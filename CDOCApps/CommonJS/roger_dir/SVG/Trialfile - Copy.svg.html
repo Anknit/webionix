@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg SYSTEM "svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="SVGOBJECTCONTAINER" x="0px" y="0px" width="800px" height="800px" viewBox="0 0 800 800" version="1.1">
+		      <title>New SVG File</title><defs id="SVGDEFINITION"> </defs>
+		       <script type="application/ecmascript">
+			          <![CDATA[
+			                   
+			                   function ChangeAnimateMotionSettings(node)
+			                   {    	
+				               	    var motionanimNode = node.nextElementSibling;       
+				               	    var fromval = motionanimNode.getAttribute("from");
+				               	    fromval = fromval.split(",");       
+				               	    var objNode = node.parentNode; 
+				               	    var objType = objNode.classList[1]; 
+				               	    if(objType == "ELLIPSE")
+				               	    {
+				               	  	  objNode.setAttribute("cx", fromval[0]); 
+				               	      objNode.setAttribute("cy", fromval[1]);   	  
+				               	    }
+				               	    else if(objType == "RECTANGLE")
+				               	    {
+				               	  	  objNode.setAttribute("x", fromval[0]); 
+				               	      objNode.setAttribute("y", fromval[1]);   	  
+				               	    }
+				               	    			
+			                   }                 
+							
+					  ]]>
+	          </script>
+		<g id="BASELAYER" class="LAYER" transform="translate(0,0) scale(1,1) rotate(0 0,0)"><path id="SVG_1267" class="SVG_PATH_OBJECT CUBIC_BEZIER ROTATE,0" transform="translate(0,0) scale(1,1) rotate(0 0,0)" d="M121,149 C275,184 516,235 561,107 " stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" fill="none" visibility="hidden" pointer-events="visible"/><ellipse id="SVG_180" class="SVG_SHAPE_OBJECT ELLIPSE ROTATE,0" cx="121" cy="149.5" rx="12" ry="11.5" transform="translate(0,0) scale(1,1) rotate(0 174,96)" fill="none" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="1.0"><animate id="ANIM_1068_V" dur="0.5s" calcMode="linear" restart="never" repeatCount="0" fill="freeze" begin="0s" from="hidden" to="visible" attributeType="XML" attributeName="visibility" onend="ChangeAnimateMotionSettings(evt.target);"><desc id="DESC_ANIM_1068_V" class="ANIM_ATTRIBUTE">Invisible Animation</desc></animate><animateMotion xmlns:xlink="http://www.w3.org/1999/xlink" id="ANIM_1068" dur="2s" calcMode="linear" restart="never" repeatCount="0" fill="freeze" begin="ANIM_1068_V.end" rotate="auto" from="0,0" to="121,150"><mpath xlink:href="#SVG_1267"/><desc id="DESC_ANIM_1068" class="ANIM_MOTION">Myanimation</desc></animateMotion></ellipse><rect id="SVG_16" class="SVG_SHAPE_OBJECT RECTANGLE ROTATE,0" x="209" y="372" width="47" height="26" transform="translate(0,0) scale(1,1) rotate(0 233,385)" fill="none" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="1.0"/><ellipse id="SVG_1038" class="SVG_SHAPE_OBJECT ELLIPSE ROTATE,0" cx="481.5" cy="349.5" rx="33.5" ry="22.5" transform="translate(0,0) scale(1,1) rotate(0 493,349)" fill="none" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="1.0"/><rect id="SVG_1457" class="SVG_SHAPE_OBJECT RECTANGLE ROTATE,0" x="448" y="394" width="67" height="77" transform="translate(0,0) scale(1,1) rotate(0 0,0)" fill="none" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="1.0"/><path id="SVG_652" class="SVG_PATH_OBJECT QUADRATIC_BEZIER ROTATE,0" transform="translate(0,0) scale(1,1) rotate(0 0,0)" d="M300,163 Q558,255 643,76 " stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" fill="none" visibility="visible" pointer-events="visible"/><path id="SVG_543" class="SVG_PATH_OBJECT POLYGON ROTATE,0 CENTRE,635,304,100" transform="translate(0,0) scale(1,1) rotate(0 0,0)" d="M752,175 L679,262 L595,57 L385,140 L601,247 L486,298 L635,404 L722,354 " stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" fill="none" visibility="visible" pointer-events="visible"/></g></svg>

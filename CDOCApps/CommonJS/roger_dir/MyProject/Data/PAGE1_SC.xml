@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!DOCTYPE SCINFO [
+<!ELEMENT SCINFO ANY>
+<!ELEMENT li ANY>
+<!ELEMENT ul ANY>
+<!ATTLIST li id ID #REQUIRED>
+<!ATTLIST li name CDATA #IMPLIED>
+<!ATTLIST li type CDATA #IMPLIED>
+<!ATTLIST li class CDATA #IMPLIED>
+<!ATTLIST li level CDATA #IMPLIED>
+<!ATTLIST li nchild CDATA #IMPLIED>
+<!ATTLIST li dataid CDATA #IMPLIED>
+<!ATTLIST li data-origin CDATA #IMPLIED>
+<!ATTLIST li data-srcid CDATA #IMPLIED>
+<!ATTLIST li onclick CDATA #IMPLIED>
+]>
+<SCINFO><ul><li id="PAGE1" type="PAGE" class="TREEMENU" level="1" data-origin="original" data-srcid="none" dataid="PAGE1" data-type="PAGE" name="Page1"><span item-title="true">Page1</span><ul><li id="TM_SCENE1742" type="SCENE" class="TREEMENU" level="2" data-origin="original" data-srcid="none" dataid="SCENE1742" data-type="SCENE" name="SLIDE"><span item-title="true">Slide:- slide-1</span><ul><li id="TM_BASELAYER" type="LAYER" class="TREEMENU" level="3" data-origin="original" data-srcid="none" dataid="BASELAYER" data-type="LAYER" name="Shared Object Group"><span item-title="true">Shared Object Group</span><ul><li id="TM_NEXTSLIDEBTN" type="HTMLOBJECT" class="TREEMENU" level="4" data-origin="original" data-srcid="none" dataid="NEXTSLIDEBTN" data-type="NEXT SLIDE BUTTON" name="Button:NEXT SLIDE BUTTON"><span item-title="true">Button:NEXT SLIDE BUTTON</span></li><li id="TM_PREVSLIDEBTN" type="HTMLOBJECT" class="TREEMENU" level="4" data-origin="original" data-srcid="none" dataid="PREVSLIDEBTN" data-type="PREVIOUS SLIDE BUTTON" name="Button:PREVIOUS SLIDE BUTTON"><span item-title="true">Button:PREVIOUS SLIDE BUTTON</span></li><li id="TM_NEXTPAGEBTN" type="HTMLOBJECT" class="TREEMENU" level="4" data-origin="original" data-srcid="none" dataid="NEXTPAGEBTN" data-type="NEXT PAGE BUTTON" name="Button:NEXT PAGE BUTTON"><span item-title="true">Button:NEXT PAGE BUTTON</span></li><li id="TM_PREVPAGEBTN" type="HTMLOBJECT" class="TREEMENU" level="4" data-origin="original" data-srcid="none" dataid="PREVPAGEBTN" data-type="PREVIOUS PAGE BUTTON" name="Button:PREVIOUS PAGE BUTTON"><span item-title="true">Button:PREVIOUS PAGE BUTTON</span></li></ul></li><li id="TM_LAYER706" type="LAYER" class="TREEMENU" level="3" data-origin="original" data-srcid="none" dataid="LAYER706" data-type="LAYER" name="Object Group(LAYER706)"><span item-title="true">Object Group(LAYER706)</span><ul><li id="TM_HTMLOBJECT43" type="HTMLOBJECT" class="TREEMENU" level="4" data-origin="original" data-srcid="none" dataid="HTMLOBJECT43" data-type="PARAGRAPH" name="SLIDE TITLE"><span item-title="true">PARAGRAPH:slide-1</span></li><li id="TM_HTMLOBJECT323" type="HTMLOBJECT" class="TREEMENU" level="4" data-origin="original" data-srcid="none" dataid="HTMLOBJECT323" data-type="SLIDE NUMBER" name="1"><span item-title="true">1</span></li><li id="TM_HTMLOBJECT837" type="HTMLOBJECT" class="TREEMENU" level="4" data-origin="original" data-srcid="none" dataid="HTMLOBJECT837" data-type="PARAGRAPH" name="PARAGRAPH"><span item-title="true">PARAGRAPH</span></li></ul></li></ul></li></ul></li></ul></SCINFO>
