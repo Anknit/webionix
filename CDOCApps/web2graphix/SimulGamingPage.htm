@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="keywords" content="jQuery Button, CheckBox, Toggle Button, Repeat Button, Radio Button, Link Button, Button" />
+    <meta name="description" content="The jqxButton widget allows you to display a button on the Web page." />
+    <title id='Description'>The jqxButton widget allows you to display a button on the Web
+        page.</title>  
+     
+      
+    <link rel="stylesheet" href="thirdparty/jqxwidget3.0.4/styles/jqx.base.css" type="text/css" /> 
+    <link rel="stylesheet" href="thirdparty/jqxwidget3.0.4/styles/jqx.energyblue.css" type="text/css" /> 
+     <link rel="stylesheet" href="../CommonCSS/CDOCStyle.css">   
+     <script type="text/javascript" src="thirdparty/jqxwidget3.0.4/jquery-1.10.2.min.js"></script>    
+     <script type="text/javascript" src="thirdparty/jqxwidget3.0.4/gettheme.js"></script>
+     <script type="text/javascript" src="thirdparty/jqxwidget3.0.4/jqxcore.js"></script> 
+     <script type="text/javascript" src="thirdparty/jqxwidget3.0.4/jqx-all.js"></script> 
+     <script type="text/javascript" src="../CommonJS/CDOCWAL_V2.js"></script> 
+ 
+ 
+  
+   
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            WAL_Initialize();  
+            UI_Initialize(); 
+             
+        });
+
+        function UI_Initialize()
+        {
+        	var JQSel = '#sessionnameIP'; 
+            $(JQSel).jqxInput({height: 25, width: 100, minLength: 1, theme: gTheme});            
+            $(JQSel).jqxInput('val', 'Round-1');
+            $(JQSel).jqxInput({disabled: true });
+            JQSel = '#roleIP'; 
+            $(JQSel).jqxInput({height: 25, width: 100, minLength: 1, theme: gTheme});            
+            $(JQSel).jqxInput('val', 'Team Leader');
+            $(JQSel).jqxInput({disabled: true });
+            
+            JQSel = '#teamnameIP'; 
+            $(JQSel).jqxInput({height: 25, width: 100, minLength: 1, theme: gTheme});            
+            $(JQSel).jqxInput('val', 'Team-A');
+            $(JQSel).jqxInput({disabled: true });
+            
+            var teamList = ['Team-B', 'Team-C', 'Team-D'];   
+            WAL_createDropdownList('teamlistDDL', '160', '24', true, teamList, "UI_DDLHandler", '80');
+            //WAL_createButton('showdatatn', 'UI_BtnHandle(event)', '80', '34', true);
+            WAL_createCustomButton('showdataBtn', 'UI_BtnHandle'); 
+            WAL_createTab('roletabs', '450', 'UI_TabSelectHandler');
+            
+            var objist = ['Testing Market', 'Introducing New Brand', 'Expanding Market'];   
+            WAL_createDropdownList('objectivelistDDL', '240', '24', true, objist, "UI_DDLHandler", '80');
+            
+            var prodList = ['Base Product', 'Product-A', 'Product-B', 'Product-C'];   
+            WAL_createDropdownList('productlistDDL', '120', '24', true, prodList, "UI_DDLHandler", '80');
+
+            var posList = ['Affordable', 'Quality', 'Value For Money', 'Premium'];   
+            WAL_createDropdownList('positioninglistDDL', '120', '24', true, posList, "UI_DDLHandler", '80');
+            
+            WAL_createNumberInput("priceIP", '58px', '24', "UI_NumEditBoxValueChange",true, 100,0, 1);
+            
+            WAL_createCheckBox('bdgt_brand_mgr_CB', 'UI_CheckBoxHandler', '50', '20', '13', false, false);
+            WAL_createNumberInput("brandmgrdbdgtIP", '58px', '24', "UI_NumEditBoxValueChange",true, 1000000,0, 1);
+            
+            WAL_createCheckBox('bdgt_media_mgr_CB', 'UI_CheckBoxHandler', '50', '20', '13', false, false);
+            WAL_createNumberInput("mediamgrdbdgtIP", '58px', '24', "UI_NumEditBoxValueChange",true, 1000000,0, 1);
+            
+            WAL_createCheckBox('bdgt_innov_mgr_CB', 'UI_CheckBoxHandler', '50', '20', '13', false, false);
+            WAL_createNumberInput("innovmgrdbdgtIP", '58px', '24', "UI_NumEditBoxValueChange",true, 1000000,0, 1);
+            
+            
+            
+        }
+        
+        function UI_BtnHandle(btnNode)
+        {
+        	alert("Clicked on"+ btnNode.id); 
+        }
+        function UI_TabSelectHandler(tabindex)
+        {
+        	
+        }
+        function UI_DDLHandler(Node, value)
+        {
+        	if(Node.id == 'objectivelistDDL' )
+        	{
+        		alert("ITem Chosen="+value); 
+        	}
+        	
+        }
+        function UI_NumEditBoxValueChange(value, widgetnode)
+        {
+        	
+        }
+        function UI_CheckBoxHandler(event)
+        {
+        	
+        }
+    </script>
+</head>
+
+<body class='default'>      
+ 
+   <div id='commonsection' style= "background-image: linear-gradient(0deg, #c6d6ec 15%,  #e0e9f5 75%); margin-bottom:10px" >
+   <div id='welcomesection' style="text-align:center; font-size:larger; font-style:italic; font-weight:bolder">Welcome to the Marketing Simulation Game</div>
+   <div style='text-align:center; font-weight:bold;'>
+   		<div style='display:inline-block; margin-left:5px;'>Session Name<input type="text" id="sessionnameIP"/></div>
+   		<div style='display:inline-block; margin-left:5px;'>Team Name<input type="text" id="teamnameIP"/></div>
+   		<div style='display:inline-block; margin-left:5px;'>Your Role<input type="text" id="roleIP"/></div>
+   		<div style= 'display:inline-block; margin-left:2px; margin-right:3px'>Other Teams<div id='teamlistDDL' class='EDIT_BOX' type='TEAM_LIST' style='margin-top:10px'></div></div>
+   		<div style= 'display:inline-block'>
+   			<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='showdataBtn' value=''  src='../CommonCSS/icons/Version1/research.png' title='Show Market Research Data'/></div>
+   		</div>
+   		
+   		
+   </div>
+   <div id='roletabs'>
+         <ul>
+             <li id='teamleadTab' style="margin-left: 15px;">Team Lead</li>
+             <li id='mediamgrTab'>Media Manager</li>  
+              <li id='brandmgrTab'>Brand Manager</li> 
+               <li id='innovmgrTab'>Innovation Manager</li>              
+         </ul>
+             <div id="teamleadcontent">
+             	<div style= 'display:inline-block; margin-left:2px; margin-right:3px'>Set Objective<div id='objectivelistDDL' class='EDIT_BOX' type='TEAM_LIST' style='margin-top:10px'></div></div>
+             	
+             	<div style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:15px; margin-bottom:20px; margin-right:5px; width: 650px; '>
+                   <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Product Definition</div>
+                   <div style= 'display:inline-block; margin-left:2px; margin-right:3px'>Select Product<div id='productlistDDL' class='EDIT_BOX' type='TEAM_LIST' style='margin-top:10px'></div></div>   
+                   <div style= 'display:inline-block; margin-left:2px; margin-right:3px'>Select Positioning<div id='positioninglistDDL' class='EDIT_BOX' type='TEAM_LIST' style='margin-top:10px'></div></div>
+                   <div style='display:inline-block; margin-left:5px;margin-top:10px;'>Select Price<div id='priceIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                </div>
+                <div style='display:inline-block; border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:15px; margin-bottom:20px; margin-right:5px; width: 253px; '>
+                   <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Budget Allocation</div>
+                   	<div id='bdgt_brand_mgr_CB' style="display:inline-block; margin-top: 5px;">Brand Manager</div>
+                   	<div style='display:inline-block; margin-left:80px;margin-top:10px;'>Allocate<div id='brandmgrdbdgtIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                   	<div id='bdgt_media_mgr_CB' style="display:inline-block; margin-top: 5px;">Media Manager</div>
+                   	<div style='display:inline-block; margin-left:80px;margin-top:10px;'>Allocate<div id='mediamgrdbdgtIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                   	<div id='bdgt_innov_mgr_CB' style="display:inline-block; margin-top: 5px;">Innov. Manager</div>
+                   	<div style='display:inline-block; margin-left:80px;margin-top:10px;'>Allocate<div id='innovmgrdbdgtIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                </div>
+                 
+             </div>
+             <div id="mediamgrcontent">Media Mgr Content</div>
+             <div id="brandmgrcontent">Brand Mgr Content</div>
+             <div id="innovmgrcontent">Innov Mgr Content</div>
+               
+   </div>
+ 
+</body>
+</html>
+
+
+
+                    
