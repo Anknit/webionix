@@ -1,6 +1,4 @@
-/*
-rajarshi making the chaanges here 
-*/
+
 var gAppVersion = "1.0"; 
 sDimension.prototype.x = new Number(0);
 sDimension.prototype.y = new Number(0);
@@ -5667,7 +5665,10 @@ function GX_AddNewAnimation()
     gInitAnimParam.title = 'Default';        
     GX_ResetUI(gInitAnimParam); 
    // GX_SetAnimParamOnUI(gInitAnimParam);         
-	
+    
+    WAL_hideWidget('newanimAddBtn', false); 
+    WAL_hideWidget('showlistbtn', true);
+    WAL_hideWidget('previewbtn', true);    
 	WAL_showModalWindow('animationwidget',"", "" );
 }
 
@@ -5688,6 +5689,11 @@ function GX_EditAnimation(animID)
     GX_SetAnimParamOnUI(gInitAnimParam);   
 	
     gbApplied = false;
+    WAL_hideWidget('newanimAddBtn', true); 
+    WAL_hideWidget('showlistbtn', false);
+    WAL_hideWidget('previewbtn', false);
+   
+    
 	WAL_showModalWindow('animationwidget',"", "" );
 	
 	//cal show window 
