@@ -483,6 +483,7 @@ function GX_GetAnimParamsFromUI()
                 
                 WAL_createButton('previewbtn', 'GX_AnimDlgBtnHdlr', '58', 24, true);
                 WAL_createButton('showlistbtn', 'GX_AnimDlgBtnHdlr', '70', 24, true);
+                WAL_createButton('newanimAddBtn', 'GX_AnimDlgBtnHdlr', '70', 24, true);               
                 
                 WAL_createRadioButton('timeRB', 'GX_AnimDlgRadioValueChangeHdlr', '110', '20', false, false);
                 WAL_createDecimalNumberInput("startTimeIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 10.0,0.0,0.1);
@@ -867,7 +868,8 @@ function GX_RemoveAnimInfoFromList(animID)
  
  function GX_AnimDlgOK()
  {
-	var JQSel = "#" + "animtitleIP";	
+	/*
+	 * var JQSel = "#" + "animtitleIP";	
 	var animName  = $(JQSel).val();	
 	if(animName == 'Default')
 	{
@@ -876,15 +878,16 @@ function GX_RemoveAnimInfoFromList(animID)
 			WAL_showModalWindow('animationwidget',"", "" );		
 			}, 250); 
 		return ; 
-	} 	
+	} 
+	*/	 
+	 if(gNewAnimObject == false)
+		 return ; 
 	if(gCurrAnimParam.animType == 'ANIM_MOTION')
 	{		
 		if(!gCurrAnimNode)
 		{
 			gCurrAnimNode = document.getElementById(gCurrAnimParam.animID); 
-		}
-		//GX_RestoreMotionObject(gCurrAnimNode);
-		//gCurrAnimNode=0;
+		}	
 	}
  	gCurrAnimParam = 0; 
 	gCurrAnimParam = GX_GetAnimParamsFromUI();	
@@ -899,45 +902,100 @@ function GX_RemoveAnimInfoFromList(animID)
 			respStr = GX_UpdateAnimObjectAttribute(gCurrAnimParam.animID, attrArray); 
 		}		
 	}
+	/*
 	else
 	 {
 		 //create a new animation object again 
 		GX_AddAnimationElement(gCurrAnimParam); 
 	 }
+	
 	if(gNewAnimObject == true)
 	{
 		if(gCurrAnimParam.animType == 'ANIM_MOTION')
 		{
 			var retval = GXRDE_openSVGFile(gSVGFilename); 
-		    var HTMLstr=""; 
-		   // var dataNode = document.getElementById('objectcontainer');   	 
-		    //dataNode.innerHTML = ''; 
+		    var HTMLstr=""; 		 
 		    var currfilename = gSVGFilename; 
 		    var currObjID = gCurrAnimParam.objectID; 
 		    if(retval)
 		    {
-		     GX_CloseSVGFile();
-		   	 var dataNode = document.getElementById('objectcontainer');   	 
-		   	 dataNode.innerHTML += retval;		   	
-		  	 GX_InitializeDocument(currfilename);
-		   	// Debug_Message("File Reloaded"); 
+			     GX_CloseSVGFile();
+			   	 var dataNode = document.getElementById('objectcontainer');   	 
+			   	 dataNode.innerHTML += retval;		   	
+			  	 GX_InitializeDocument(currfilename);		   	
 		    }	
 		    var xmlstr = GXRDE_GetSVGMetaXML(currfilename);    
 		    if(xmlstr)
 		       GX_updateTreeWidget(xmlstr);   
 		    WAL_expandAllTreeItems(gTreeNodeID, true);
 		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);		     
-		    GX_MenuItemShow('animate', 'Animate');
-		    
+		    GX_MenuItemShow('animate', 'Animate');		    
 		}
 	}
 	
 	if(gNewAnimObject == true)
 		gNewAnimObject = false; 
+		*/
+	
 	gbApplied = false;	
 	
  } 
  
+ 
+ function GX_AddNewAnimationObject()
+ {	 
+	 var JQSel = "#" + "animtitleIP";	
+		var animName  = $(JQSel).val();	
+		if(animName == 'Default')
+		{
+			Debug_Message("Please Assign a Name to the Animation");		
+			setTimeout(function(){			
+				WAL_showModalWindow('animationwidget',"", "" );		
+				}, 250); 
+			return ; 
+		} 	
+		
+		if(gCurrAnimParam.animType == 'ANIM_MOTION')
+		{		
+			if(!gCurrAnimNode)
+			{
+				gCurrAnimNode = document.getElementById(gCurrAnimParam.animID); 
+			}
+			
+		}
+	 	gCurrAnimParam = 0; 
+		gCurrAnimParam = GX_GetAnimParamsFromUI();
+	
+		if(gNewAnimObject == true)
+		{
+			var retval = GX_AddAnimationElement(gCurrAnimParam);
+			if(gCurrAnimParam.animType == 'ANIM_MOTION')
+			{
+				var retval = GXRDE_openSVGFile(gSVGFilename); 
+			    var HTMLstr=""; 		 
+			    var currfilename = gSVGFilename; 
+			    var currObjID = gCurrAnimParam.objectID; 
+			    if(retval)
+			    {
+				     GX_CloseSVGFile();
+				   	 var dataNode = document.getElementById('objectcontainer');   	 
+				   	 dataNode.innerHTML += retval;		   	
+				  	 GX_InitializeDocument(currfilename);		   	
+			    }	
+			    var xmlstr = GXRDE_GetSVGMetaXML(currfilename);    
+			    if(xmlstr)
+			       GX_updateTreeWidget(xmlstr);   
+			    WAL_expandAllTreeItems(gTreeNodeID, true);
+			    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);		     
+			    GX_MenuItemShow('animate', 'Animate');	
+			    WAL_SetItemByValueInList('listanimDDL', gCurrAnimParam.animID, true); 
+			    GX_EditAnimation(gCurrAnimParam.animID); 
+			}
+			
+		}		
+		if(gNewAnimObject == true)
+			gNewAnimObject = false; 
+ }
  
  function GX_AnimDlgCANCEL()
  {
@@ -1002,6 +1060,10 @@ function GX_RemoveAnimInfoFromList(animID)
 				var initColVal = gCurrentObjectSelected.getAttribute(gCurrAttrname); 		
 				WAL_showColorPickerWidget('animcolorpickwidget', '', 'endanimcolbtn','value', initColVal, 'endColValIP');				
 			}			
+	 }
+	 else if(nodeid == 'newanimAddBtn')
+	 {
+		 GX_AddNewAnimationObject(); 
 	 }
  }
  
@@ -1901,4 +1963,6 @@ function GX_RemoveAnimInfoFromList(animID)
 	WAL_setNumberInputValue('repeatcountIP', animParam.repeatCount, false);
 	    // animParam.endState = 'freeze'; //FREEZE, REMOVE
 	WAL_SetItemByValueInList('endstatelistDDL', animParam.endState, true);  
+	
+	//hide ahow buttons here
  }
