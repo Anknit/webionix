@@ -12,7 +12,10 @@
 /*
 Rajarshi is making these changes to test out the SVn functionality
 */
-
+/*
+Now some more changes are at work which gives me immense
+pleasure in checking in the code 
+*/
 function DH_getNewProject(ProjectTitle)
 {
 	var respstring = AJX_RequestWithReponseData("text", "WKSM", "102", ProjectTitle);
