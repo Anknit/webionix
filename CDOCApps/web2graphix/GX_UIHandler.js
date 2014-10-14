@@ -3054,7 +3054,7 @@ function GX_InitializeToolbar()
     var gradList = ['New:Linear', 'New:Radial'];   
     WAL_createDropdownList('gradlistDDL', '160', '24', false, gradList, "GX_DDLHandler", '50');
     WAL_createCustomButton('edit_grad_icon', 'GX_ToolbarHandler');   
-    GX_CreateGradientWidget('LGgradDlg');
+    GX_CreateGradientWidget('gradientDlg');
     
    // 
     WAL_createCustomButton('anim_new_icon', 'GX_ToolbarHandler');   
@@ -5604,7 +5604,7 @@ function OnGradMouseOut(evt) {
 
 function GX_ShowGradWindow(gradID, gradType)
 {	    
-     var JQSel = '#LGgradDlg';   
+     var JQSel = '#gradientDlg';   
      var rgnode = document.getElementById('RGSpecific'); 
  	 var lgnode = document.getElementById('LGSpecific');
      if(gradType == 'LINEAR_GRAD')
@@ -5627,7 +5627,7 @@ function GX_ShowGradWindow(gradID, gradType)
      	 JQSel = '.LG_MARKERS'; 
      	 $(JQSel).hide();        	
      } 	 
-     WAL_showModalWindow('LGgradDlg', "OnclickInputOK", "");     
+     WAL_showModalWindow('gradientDlg', "OnclickInputOK", "");     
      gGradientObj = new sGradientWidget('gradientWidget', gradID);
 }
 
