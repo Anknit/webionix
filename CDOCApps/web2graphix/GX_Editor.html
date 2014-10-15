@@ -305,6 +305,7 @@
             </div>        
   </div>       
    
+ <!-- 
   <div id='gradientDlg'style="overflow: hidden"><div id="LGtitle">Linear Gradient Settings</div>       
        <div id="linearcontent" style="overflow:hidden">
         
@@ -378,11 +379,101 @@
                         <input type="button" id ='myOK'     value="OK"  onclick='GX_GradDlgOK()'/>
                         <input type="button" id ='myCancel' value="Cancel" onclick='GX_GradDlgCancel()' />
                     </div>
-                 </div><!--linearcontent-->
+                 </div>
                  
     </div>       
        
+ -->
  
+ <div id='gradientDlg'style="overflow: hidden"><div id="LGtitle">Linear Gradient Settings</div>       
+       <div id="linearcontent" style="overflow:hidden">
+        
+              <div style= 'margin-left:2px; margin-top:10px;'>Title of Gradient<input  id='gradTitleIP' style= 'margin-left:4px;' type=text value="Default" onblur='OnEditBoxFocusOut(event)'/></div>
+                 <div id='linSpreaddiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Spread-Method<div id='LinearSpreadDDL' class='EDIT_BOX' type='Spread Method to Apply' style='margin-top:8px' ></div></div>
+         <div id='LGSpecific' style='display:block'>       
+                 <div style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:15px; margin-bottom:20px; margin-right:5px; width: auto'>
+                      <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Gradient Start</div>
+                      <div>
+	                      <div id='GradStartXEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>X-Pos(%)<div id='GradStartXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+	                      <div id='animateXPos' style="display:inline-block;margin-left:20px; margin-top: 5px;">Animate</div>
+	                      <div id='fromXPos' class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>From(%)<div id='fromXPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+	                      <div id='toXPos'  class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'>To(%)<div id='toXPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	                      
+                      </div>
+                      
+                      <div>
+	                      <div id='GradStartYEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Y-Pos(%)<div id='GradStartYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+	                       <div id='animateYPos' style="display:inline-block;margin-left:20px; margin-top: 5px;">Animate</div>
+	                                           
+	                      	<div id='fromYPos' class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>From(%)<div id='fromYPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+	                      	<div id='toYPos'  class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'>To(%)<div id='toYPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+	                     
+	                  </div>
+                 </div>
+                 <div style='border:solid 1px grey;border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:10px; margin-bottom:20px; margin-right:5px; width: 270px; '>
+                      <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px; '>Gradient Stop</div>
+                      <div id='GradStopXEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>X-Pos(%)<div id='GradStopXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                      <div id='GradStopYEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Y-Pos(%)<div id='GradStopYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                 </div>
+          </div>
+        <div id='RGSpecific' style='display:none'>
+          	 <div style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:15px; margin-bottom:20px; margin-right:5px; width: 450px; '>
+          	  	<div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Radial Parameters</div>
+          			<div id='centerXEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Center-X(%)<div id='centerXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+          			<div id='centerYEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Center-Y(%)<div id='centerYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+          			<div id='radiusEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Radius(%)<div id='radiusIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+          	</div>
+          	<div style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:15px; margin-bottom:20px; margin-right:5px; width: 450px; '>
+          	  	<div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Focal Parameters</div>
+          			<div id='focusXEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Focus-X(%)<div id='focusXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+          			<div id='focusYEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Focus-Y(%)<div id='focusYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>          			
+          	</div>	
+          		
+       </div>      
+         
+                  <div style='border:solid 1px grey;border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:10px; margin-bottom:5px; margin-right:5px; width: 270px; '>
+                    <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Color Offsets</div>
+                    <div id='stop0_CB' style="display:inline-block; margin-top: 5px;">Stop-1</div>
+                    <div id='stop0_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop0_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    <div style='display:inline-block; position:relative; top:-10px; margin-left:20px;'><button id='stop0_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                    
+                    <div id='stop1_CB' style="display:inline-block; margin-top: 5px;">Stop-2</div>
+                    <div id='stop1_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop1_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    <div style='display:inline-block; position:relative; top:-10px; margin-left:20px;'><button id='stop1_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                    
+                    <div id='stop2_CB' style="display:inline-block; margin-top: 5px;">Stop-3</div>
+                    <div id='stop2_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop2_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    <div style='display:inline-block; position:relative; top:-10px; margin-left:20px;'><button id='stop2_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                    
+                    <div id='stop3_CB' style="display:inline-block; margin-top: 5px;">Stop-4</div>
+                    <div id='stop3_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop3_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    <div style='display:inline-block; position:relative; top:-10px; margin-left:20px;'><button id='stop3_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                  </div>
+                  <div id='gradpreview' style='position:absolute; top:248px; left:290px; width:auto;'>
+                    <?xml version="1.0"?><!DOCTYPE svg SYSTEM "svg11.dtd">
+                    <svg xmlns="http://www.w3.org/2000/svg" id="GRAD_PREVIEW_SVG" x="0px" y="0px" width="190px" height="190px" viewBox="0 0 190 190" version="1.1">
+		            <title>New SVG File</title>
+                    <defs>    
+                    </defs>
+                    <rect id="GRAD_PREVIEW_RECTANGLE" x="0" y="0" width="190" height="190" fill="green" stroke="black" stroke-width="2" opacity="1.0"/>
+                    <line id="LG_INDICATOR_LINE" class="LG_MARKERS" x1='1' y1='1' x2='189' y2='189' stroke="black" stroke-width="3" stroke-dasharray="4,2" stroke-linejoin="miter" stroke-opacity="1" fill="none"/>
+                    <circle id='START_POINT' class="LG_MARKERS" cx='7' cy='7' r='5' stroke='black'  stroke-width='2' fill='none' fill-opacity='0.5' pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
+                    <circle id='END_POINT' class="LG_MARKERS" cx='185' cy='185' r='5' stroke='black' stroke-width='2' fill='none' fill-opacity='0.5'pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
+                    
+                    <circle id='RG_CIRCLE' class= 'RG_MARKERS' cx='95' cy='95' r='92' fx='95' fy='95' fill='none' stroke="black" stroke-width="3" stroke-dasharray="4,2"  pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)"/>
+                    <circle id='RG_CENTER' class= 'RG_MARKERS' cx='95' cy='95' r='3' fill='black' stroke="black" stroke-width="3" />
+                    <line id="RG_RADIUS_LINE" class="RG_MARKERS" x1='95' y1='95' x2='187' y2='95' stroke="black" stroke-width="3" stroke-dasharray="4,2" stroke-linejoin="miter" stroke-opacity="1" fill="none"/>
+                    <circle id='RG_RADIUS_END_POINT' class="RG_MARKERS" cx='185' cy='95' r='5' stroke='black' stroke-width='2' fill='none' fill-opacity='0.5' pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
+                    <circle id='RG_FOCUS_POINT' class="RG_MARKERS" cx='95' cy='95' r='10' stroke='black' stroke-width='2' fill='black' fill-opacity='0.5' pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
+                    
+                    </svg>
+                  </div>
+                    <div> 
+                        <input type="button" id ='myOK'     value="OK"  onclick='GX_GradDlgOK()'/>
+                        <input type="button" id ='myCancel' value="Cancel" onclick='GX_GradDlgCancel()' />
+                    </div>
+                 </div>
+                 
+    </div>        	
     <div id='gradcolorpickwidget'>
                 <div id='gradcolorhdr'>Choose Color</div>
                 <div id='gradcolorcontent' style="overflow: hidden">
