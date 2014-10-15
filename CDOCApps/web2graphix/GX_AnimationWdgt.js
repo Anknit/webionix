@@ -968,7 +968,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	
 		if(gNewAnimObject == true)
 		{
-			var retval = GX_AddAnimationElement(gCurrAnimParam);
+			var retval = GX_AddAnimationElement(gCurrAnimParam, true);
 			if(gCurrAnimParam.animType == 'ANIM_MOTION')
 			{
 				var retval = GXRDE_openSVGFile(gSVGFilename); 
@@ -1027,7 +1027,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	}
 	else
 	{
-		GX_AddAnimationElement(gInitAnimParam); 
+		GX_AddAnimationElement(gInitAnimParam, true); 
 	}
 	gbApplied = false;
 	
@@ -1115,7 +1115,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	else
 	{
 		 //create a new animation object again 
-		GX_AddAnimationElement(tempAnimParam); 
+		GX_AddAnimationElement(tempAnimParam, true); 
 	 }
 	gbApplied = true; 
 	//Debug_Message("End of Apply"); 
@@ -1152,7 +1152,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 }
  }
  
- function GX_AddAnimationElement(animParams)
+ function GX_AddAnimationElement(animParams, bUpdateUI)
  {
 	 var animcodestr =""; 
 	 var attrArray = [];
@@ -1226,7 +1226,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		newAttr.push(attrData); 		
 		attrData = ['onend',"ChangeAnimateMotionSettings(evt.target);"]; 
 		newAttr.push(attrData); 
-		GX_AddNewAnimElementInDOM(newAnimID, animParams.objectID,'ANIM_ATTRIBUTE', newAttr); 		
+		GX_AddNewAnimElementInDOM(newAnimID, animParams.objectID,'ANIM_ATTRIBUTE', newAttr, bUpdateUI); 		
 		
 		
 		attrData = ['refpathid',animParams.refPathID];  
@@ -1307,7 +1307,7 @@ function GX_RemoveAnimInfoFromList(animID)
 //			 animParams.animType, attrArray);	 
 	 
 	//delete the existing node first 
-	GX_AddNewAnimElementInDOM(animParams.animID, animParams.objectID,animParams.animType, attrArray); 
+	GX_AddNewAnimElementInDOM(animParams.animID, animParams.objectID,animParams.animType, attrArray, bUpdateUI); 
  }
  
  
@@ -1362,7 +1362,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	Debug_Message('Aligning Object'); 
 	 
  }
- function GX_AddNewAnimElementInDOM(animID, ObjID, animType, attrArray)
+ function GX_AddNewAnimElementInDOM(animID, ObjID, animType, attrArray, bUIUpdate)
  {
 	 
 	 var animstr = GXRDE_addNewAnimationObject(animID, ObjID, animType, attrArray); 
@@ -1373,9 +1373,13 @@ function GX_RemoveAnimInfoFromList(animID)
 		 parentNode.removeChild(animNode); 
 	 }	
  	GX_AddNewNodeFromXMLString(ObjID, animstr);	 
- 	animNode = document.getElementById(animID);
- 	
+ 	animNode = document.getElementById(animID); 	
+ 	if(bUIUpdate == true)
+ 	{
+ 		GX_UpdateAnimParamOnUI(animNode);
+ 	}
  	//gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
+ 	/*
  	if(animNode)
  		GX_UpdateAnimInfoInList(animNode); 
  	var animlist=[];
@@ -1385,8 +1389,22 @@ function GX_RemoveAnimInfoFromList(animID)
  	}
  	WAL_UpdateDropDownList('listanimDDL', animlist);
  	var index = animlist.length-1; 
- 	WAL_SetItemInDropDownList('listanimDDL', index, true); 
-			 
+ 	WAL_SetItemInDropDownList('listanimDDL', index, true); 	*/
+ 	
+ }
+ 
+ function GX_UpdateAnimParamOnUI(animNode)
+ {
+	 if(animNode)
+	 		GX_UpdateAnimInfoInList(animNode); 
+	 	var animlist=[];
+	 	for(var k=0; k < gAnimList.length; k++)
+	 	{
+	 		animlist.push(gAnimList[k][5]); 
+	 	}
+	 	WAL_UpdateDropDownList('listanimDDL', animlist);
+	 	var index = animlist.length-1; 
+	 	WAL_SetItemInDropDownList('listanimDDL', index, true); 
  }
  
  function GX_AnimColorWidgetOK(event)
@@ -1813,8 +1831,7 @@ function GX_RemoveAnimInfoFromList(animID)
  
  function GX_PreviewAnimation(animID)
  {	 
- 	//gInitAnimParam = GX_GetAnimParamsFromUI();	
-  	//GX_AddAnimationElement(gInitAnimParam); 
+ 	
 	
   	var animnode = document.getElementById(animID);
   	if(!animnode)
