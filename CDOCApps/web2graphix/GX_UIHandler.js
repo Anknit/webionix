@@ -390,6 +390,41 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     var state = event.args.checked;
     var index;
     var stopnodeid;
+    if (CBID == 'animateXPos')
+    {
+    	if(state ==  true)
+    	{
+    		 WAL_disableWidget('fromXPosIP', 'data-jqxNumberInput', false, false); 
+             WAL_disableWidget('toXPosIP', 'data-jqxNumberInput', false, false); 
+             WAL_disableWidget('GradStartXIP', 'data-jqxNumberInput', false, true); 
+             
+    	}
+    	else
+    	{
+    		WAL_disableWidget('fromXPosIP', 'data-jqxNumberInput', false, true); 
+            WAL_disableWidget('toXPosIP', 'data-jqxNumberInput', false, true); 
+            WAL_disableWidget('GradStartXIP', 'data-jqxNumberInput', false, false); 
+    	}
+    	
+    	return ; 
+    }
+    else  if (CBID == 'animateYPos')
+    {
+    	if(state ==  true)
+    	{
+    		 WAL_disableWidget('fromYPosIP', 'data-jqxNumberInput', false, false); 
+             WAL_disableWidget('toYPosIP', 'data-jqxNumberInput', false, false); 
+             WAL_disableWidget('GradStartYIP', 'data-jqxNumberInput', false, true);              
+    	}
+    	else
+    	{
+    		WAL_disableWidget('fromYPosIP', 'data-jqxNumberInput', false, true); 
+            WAL_disableWidget('toYPosIP', 'data-jqxNumberInput', false, true); 
+            WAL_disableWidget('GradStartYIP', 'data-jqxNumberInput', false, false); 
+    	}
+    	
+    	return ; 
+    }
     if (CBID == 'stop2_CB')
         index = 2;
     else if (CBID == 'stop3_CB')
@@ -586,7 +621,20 @@ function GX_CreateGradientWidget(wdgtID)
    
       //  WAL_createTab('gradTabsContent', '425', 'TabSelectHandler');
         WAL_createNumberInput("GradStartXIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
+        WAL_createCheckBox('animateXPos', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
+        WAL_createNumberInput("fromXPosIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
+        WAL_createNumberInput("toXPosIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
+        WAL_disableWidget('fromXPosIP', 'data-jqxNumberInput', false, true); 
+        WAL_disableWidget('toXPosIP', 'data-jqxNumberInput', false, true); 
+        
+        
         WAL_createNumberInput("GradStartYIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
+        WAL_createCheckBox('animateYPos', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
+        WAL_createNumberInput("fromYPosIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
+        WAL_createNumberInput("toYPosIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
+        WAL_disableWidget('fromYPosIP', 'data-jqxNumberInput', false, true); 
+        WAL_disableWidget('toYPosIP', 'data-jqxNumberInput', false, true); 
+        
         WAL_createNumberInput("GradStopXIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
         WAL_createNumberInput("GradStopYIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
         var spreadValueDisplay = ['pad', 'reflect', 'repeat'];
