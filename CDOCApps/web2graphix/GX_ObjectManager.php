@@ -568,7 +568,8 @@ function GX_OBJ_AddNewSVGAnimation(&$respData)
 	//now add the title of the animation 
 	$descID = 'DESC_'.$animIDVal; 
 	$attrdefinition = array('id'=>$descID, "class"=>$animTypeVal);
-	$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'desc',$descID, $animIDVal, $attrdefinition,$ATTRVAL[0]);
+	if($ATTRVAL[0] != 'none')
+		$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'desc',$descID, $animIDVal, $attrdefinition,$ATTRVAL[0]);
 	
 	$retVal = $SVGDom->load($SVGFileName);
 	if($retVal != true)
