@@ -628,7 +628,7 @@ function GX_CreateGradientWidget(wdgtID)
         WAL_createCheckBox('animateStartXPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
         WAL_createNumberInput("StartfromXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
         WAL_createNumberInput("StarttoXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
-        WAL_createButton('apply_StartXPos', 'GX_GradAnimApplyBtnHdlr', '50', 25, true);
+        WAL_createButton('apply_StartXPos', '', '50', 25, true);
         WAL_disableWidget('StartfromXPosIP', 'data-jqxNumberInput', false, true); 
         WAL_disableWidget('StarttoXPosIP', 'data-jqxNumberInput', false, true); 
         WAL_disableWidget('apply_StartXPos', 'data-jqxButton', false, true); 
@@ -5765,7 +5765,7 @@ function GX_AddGradientAnimation(gradID, attribute, start, end)
     gInitAnimParam.animID = GXRDE_GetUniqueID('ANIM_');  
     gInitAnimParam.objectID = objID;  
     gInitAnimParam.duration = 2;
-    gInitAnimParam.animType = 'ATTRIBUTE'; //ATTRIBUTE, MOTION,TRANSFORM
+    gInitAnimParam.animType = 'ANIM_ATTRIBUTE'; //ATTRIBUTE, MOTION,TRANSFORM
     gInitAnimParam.attribute = attribute;
     gInitAnimParam.startValue = start;
     gInitAnimParam.endValue = end;
@@ -5784,11 +5784,17 @@ function GX_AddGradientAnimation(gradID, attribute, start, end)
     gInitAnimParam.PathObjectOffset=0;
     gInitAnimParam.PathStartPoint = new sPoint();
     gInitAnimParam.center = '';  //centre of rotation 
-    gInitAnimParam.title = 'Default';          
+    gInitAnimParam.title = 'none';          
     GX_AddAnimationElement(gInitAnimParam, false);
 }
 
 function GX_GradAnimApplyBtnHdlr(event)
 {
-	alert('Apply Hit here'); 
+	var btnID = event.target.id; 
+	if(btnID == 'apply_StartXPos')
+	{	
+		var from = WAL_getMaskedInputValue('StartfromXPosIP'); 
+		var to = WAL_getMaskedInputValue('StarttoXPosIP'); 
+		GX_AddGradientAnimation(gGradientObj.GradResourceID, 'x1', from + '%', to + '%'); 
+	}
 }
