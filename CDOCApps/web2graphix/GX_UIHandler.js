@@ -5759,10 +5759,25 @@ function GX_EditAnimation(animID)
 
 function GX_AddGradientAnimation(gradID, attribute, start, end)
 {
+	//get the first chld of the gradient object 
+    var node = document.querySelector('#' +gradID); 
+    if(!node)
+    	return ; 
+   var childnode = node.firstElementChild; 
+    if(!childnode)
+    	return ; 
+    var nodename = childnode.nodeName.toUpperCase(); 
+    if(nodename != 'ANIMATE')
+    {
+    	Debug_Message("top animation node not found"); 
+    	return ; 
+    }
+    var topAnimNodeID =  childnode.id; 
+    
 	gNewAnimObject = true; 
 	var objID = gradID; 
 	gInitAnimParam = new sAnimParams();
-    gInitAnimParam.animID = GXRDE_GetUniqueID('ANIM_');  
+    gInitAnimParam.animID = gradID + '_' + attribute.toUpperCase() ;//GXRDE_GetUniqueID('ANIM_');  
     gInitAnimParam.objectID = objID;  
     gInitAnimParam.duration = 2;
     gInitAnimParam.animType = 'ANIM_ATTRIBUTE'; //ATTRIBUTE, MOTION,TRANSFORM
@@ -5771,7 +5786,7 @@ function GX_AddGradientAnimation(gradID, attribute, start, end)
     gInitAnimParam.endValue = end;
     gInitAnimParam.refPathID = '';
     gInitAnimParam.bPathVisible = false;
-    gInitAnimParam.startType = 'ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
+    gInitAnimParam.startType = 'ON_ANIMEVENT'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
     gInitAnimParam.startTime = 0;
     gInitAnimParam.UIEventType = 'M_MOVE'; //M_CLICK, M_MOVE
     gInitAnimParam.UIObjectID = gInitAnimParam.objectID; 
@@ -5785,7 +5800,8 @@ function GX_AddGradientAnimation(gradID, attribute, start, end)
     gInitAnimParam.PathStartPoint = new sPoint();
     gInitAnimParam.center = '';  //centre of rotation 
     gInitAnimParam.title = 'none';   
-    gInitAnimParam.siblingID = 0; 
+    gInitAnimParam.siblingID = 0;
+    gInitAnimParam.refAnimID = topAnimNodeID;     
     
     if( (gInitAnimParam.attribute == 'x1') || (gInitAnimParam.attribute == 'y1') )
     {
