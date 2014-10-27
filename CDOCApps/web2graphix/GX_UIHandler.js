@@ -639,7 +639,7 @@ function GX_CreateGradientWidget(wdgtID)
         WAL_createCheckBox('animateStartYPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
         WAL_createNumberInput("StartfromYPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
         WAL_createNumberInput("StarttoYPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
-        WAL_createButton('apply_StartYPos', 'GX_GradAnimApplyBtnHdlr', '50', 25, true);
+        WAL_createButton('apply_StartYPos', '', '50', 25, true);
         WAL_disableWidget('StartfromYPosIP', 'data-jqxNumberInput', false, true); 
         WAL_disableWidget('StarttoYPosIP', 'data-jqxNumberInput', false, true); 
         WAL_disableWidget('apply_StartYPos', 'data-jqxButton', false, true);
@@ -5784,7 +5784,13 @@ function GX_AddGradientAnimation(gradID, attribute, start, end)
     gInitAnimParam.PathObjectOffset=0;
     gInitAnimParam.PathStartPoint = new sPoint();
     gInitAnimParam.center = '';  //centre of rotation 
-    gInitAnimParam.title = 'none';          
+    gInitAnimParam.title = 'none';   
+    gInitAnimParam.siblingID = 0; 
+    
+    if( (gInitAnimParam.attribute == 'x1') || (gInitAnimParam.attribute == 'y1') )
+    {
+    	gInitAnimParam.siblingID =  gInitAnimParam.objectID + '_stop0'; 
+    }    	
     GX_AddAnimationElement(gInitAnimParam, false);
 }
 
@@ -5796,5 +5802,11 @@ function GX_GradAnimApplyBtnHdlr(event)
 		var from = WAL_getMaskedInputValue('StartfromXPosIP'); 
 		var to = WAL_getMaskedInputValue('StarttoXPosIP'); 
 		GX_AddGradientAnimation(gGradientObj.GradResourceID, 'x1', from + '%', to + '%'); 
+	}
+	else if(btnID == 'apply_StartYPos')
+	{	
+		var from = WAL_getMaskedInputValue('StartfromYPosIP'); 
+		var to = WAL_getMaskedInputValue('StarttoYPosIP'); 
+		GX_AddGradientAnimation(gGradientObj.GradResourceID, 'y1', from + '%', to + '%'); 
 	}
 }
