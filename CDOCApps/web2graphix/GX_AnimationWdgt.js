@@ -29,6 +29,7 @@ sAnimParams.prototype.center = '';
 function sAnimParams() {	
 	sAnimParams.prototype.animID = 0;
 	sAnimParams.prototype.objectID = 0; 
+	sAnimParams.prototype.siblingID = 0; 
 	sAnimParams.prototype.duration = 0;
 	sAnimParams.prototype.animType =''; //ANIM_ATTRIBUTE, ANIM_MOTION,ANIM_TRANSFORM
 	sAnimParams.prototype.attribute = ''; 
@@ -1172,6 +1173,9 @@ function GX_RemoveAnimInfoFromList(animID)
 	 attrArray.push(attrData);
 	    
 	 attrData = ['repeatCount',animParams.repeatCount];  
+	 attrArray.push(attrData);
+	 
+	 attrData = ['siblingID',animParams.siblingID];  
 	 attrArray.push(attrData);
 	    
 	 var beginval = ''; 
