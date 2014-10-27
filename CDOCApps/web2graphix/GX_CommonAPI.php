@@ -1,7 +1,7 @@
 <?php
 include_once "Debuglog.php";
 //function GX_COMMON_AddSVGElement($tagname, $elemID, $parentID, $attrdefinition)
-function GX_COMMON_AddSVGElement($SVGDom, $SVGFilename, $tagname, $elemID, $parentID, $attrdefinition, $tagvalue)
+function GX_COMMON_AddSVGElement($SVGDom, $SVGFilename, $tagname, $elemID, $beforeID, $parentID,$attrdefinition, $tagvalue)
 {
 	//libxml_use_internal_errors(true);
 	//libxml_clear_errors();
@@ -40,7 +40,20 @@ function GX_COMMON_AddSVGElement($SVGDom, $SVGFilename, $tagname, $elemID, $pare
 	$parentNode = $SVGDom->getElementById($parentID);
 	if(!$parentNode)
 		return 0;
-	$retval = $parentNode->appendChild($element);
+	$beforenode = $SVGDom->getElementById($beforeID);
+	if($beforeID)
+	{
+		$beforenode = $SVGDom->getElementById($beforeID);
+		if(!$beforenode)
+			return 0;
+		$retval = $parentNode->insertBefore($element, $beforenode);		
+	}
+	else
+	{
+		$retval = $parentNode->appendChild($element);
+	}
+ 
+	
 	$SVGDom->save($_SESSION['svg_xml_FileName']);
 	$objNode = $SVGDom->getElementById($elemID);
 	//$objNode = $SVGDom->getElementById($parentID);	
