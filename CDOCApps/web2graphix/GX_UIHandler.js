@@ -152,6 +152,17 @@ function sPoint (){
     sPoint.prototype.x = 0; 
     sPoint.prototype.y = 0;
 }
+
+sGradAnimProp.prototype.bAnimate =  false; 
+sGradAnimProp.prototype.fromValue = 0; 
+sGradAnimProp.prototype.toValue = 0; 
+
+function sGradAnimProp(){	
+	sGradAnimProp.prototype.bAnimate =  false; 
+	sGradAnimProp.prototype.fromValue = 0; 
+	sGradAnimProp.prototype.toValue = 0; 
+}
+
 sStopProp.prototype.bFlag = false; 
 sStopProp.prototype.offset = 0; 
 sStopProp.prototype.color = 0;
@@ -172,6 +183,7 @@ sGradientProp.prototype.Title = 'Default';
 sGradientProp.prototype.center =  new sPoint(); 
 sGradientProp.prototype.radius =  '100%';
 sGradientProp.prototype.focus =  new sPoint(); 
+sGradientProp.prototype.gradAnimList = [];//  new sGradAnimProp(); 
 
 function sGradientProp(){
     sGradientProp.prototype.GradMode = 'none';            
@@ -184,6 +196,10 @@ function sGradientProp(){
     sGradientProp.prototype.center =  new sPoint(); 
     sGradientProp.prototype.radius =  '100%';
     sGradientProp.prototype.focus =  new sPoint(); 
+    
+    //pre-defined list of animation attributes with index as attribute names 
+    sGradientProp.prototype.gradAnimList['x1'] = new sGradAnimProp(); 
+    sGradientProp.prototype.gradAnimList['y1'] = new sGradAnimProp();     
 }        
 sGradientWidget.prototype.GradResourceID = 0;
 sGradientWidget.prototype.GradResourceNode=0;      
@@ -258,6 +274,13 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
     if (gradProp.GradMode == 'LINEAR') {
         //update the title here     	
         WAL_setNumberInputValue("GradStartXIP", gradProp.LGGradStart.x, false);
+      // if(gradProp.gradAnimList['x1'].bAnimate == true)
+        var objProp =  gradProp.gradAnimList['x1']; 
+    	WAL_setCheckBoxValue('animateStartXPos', objProp.bAnimate);   	
+    	
+    	WAL_setNumberInputValue("StartfromXPosIP",'5%', false);
+    	WAL_setNumberInputValue("StarttoXPosIP", '50%', false);
+    	
         WAL_setNumberInputValue("GradStartYIP", gradProp.LGGradStart.y, false);
         WAL_setNumberInputValue("GradStopXIP", gradProp.LGGradStop.x, false);
         WAL_setNumberInputValue("GradStopYIP", gradProp.LGGradStop.y, false);
@@ -393,6 +416,8 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     var stopnodeid;
     if (CBID == 'animateStartXPos')
     {
+    	Debug_Message('Anim start X handled ');
+    	
     	if(state ==  true)
     	{
     		 WAL_disableWidget('StartfromXPosIP', 'data-jqxNumberInput', false, false); 
@@ -498,20 +523,53 @@ sGradientWidget.prototype.OnGradColorButtonHandler = function(event) {
     WAL_showColorPickerWidget('gradcolorpickwidget', '', btnID, 'stop-color', initColVal, stopnodeid);
 };
 
+sGradientWidget.prototype.getGradientAnimNode = function(gradType, attributeName)
+{
+	//generate proper ID 
+	var gradID =  this.GradResourceNode.id;
+	var animID = gradID + '_' + attributeName.toUpperCase(); 
+	
+	//query for the same 
+	//var animnode = document.querySelector('#' +animID ); 
+	var animnode = document.getElementById(animID ); 
+	if(!animnode)
+		return 0; 
+	
+	//if found then populate the from, to attribute values 
+	var gradAnimProp =  new sGradAnimProp(); 
+	gradAnimProp.bAnimate =  true; 
+	gradAnimProp.fromValue = animnode.getAttribute('from'); 
+	gradAnimProp.toValue = animnode.getAttribute('to'); 
+	return gradAnimProp; 
+	//return the populated structure 
+	//else return 0 
+}
+
 sGradientWidget.prototype.getGradientProperty = function() {
     var gradProp = new sGradientProp();
     if (!this.GradResourceNode)
         return;
     var Currnode = this.GradResourceNode;
     var nodename = Currnode.nodeName.toUpperCase();
+    var gradanimProp = 0; 
     if (nodename == 'LINEARGRADIENT') {
         
         gradProp.GradMode = 'LINEAR';
         gradProp.LGGradStart.x = Currnode.getAttribute('x1');
+        gradanimProp = this.getGradientAnimNode('LG','x1');
+        if(gradanimProp)
+        {
+        	gradProp.gradAnimList['x1'] = gradanimProp; 
+        }
+        
         gradProp.LGGradStart.y = Currnode.getAttribute('y1');
         gradProp.LGGradStop.x = Currnode.getAttribute('x2');
         gradProp.LGGradStop.y = Currnode.getAttribute('y2');
         gradProp.spreadMethod = Currnode.getAttribute('spreadMethod');
+        
+        //getting the gradanimation node here 
+       // var animNode = 
+       // sGradientProp.prototype.gradAnimList['x1']
     }
     else if (nodename == 'RADIALGRADIENT') {
     	gradProp.GradMode = 'RADIAL';
@@ -625,9 +683,13 @@ function GX_CreateGradientWidget(wdgtID)
    
       //  WAL_createTab('gradTabsContent', '425', 'TabSelectHandler');
         WAL_createNumberInput("GradStartXIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
-        WAL_createCheckBox('animateStartXPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
         WAL_createNumberInput("StartfromXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
+        WAL_createCheckBox('animateStartXPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
         WAL_createNumberInput("StarttoXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
+        
+        var node1 = document.querySelector('#GradStartXIP'); 
+        var node2 = document.querySelector('#StartfromXPos'); 
+        
         WAL_createButton('apply_StartXPos', '', '50', 25, true);
         WAL_disableWidget('StartfromXPosIP', 'data-jqxNumberInput', false, true); 
         WAL_disableWidget('StarttoXPosIP', 'data-jqxNumberInput', false, true); 
@@ -5684,8 +5746,9 @@ function GX_ShowGradWindow(gradID, gradType)
      	 JQSel = '.LG_MARKERS'; 
      	 $(JQSel).hide();        	
      } 	 
-     WAL_showModalWindow('gradientDlg', "OnclickInputOK", "");     
      gGradientObj = new sGradientWidget('gradientWidget', gradID);
+     WAL_showModalWindow('gradientDlg', "OnclickInputOK", "");     
+    
 }
 
 function GX_AddNewAnimation()
