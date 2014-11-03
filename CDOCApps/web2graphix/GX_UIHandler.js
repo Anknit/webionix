@@ -690,18 +690,22 @@ function GX_GradColorButtonHandler(event) {
 
 function GX_CreateGradientWidget(wdgtID)
 {
-        WAL_createModelessWindow(wdgtID, '500', '550', 'myOK', 'myCancel');
-   
+        WAL_createModelessWindow(wdgtID, '575', '550', 'myOK', 'myCancel');
+        
+        
       //  WAL_createTab('gradTabsContent', '425', 'TabSelectHandler');
         WAL_createNumberInput("GradStartXIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
         WAL_createNumberInput("StartfromXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
         WAL_createCheckBox('animateStartXPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
         WAL_createNumberInput("StarttoXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
         
-        var node1 = document.querySelector('#GradStartXIP'); 
-        var node2 = document.querySelector('#StartfromXPos'); 
+      //  var node1 = document.querySelector('#GradStartXIP'); 
+      //  var node2 = document.querySelector('#StartfromXPos'); 
         
+        WAL_createButton('animPreviewBtn', '', '140', 25, true);
         WAL_createButton('apply_StartXPos', '', '50', 25, true);
+        WAL_createButton('animPreviewStartXBtn', '', '60', 25, true);
+        
         WAL_disableWidget('StartfromXPosIP', 'data-jqxNumberInput', false, true); 
         WAL_disableWidget('StarttoXPosIP', 'data-jqxNumberInput', false, true); 
         WAL_disableWidget('apply_StartXPos', 'data-jqxButton', false, true); 
@@ -5911,4 +5915,26 @@ function GX_GradAnimApplyBtnHdlr(event)
 		var to = WAL_getMaskedInputValue('StarttoYPosIP'); 
 		GX_AddGradientAnimation(gGradientObj.GradResourceID, 'y1', from + '%', to + '%'); 
 	}
+}
+
+function GX_GradAnimPreviewBtnHdlr(event){
+		//get the resource ID and then the top anim Id 
+	var nodeID = event.target.id; 
+	var resID = gGradientObj.GradResourceNode.id; 
+	if(nodeID == 'animPreviewStartXBtn')
+	{
+		animID = resID + '_X1'; 
+		GX_PreviewAnimation(animID);
+	}
+	/*
+	var resID = gGradientObj.GradResourceNode.id; 
+	var animID = resID + '_TOP_GRAD_ANIM'; 
+	//var animNode = document.querySelector('#' + animID);
+	//animNode.setAttribute('begin', ''); 
+	//animNode.setAttribute('fill', 'remove'); 	
+	GX_PreviewAnimation(animID);
+	*/
+	
+	//Debug_Message('Animating Gradient'); 
+	//set the anim begin value and
 }
