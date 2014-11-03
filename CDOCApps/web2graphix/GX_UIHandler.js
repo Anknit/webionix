@@ -258,7 +258,15 @@ sGradientWidget.prototype.OnGradEditBoxHdlr = function(value, wdgtNode) {
             var stopnodeid = this.GradResourceNode.id + '_stop3';
             var stopnode = document.getElementById(stopnodeid);
             GX_SetObjectAttribute(stopnode, 'offset', value + '%', true, false);
-            break;        
+            break;    
+     /*   case "StartfromXPosIP":
+        	var animNodeID = this.GradResourceNode.id + '_X1';
+        	var animNode = document.querySelector('#'+animNodeID); 
+        	GX_SetObjectAttribute(animNode, 'from', value + '%', true, false);
+        	break; 
+        case "StarttoXPosIP":
+        	break;
+        	*/ 
         default:
             break;
 
@@ -278,8 +286,8 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
         var objProp =  gradProp.gradAnimList['x1']; 
     	WAL_setCheckBoxValue('animateStartXPos', objProp.bAnimate);   	
     	
-    	WAL_setNumberInputValue("StartfromXPosIP",'5%', false);
-    	WAL_setNumberInputValue("StarttoXPosIP", '50%', false);
+    	WAL_setNumberInputValue("StartfromXPosIP",objProp.fromValue, false);
+    	WAL_setNumberInputValue("StarttoXPosIP", objProp.toValue, false);
     	
         WAL_setNumberInputValue("GradStartYIP", gradProp.LGGradStart.y, false);
         WAL_setNumberInputValue("GradStopXIP", gradProp.LGGradStop.x, false);
@@ -416,8 +424,7 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     var stopnodeid;
     if (CBID == 'animateStartXPos')
     {
-    	Debug_Message('Anim start X handled ');
-    	
+    	//Debug_Message('Anim start X handled ');    	
     	if(state ==  true)
     	{
     		 WAL_disableWidget('StartfromXPosIP', 'data-jqxNumberInput', false, false); 
@@ -431,6 +438,11 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
             WAL_disableWidget('StarttoXPosIP', 'data-jqxNumberInput', false, true); 
             WAL_disableWidget('apply_StartXPos', 'data-jqxButton', false, true); 
             WAL_disableWidget('GradStartXIP', 'data-jqxNumberInput', false, false); 
+            
+            var animNodeID = this.GradResourceNode.id + '_X1';
+        	var animNode = document.querySelector('#'+animNodeID); 
+        	if(animNode)
+        		GXRDE_DeleteObject(animNodeID); 
     	}
     	
     	return ; 
@@ -597,8 +609,7 @@ sGradientWidget.prototype.getGradientProperty = function() {
                     stopvalue.bFlag = false;
                 gradProp.StopParam[k] = stopvalue;
             }
-        }
-   
+        }  
     
     return gradProp;
 };
@@ -658,7 +669,7 @@ function sGradientWidget(WdgtID, GradResID) {
     //now get the gradient property
     this.GradParam = this.getGradientProperty();
     //update the UI
-    this.UpdateUI(this.GradParam);
+   // this.UpdateUI(this.GradParam);
     this.bInitialize = true;
 };
 
@@ -5747,6 +5758,7 @@ function GX_ShowGradWindow(gradID, gradType)
      	 $(JQSel).hide();        	
      } 	 
      gGradientObj = new sGradientWidget('gradientWidget', gradID);
+     gGradientObj.UpdateUI(gGradientObj.GradParam);
      WAL_showModalWindow('gradientDlg', "OnclickInputOK", "");     
     
 }
@@ -5879,8 +5891,19 @@ function GX_GradAnimApplyBtnHdlr(event)
 	if(btnID == 'apply_StartXPos')
 	{	
 		var from = WAL_getMaskedInputValue('StartfromXPosIP'); 
-		var to = WAL_getMaskedInputValue('StarttoXPosIP'); 
-		GX_AddGradientAnimation(gGradientObj.GradResourceID, 'x1', from + '%', to + '%'); 
+		var to = WAL_getMaskedInputValue('StarttoXPosIP'); 	
+		var animNodeID = gGradientObj.GradResourceID + '_X1';
+    	var animNode = document.querySelector('#'+animNodeID); 
+    	if(animNode)
+    	{
+    		GX_SetObjectAttribute(animNode, 'from', from + '%', true, false);
+    		GX_SetObjectAttribute(animNode, 'to', to + '%', true, false);
+    	}
+    	else
+    	{
+    		GX_AddGradientAnimation(gGradientObj.GradResourceID, 'x1', from + '%', to + '%'); 
+    	}
+    	
 	}
 	else if(btnID == 'apply_StartYPos')
 	{	
