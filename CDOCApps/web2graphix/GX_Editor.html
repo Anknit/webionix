@@ -388,7 +388,9 @@
  <div id='gradientDlg'style="overflow: hidden"><div id="LGtitle">Linear Gradient Settings</div>       
        <div id="linearcontent" style="overflow:hidden">
         
-              <div style= 'margin-left:2px; margin-top:10px;'>Title of Gradient<input  id='gradTitleIP' style= 'margin-left:4px;' type=text value="Default" onblur='OnEditBoxFocusOut(event)'/></div>
+              <div style= 'margin-left:2px; margin-top:10px;'>Title of Gradient<input  id='gradTitleIP' style= 'margin-left:4px;' type=text value="Default" onblur='OnEditBoxFocusOut(event)'/>
+              	<input type="button" id ='animPreviewBtn' style='display:inline-block; margin-left:6px; position:relative; top:0px; width:120px'; value="Preview Animation" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
+              </div>
                  <div id='linSpreaddiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Spread-Method<div id='LinearSpreadDDL' class='EDIT_BOX' type='Spread Method to Apply' style='margin-top:8px' ></div></div>
          <div id='LGSpecific' style='display:block'>       
                  <div style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:15px; margin-bottom:20px; margin-right:5px; width: auto'>
@@ -399,6 +401,7 @@
 	                      <div id='StartfromXPos' class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>From(%)<div id='StartfromXPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
 	                      <div id='StarttoXPos'  class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'>To(%)<div id='StarttoXPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
 	                      <input type="button" id ='apply_StartXPos' style='display:inline-block; margin-left:12px; position:relative; top:-6px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                      <input type="button" id ='animPreviewStartXBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
 	                                          
                       </div>
                       		  
