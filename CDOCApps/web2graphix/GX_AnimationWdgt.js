@@ -1853,7 +1853,7 @@ function GX_RemoveAnimInfoFromList(animID)
   		animnode.setAttribute('onend', 'GX_OnAnimationEndHandler(evt)'); 
   		GX_ChangeAnimateMotionSettings(animnode);  		 
   	}
-  	var animInfo = GX_GetAnimInfoByID(animID); 
+  //	var animInfo = GX_GetAnimInfoByID(animID); 
   	var restartval =  animnode.getAttribute('restart');
   	animnode.setAttribute('restart', 'whenNotActive');
      animnode.setAttribute('fill', 'freeze'); 
