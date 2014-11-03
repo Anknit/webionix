@@ -456,26 +456,52 @@
           		
        </div>      
          
-                  <div style='border:solid 1px grey;border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:10px; margin-bottom:5px; margin-right:5px; width: 270px; '>
+                  <div style='border:solid 1px grey;border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:10px; margin-bottom:5px; margin-right:5px; width: auto; '>
                     <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Color Offsets</div>
-                    <div id='stop0_CB' style="display:inline-block; margin-top: 5px;">Stop-1</div>
-                    <div id='stop0_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop0_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
-                    <div style='display:inline-block; position:relative; top:-10px; margin-left:20px;'><button id='stop0_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                   <div> 
+                    	<div id='stop0_CB' style="display:inline-block; margin-top: 5px;">Stop-1</div>
+                    	<div id='stop0_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop0_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    	<div style='display:inline-block; position:relative; top:-10px; margin-left:5px;'><button id='stop0_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                    	<div id='animateStop0_col' style="display:inline-block;margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:20px;'>From<button id='stop0_color_from' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='position:relative; top:-10px; background-color:grey; width:32px; height:32px;margin-top:-20px'></button></div>
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:5px;'>To<button id='stop0_color_to' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='position:relative; top:-10px; background-color:grey; width:32px; height:32px;margin-top:-20px'></button></div>	               
+	                	<input type="button" id ='apply_Stop0_Col' style='display:inline-block; margin-left:12px; position:relative; top:0px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                	<input type="button" id ='animPreviewStop0' style='display:inline-block; margin-left:1px; position:relative; top:0px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
+	               </div>
                     
-                    <div id='stop1_CB' style="display:inline-block; margin-top: 5px;">Stop-2</div>
-                    <div id='stop1_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop1_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
-                    <div style='display:inline-block; position:relative; top:-10px; margin-left:20px;'><button id='stop1_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
-                  
-                 
-                  <!-- 
-                    <div id='stop2_CB' style="display:inline-block; margin-top: 5px;">Stop-3</div>
-                    <div id='stop2_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop2_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
-                    <div style='display:inline-block; position:relative; top:-10px; margin-left:20px;'><button id='stop2_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                    <div>
+                    	<div id='stop1_CB' style="display:inline-block; margin-top: 5px;">Stop-2</div>
+                    	<div id='stop1_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop1_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    	<div style='display:inline-block; position:relative; top:-10px; margin-left:5px;'><button id='stop1_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                    	<div id='animateStop1_col' style="display:inline-block;margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:20px;'>From<button id='stop1_color_from' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='position:relative; top:-10px; background-color:grey; width:32px; height:32px;margin-top:-20px'></button></div>
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:5px;'>To<button id='stop1_color_to' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='position:relative; top:-10px; background-color:grey; width:32px; height:32px;margin-top:-20px'></button></div>	               
+	                	<input type="button" id ='apply_Stop1_Col' style='display:inline-block; margin-left:12px; position:relative; top:0px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                	<input type="button" id ='animPreviewStop1' style='display:inline-block; margin-left:1px; position:relative; top:0px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
+                    </div>
                     
-                    <div id='stop3_CB' style="display:inline-block; margin-top: 5px;">Stop-4</div>
-                    <div id='stop3_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop3_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
-                    <div style='display:inline-block; position:relative; top:-10px; margin-left:20px;'><button id='stop3_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
-                   -->
+                    <div>
+                   		<div id='stop2_CB' style="display:inline-block; margin-top: 5px;">Stop-3</div>
+                    	<div id='stop2_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop2_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    	<div style='display:inline-block; position:relative; top:-10px; margin-left:5px;'><button id='stop2_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                    	<div id='animateStop2_col' style="display:inline-block;margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:20px;'>From<button id='stop2_color_from' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='position:relative; top:-10px; background-color:grey; width:32px; height:32px;margin-top:-20px'></button></div>
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:5px;'>To<button id='stop2_color_to' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='position:relative; top:-10px; background-color:grey; width:32px; height:32px;margin-top:-20px'></button></div>	               
+	                	<input type="button" id ='apply_Stop2_Col' style='display:inline-block; margin-left:12px; position:relative; top:0px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                	<input type="button" id ='animPreviewStop2' style='display:inline-block; margin-left:1px; position:relative; top:0px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
+                    </div>
+                    
+                    <div> 
+                    	<div id='stop3_CB' style="display:inline-block; margin-top: 5px;">Stop-4</div>
+                    	<div id='stop3_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop3_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    	<div style='display:inline-block; position:relative; top:-10px; margin-left:5px;'><button id='stop3_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                    	<div id='animateStop3_col' style="display:inline-block;margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:20px;'>From<button id='stop3_color_from' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='position:relative; top:-10px; background-color:grey; width:32px; height:32px;margin-top:-20px'></button></div>
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:5px;'>To<button id='stop3_color_to' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='position:relative; top:-10px; background-color:grey; width:32px; height:32px;margin-top:-20px'></button></div>	               
+	                	<input type="button" id ='apply_Stop3_Col' style='display:inline-block; margin-left:12px; position:relative; top:0px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                	<input type="button" id ='animPreviewStop3' style='display:inline-block; margin-left:1px; position:relative; top:0px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
+                    </div>
+                   
                   </div>
                   <div id='gradpreview' style='position:absolute; top:35px; left:490px; width:auto;'>
                     <?xml version="1.0"?><!DOCTYPE svg SYSTEM "svg11.dtd">
