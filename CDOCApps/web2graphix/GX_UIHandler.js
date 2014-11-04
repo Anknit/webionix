@@ -6000,10 +6000,12 @@ function GX_AddGradientAnimation(gradID, attribute, start, end)
     gInitAnimParam.siblingID = 0;
     gInitAnimParam.refAnimID = topAnimNodeID;     
     
-    if( (gInitAnimParam.attribute == 'x1') || (gInitAnimParam.attribute == 'y1') )
+    if( (gInitAnimParam.attribute == 'x1') || (gInitAnimParam.attribute == 'y1') ||
+    		 (gInitAnimParam.attribute == 'x2') || (gInitAnimParam.attribute == 'y2') )
     {
     	gInitAnimParam.siblingID =  gInitAnimParam.objectID + '_stop0'; 
-    }    	
+    }  
+    
     GX_AddAnimationElement(gInitAnimParam, false);
 }
 
@@ -6103,9 +6105,6 @@ function GX_GradAnimPreviewBtnHdlr(event){
 		animID = resID + '_Y2'; 
 		GX_PreviewAnimation(animID);
 	}
-	
-	
-	
 	/*
 	var resID = gGradientObj.GradResourceNode.id; 
 	var animID = resID + '_TOP_GRAD_ANIM'; 
