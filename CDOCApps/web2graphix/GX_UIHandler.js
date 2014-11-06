@@ -437,20 +437,22 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     	{
     		 WAL_disableWidget('StartfromXPosIP', 'data-jqxNumberInput', false, false); 
              WAL_disableWidget('StarttoXPosIP', 'data-jqxNumberInput', false, false); 
-             WAL_disableWidget('apply_StartXPos', 'data-jqxButton', false, false); 
+           //  WAL_disableWidget('apply_StartXPos', 'data-jqxButton', false, false); 
              WAL_disableWidget('GradStartXIP', 'data-jqxNumberInput', false, true);              
     	}
     	else
     	{
     		WAL_disableWidget('StartfromXPosIP', 'data-jqxNumberInput', false, true); 
             WAL_disableWidget('StarttoXPosIP', 'data-jqxNumberInput', false, true); 
-            WAL_disableWidget('apply_StartXPos', 'data-jqxButton', false, true); 
+           // WAL_disableWidget('apply_StartXPos', 'data-jqxButton', false, true); 
             WAL_disableWidget('GradStartXIP', 'data-jqxNumberInput', false, false); 
             
-            var animNodeID = this.GradResourceNode.id + '_X1';
+       /*     var animNodeID = this.GradResourceNode.id + '_X1';
         	var animNode = document.querySelector('#'+animNodeID); 
         	if(animNode)
-        		GXRDE_DeleteObject(animNodeID); 
+        		GXRDE_DeleteObject(animNodeID);
+       */
+            
     	}
     	
     	return ; 
@@ -461,14 +463,14 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     	{
     		 WAL_disableWidget('StartfromYPosIP', 'data-jqxNumberInput', false, false); 
              WAL_disableWidget('StarttoYPosIP', 'data-jqxNumberInput', false, false); 
-             WAL_disableWidget('apply_StartYPos', 'data-jqxButton', false, false); 
+           //  WAL_disableWidget('apply_StartYPos', 'data-jqxButton', false, false); 
              WAL_disableWidget('GradStartYIP', 'data-jqxNumberInput', false, true);              
     	}
     	else
     	{
     		WAL_disableWidget('StartfromYPosIP', 'data-jqxNumberInput', false, true); 
             WAL_disableWidget('StarttoYPosIP', 'data-jqxNumberInput', false, true); 
-            WAL_disableWidget('apply_StartYPos', 'data-jqxButton', false, true); 
+           // WAL_disableWidget('apply_StartYPos', 'data-jqxButton', false, true); 
             WAL_disableWidget('GradStartYIP', 'data-jqxNumberInput', false, false); 
             
             var animNodeID = this.GradResourceNode.id + '_Y1';
@@ -486,14 +488,14 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     	{
     		 WAL_disableWidget('StopfromXPosIP', 'data-jqxNumberInput', false, false); 
              WAL_disableWidget('StoptoXPosIP', 'data-jqxNumberInput', false, false); 
-             WAL_disableWidget('apply_StopXPos', 'data-jqxButton', false, false); 
+            // WAL_disableWidget('apply_StopXPos', 'data-jqxButton', false, false); 
              WAL_disableWidget('GradStopXIP', 'data-jqxNumberInput', false, true);              
     	}
     	else
     	{
     		WAL_disableWidget('StopfromXPosIP', 'data-jqxNumberInput', false, true); 
             WAL_disableWidget('StoptoXPosIP', 'data-jqxNumberInput', false, true); 
-            WAL_disableWidget('apply_StopXPos', 'data-jqxButton', false, true); 
+           // WAL_disableWidget('apply_StopXPos', 'data-jqxButton', false, true); 
             WAL_disableWidget('GradStopXIP', 'data-jqxNumberInput', false, false); 
             
             var animNodeID = this.GradResourceNode.id + '_X2';
@@ -511,14 +513,14 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     	{
     		 WAL_disableWidget('StopfromYPosIP', 'data-jqxNumberInput', false, false); 
              WAL_disableWidget('StoptoYPosIP', 'data-jqxNumberInput', false, false); 
-             WAL_disableWidget('apply_StopYPos', 'data-jqxButton', false, false); 
+             //WAL_disableWidget('apply_StopYPos', 'data-jqxButton', false, false); 
              WAL_disableWidget('GradStopYIP', 'data-jqxNumberInput', false, true);              
     	}
     	else
     	{
     		WAL_disableWidget('StopfromYPosIP', 'data-jqxNumberInput', false, true); 
             WAL_disableWidget('StoptoYPosIP', 'data-jqxNumberInput', false, true); 
-            WAL_disableWidget('apply_StopYPos', 'data-jqxButton', false, true); 
+           // WAL_disableWidget('apply_StopYPos', 'data-jqxButton', false, true); 
             WAL_disableWidget('GradStopYIP', 'data-jqxNumberInput', false, false); 
             
             var animNodeID = this.GradResourceNode.id + '_Y2';
@@ -529,6 +531,32 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     	
     	return ; 
     }
+    else if (CBID == 'animateStop0_col')
+    {
+    	//Debug_Message('Anim start X handled ');    	
+    	if(state ==  true)
+    	{
+    		 WAL_disableWidget('stop0_color_from', 'data-customButton', false, false); 
+             WAL_disableWidget('stop0_color_to', 'data-customButton', false, false);             
+           //  WAL_disableWidget('animPreviewStop0', 'data-jqxButton', false, false);              
+    	}
+    	else
+    	{
+    		 WAL_disableWidget('stop0_color_from', 'data-customButton', false, true); 
+             WAL_disableWidget('stop0_color_to', 'data-customButton', false, true);             
+           //  WAL_disableWidget('animPreviewStop0', 'data-jqxButton', false, true);
+            
+          /*  var animNodeID = this.GradResourceNode.id + '_Y2';
+        	var animNode = document.querySelector('#'+animNodeID); 
+        	if(animNode)
+        		GXRDE_DeleteObject(animNodeID);
+        		*/ 
+    	}
+    	
+    	return ; 
+    }
+    
+    
     
     
     if (CBID == 'stop2_CB')
@@ -787,7 +815,7 @@ function GX_CreateGradientWidget(wdgtID)
         
         WAL_disableWidget('StartfromXPosIP', 'data-jqxNumberInput', false, true); 
         WAL_disableWidget('StarttoXPosIP', 'data-jqxNumberInput', false, true); 
-        WAL_disableWidget('apply_StartXPos', 'data-jqxButton', false, true); 
+    //    WAL_disableWidget('apply_StartXPos', 'data-jqxButton', false, true); 
         
         
         
@@ -800,7 +828,7 @@ function GX_CreateGradientWidget(wdgtID)
         
         WAL_disableWidget('StartfromYPosIP', 'data-jqxNumberInput', false, true); 
         WAL_disableWidget('StarttoYPosIP', 'data-jqxNumberInput', false, true); 
-        WAL_disableWidget('apply_StartYPos', 'data-jqxButton', false, true);
+     //   WAL_disableWidget('apply_StartYPos', 'data-jqxButton', false, true);
         
         WAL_createNumberInput("GradStopXIP", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
         WAL_createNumberInput("StopfromXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
@@ -811,7 +839,7 @@ function GX_CreateGradientWidget(wdgtID)
         
         WAL_disableWidget('StopfromXPosIP', 'data-jqxNumberInput', false, true); 
         WAL_disableWidget('StoptoXPosIP', 'data-jqxNumberInput', false, true); 
-        WAL_disableWidget('apply_StopXPos', 'data-jqxButton', false, true); 
+      //  WAL_disableWidget('apply_StopXPos', 'data-jqxButton', false, true); 
         
         
         
@@ -824,7 +852,7 @@ function GX_CreateGradientWidget(wdgtID)
         
         WAL_disableWidget('StopfromYPosIP', 'data-jqxNumberInput', false, true); 
         WAL_disableWidget('StoptoYPosIP', 'data-jqxNumberInput', false, true); 
-        WAL_disableWidget('apply_StopYPos', 'data-jqxButton', false, true); 
+      //  WAL_disableWidget('apply_StopYPos', 'data-jqxButton', false, true); 
         
         var spreadValueDisplay = ['pad', 'reflect', 'repeat'];
         WAL_createDropdownList('LinearSpreadDDL', '110', '24', false, spreadValueDisplay, "GX_SpreadDDLHandler", '50');
@@ -3185,6 +3213,17 @@ function GX_RemoveObject(objNode)
 	
 	
 	//post the request for delete on the server side 
+}
+
+//does a local delete as well as remote server delete 
+function GX_DeleteObject(objectID)
+{
+	var objNode = document.querySelector('#' +objectID ); 
+	if(!objNode)
+		return ; 
+	var parentNode = objNode.parentNode; 
+	parentNode.removeChild(objNode); 
+	GXRDE_DeleteObject(objNode.id);
 }
 
 function GX_InitializeToolbar()
@@ -5984,7 +6023,7 @@ function GX_AddGradientAnimation(gradID, attribute, start, end)
     gInitAnimParam.refPathID = '';
     gInitAnimParam.bPathVisible = false;
     gInitAnimParam.startType = 'ON_ANIMEVENT'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
-    gInitAnimParam.startTime = 0;
+    gInitAnimParam.startTime = gInitAnimParam.objectID + '_TOP_GRAD_ANIM';
     gInitAnimParam.UIEventType = 'M_MOVE'; //M_CLICK, M_MOVE
     gInitAnimParam.UIObjectID = gInitAnimParam.objectID; 
     gInitAnimParam.AnimEventType = 'END'; //BEGIN, END
@@ -6003,82 +6042,88 @@ function GX_AddGradientAnimation(gradID, attribute, start, end)
     if( (gInitAnimParam.attribute == 'x1') || (gInitAnimParam.attribute == 'y1') ||
     		 (gInitAnimParam.attribute == 'x2') || (gInitAnimParam.attribute == 'y2') )
     {
-    	gInitAnimParam.siblingID =  gInitAnimParam.objectID + '_stop0'; 
+    	
+    	gInitAnimParam.siblingID =  gInitAnimParam.objectID + '_stop0';
+    	switch(gInitAnimParam.attribute)
+    	{
+    	case 'x1':  
+    	  break; 
+    	case 'x2':
+    	case 'y2':
+    		var refAnimX = gInitAnimParam.objectID + '_X1'; 
+    		var animNodeX1 = document.getElementById(refAnimX); 
+    		if(!animNodeX1) 
+    		{
+    			var refAnimX = gInitAnimParam.objectID + '_Y1';
+    			animNodeX1 = document.getElementById(refAnimX); 
+    		}    					
+    		if(animNodeX1)
+    			gInitAnimParam.refAnimID = refAnimX; 
+    		break;    	
+    	}
     }  
     
     GX_AddAnimationElement(gInitAnimParam, false);
 }
+
+function GX_UpdateGradAnimAttribute(bFlag, gradResID, attrName, from, to)
+{
+	var animNodeID = gradResID + '_' +  attrName.toUpperCase(); //'_X1';
+	var animNode = document.querySelector('#'+animNodeID); 
+	if(animNode)
+	{
+		if(bFlag == 'true')
+		{
+			GX_SetObjectAttribute(animNode, 'from', from + '%', true, false);
+    		GX_SetObjectAttribute(animNode, 'to', to + '%', true, false);
+		}
+		else
+		{
+			GX_DeleteObject(animNodeID); 
+			//GXRDE_DeleteObject(animNodeID); 
+		}  		
+	}
+	else
+	{
+		if(bFlag == 'true')
+		{
+			GX_AddGradientAnimation(gradResID, attrName, from + '%', to + '%'); 
+			//Debug_Message("Reached Here"); 
+		}    			
+	 }    	
+ }	
 
 function GX_GradAnimApplyBtnHdlr(event)
 {
 	var btnID = event.target.id; 
 	if(btnID == 'apply_StartXPos')
 	{	
+		var bState = WAL_getCheckBoxValue('animateStartXPos'); 
 		var from = WAL_getMaskedInputValue('StartfromXPosIP'); 
 		var to = WAL_getMaskedInputValue('StarttoXPosIP'); 	
-		var animNodeID = gGradientObj.GradResourceID + '_X1';
-    	var animNode = document.querySelector('#'+animNodeID); 
-    	if(animNode)
-    	{
-    		GX_SetObjectAttribute(animNode, 'from', from + '%', true, false);
-    		GX_SetObjectAttribute(animNode, 'to', to + '%', true, false);
-    	}
-    	else
-    	{
-    		GX_AddGradientAnimation(gGradientObj.GradResourceID, 'x1', from + '%', to + '%'); 
-    	}    	
-	}
+		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'x1', from, to); 
+	 }	
 	else if(btnID == 'apply_StartYPos')
-	{	
+	{			
 		var from = WAL_getMaskedInputValue('StartfromYPosIP'); 
 		var to = WAL_getMaskedInputValue('StarttoYPosIP'); 	
-		var animNodeID = gGradientObj.GradResourceID + '_Y1';
-    	var animNode = document.querySelector('#'+animNodeID); 
-    	if(animNode)
-    	{
-    		GX_SetObjectAttribute(animNode, 'from', from + '%', true, false);
-    		GX_SetObjectAttribute(animNode, 'to', to + '%', true, false);
-    	}
-    	else
-    	{
-    		GX_AddGradientAnimation(gGradientObj.GradResourceID, 'y1', from + '%', to + '%'); 
-    	}
-		//var from = WAL_getMaskedInputValue('StartfromYPosIP'); 
-		//var to = WAL_getMaskedInputValue('StarttoYPosIP'); 
-		//GX_AddGradientAnimation(gGradientObj.GradResourceID, 'y1', from + '%', to + '%'); 
+		var bState = WAL_getCheckBoxValue('animateStartYPos'); 
+		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'y1', from, to);		 
 	}
 	else if(btnID == 'apply_StopXPos')
 	{	
 		var from = WAL_getMaskedInputValue('StopfromXPosIP'); 
-		var to = WAL_getMaskedInputValue('StoptoXPosIP'); 	
-		var animNodeID = gGradientObj.GradResourceID + '_X2';
-    	var animNode = document.querySelector('#'+animNodeID); 
-    	if(animNode)
-    	{
-    		GX_SetObjectAttribute(animNode, 'from', from + '%', true, false);
-    		GX_SetObjectAttribute(animNode, 'to', to + '%', true, false);
-    	}
-    	else
-    	{
-    		GX_AddGradientAnimation(gGradientObj.GradResourceID, 'x2', from + '%', to + '%'); 
-    	}    	
+		var to = WAL_getMaskedInputValue('StoptoXPosIP');		
+		var bState = WAL_getCheckBoxValue('animateStopXPos'); 
+		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'x2', from, to); 
 	}
 	else if(btnID == 'apply_StopYPos')
 	{	
 		var from = WAL_getMaskedInputValue('StopfromYPosIP'); 
 		var to = WAL_getMaskedInputValue('StoptoYPosIP'); 	
-		var animNodeID = gGradientObj.GradResourceID + '_Y2';
-    	var animNode = document.querySelector('#'+animNodeID); 
-    	if(animNode)
-    	{
-    		GX_SetObjectAttribute(animNode, 'from', from + '%', true, false);
-    		GX_SetObjectAttribute(animNode, 'to', to + '%', true, false);
-    	}
-    	else
-    	{
-    		GX_AddGradientAnimation(gGradientObj.GradResourceID, 'y2', from + '%', to + '%'); 
-    	}    	
-	}
+		var bState = WAL_getCheckBoxValue('animateStopYPos'); 
+		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'y2', from, to);
+	}	
 }
 
 function GX_GradAnimPreviewBtnHdlr(event){
