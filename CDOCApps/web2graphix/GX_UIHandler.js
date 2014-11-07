@@ -202,6 +202,11 @@ function sGradientProp(){
     sGradientProp.prototype.gradAnimList['y1'] = new sGradAnimProp();  
     sGradientProp.prototype.gradAnimList['x2'] = new sGradAnimProp(); 
     sGradientProp.prototype.gradAnimList['y2'] = new sGradAnimProp();
+    sGradientProp.prototype.gradAnimList['stop-color_0'] = new sGradAnimProp();
+    sGradientProp.prototype.gradAnimList['stop-color_1'] = new sGradAnimProp();
+    sGradientProp.prototype.gradAnimList['stop-color_2'] = new sGradAnimProp();
+    sGradientProp.prototype.gradAnimList['stop-color_3'] = new sGradAnimProp();
+    
 }        
 sGradientWidget.prototype.GradResourceID = 0;
 sGradientWidget.prototype.GradResourceNode=0;      
@@ -610,23 +615,45 @@ sGradientWidget.prototype.OnGradColorButtonHandler = function(event) {
 
     var btnID = event.target.id;
     var stopnodeid;
-    if (btnID == 'stop0_color')
-        stopnodeid = this.GradResourceNode.id + '_stop' + 0;
-    else if (btnID == 'stop1_color')
-        stopnodeid = this.GradResourceNode.id + '_stop' + 1;
-    else if (btnID == 'stop2_color')
-        stopnodeid = this.GradResourceNode.id + '_stop' + 2;
-    else if (btnID == 'stop3_color')
-        stopnodeid = this.GradResourceNode.id + '_stop' + 3;
-    else
-        return;
+   var attrName = 'stop-color'; 
+    switch(btnID)
+    {    
+    case 'stop0_color':
+    	stopnodeid = this.GradResourceNode.id + '_stop' + 0;
+    	break;
+    case 'stop1_color':
+    	stopnodeid = this.GradResourceNode.id + '_stop' + 1;
+    	break;
+    case 'stop2_color':
+    	stopnodeid = this.GradResourceNode.id + '_stop' + 2;
+    	break;
+    case 'stop3_color':
+    	stopnodeid = this.GradResourceNode.id + '_stop' + 3;
+    	break;
+    	/*
+    case 'stop0_color_from':
+    	stopnodeid = btnID; 
+    	attrName = 'background-color';
+    	var Node = document.getElementById(btnID); 
+    	initColVal = Node.style.backgroundColor; //('background-color');
+    	break;
+    	*/
+    	
+    default:
+    	return ; 
+    	break;     	
+    }   
 
-    var stopNode = document.getElementById(stopnodeid);
-    var initColVal = stopNode.getAttribute('stop-color');
-    if (initColVal == 'none')
-        initColVal = 'grey'; 
-    gPrevAttributeList = EL_getObjectAttributes(stopNode);
-    WAL_showColorPickerWidget('gradcolorpickwidget', '', btnID, 'stop-color', initColVal, stopnodeid);
+    if(stopnodeid)
+    {
+    	 var stopNode = document.getElementById(stopnodeid);    
+    	 var initColVal = stopNode.getAttribute('stop-color');
+    	 if (initColVal == 'none')
+    	     initColVal = 'grey'; 
+    	 gPrevAttributeList = EL_getObjectAttributes(stopNode);
+    }
+    
+    WAL_showColorPickerWidget('gradcolorpickwidget', '', btnID, attrName, initColVal, stopnodeid);
 };
 
 sGradientWidget.prototype.getGradientAnimNode = function(gradType, attributeName)
@@ -797,6 +824,7 @@ function GX_SpreadDDLHandler(Node, value) {
 }
 
 function GX_GradColorButtonHandler(event) {
+	Debug_Message("Calling Button"); 
     gGradientObj.OnGradColorButtonHandler(event); 
 }
 
@@ -6161,4 +6189,9 @@ function GX_GradAnimPreviewBtnHdlr(event){
 	
 	//Debug_Message('Animating Gradient'); 
 	//set the anim begin value and
+}
+
+function MyStopAnimButtonHdlr(event)
+{
+	Debug_Message('MyStopAnimButtonHdlr  called'); 
 }
