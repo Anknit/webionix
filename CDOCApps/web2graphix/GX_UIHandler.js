@@ -614,8 +614,10 @@ sGradientWidget.prototype.OnGradSpreadDDLHandler = function(Node, value) {
 sGradientWidget.prototype.OnGradColorButtonHandler = function(event) {
 
     var btnID = event.target.id;
-    var stopnodeid;
+    var stopnodeid='';
    var attrName = 'stop-color'; 
+   var bStopAnimColor = false; 
+   var initColVal; 
     switch(btnID)
     {    
     case 'stop0_color':
@@ -629,32 +631,41 @@ sGradientWidget.prototype.OnGradColorButtonHandler = function(event) {
     	break;
     case 'stop3_color':
     	stopnodeid = this.GradResourceNode.id + '_stop' + 3;
-    	break;
-    	/*
-    case 'stop0_color_from':
-    	stopnodeid = btnID; 
-    	attrName = 'background-color';
+    	break;       	
+    case 'stop0_color_from':    	
+    	attrName = '' ; //'background-color';
     	var Node = document.getElementById(btnID); 
     	initColVal = Node.style.backgroundColor; //('background-color');
-    	break;
-    	*/
-    	
+    	bStopAnimColor = true; 
+    	break;    	    	
     default:
     	return ; 
     	break;     	
     }   
 
-    if(stopnodeid)
+    if(stopnodeid)   
     {
-    	 var stopNode = document.getElementById(stopnodeid);    
-    	 var initColVal = stopNode.getAttribute('stop-color');
+    	 var tgtNode = document.getElementById(stopnodeid);    
+    	 initColVal = tgtNode.getAttribute('stop-color');
     	 if (initColVal == 'none')
     	     initColVal = 'grey'; 
-    	 gPrevAttributeList = EL_getObjectAttributes(stopNode);
+    	 gPrevAttributeList = EL_getObjectAttributes(tgtNode);
+    	 WAL_showColorPickerWidget('gradcolorpickwidget', '', btnID, attrName, initColVal, tgtNode.id);
     }
-    
-    WAL_showColorPickerWidget('gradcolorpickwidget', '', btnID, attrName, initColVal, stopnodeid);
+   else
+    {
+	   	 var tgtNode = document.getElementById(btnID);    
+	   	 initColVal = tgtNode.style.backgroundColor;
+	   	 if (initColVal == 'none')
+	   	     initColVal = 'grey'; 
+	   	 //gPrevAttributeList = EL_getObjectAttributes(tgtNode);
+	   	 WAL_showColorPickerWidget('gradcolorpickwidget', '', btnID, attrName, initColVal, tgtNode.id);
+    }
+   
+   
 };
+
+
 
 sGradientWidget.prototype.getGradientAnimNode = function(gradType, attributeName)
 {
@@ -6189,9 +6200,4 @@ function GX_GradAnimPreviewBtnHdlr(event){
 	
 	//Debug_Message('Animating Gradient'); 
 	//set the anim begin value and
-}
-
-function MyStopAnimButtonHdlr(event)
-{
-	Debug_Message('MyStopAnimButtonHdlr  called'); 
 }
