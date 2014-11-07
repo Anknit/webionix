@@ -2014,7 +2014,7 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
 		 $(JQSel).jqxColorPicker('setColor', initAttrVal);
 	 else
 	 {
-		 color = RGBToHex(coloval); 
+		 color = RGBToHex(initAttrVal); 
 		 $(JQSel).jqxColorPicker('setColor', color);
 	 }
 	 
