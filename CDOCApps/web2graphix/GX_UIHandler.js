@@ -632,7 +632,8 @@ sGradientWidget.prototype.OnGradColorButtonHandler = function(event) {
     case 'stop3_color':
     	stopnodeid = this.GradResourceNode.id + '_stop' + 3;
     	break;       	
-    case 'stop0_color_from':    	
+    case 'stop0_color_from': 
+    case 'stop0_color_to': 
     	attrName = '' ; //'background-color';
     	var Node = document.getElementById(btnID); 
     	initColVal = Node.style.backgroundColor; //('background-color');
@@ -652,13 +653,13 @@ sGradientWidget.prototype.OnGradColorButtonHandler = function(event) {
     	 gPrevAttributeList = EL_getObjectAttributes(tgtNode);
     	 WAL_showColorPickerWidget('gradcolorpickwidget', '', btnID, attrName, initColVal, tgtNode.id);
     }
-   else
+   else if(bStopAnimColor == true)
     {
 	   	 var tgtNode = document.getElementById(btnID);    
 	   	 initColVal = tgtNode.style.backgroundColor;
 	   	 if (initColVal == 'none')
 	   	     initColVal = 'grey'; 
-	   	 //gPrevAttributeList = EL_getObjectAttributes(tgtNode);
+	   	// gPrevAttributeList = EL_getObjectAttributes(tgtNode);
 	   	 WAL_showColorPickerWidget('gradcolorpickwidget', '', btnID, attrName, initColVal, tgtNode.id);
     }
    
