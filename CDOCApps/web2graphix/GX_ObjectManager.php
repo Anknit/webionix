@@ -222,7 +222,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			
 			for($i=0; $i < 4; $i++)
 			{
-				$stopid = $objectIDVal . '_stop' . $i; 
+				$stopid = $objectIDVal . '_STOP' . $i; 
 				if($i == 0) 
 				{
 					$offset = '0%'; 
@@ -259,7 +259,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 				//<stop id="MyGradient_stop0" offset="5%" stop-color="#F60000"/>
 				for($i=0; $i < 4; $i++)
 				{
-					$stopid = $objectIDVal . '_stop' . $i;
+					$stopid = $objectIDVal . '_STOP' . $i;
 					if($i == 0)
 						{
 						$offset = '0%';
