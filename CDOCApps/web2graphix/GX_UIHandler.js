@@ -640,7 +640,9 @@ sGradientWidget.prototype.OnGradColorButtonHandler = function(event) {
     	stopnodeid = this.GradResourceNode.id + '_STOP' + '3';
     	break;       	
     case 'stop_color_from0': 
+    case 'stop_color_from1': 
     case 'stop_color_to0': 
+    case 'stop_color_to1': 
     	attrName = '' ; //'background-color';
     	var Node = document.getElementById(btnID); 
     	initColVal = Node.style.backgroundColor; //('background-color');
@@ -932,9 +934,9 @@ function GX_CreateGradientWidget(wdgtID)
         
         WAL_createCheckBox('stop1_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
         WAL_createNumberInput("stop1_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        WAL_createCheckBox('animateStop1_col', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
-        WAL_createButton('apply_Stop1_Col', '', '50', 25, true);
-        WAL_createButton('animPreviewStop1', '', '60', 25, true); 
+        WAL_createCheckBox('animateStop_col1', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
+        WAL_createButton('apply_Stop_Col1', '', '50', 25, true);
+        WAL_createButton('animPreviewStop1', '', '60', 25, true);  
         
         WAL_createCheckBox('stop2_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
         WAL_createNumberInput("stop2_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
@@ -6214,6 +6216,18 @@ function GX_GradAnimApplyBtnHdlr(event)
 		var stopNodeid = gGradientObj.GradResourceID + '_STOP0'; 
 		GX_UpdateGradAnimAttribute(bState, stopNodeid, 'stop-color', fromcolval, tocolval);		
 	}
+	else if(btnID == 'apply_Stop_Col1')
+	{
+		var node = document.getElementById('stop_color_from1') ;  
+		var fromcolval = node.style.backgroundColor; 
+		
+		node = document.getElementById('stop_color_to1') ;  
+		var tocolval = node.style.backgroundColor;
+		
+		var bState = WAL_getCheckBoxValue('animateStop_col1'); 
+		var stopNodeid = gGradientObj.GradResourceID + '_STOP1'; 
+		GX_UpdateGradAnimAttribute(bState, stopNodeid, 'stop-color', fromcolval, tocolval);		
+	}
 }
 
 function GX_GradAnimPreviewBtnHdlr(event){
@@ -6243,6 +6257,11 @@ function GX_GradAnimPreviewBtnHdlr(event){
 	else if(nodeID == 'animPreviewStop0')
 	{
 		animID = resID + '_STOP0_STOP-COLOR';		
+		GX_PreviewAnimation(animID);
+	}
+	else if(nodeID == 'animPreviewStop1')
+	{
+		animID = resID + '_STOP1_STOP-COLOR';		
 		GX_PreviewAnimation(animID);
 	}
 	
