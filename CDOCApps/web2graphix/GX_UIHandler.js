@@ -864,7 +864,7 @@ function GX_GradColorButtonHandler(event) {
 
 function GX_CreateGradientWidget(wdgtID)
 {
-        WAL_createModelessWindow(wdgtID, '620', '580', 'myOK', 'myCancel');
+        WAL_createModelessWindow(wdgtID, '620', '480', 'myOK', 'myCancel');
         
         
       //  WAL_createTab('gradTabsContent', '425', 'TabSelectHandler');
@@ -940,15 +940,17 @@ function GX_CreateGradientWidget(wdgtID)
         
         WAL_createCheckBox('stop2_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
         WAL_createNumberInput("stop2_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        WAL_createCheckBox('animateStop2_col', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
-        WAL_createButton('apply_Stop2_Col', '', '50', 25, true);
-        WAL_createButton('animPreviewStop2', '', '60', 25, true); 
+        WAL_createCheckBox('animateStop_col2', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
+        WAL_createButton('apply_Stop_Col2', '', '50', 25, true);
+        WAL_createButton('animPreviewStop2', '', '60', 25, true);  
+        
         
         WAL_createCheckBox('stop3_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
         WAL_createNumberInput("stop3_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        WAL_createCheckBox('animateStop3_col', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
-        WAL_createButton('apply_Stop3_Col', '', '50', 25, true);
-        WAL_createButton('animPreviewStop3', '', '60', 25, true);
+        WAL_createCheckBox('animateStop_col3', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
+        WAL_createButton('apply_Stop_Col3', '', '50', 25, true);
+        WAL_createButton('animPreviewStop3', '', '60', 25, true);  
+        
 
         WAL_setCheckBoxValue('stop0_CB', true);
         WAL_disableWidget('stop0_CB', 'data-jqxCheckBox', false, true);
