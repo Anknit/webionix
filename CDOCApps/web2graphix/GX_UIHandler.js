@@ -688,7 +688,8 @@ sGradientWidget.prototype.getGradientAnimNode = function(gradType, attributeName
 	}
 	else if( (gradType == 'STOP0') || (gradType == 'STOP1') || (gradType == 'STOP2') || (gradType == 'STOP3') )
 	{
-		animID = gradID + '_' + gradType + '_' + attributeName.toUpperCase();		 		
+		var attrStr = attributeName.replace('-', '_'); 
+		animID = gradID + '_' + gradType + '_' + attrStr.toUpperCase();		 		
 	}
 		
 		var animnode = document.getElementById(animID ); 
@@ -6057,9 +6058,10 @@ function GX_EditAnimation(animID)
 	
 }
 
-function GX_AddGradientAnimation(gradID, attribute, start, end)
+function GX_AddGradientAnimation(gradID, animID, attribute, start, end)
 {
 	//get the first chld of the gradient object 
+	var GradientResID=0; 
 	 var node = document.querySelector('#' +gradID); 
 	 if(!node)
 	   	return; 
@@ -6068,8 +6070,10 @@ function GX_AddGradientAnimation(gradID, attribute, start, end)
 		if('STOP' != node.nodeName.toUpperCase() ){
 			return ; 
 		}			
-		node =  node.parentNode; 		
+		node =  node.parentNode; 	
+		
 	}   
+	GradientResID = node.id; 
    var childnode = node.firstElementChild; 
     if(!childnode)
     	return; 
@@ -6084,7 +6088,7 @@ function GX_AddGradientAnimation(gradID, attribute, start, end)
 	gNewAnimObject = true; 
 	var objID = gradID; 
 	gInitAnimParam = new sAnimParams();
-    gInitAnimParam.animID = objID + '_' + attribute.toUpperCase() ;//GXRDE_GetUniqueID('ANIM_');  
+    gInitAnimParam.animID = animID ;//GXRDE_GetUniqueID('ANIM_');  
     gInitAnimParam.objectID = objID;  
     gInitAnimParam.duration = 2;
     gInitAnimParam.animType = 'ANIM_ATTRIBUTE'; //ATTRIBUTE, MOTION,TRANSFORM
@@ -6138,7 +6142,18 @@ function GX_AddGradientAnimation(gradID, attribute, start, end)
     	var stopnodeid = gradID.substr(gradID.length-5,5 ); 
     	switch(stopnodeid)
     	{
-    		case 'STOP0':
+    		case 'STOP1':
+    			//get the previous sibling node 
+    			var tgtNode= document.getElementById(objID); 
+    			tgtNode = tgtNode.previousSibling; 
+    			if('STOP' != tgtNode.nodeName.toUpperCase() )
+    				return ; 
+    			tgtNode = tgtNode.firstElementChild; 
+    			if( (tgtNode) && ('ANIMATE' == tgtNode.nodeName.toUpperCase()) )
+    			{
+    				//deduce the child animation object 
+    				gInitAnimParam.refAnimID = tgtNode.id;         		
+    			}   		        		
     			break; 
     		default:
     			break; 
@@ -6151,7 +6166,8 @@ function GX_AddGradientAnimation(gradID, attribute, start, end)
 
 function GX_UpdateGradAnimAttribute(bFlag, gradResID, attrName, from, to)
 {
-	var animNodeID = gradResID + '_' +  attrName.toUpperCase(); //'_X1';
+	var animIDStr = attrName.replace('-', '_'); 
+	var animNodeID = gradResID + '_' +  animIDStr.toUpperCase(); //'_X1';
 	var animNode = document.querySelector('#'+animNodeID); 
 	if(animNode)
 	{
@@ -6169,7 +6185,7 @@ function GX_UpdateGradAnimAttribute(bFlag, gradResID, attrName, from, to)
 	{
 		if(bFlag == 'true')
 		{
-			GX_AddGradientAnimation(gradResID, attrName, from ,to ); 
+			GX_AddGradientAnimation(gradResID,animNodeID, attrName, from ,to ); 
 			//Debug_Message("Reached Here"); 
 		}    			
 	 }    	
@@ -6258,12 +6274,12 @@ function GX_GradAnimPreviewBtnHdlr(event){
 	}
 	else if(nodeID == 'animPreviewStop0')
 	{
-		animID = resID + '_STOP0_STOP-COLOR';		
+		animID = resID + '_STOP0_STOP_COLOR';		
 		GX_PreviewAnimation(animID);
 	}
 	else if(nodeID == 'animPreviewStop1')
 	{
-		animID = resID + '_STOP1_STOP-COLOR';		
+		animID = resID + '_STOP1_STOP_COLOR';		
 		GX_PreviewAnimation(animID);
 	}
 	
