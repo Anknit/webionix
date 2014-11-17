@@ -266,7 +266,11 @@ sGradientWidget.prototype.OnGradEditBoxHdlr = function(value, wdgtNode) {
             var stopnode = document.getElementById(stopnodeid);
             GX_SetObjectAttribute(stopnode, 'offset', value + '%', true, false);
             break;    
-     
+        case 'gradAnimDurIP':
+        	var animNodeID = this.GradResourceNode.id + '_TOP_GRAD_ANIM';       
+        	 var animNode = document.getElementById(animNodeID);
+             GX_SetObjectAttribute(animNode, 'duration', value + 's', true, false);
+        	break; 
         default:
             break;
 
@@ -865,12 +869,15 @@ function GX_GradColorButtonHandler(event) {
 
 function GX_CreateGradientWidget(wdgtID)
 {
-        WAL_createModelessWindow(wdgtID, '620', '480', 'myOK', 'myCancel');
+        WAL_createModelessWindow(wdgtID, '720', '530', 'myOK', 'myCancel');
         
-        
+        WAL_createNumberInput("gradAnimDurIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
       //  WAL_createTab('gradTabsContent', '425', 'TabSelectHandler');
         WAL_createNumberInput("GradStartXIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
         WAL_createNumberInput("StartfromXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
+        WAL_createDecimalNumberInput("durStartXPosIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
+        //WAL_createDecimalNumberInput("endOpacityValueIP", '80px', gInputHeight, "GX_AnimDlgEditHdlr",true, 1.0,0.0,0.1);
+        
         WAL_createCheckBox('animateStartXPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
         WAL_createNumberInput("StarttoXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
         WAL_createButton('apply_StartXPos', '', '50', 25, true);
@@ -886,6 +893,8 @@ function GX_CreateGradientWidget(wdgtID)
         WAL_createCheckBox('animateStartYPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
         WAL_createNumberInput("StartfromYPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
         WAL_createNumberInput("StarttoYPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
+        WAL_createDecimalNumberInput("durStartYPosIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
+        
         WAL_createButton('apply_StartYPos', '', '50', 25, true);
         WAL_createButton('animPreviewStartYBtn', '', '60', 25, true);
         
@@ -897,6 +906,8 @@ function GX_CreateGradientWidget(wdgtID)
         WAL_createNumberInput("StopfromXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
         WAL_createCheckBox('animateStopXPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
         WAL_createNumberInput("StoptoXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
+        WAL_createNumberInput("durStopXPosIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
+        
         WAL_createButton('apply_StopXPos', '', '50', 25, true);
         WAL_createButton('animPreviewStopXBtn', '', '60', 25, true);
         
@@ -910,6 +921,7 @@ function GX_CreateGradientWidget(wdgtID)
         WAL_createNumberInput("StopfromYPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
         WAL_createCheckBox('animateStopYPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
         WAL_createNumberInput("StoptoYPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
+        WAL_createNumberInput("durStopYPosIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
         WAL_createButton('apply_StopYPos', '', '50', 25, true);
         WAL_createButton('animPreviewStopYBtn', '', '60', 25, true);
         
@@ -929,13 +941,16 @@ function GX_CreateGradientWidget(wdgtID)
         
         WAL_createCheckBox('stop0_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
         WAL_createNumberInput("stop0_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        WAL_createCheckBox('animateStop_col0', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
+        WAL_createCheckBox('animateStop_col0', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
+        WAL_createNumberInput("durStopColIP0", '50px', '24', "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
+        
         WAL_createButton('apply_Stop_Col0', '', '50', 25, true);
         WAL_createButton('animPreviewStop0', '', '60', 25, true);       
         
         WAL_createCheckBox('stop1_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
         WAL_createNumberInput("stop1_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        WAL_createCheckBox('animateStop_col1', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
+        WAL_createCheckBox('animateStop_col1', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
+        WAL_createNumberInput("durStopColIP1", '50px', '24', "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
         WAL_createButton('apply_Stop_Col1', '', '50', 25, true);
         WAL_createButton('animPreviewStop1', '', '60', 25, true);  
         
@@ -6058,7 +6073,7 @@ function GX_EditAnimation(animID)
 	
 }
 
-function GX_AddGradientAnimation(gradID, animID, attribute, start, end)
+function GX_AddGradientAnimation(gradID, animID, attribute, start, end, duration)
 {
 	//get the first chld of the gradient object 
 	var GradientResID=0; 
@@ -6090,7 +6105,7 @@ function GX_AddGradientAnimation(gradID, animID, attribute, start, end)
 	gInitAnimParam = new sAnimParams();
     gInitAnimParam.animID = animID ;//GXRDE_GetUniqueID('ANIM_');  
     gInitAnimParam.objectID = objID;  
-    gInitAnimParam.duration = 2;
+    gInitAnimParam.duration = duration;
     gInitAnimParam.animType = 'ANIM_ATTRIBUTE'; //ATTRIBUTE, MOTION,TRANSFORM
     gInitAnimParam.attribute = attribute;
     gInitAnimParam.startValue = start;
@@ -6164,7 +6179,7 @@ function GX_AddGradientAnimation(gradID, animID, attribute, start, end)
     GX_AddAnimationElement(gInitAnimParam, false);
 }
 
-function GX_UpdateGradAnimAttribute(bFlag, gradResID, attrName, from, to)
+function GX_UpdateGradAnimAttribute(bFlag, gradResID, attrName, from, to, duration)
 {
 	var animIDStr = attrName.replace('-', '_'); 
 	var animNodeID = gradResID + '_' +  animIDStr.toUpperCase(); //'_X1';
@@ -6175,6 +6190,7 @@ function GX_UpdateGradAnimAttribute(bFlag, gradResID, attrName, from, to)
 		{
 			GX_SetObjectAttribute(animNode, 'from', from , true, false);
     		GX_SetObjectAttribute(animNode, 'to', to , true, false);
+    		GX_SetObjectAttribute(animNode, 'dur', duration+'s' , true, false);
 		}
 		else
 		{
@@ -6185,7 +6201,7 @@ function GX_UpdateGradAnimAttribute(bFlag, gradResID, attrName, from, to)
 	{
 		if(bFlag == 'true')
 		{
-			GX_AddGradientAnimation(gradResID,animNodeID, attrName, from ,to ); 
+			GX_AddGradientAnimation(gradResID,animNodeID, attrName, from,to, duration ); 
 			//Debug_Message("Reached Here"); 
 		}    			
 	 }    	
@@ -6199,28 +6215,32 @@ function GX_GradAnimApplyBtnHdlr(event)
 		var bState = WAL_getCheckBoxValue('animateStartXPos'); 
 		var from = WAL_getMaskedInputValue('StartfromXPosIP'); 
 		var to = WAL_getMaskedInputValue('StarttoXPosIP'); 	
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'x1', from + '%', to+'%'); 
+		var dur = WAL_getMaskedInputValue('durStartXPosIP');		
+		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'x1', from + '%', to+'%', dur); 
 	 }	
 	else if(btnID == 'apply_StartYPos')
 	{			
 		var from = WAL_getMaskedInputValue('StartfromYPosIP'); 
 		var to = WAL_getMaskedInputValue('StarttoYPosIP'); 	
 		var bState = WAL_getCheckBoxValue('animateStartYPos'); 
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'y1',  from + '%', to+'%');		 
+		var dur = WAL_getMaskedInputValue('durStartYPosIP');
+		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'y1',  from + '%', to+'%', dur);		 
 	}
 	else if(btnID == 'apply_StopXPos')
 	{	
 		var from = WAL_getMaskedInputValue('StopfromXPosIP'); 
 		var to = WAL_getMaskedInputValue('StoptoXPosIP');		
 		var bState = WAL_getCheckBoxValue('animateStopXPos'); 
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'x2',  from + '%', to+'%'); 
+		var dur = WAL_getMaskedInputValue('durStopXPosIP');
+		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'x2',  from + '%', to+'%', dur); 
 	}
 	else if(btnID == 'apply_StopYPos')
 	{	
 		var from = WAL_getMaskedInputValue('StopfromYPosIP'); 
 		var to = WAL_getMaskedInputValue('StoptoYPosIP'); 	
 		var bState = WAL_getCheckBoxValue('animateStopYPos'); 
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'y2',  from + '%', to+'%');
+		var dur = WAL_getMaskedInputValue('durStopYPosIP');
+		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'y2',  from + '%', to+'%', dur);
 	}	
 	else if(btnID == 'apply_Stop_Col0')
 	{
@@ -6232,7 +6252,8 @@ function GX_GradAnimApplyBtnHdlr(event)
 		
 		var bState = WAL_getCheckBoxValue('animateStop_col0'); 
 		var stopNodeid = gGradientObj.GradResourceID + '_STOP0'; 
-		GX_UpdateGradAnimAttribute(bState, stopNodeid, 'stop-color', fromcolval, tocolval);		
+		var dur = WAL_getMaskedInputValue('durStopColIP0');		
+		GX_UpdateGradAnimAttribute(bState, stopNodeid, 'stop-color', fromcolval, tocolval, dur);		
 	}
 	else if(btnID == 'apply_Stop_Col1')
 	{
@@ -6244,7 +6265,8 @@ function GX_GradAnimApplyBtnHdlr(event)
 		
 		var bState = WAL_getCheckBoxValue('animateStop_col1'); 
 		var stopNodeid = gGradientObj.GradResourceID + '_STOP1'; 
-		GX_UpdateGradAnimAttribute(bState, stopNodeid, 'stop-color', fromcolval, tocolval);		
+		var dur = WAL_getMaskedInputValue('durStopColIP1');		
+		GX_UpdateGradAnimAttribute(bState, stopNodeid, 'stop-color', fromcolval, tocolval, dur);		
 	}
 }
 
