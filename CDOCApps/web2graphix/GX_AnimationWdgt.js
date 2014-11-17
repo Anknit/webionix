@@ -1163,7 +1163,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	 attrData = ['title',animParams.title];  
 	 attrArray.push(attrData); 	  
 	    
-	 attrData = ['dur',animParams.duration+'s'];  
+	// attrData = ['dur',animParams.duration+'s'];  
+	 attrData = ['dur',animParams.duration+'s']; 
 	 attrArray.push(attrData);
 	 
 	 attrData = ['calcMode',animParams.calcMode];  
