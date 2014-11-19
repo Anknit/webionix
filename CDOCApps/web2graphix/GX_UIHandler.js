@@ -6461,6 +6461,14 @@ function GX_GradAnimPreviewBtnHdlr(event){
 		animID = resID + '_CY';		
 		GX_PreviewAnimation(animID);
 	}
+	else if(nodeID == 'animPreviewRadiusBtn')
+	{
+		animID = resID + '_R';		
+		GX_PreviewAnimation(animID);
+	}
+	
+	
+	
 	
 	
 	/*
