@@ -6502,12 +6502,16 @@ function GX_GradAnimPreviewBtnHdlr(event){
 	{
 		animID = resID + '_FY';		
 		GX_PreviewAnimation(animID);
-	}
+	}	
 	else if(nodeID == 'animTotalPreviewBtn')
 	{
 		animID = resID + '_TOP_GRAD_ANIM';		
 		GX_PreviewAnimation(animID);
+		//hide thenode and then display again 
+				
 	}
+	
+	
 	
 	/*
 	var resID = gGradientObj.GradResourceNode.id; 
