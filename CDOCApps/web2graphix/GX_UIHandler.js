@@ -453,12 +453,12 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
             objProp =  gradProp.gradAnimList['stop-color'+index]; 
             if(objProp)
             {
-            	WAL_setCheckBoxValue('animateStop_col'+ index, objProp.bAnimate);   
+            	WAL_setCheckBoxValue('animateStop_col', objProp.bAnimate);   
             	//var btnNode =  document.getElementById('stop_color_from' + index); 
             	//btnNode.style.backgroundColor = objProp.fromValue;
             	//btnNode =  document.getElementById('stop_color_to' + index); 
             	//btnNode.style.backgroundColor = objProp.toValue;
-            	var durIPID= 'durStopColIP' + j; 
+            	var durIPID= 'durStopColIP'; 
                 WAL_setNumberInputValue(durIPID, objProp.duration, false);
             }            
         }
@@ -477,10 +477,13 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     	if(state ==  true)
     	{    		
              WAL_disableWidget('durStartPosIP', 'data-jqxNumberInput', false, false); 
+             WAL_setNumberInputValue("durStartPosIP", 0.5, false);
+             
     	}
     	else
     	{
             WAL_disableWidget('durStartPosIP', 'data-jqxNumberInput', false, true); 
+            WAL_setNumberInputValue("durStartPosIP", 0.0, false);
     	}
     	
     	return ; 
@@ -490,11 +493,13 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     	//Debug_Message('Anim start X handled ');    	
     	if(state ==  true)
     	{
-             WAL_disableWidget('durStopPosIP', 'data-jqxNumberInput', false, false); 
+             WAL_disableWidget('durStopPosIP', 'data-jqxNumberInput', false, false);
+             WAL_setNumberInputValue("durStopPosIP", 0.5, false);    
     	}
     	else
     	{           
-    		WAL_disableWidget('durStopPosIP', 'data-jqxNumberInput', false, true);     
+    		WAL_disableWidget('durStopPosIP', 'data-jqxNumberInput', false, true); 
+    		 WAL_setNumberInputValue("durStopPosIP", 0.0, false);  
     	}
     	
     	return ; 
@@ -504,11 +509,13 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     {
     	if(state ==  true)
     	{
-    		WAL_disableWidget('CENTER_ANIM_PROP', 'data-jqxNumberInput', true, false);
+    		WAL_disableWidget('durCenterIP', 'data-jqxNumberInput', false, false);
+    		WAL_setNumberInputValue("CENTER_ANIM_PROP", 0.5, false); 
     	}    		
     	else
     	{
-    		WAL_disableWidget('CENTER_ANIM_PROP', 'data-jqxNumberInput', true, true);
+    		WAL_disableWidget('durCenterIP', 'data-jqxNumberInput', false, true);
+    		WAL_setNumberInputValue("durCenterIP", 0.0, false); 
     	}
     		
     }
@@ -516,20 +523,42 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     {
     	if(state ==  true)
     	{
-    		WAL_disableWidget('RADIUS_ANIM_PROP', 'data-jqxNumberInput', true, false);
+    		WAL_disableWidget('durRadiusIP', 'data-jqxNumberInput', false, false);
+    		WAL_setNumberInputValue("durRadiusIP", 0.5, false);
     	}    		
     	else
     	{
-    		WAL_disableWidget('RADIUS_ANIM_PROP', 'data-jqxNumberInput', true, true);
-    	}
-    		
-    }
-    
-   
-    
-    
-    
-    
+    		WAL_disableWidget('durRadiusIP', 'data-jqxNumberInput', false, true);
+    		WAL_setNumberInputValue("durRadiusIP", 0.0, false);
+    	}    		
+    }   
+    else if(CBID == 'animateFocus')
+    {
+    	if(state ==  true)
+    	{
+    		WAL_disableWidget('durFocusIP', 'data-jqxNumberInput', false, false);
+    		WAL_setNumberInputValue("durFocusIP", 0.5, false);
+    	}    		
+    	else
+    	{
+    		WAL_disableWidget('durFocusIP', 'data-jqxNumberInput', false, true);
+    		WAL_setNumberInputValue("durFocusIP", 0.0, false);
+    	}    		
+    }  
+    else if(CBID == 'animateStop_col')
+    {
+    	if(state ==  true)
+    	{
+    		WAL_disableWidget('durStopColIP', 'data-jqxNumberInput', false, false);
+    		WAL_setNumberInputValue("durStopColIP", 0.5, false);
+    	}    		
+    	else
+    	{
+    		WAL_disableWidget('durStopColIP', 'data-jqxNumberInput', false, true);
+    		WAL_setNumberInputValue("durStopColIP", 0.0, false);
+    	}    		
+    }  
+        
     if (CBID == 'stop2_CB')
         index = 2;
     else if (CBID == 'stop3_CB')
@@ -547,6 +576,7 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
         btnID = 'stop' + index + '_Offset';
         WAL_disableWidget(btnID, 'data-jqxNumberInput', false, true);
         WAL_setNumberInputValue(btnID, '100', false); 
+        
         
 
     }
@@ -858,7 +888,7 @@ function GX_GradColorButtonHandler(event) {
 
 function GX_CreateGradientWidget(wdgtID)
 {
-        WAL_createModelessWindow(wdgtID, '590', '480', 'myOK', 'myCancel');
+        WAL_createModelessWindow(wdgtID, '590', '530', 'myOK', 'myCancel');
         WAL_createButton('animTotalPreviewBtn', '', '60', 25, true);
         
       //  WAL_createTab('gradTabsContent', '425', 'TabSelectHandler');
@@ -940,23 +970,19 @@ function GX_CreateGradientWidget(wdgtID)
         
         WAL_createCheckBox('stop1_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
         WAL_createNumberInput("stop1_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        WAL_createCheckBox('animateStop_col1', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
-        WAL_createDecimalNumberInput("durStopColIP1", '50px', '24', "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
-        WAL_createButton('apply_Stop_Col1', '', '50', 25, true);
-        WAL_createButton('animPreviewStop1', '', '60', 25, true);  
+        WAL_createCheckBox('animateStop_col', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
+        WAL_createDecimalNumberInput("durStopColIP", '50px', '24', "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
+        WAL_createButton('apply_Stop_Col', '', '50', 25, true);
+        WAL_createButton('animPreviewStop', '', '60', 25, true);  
         
         WAL_createCheckBox('stop2_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
         WAL_createNumberInput("stop2_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        WAL_createCheckBox('animateStop_col2', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
-        WAL_createButton('apply_Stop_Col2', '', '50', 25, true);
-        WAL_createButton('animPreviewStop2', '', '60', 25, true);  
+       
         
         
         WAL_createCheckBox('stop3_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
         WAL_createNumberInput("stop3_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        WAL_createCheckBox('animateStop_col3', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
-        WAL_createButton('apply_Stop_Col3', '', '50', 25, true);
-        WAL_createButton('animPreviewStop3', '', '60', 25, true);  
+
         
 
         WAL_setCheckBoxValue('stop0_CB', true);
@@ -6248,7 +6274,7 @@ function GX_GradAnimApplyBtnHdlr(event)
 		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'x2', '0%', X+'%', dur); 
 		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'Y2', '0%', Y+'%', dur); 
 	}
-	else if(btnID == 'apply_Stop_Col1')
+	else if(btnID == 'apply_Stop_Col')
 	{
 		var node = document.getElementById('stop0_color') ;  
 		var fromcolval = node.style.backgroundColor; 
@@ -6256,9 +6282,9 @@ function GX_GradAnimApplyBtnHdlr(event)
 		node = document.getElementById('stop1_color') ;  
 		var tocolval = node.style.backgroundColor;
 		
-		var bState = WAL_getCheckBoxValue('animateStop_col1'); 
+		var bState = WAL_getCheckBoxValue('animateStop_col'); 
 		var stopNodeid = gGradientObj.GradResourceID + '_STOP1'; 
-		var dur = WAL_getMaskedInputValue('durStopColIP1');		
+		var dur = WAL_getMaskedInputValue('durStopColIP');		
 		GX_UpdateGradAnimAttribute(bState, stopNodeid, 'stop-color', fromcolval, tocolval, dur);		
 	}
 	else if(btnID == 'apply_CenterPos')
@@ -6307,7 +6333,7 @@ function GX_GradAnimPreviewBtnHdlr(event){
 		animID = resID + '_Y2'; 
 		GX_PreviewAnimation(animID);
 	}	
-	else if(nodeID == 'animPreviewStop1')
+	else if(nodeID == 'animPreviewStop')
 	{
 		animID = resID + '_STOP1_STOP_COLOR';		
 		GX_PreviewAnimation(animID);
