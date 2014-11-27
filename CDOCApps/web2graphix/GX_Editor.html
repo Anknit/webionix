@@ -398,54 +398,26 @@
          <div id='LGSpecific' style='display:block'>       
                  <div style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:15px; margin-bottom:20px; margin-right:5px; width: auto'>
                       <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Gradient Start</div>
-                      <div>
-	                      <div id='GradStartXEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>X-Pos(%)<div id='GradStartXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                      <div id='animateStartXPos' style="display:inline-block;margin-left:10px; margin-top: 5px;">Animate</div>
-	                      <div id='StartfromXPos' class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>From(%)<div id='StartfromXPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                      <div id='StarttoXPos'  class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'>To(%)<div id='StarttoXPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                      <div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'>Dur(s)<div id='durStartXPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                      <input type="button" id ='apply_StartXPos' style='display:inline-block; margin-left:12px; position:relative; top:-6px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
-	                      <input type="button" id ='animPreviewStartXBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
-	                                          
-                      </div>
-                      		  
-                      
-                      <div>
-	                      <div id='GradStartYEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Y-Pos(%)<div id='GradStartYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                       <div id='animateStartYPos' style="display:inline-block;margin-left:10px; margin-top: 5px;">Animate</div>
-	                       <div id='StartfromYPos' class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>From(%)<div id='StartfromYPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                       <div id='StarttoYPos'  class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'>To(%)<div id='StarttoYPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                       <div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'>Dur(s)<div id='durStartYPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                       <input type="button" id ='apply_StartYPos' style='display:inline-block; margin-left:12px; position:relative; top:-6px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)'  />
-	                       <input type="button" id ='animPreviewStartYBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
-	                     
-	                  </div>
+                      <div id='GradStartXEdit' style='margin-left:5px;margin-top:10px;'>X-Pos(%)<div id='GradStartXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                      <div id='GradStartYEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Y-Pos(%)<div id='GradStartYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                      <div style='display:inline-block; position:relative; top:-20px'>	                      
+	                      <div id='animateStartPos' style="display:inline-block;margin-left:10px; margin-top: 5px;">Animate</div>	                      
+	                      <div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>Dur(s)<div id='durStartPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+	                      <input type="button" id ='apply_StartPos' style='display:inline-block; margin-left:12px; position:relative; top:-6px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                      <input type="button" id ='animPreviewStartBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />	                                          
+                      </div>     
                  </div>
                  <div style='border:solid 1px grey;border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:10px; margin-bottom:20px; margin-right:5px; width: auto; '>
-                      <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px; '>Gradient Stop</div>
-                      <!-- <div id='GradStopXEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>X-Pos(%)<div id='GradStopXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-                      
-                      <div id='GradStopYEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Y-Pos(%)<div id='GradStopYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-                      -->
-                      <div>
-                          <div id='GradStopXEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>X-Pos(%)<div id='GradStopXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                      <div id='animateStopXPos' style="display:inline-block;margin-left:10px; margin-top: 5px;">Animate</div>
-	                      <div id='StopfromXPos' class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>From(%)<div id='StopfromXPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                      <div id='StoptoXPos'  class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'>To(%)<div id='StoptoXPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                      <div  class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'>Dur(s)<div id='durStopXPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                      <input type="button" id ='apply_StopXPos' style='display:inline-block; margin-left:12px; position:relative; top:-6px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
-	                      <input type="button" id ='animPreviewStopXBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
+                    <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px; '>Gradient Stop</div>
+                    <div id='GradStopXEdit' style='margin-left:5px;margin-top:10px;'>X-Pos(%)<div id='GradStopXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                    <div id='GradStopYEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Y-Pos(%)<div id='GradStopYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                      <div style='display:inline-block; position:relative; top:-25px;'>                          
+	                      <div id='animateStopPos' style="display:inline-block;margin-left:10px; margin-top: 5px;">Animate</div>                       
+	                      <div  class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>Dur(s)<div id='durStopPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+	                      <input type="button" id ='apply_StopPos' style='display:inline-block; margin-left:12px; position:relative; top:-6px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                      <input type="button" id ='animPreviewStopBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
 	                  </div>
 	                  
-	                  <div>
-                          <div id='GradStopYEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Y-Pos(%)<div id='GradStopYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                      <div id='animateStopYPos' style="display:inline-block;margin-left:10px; margin-top: 5px;">Animate</div>
-	                      <div id='StopfromYPos' class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>From(%)<div id='StopfromYPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                      <div id='StoptoYPos'  class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'>To(%)<div id='StoptoYPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                      <div  class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'>Dur(s)<div id='durStopYPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
-	                      <input type="button" id ='apply_StopYPos' style='display:inline-block; margin-left:12px; position:relative; top:-6px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
-	                      <input type="button" id ='animPreviewStopYBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
-	                  </div>
                  </div>
           </div>
         <div id='RGSpecific' style='display:none'>
