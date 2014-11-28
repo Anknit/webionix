@@ -117,8 +117,13 @@ function GX_SetAnimParamOnUI(animParam) {
     gInitAnimParam.title = animParam.title;
     */
       
-	
-    WAL_UpdateDropDownList('objectlistDDL', gObjectList);
+	//first filter out the entries here 
+	var objectList=[]; 
+	for(var j=0; j <gObjectList.length; j++)
+	{
+		objectList.push(gObjectList[j][0]); 
+	}	
+    WAL_UpdateDropDownList('objectlistDDL', objectList);
     //update the path list 
     var pathList=[]; 
     for(var k=0; k < gObjectList.length; k++)
@@ -131,7 +136,7 @@ function GX_SetAnimParamOnUI(animParam) {
     var animlist=[]; 
     for(var i =0; i <gAnimList.length; i++)
 	 {
-    	if(animParam.title  !=  gAnimList[i][5])
+    	if( (animParam.title  !=  gAnimList[i][5]) && (gAnimList[i][5] != 'Invisible Animation') )
     		animlist.push(gAnimList[i][5]); 
 	 }
     WAL_UpdateDropDownList('animlistDDL', animlist);
@@ -157,7 +162,7 @@ function GX_SetAnimParamOnUI(animParam) {
         WAL_setradioButtonCheck('attrvalbtn', true); 
         //animParam.attribute = '';
         var itemvalue = gReverseAttrList[animParam.attribute]; 
-        WAL_SetItemByValueInList('animAttrDDL', itemvalue, true);
+        WAL_SetItemByValueInList('animAttrDDL', itemvalue, false);
         //animParam.startValue
         
       //here should be the switch statement
@@ -504,7 +509,8 @@ function GX_GetAnimParamsFromUI()
                 var animlist = new Array(); 
                 for(var k=0; k < gAnimList.length; k++)
             	{
-                	animlist.push(gAnimList[k][0]); 
+                	if(gAnimList[k][0] != 'Invisible Animation')
+                		animlist.push(gAnimList[k][0]); 
             	}
                 
                 WAL_createDropdownList('animlistDDL', '135', gInputHeight, false, animlist, "GX_AnimAttrListHandler", '50');
@@ -717,7 +723,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	var animlist=[];
  	for(var k=0; k < gAnimList.length; k++)
  	{
- 		animlist.push(gAnimList[k][5]); 
+ 		if(gAnimList[k][5] != 'Invisible Animation')
+ 			animlist.push(gAnimList[k][5]); 
  	}
  	
 	WAL_UpdateDropDownList('listanimDDL', animlist);
@@ -1176,8 +1183,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	 attrData = ['repeatCount',animParams.repeatCount];  
 	 attrArray.push(attrData);
 	 
-	 attrData = ['siblingID',animParams.siblingID];  
-	 attrArray.push(attrData);
+//	 attrData = ['siblingID',animParams.siblingID];  
+//	 attrArray.push(attrData);
 	    
 	 var beginval = ''; 
 	 if(animParams.startType == 'ON_TIME')
@@ -1405,7 +1412,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	 	var animlist=[];
 	 	for(var k=0; k < gAnimList.length; k++)
 	 	{
-	 		animlist.push(gAnimList[k][5]); 
+	 		if(gAnimList[k][5] != 'Invisible Animation')
+	 			animlist.push(gAnimList[k][5]); 
 	 	}
 	 	WAL_UpdateDropDownList('listanimDDL', animlist);
 	 	var index = animlist.length-1; 
@@ -1938,8 +1946,16 @@ function GX_RemoveAnimInfoFromList(animID)
  
  function GX_ResetUI(animParam)
  {	 
-	 if(gObjectList)
-		 WAL_UpdateDropDownList('objectlistDDL', gObjectList);
+	if(gObjectList)
+	{
+		var objectList=[]; 
+		for(var j=0; j <gObjectList.length; j++)
+		{
+			objectList.push(gObjectList[j][0]); 
+		}	
+		WAL_UpdateDropDownList('objectlistDDL', objectList);
+	}
+		 
 	    //update the path list 
 	var pathList=[]; 
 	for(var k=0; k < gObjectList.length; k++)
@@ -1952,7 +1968,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	var animlist=[]; 	
 	for(var i =0; i <gAnimList.length; i++)
 	{
-	    if(animParam.title  !=  gAnimList[i][5])
+	    if( (animParam.title  !=  gAnimList[i][5]) && (gAnimList[i][5] != 'Invisible Animation') )
 	    	animlist.push(gAnimList[i][5]); 
 	}
 	WAL_UpdateDropDownList('animlistDDL', animlist);
@@ -1964,7 +1980,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	WAL_setTextInputValue('animtitleIP', animParam.title, false);	
 	WAL_setradioButtonCheck('attrvalbtn', true); 	        
 	var itemvalue = gReverseAttrList[animParam.attribute]; 
-	WAL_SetItemByValueInList('animAttrDDL', itemvalue, true); 	     
+	WAL_SetItemByValueInList('animAttrDDL', itemvalue, false); 	     
 	WAL_setradioButtonCheck('motionvalbtn', false); 
 	        //animParam.refPathID = 0;
 	WAL_SetItemByValueInList('pathlistDDL', animParam.refPathID, true);
