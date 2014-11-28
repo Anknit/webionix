@@ -510,7 +510,7 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     	if(state ==  true)
     	{
     		WAL_disableWidget('durCenterIP', 'data-jqxNumberInput', false, false);
-    		WAL_setNumberInputValue("CENTER_ANIM_PROP", 0.5, false); 
+    		WAL_setNumberInputValue("durCenterIP", 0.5, false); 
     	}    		
     	else
     	{
@@ -1059,7 +1059,7 @@ function GX_GradDlgOK() {
         	gGradientList.push(gradInfo); 
         }        
         GX_UpdateGradientList(gGradientList); 
-        WAL_SetItemByValueInList('gradlistDDL', gradTitle, true); 
+        WAL_SetItemByValueInList('gradlistDDL', gradTitle, 'true'); 
 }
 function GX_GradDlgCancel() {
     //alert("Cancel");
@@ -4210,7 +4210,7 @@ function GX_UpdatePropertyOnUI(AttrName, AttrVal)
 			return ; 
 		if(fillstr == 'none')
 		{
-			WAL_SetItemByValueInList('gradlistDDL', 'none', true); 
+			WAL_SetItemByValueInList('gradlistDDL', 'none', 'true'); 
 			return ; 
 		}
 		var index = fillstr.indexOf('url(#');
@@ -4219,7 +4219,7 @@ function GX_UpdatePropertyOnUI(AttrName, AttrVal)
 		fillstr = fillstr.substring(5, fillstr.length-1); 
 		var info = GX_GetGradInfoByID(fillstr);
 		if(info[0])
-			WAL_SetItemByValueInList('gradlistDDL', info[0], true); 
+			WAL_SetItemByValueInList('gradlistDDL', info[0], 'true'); 
 		return ; 
 		
 		
