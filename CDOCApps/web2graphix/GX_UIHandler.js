@@ -3699,6 +3699,9 @@ function GX_ToolbarHandler(Node)
 	}
 		break;		
 	case 'delete_grad_icon':
+		var currgradTitle = WAL_getDropdownListSelection('gradlistDDL');
+		var gradInfo = GX_GetGradInfoByTitle(currgradTitle); 
+		GX_RemoveGradient(gradInfo[1], currgradTitle);
 		break; 
 	 case 'anim_new_icon':
 		 gLastPositionValue = 0;
@@ -4625,7 +4628,7 @@ function GX_RemoveGradFromList(gradTitle, gradList)
 			break; 			
 		}
 	}
-	gradList.splice(index,1); 	
+	gradList = gradList.splice(index,1); 	
 }
 
 function GX_ApplyPan(bHorizontal, panDelta)
@@ -6426,4 +6429,12 @@ function GX_GradAnimPreviewBtnHdlr(event){
 	
 	//Debug_Message('Animating Gradient'); 
 	//set the anim begin value and
+}
+
+function GX_RemoveGradient(gradID, gradTitle)
+{
+	GX_DeleteObject(gradID); 
+	gGradientList = GX_RemoveGradFromList(gradTitle, gGradientList);
+	gGradientList = GX_GetGradientList(); 
+	GX_UpdateGradientList(gGradientList);
 }
