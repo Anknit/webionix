@@ -882,7 +882,7 @@ function GX_SpreadDDLHandler(Node, value) {
 }
 
 function GX_GradColorButtonHandler(event) {
-	Debug_Message("Calling Button"); 
+	//Debug_Message("Calling Button"); 
     gGradientObj.OnGradColorButtonHandler(event); 
 }
 
@@ -1264,7 +1264,8 @@ function GX_InitializeDocument(svgFileName)
 		 var animlist = new Array(); 
 		 for(var i =0; i <gAnimList.length; i++)
 		 {
-			 animlist.push(gAnimList[i][5]); 
+			 if(gAnimList[i][5] != 'Invisible Animation')
+				 animlist.push(gAnimList[i][5]); 
 		 }
 		 WAL_UpdateDropDownList('listanimDDL', animlist);
 	 }
