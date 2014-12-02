@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg width="12cm" height="3.6cm" viewBox="0 0 1000 300" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <path id="MyPath"
+          d="M 100 125 
+             C 150 125 250 175 300 175
+             C 350 175 450 125 500 125
+             C 550 125 650 175 700 175
+             C 750 175 850 125 900 125" />
+  </defs>
+  <desc>Example toap04 - text on a path layout rules</desc>
+  <symbol id="textgroup">
+    <rect x="100" y="125" width="800" height="50" stroke="green" fill="yellow"/>
+    <use xlink:href="#MyPath" fill="none" stroke="red"  />
+    <text font-family="Verdana" font-size="60" fill="blue" letter-spacing="2" >
+      <textPath xlink:href="#MyPath">
+        Choose shame or get war
+      </textPath>
+    </text>
+  </symbol>
+  <rect x="1" y="1" width="998" height="298" fill="none" stroke="blue" stroke-width="2" />
+
+  <g>
+    <use xlink:href="#textgroup" />
+     <animateTransform id="anim1" attributeName="transform" attributeType="XML"  type="scale" from="0.2" to="1" dur="2s"  additive="sum" fill="freeze"/>
+     <animateTransform attributeName="transform" attributeType="XML"  type="rotate" from="0 500 150" to="360 500 150" dur="0.5s"  additive="sum" fill="freeze" repeatCount="indefinite" end="anim1.end"/>
+    
+  </g>
+
+
+
+  <!-- Show outline of canvas using 'rect' element -->
+ 
+</svg>

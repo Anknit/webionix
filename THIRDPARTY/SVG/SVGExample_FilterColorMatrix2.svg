@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+
+  <svg  width="800px" height="800px" viewBox = "0 0 1000 1000" version = "1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+      <radialGradient spreadMethod="reflect" id="svg_13" cx="0.20703" cy="0.35938" r="0.5" fx="0.20703" fy="0.35938">
+        <stop offset="0" stop-color="#f2e6e6"/>
+        <stop offset="0.25" stop-color="#f200e6"/>
+        <stop offset="0.5" stop-color="#f2e600"/>
+        <stop offset="0.75" stop-color="#00e600"/>
+        <stop offset="1" stop-color="#f70c2b"/>
+      </radialGradient>
+      <linearGradient id="MyGradient" x1="0" y1="0" x2="60%" y2="50%" spreadMethod="repeat">
+        <stop offset="10%" stop-color="#F60" />
+        <stop offset="98%" stop-color="#FF6" />
+      </linearGradient>
+      <filter id="myfilter1">
+        <feColorMatrix in="SourceAlpha" type="matrix" values=  "0 0 0 .1 0
+                                                                0 0 0 .1 0
+                                                                0 0 0 .1 0
+                                                                0 0 0 1 0"  result="output1"/>
+        
+        <feGaussianBlur in="output1" stdDeviation="3" result="offsetBlur"/>
+        
+        <feMerge>
+          <feMergeNode in="offsetBlur"/>
+          <feMergeNode in="SourceGraphic"/>                  
+        </feMerge> 
+      </filter>
+      <filter id="lumfilter">
+        <feColorMatrix in="SourceGraphic" type="luminanceToAlpha"  result="output1"/>        
+      </filter>
+      <filter id="satfilter">
+        <feColorMatrix in="SourceGraphic" type="saturate" values=".8" result="output1"/>
+      </filter>
+      <filter id="huefilter">
+        <feColorMatrix in="SourceGraphic" type="hueRotate" values="90" result="output1"/>
+      </filter>
+    </defs>
+
+    <g>     
+      <!-- <circle cx="240" cy="300" r="120" fill="none" stroke-width="4" stroke="blue" filter="url(#myfilter1)" /> -->
+      <rect x="110" y="170" width="256" height="256"  stroke="red" fill="url(#MyGradient)"/> 
+      <circle cx="240" cy="300" r="120"  stroke-width="4" fill="url(#svg_13)"  filter="url(#huefilter)" />
+      
+    </g>
+  </svg>
+
+

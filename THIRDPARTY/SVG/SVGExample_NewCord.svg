@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+
+ <svg width="2400px" height="2400px"   xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+    <desc>Example NewCoordSys - New user coordinate system</desc>
+   <defs>
+     <g id="axes" fill="none" stroke="black" stroke-width="3">
+       <!-- Draw the axes of the original coordinate system -->
+       <line x1="0" y1="1.5" x2="400" y2="1.5"  />
+       <line x1="1.5" y1="0" x2="1.5" y2="150" stroke="black" stroke-width="3"/>
+     </g>
+     
+      <text id="mytext" x="30" y="30" font-size="20px" font-family="Verdana">
+         ABC (orig coord system)
+       </text>
+     
+     
+   </defs>
+   <g>
+    <use xlink:href="#axes"/>
+    <use xlink:href="#mytext"/>
+    
+   </g>
+
+   <g transform="translate(100,100)">
+     <use xlink:href="#axes"/>
+     <use xlink:href="#mytext"/>
+   </g>
+
+   <g transform="translate(300,300)">
+     <g transform="scale(1.5)">
+       <use xlink:href="#axes"/>
+       <use xlink:href="#mytext"/>
+     </g>
+     
+   </g>
+   
+  </svg>
+

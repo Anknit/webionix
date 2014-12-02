@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Animation Examples</title>
+</head>
+<body>
+
+<div>SVG Animation EXample
+<div> Button
+ 
+ <input type="button" id="startbtn" value="Start" onclick="OnStart()" /> 
+ </div>
+<svg width="2400px" height="2400px"  version="1.1"  viewBox="0 0 2400 2400" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+  <script type="application/ecmascript">
+    <![CDATA[
+    
+    function OnClickForAnimate(evt)
+    {   
+      
+    }
+    ]]>
+  </script>
+
+
+  <desc>
+    Example ViewBox - uses the viewBox
+    attribute to automatically create an initial user coordinate
+    system which causes the graphic to scale to fit into the
+    viewport no matter what size the viewport is.
+  </desc>
+  <defs>
+    
+    
+  </defs>
+  
+  <rect id="myrect1" x="50" y="50" width="200" height="150" stroke="" fill="green">
+    <animate attributeType="XML" attributeName="x" values="100; 115; 120; 175; 200" keyTimes="0;.15;.20;.75;1.0" begin="startbtn.click" dur="1.5s" fill="remove" calcMode='linear'/>
+  </rect>
+  
+</svg>
+
+</div>
+ 
+ 
+</body>
+</html>

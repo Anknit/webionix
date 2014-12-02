@@ -1,0 +1,49 @@
+<?xml version="1.0" standalone="no"?>
+<?xml-stylesheet href="mystyle.css" type="text/css"?>
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg width="400px" height="400px" x="250px" y="250px" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Example of My Own four rectangles</title>  
+ 
+  <script type="application/ecmascript"> <![CDATA[
+    function circle_click(evt) {
+      var node =  document.rootElement; 
+      alert("you clicked me");
+    }
+  ]]> 
+  
+  
+  <!--
+  <style type="text/css"><![CDATA[
+      rect {
+        fill: red;
+        stroke: blue;
+        stroke-width: 3
+      }
+    ]]></style>
+    -->
+  </script>
+  <desc>Four separate rectangles</desc>
+  
+   
+   <g id="group2"> 
+    <rect x="35px" y="10px" class="green" width="25px" height="20px" />
+    <rect x="35px" y="50px" class="red"  width="40px" height="40px"/>    
+   </g>
+    
+<!-- <use x="20" y="5" xlink:href="#mysymbol1" />  -->
+</svg>
+
+<!--
+<svg width="10cm" height="3cm" viewBox="0 0 100 30" version="1.1"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <desc>Example Use01 - Simple case of 'use' on a 'rect'</desc>
+  <defs>
+    <rect id="MyRect" width="60" height="10"/>
+  </defs>
+  <rect x=".1" y=".1" width="99.8" height="29.8" fill="red" stroke="blue" stroke-width=".2" />
+  <use x="20" y="10" xlink:href="#MyRect" />
+</svg>
+
+--> 

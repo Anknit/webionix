@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+
+  <svg  width="1200px" height="1200px" viewBox = "0 0 1800 1800" version = "1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+      <path id="curve" d="M 0 0 Q 5 20 10 10 T 20 20"   style="stroke: black; fill: none;"/>
+     
+      <path id="wedge" d="M100 150 L 100 500 L800 500 z" stroke="black" stroke-width="5px" fill="blue" />
+      <path id="animpath" d="M 100 150 L800 500 L800 1200" fill="none" stroke="grey" stroke-width="5"/>
+      <radialGradient spreadMethod="reflect" id="radgrad" cx="0.20703" cy="0.35938" r="0.5" fx="0.20703" fy="0.35938">
+        <stop offset="0" stop-color="#f2e6e6"/>
+        <stop offset="0.25" stop-color="#f200e6"/>
+        <stop offset="0.5" stop-color="#f2e600"/>
+        <stop offset="0.75" stop-color="#00e600"/>
+        <stop offset="1" stop-color="#f70c2b"/>
+      </radialGradient>
+      <circle id="green-light" cx="-75" cy="-75" r="75" fill="url(#radgrad)"/>
+    </defs>
+
+    <!--<circle id="green-light" cx="350" cy="350" r="200" fill="#006000"/> -->
+    <!--<rect id="green-light" x="100" y="150" width="200" height="250"  fill="#006000" /> -->
+    <defs> 
+      <filter id="diff-light" color-interpolation-filters="sRGB"  x="0" y="0" width="100%" height="100%">
+        <feImage xlink:href="#curve" result="tile"  width="20" height="20"/>
+        <feTile in="tile" result="tile"/>
+        <feColorMatrix type="luminanceToAlpha" in="tile"  result="alphaTile"/>
+
+        <feDiffuseLighting in="alphaTile" lighting-color="#ffffcc"  surfaceScale="1" diffuseConstant="0.5"  result="diffuseOutput">
+             <fePointLight x="150" y="120" z="50"/>    
+        </feDiffuseLighting>    
+
+        <feComposite in="diffuseOutput" in2="SourceGraphic"  operator="in" result="diffuseOutput"/>
+
+        <feBlend in="diffuseOutput" in2="SourceGraphic"     mode="screen"/>
+      </filter>
+    </defs>
+
+    <use xlink:href="#wedge"/>
+    <g>
+      <use xlink:href="#green-light">
+        <!--<animateTransform id="anim1" attributeName="transform" attributeType="XML" type="translate" from="0,0" to="200,0" dur="5s" fill="freeze" additive="sum"/>-->
+        <animateMotion id="anim1" dur="2s"  rotate="auto" fill="freeze">
+          <mpath xlink:href="#animpath"/>
+        </animateMotion>
+        <animateTransform id="anim2" attributeName="transform" attributeType="XML" type="rotate" from="0 -75 -75" to="360 -75 -75" dur="0.4s" end="anim1.end" repeatCount="indefinite" additive="sum" />
+      </use>
+    </g>
+   <!-- <use xlink:href="#green-light" style="filter: url(#diff-light);"/>-->
+  </svg>
+
+

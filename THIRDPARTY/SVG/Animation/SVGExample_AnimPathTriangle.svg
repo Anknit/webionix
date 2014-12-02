@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg width="12cm" height="8cm" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" >
+  <defs>
+    <path id="wedge" d="M100 125 L 100 300 L500 300 z" stroke="black" stroke-width="5px" fill="blue" />
+    <radialGradient spreadMethod="reflect" id="radgrad" cx="0.20703" cy="0.35938" r="0.5" fx="0.20703" fy="0.35938">
+      <stop offset="0" stop-color="#f2e6e6"/>
+      <stop offset="0.25" stop-color="#f200e6"/>
+      <stop offset="0.5" stop-color="#f2e600"/>
+      <stop offset="0.75" stop-color="#00e600"/>
+      <stop offset="1" stop-color="#f70c2b"/>
+    </radialGradient>
+  </defs>
+  <rect x="10" y="10" width="1200" height="800" fill="none" stroke="blue" stroke-width="2"/>
+  <path id="animpath" d="M 100 125 L500 300" fill="none" stroke="grey" stroke-width="5"/> 
+  <!--<path id="animpath" d="M 100 125 L 300 175 "  fill="none" stroke="grey" stroke-width="4"/>-->
+  <!--<use xlink:href="#animpath" stroke="black" fill="none" stroke-width="5px"/>-->
+
+  <use xlink:href="#wedge" />
+ <!-- <circle cx="0" cy="-25px" r="20" fill="red">-->
+<!--  <image xlink:href="SVGExample_FilterDiffuse2.svg" x="0" y="-100" width="180" height="180" >
+    <animateMotion dur="5s"  rotate="auto" fill="freeze">
+      <mpath xlink:href="#path1"/>
+    </animateMotion>
+  </image>
+  -->
+
+  <image xlink:href="SVGExample_FilterDiffuse2.svg" x="0" y="-100" width="180" height="180" >
+    <!-- Define the motion path animation -->
+    <animateMotion dur="5s"  rotate="auto" fill="freeze">
+      <mpath xlink:href="#animpath"/>
+    </animateMotion>
+  </image>
+</svg>

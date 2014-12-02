@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg width="600" height="400"  viewBox="0 0 1200 800"  xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <desc>Example anim01 - demonstrate animation elements</desc>
+    <rect x="1" y="1" width="1000" height="400"   fill="none" stroke="blue" stroke-width="2" />
+    <!-- The following illustrates the use of the 'animate' element
+        to animate a rectangles x, y, and width attributes so that
+        the rectangle grows to ultimately fill the viewport. -->
+  <defs>
+    <rect id="RectElement" x="300" y="10" width="400" height="100"   fill="rgb(240,222,123)" />
+  </defs>
+
+  <rect width="200px" height="100px" fill="none" x="50" y="200" stroke="black">
+    <!--<animate attributeName="fill" from="green" to="red" dur="3s" fill="freeze"/>-->
+    <!--<set attributeName="fill" from="green" to="red" dur="3s" fill="freeze" />-->
+    <set attributeName="stroke-width" to="12px"   begin="0s" dur="4" fill="remove" />
+  </rect> 
+   
+    <!-- Set up a new user coordinate system so that
+        the text string's origin is at (0,0), allowing
+        rotation and scale relative to the new origin -->
+ <!-- <g>
+    <use xlink:href="#RectElement">
+        <animate attributeName="width" attributeType="XML"  begin="0s" dur="3s" fill="freeze" from="40px" to="10" additive="sum" />
+    </use>
+  </g>
+ 
+  <g transform="translate(0, 120)">
+    <use xlink:href="#RectElement">
+      <animate  attributeName="x" attributeType="XML"  begin="0s" dur="4s" fill="freeze" from="20" to="400" calcMode="spline"   
+                keyTimes="0; 0.7" keySplines=".5 0 .5 1"/>       
+    </use>
+  </g>
+  --> 
+  
+  <!--
+  <g transform="translate(0, 240)">
+    <use xlink:href="#RectElement">
+      <animate attributeName="x" attributeType="XML"  begin="0s" dur="3s" fill="freeze" values="300; 200; 100; 50; 100; 200; 300;" calcMode="paced" />
+      
+    </use>
+  </g>
+  -->
+  </svg>

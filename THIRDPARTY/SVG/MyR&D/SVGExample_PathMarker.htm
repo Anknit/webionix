@@ -1,0 +1,481 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SVG Page </title>
+    <script type="text/javascript" src="../../../APPLICATION/CDOC_App/script/jquery-1.8.3.js"></script>
+    <script type="text/javascript">
+        sDimension.prototype.x = new Number(0);
+        sDimension.prototype.y = new Number(0);
+        sDimension.prototype.width = new Number(0);
+        sDimension.prototype.height = new Number(0);
+
+        function sDimension() {
+            sDimension.prototype.x = new Number(0);
+            sDimension.prototype.y = new Number(0);
+            sDimension.prototype.width = new Number(0);
+            sDimension.prototype.height = new Number(0);
+        }
+        
+        var pathdata = "";
+        var pathnode;
+        var bDraw = "false";
+        var lastuniqueID = 0;
+        var gCurrentObjectSelected = 0;
+        var gCurrSelectedObjectDim = new sDimension();
+        var gGrabberDim = new sDimension(); 
+        
+      //  var gCurrSelObjOriginX, gCurrSelObjOriginY, gGrabberOriginX, gGrabberOriginY;
+      //  var gCurrSelObjOrigWidth, gCurrSelObjOrigHeight;
+      //  var gGrabberOrigWidth, gGrabberOrigHeight; 
+        var gOrigMousePosX, gOrigMousePosY;
+        var gsvgRootNode = 0;
+        var bMove = false;
+        var gCurrGrabber = 0;
+        var bResize = false;
+        var bMarkerMove = false;
+        var bMarkerShow = true;
+        var gpathSegIndex = -1;
+        var gCurrPathParam = [["M", "50", "130"], ["L", "200", "100"], ["L", "300", "150"], ["L", "350", "200"], 
+        ["L", "380", "300"], ["L", "250", "400"]];
+        var gIndicatorPath = [];
+        var gPathType = 'NONE'; 
+
+        var gnSides = new Number(0);
+        var gnInternalAngle = new Number(0); //radian
+        var glength = new Number(0);
+        var gRadius = new Number(0);
+        sPoint.prototype.x = new Number(0);
+        sPoint.prototype.y = new Number(0);
+        function sPoint() {
+            sPoint.prototype.x = new Number(0);
+            sPoint.prototype.y = new Number(0);
+        }
+    
+          
+        function OnSVGLoad() {
+
+            gsvgRootNode = document.getElementById("rootsvg1");
+           // UpdatePath("mypath", gCurrPathParam);
+        }
+       //defining point structure
+        function OnMyMarkerMouseMove(evt) {
+           
+            //now get the relative X, Y
+            var relX, relY;
+            var markerNode = evt.target; 
+            markerNode.setAttribute('r', '15'); 
+            markerNode.setAttribute('opacity', '1'); 
+            if (bMarkerMove == true) {
+                //now also set the parameters corresponding to the marker index
+                relX = new Number(evt.clientX - gOrigMousePosX);
+                relY = new Number(evt.clientY - gOrigMousePosY);
+                var newcX, newcY;
+                newcX = gCurrSelectedObjectDim.x;
+                newcY = gCurrSelectedObjectDim.y;
+                var num = new Number(newcX);
+                num += relX;
+                markerNode.setAttribute("cx", num);
+                newcX = num; 
+                
+                var num = new Number(newcY);
+                num += relY;
+                markerNode.setAttribute("cy", num);
+                newcY = num;            
+                gIndicatorPath[1][1] = newcX;
+                gIndicatorPath[1][2] = newcY;
+                UpdatePath("indicatorpath", gIndicatorPath, 'LINE');
+
+                //call the update path and add markers. could be a major overhead
+            }
+        }
+
+        function OnMyMarkerMouseDown(evt) {
+            var pathNode = document.getElementById("indicatorpath");
+            var currentPos;
+            var arrLen = new Number(gCurrPathParam.length); 
+            if(gPathType == 'ELLIPTIC_CURVE')
+            	arrLen = 2; 
+            
+            if (bMarkerMove == false) {
+                gsvgRootNode.setAttribute("cursor", "move");
+                bMarkerMove = true;
+                var markerNode = evt.target;    
+               
+                var index = markerNode.getAttribute("data-index");
+                if (!index)
+                    return;
+                gpathSegIndex = new Number(index); 
+                gOrigMousePosX = evt.clientX;
+                gOrigMousePosY = evt.clientY;
+                gCurrSelectedObjectDim.x = markerNode.getAttribute("cx");
+                gCurrSelectedObjectDim.y = markerNode.getAttribute("cy");
+
+                if ((gpathSegIndex > 0) && (gpathSegIndex < arrLen-1)) {
+                    gIndicatorPath.push(gCurrPathParam[gpathSegIndex - 1]);
+                    var currentPos = ["L", gCurrPathParam[gpathSegIndex][1], gCurrPathParam[gpathSegIndex][2]];
+                    gIndicatorPath.push(currentPos);
+                    gIndicatorPath.push(gCurrPathParam[gpathSegIndex + 1]);
+                }
+
+                else if (gpathSegIndex == 0) {
+                    //this isstored in such a way that oin mouse move only Index=1 is updated no matter which vertex user chooses 
+                    currentPos = ["M", gCurrPathParam[gpathSegIndex+1][1], gCurrPathParam[gpathSegIndex+1][2]];
+                    gIndicatorPath.push(currentPos);
+                    currentPos = ["L", gCurrPathParam[gpathSegIndex][1], gCurrPathParam[gpathSegIndex][2]];
+                    gIndicatorPath.push(currentPos);
+                    
+                }
+                else if (gpathSegIndex == arrLen-1) {
+                    currentPos = ["M", gCurrPathParam[gpathSegIndex - 1][1], gCurrPathParam[gpathSegIndex - 1][2]];
+                    gIndicatorPath.push(currentPos);
+                    currentPos = ["L", gCurrPathParam[gpathSegIndex][1], gCurrPathParam[gpathSegIndex][2]];
+                    gIndicatorPath.push(currentPos);                  
+                }
+                
+                UpdatePath('indicatorpath', gIndicatorPath, 'LINE');
+                pathNode.setAttribute("visibility", "visible");
+               
+            }
+            else {
+                var relX = new Number(evt.clientX - gOrigMousePosX);            
+                var relY = new Number(evt.clientY - gOrigMousePosY);
+                
+                bMarkerMove = false;
+                gsvgRootNode.setAttribute("cursor", "auto");
+                //now set the new path here 
+                var newpathvalue = new Number(gCurrPathParam[gpathSegIndex][1]); 
+                newpathvalue += relX; 
+                gCurrPathParam[gpathSegIndex][1] = newpathvalue;
+
+                newpathvalue = new Number(gCurrPathParam[gpathSegIndex][2]);
+                newpathvalue += relY;
+                gCurrPathParam[gpathSegIndex][2] = newpathvalue;
+                UpdatePath('mypath', gCurrPathParam, gPathType);
+                //UpdatePolygonPath('mypath', gCurrPathParam);
+                AddMarker("mypath", "mark1", gCurrPathParam, gPathType);
+                pathNode.setAttribute("visibility", "hidden");
+                gIndicatorPath = []; 
+                
+            }                     
+        }
+
+        function OnMyMarkerMouseOut(evt) {
+            gsvgRootNode.setAttribute("cursor", "auto");
+            var markerNode = evt.target; 
+            markerNode.setAttribute('r', '5'); 
+            markerNode.setAttribute('opacity', '0.5'); 
+           // alert("Mouse Out"); 
+        }
+        function OnToggleMarker(evt) {
+            var markerNode = document.getElementById("mymarker"); 
+            if (bMarkerShow == true) {
+                bMarkerShow = false;
+                markerNode.setAttribute("visibility", "hidden");
+            }
+            else{
+                bMarkerShow = true;
+                markerNode.setAttribute("visibility", "visible");                
+            }
+        }
+
+        function UpdatePath(pathID, inputpathParam, pathType) {
+            var pathNode = document.getElementById(pathID);
+            var pathParam = "";           
+            var svgcontentnode = document.getElementById("svgcontent");
+            if( (pathType == 'LINE') || (pathType == 'POLYGON') )
+            {
+            	for (var k = 0; k < inputpathParam.length; k++) {
+                    if (k == 0)
+                        pathParam += ("M" + inputpathParam[k][1] + " " + inputpathParam[k][2] + " ");
+                    else
+                        pathParam += (inputpathParam[k][0] + inputpathParam[k][1] + " " + inputpathParam[k][2] + " ");
+                }            
+            	if(pathType == 'POLYGON')
+            		pathParam += "z";
+            }
+            else if(pathType == 'CUBIC_BEZIER')
+            {
+            	//pathParam += ("M" + inputpathParam[0][1] + " " + inputpathParam[0][2] + " ");
+            	//pathParam += ("C" + inputpathParam[1][1] + " " + inputpathParam[1][2] + " ");
+            	//pathParam += (" " + inputpathParam[2][1] + " " + inputpathParam[2][2] + " ");
+            	//pathParam += (" " + inputpathParam[3][1] + " " + inputpathParam[3][2] + " ");
+            	for (var k = 0; k < inputpathParam.length; k++) {
+            	    pathParam += (inputpathParam[k][0] + inputpathParam[k][1] + "," + inputpathParam[k][2] + " ");
+            	}        	
+            }
+            else if(pathType == 'QUADRATIC_BEZIER')
+            {
+            	pathParam += ("M" + inputpathParam[0][1] + " " + inputpathParam[0][2] + " ");
+            	pathParam += ("Q" + inputpathParam[1][1] + " " + inputpathParam[1][2] + " ");
+            	pathParam += (" " + inputpathParam[2][1] + " " + inputpathParam[2][2] + " ");
+         }
+         else if (pathType == 'ELLIPTIC_CURVE') {
+             pathParam += ("M" + inputpathParam[0][1] + "," + inputpathParam[0][2] + " ");
+             pathParam += ("A" + inputpathParam[2][1] + "," + inputpathParam[2][2] + " ");
+             pathParam += inputpathParam[3][0]+ " " +inputpathParam[3][1]+ " "+inputpathParam[3][2]+ " ";
+             pathParam += inputpathParam[1][1] + "," +inputpathParam[1][2];             
+         }     
+            pathNode.setAttribute("d", pathParam);
+            
+            //alert("Path updated successfully"); 
+        }
+
+        function AddMarker(pathID, markerID, pathParam, pathType) {
+            var pathNode = document.getElementById(pathID);           
+            var copynode;
+            usenode = document.getElementById(markerID);
+            var svgcontentnode = document.getElementById("svgcontent");
+            var JQSel = ".markerclass";
+            $(JQSel).remove();
+            if(pathType != 'ELLIPTIC_CURVE')
+            {
+            	for (var k = 0; k < pathParam.length; k++) {
+                    copynode = usenode.cloneNode(true);
+                    copynode.setAttribute("id", 'marker_'+ k);
+                    copynode.setAttribute("cx", pathParam[k][1]);
+                    copynode.setAttribute("cy", pathParam[k][2]);
+                    copynode.setAttribute("visibility", "visible");
+                    copynode.setAttribute("data-index", k);
+                    copynode.setAttribute("class", "markerclass");           
+                    svgcontentnode.appendChild(copynode);
+                }
+            }
+            else if(pathType == 'ELLIPTIC_CURVE')
+            {
+            	 copynode = usenode.cloneNode(true);                 
+                 copynode.setAttribute("cx", pathParam[0][1]);
+                 copynode.setAttribute("cy", pathParam[0][2]);
+                 copynode.setAttribute("visibility", "visible");
+                 copynode.setAttribute("data-index", 0);
+                 copynode.setAttribute("class", "markerclass");           
+                 svgcontentnode.appendChild(copynode);
+                 
+                 copynode = usenode.cloneNode(true);                 
+                 copynode.setAttribute("cx", pathParam[1][1]);
+                 copynode.setAttribute("cy", pathParam[1][2]);
+                 copynode.setAttribute("visibility", "visible");
+                 copynode.setAttribute("data-index", 1);
+                 copynode.setAttribute("class", "markerclass");           
+                 svgcontentnode.appendChild(copynode);
+            }
+            
+        }
+
+        function UpdateMarker(pathID, markerID, pathParam) {
+                
+        }
+        
+        function OnPathInfo() {
+        	gPathType = 'LINE'; 
+            UpdatePath('mypath', gCurrPathParam, gPathType);
+            AddMarker("mypath", "mark1", gCurrPathParam, gPathType);
+        }
+        //this function should take in a path and convert into Path Params for UI 
+        function GetPathParamArray(pathID) {
+        }
+        function OnDrawPolygon(evt) {
+            //get number of sides 
+            //get internal angle 
+            //now compute the arrar of points for the polygon path
+            //put some markers if requried 
+            gPathType = 'POLYGON'; 
+            glength = new Number(50);
+            gnSides = new Number(3);
+            gCurrPathParam = DrawPolygon("mypath", 150, 150, gnSides, glength);
+            var pathNode = document.getElementById('mypath');
+            pathNode.setAttribute('transform', 'scale(2)'); 
+            AddMarker("mypath", "mark1", gCurrPathParam, gPathType);
+        }
+        
+        function OnDrawCubicBezier(event)
+        {
+        	gPathType = 'CUBIC_BEZIER'; 
+        	var pathParam = []; 
+        	if(gCurrPathParam.length > 0)
+        	{
+        		gCurrPathParam.splice(0, gCurrPathParam.length); 
+        	}
+        	
+        		pathParam = ["M", "10", "10"]; 
+        		gCurrPathParam.push(pathParam); 
+        		
+        		pathParam = ["C", "50", "70"]; 
+        		gCurrPathParam.push(pathParam);
+        		
+        		pathParam = ["", "90", "100"]; 
+        		gCurrPathParam.push(pathParam);
+        		
+        		pathParam = ["", "50", "20"];
+        		gCurrPathParam.push(pathParam);
+
+        		pathParam = ["", "70", "20"];
+        		gCurrPathParam.push(pathParam);
+
+        		pathParam = ["", "80", "20"];
+        		gCurrPathParam.push(pathParam);
+        		
+        		UpdatePath('mypath', gCurrPathParam, gPathType);
+                AddMarker("mypath", "mark1", gCurrPathParam, gPathType);                      
+        	 
+        }
+		function OnDrawQuadaraticBezier(event){
+			gPathType = 'QUADRATIC_BEZIER'; 
+        	var pathParam = []; 
+        	if(gCurrPathParam.length > 0)
+        	{
+        		gCurrPathParam.splice(0, gCurrPathParam.length); 
+        	}
+        	
+        		pathParam = ["M", "10", "10"]; 
+        		gCurrPathParam.push(pathParam); 
+        		
+        		pathParam = ["Q", "50", "70"]; 
+        		gCurrPathParam.push(pathParam);
+        		
+        		pathParam = [" ", "90", "100"]; 
+        		gCurrPathParam.push(pathParam);        		
+        		
+        		UpdatePath('mypath', gCurrPathParam, gPathType);
+                AddMarker("mypath", "mark1", gCurrPathParam, gPathType); 
+		}
+
+        function DrawPolygon(pathID, x, y, nSides, length) {
+            gnInternalAngle = 2 * Math.PI / nSides;
+            var startAngle = Math.PI / nSides;
+            var radius = new Number(length);
+            radius = Math.round(radius / (2 * Math.sin(gnInternalAngle / 2)));
+            //  alert("Int Angle=" + gnInternalAngle) ;
+            var nPointArray = [];
+            var currPoint = new sPoint();
+            currPoint.x = x;
+            currPoint.y = y;
+            var currAngle;
+            var cx = new Number(x);
+            var cy = new Number(y);
+            var newPoint = ["M", currPoint.x, currPoint.y];
+
+            for (var k = 0; k < nSides; k++) {
+
+                currAngle = startAngle + (k * gnInternalAngle);
+                currPoint.x = Math.round(cx + radius * Math.cos(currAngle));
+                currPoint.y = Math.round(cy - radius * Math.sin(currAngle));
+                newPoint = ["L", currPoint.x, currPoint.y];
+                nPointArray.push(newPoint);
+
+            }
+            //UpdatePolygonPath(pathID, nPointArray);
+            UpdatePath(pathID, nPointArray, 'POLYGON'); 
+            return nPointArray; 
+
+        }
+
+        function OnDrawEllipticCurve(event) {
+
+            gPathType = 'ELLIPTIC_CURVE';            
+            var pathParam = [];
+            if (gCurrPathParam.length > 0) {
+                gCurrPathParam.splice(0, gCurrPathParam.length);
+            }
+            //START POINTS 
+            pathParam = ["M", "100", "100"];
+            gCurrPathParam.push(pathParam);
+            
+          //end points
+            pathParam = [" ", "140", "150"];
+            gCurrPathParam.push(pathParam);
+
+            //radius
+            pathParam = ["A", "80", "50"];
+            gCurrPathParam.push(pathParam);
+
+            //x-axis rotation //large arc flag //sweep arc flag
+            pathParam = ["60", "0", "1"];
+            gCurrPathParam.push(pathParam);          
+            
+
+            UpdatePath('mypath', gCurrPathParam, gPathType);
+            AddMarker("mypath", "mark1", gCurrPathParam, gPathType); 
+            
+        }
+        function UpdatePolygonPath(pathID, inputpathParam) {
+            var pathNode = document.getElementById(pathID);
+            var pathParam = "";
+            for (var k = 0; k < inputpathParam.length; k++) {
+                if (k == 0)
+                    pathParam += ("M" + inputpathParam[k][1] + " " + inputpathParam[k][2] + " ");
+                else
+                    pathParam += (inputpathParam[k][0] + inputpathParam[k][1] + " " + inputpathParam[k][2] + " ");
+            }
+            pathParam += "z";
+            pathNode.setAttribute("d", pathParam);
+            //alert("Path updated successfully");
+        }
+
+        function OnSplice(event) {
+            
+        }
+    </script>
+</head>
+<body>
+
+<!--
+<svg id="rootsvg1" x="0px" y="0px" width="415px" height="415px" version="1.1"  viewBox="0 0 415 415" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg"  onmousedown="OnBeginDraw(evt)" onmousemove="OnDrawing(evt)" onmouseup="OnEndDraw(evt)" cursor="auto" pointer-events="none")>
+ -->
+ <svg id="rootsvg1" x="0px" y="0px" width="415px" height="415px" version="1.1"  viewBox="0 0 415 415" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg"  cursor="auto" onload="OnSVGLoad()" )>
+
+  <svg id="background" width="100%" height="100%" visibility="visble" >
+    <defs>
+      <pattern id="gridpattern" patternUnits="userSpaceOnUse"  x="0" y="0" width="10" height="10"  viewBox="0 0 10 10" >
+        <rect x="0" y="0" width="10" height="10" stroke="grey" stroke-width="0.5" fill="none"/>
+      </pattern>
+      <pattern id="bigrectpattern" patternUnits="userSpaceOnUse"  x="0" y="0" width="100" height="100"  viewBox="0 0 100 100" >
+        <rect x="0" y="0" width="100" height="100" stroke="black" stroke-width="1" fill="url(#gridpattern)"/>
+      </pattern>     
+      
+    </defs>    
+    
+    <rect x="0" y="0" width="100%" height="100%"  fill="url(#bigrectpattern)" />
+    
+  </svg>     
+    <svg id="svgcontent" width="100%" height="100%" >    
+        <defs>        
+        <marker id="circmarker"  viewBox="0 0 10 10" refX="5" refY="5"  markerUnits="strokeWidth"  markerWidth="4" markerHeight="3" orient="auto">
+            <circle cx="5" cy="5" r="5" fill="black"/>
+        </marker>
+      <!--  <circle id="mymarker" cx="0" cy="0" r="3" stroke="black" stroke-width="2"  fill="blue" fill-opacity="0.2" />--> 
+<!--   <circle id="mymarker" cx="0" cy="0" r="3" stroke="black" stroke-width="2"  fill="blue" fill-opacity="0.2" /> -->      
+    </defs>     
+       <circle id="mark1" cx="0" cy="0" r="5" stroke="black" stroke-width="2"  fill="blue" fill-opacity="0.4" pointer-event="fill"  visibility="hidden" data-index="" 
+        pointer-events="fill" onmousemove="OnMyMarkerMouseMove(evt)" onclick="OnMyMarkerMouseDown(evt)" onmouseout="OnMyMarkerMouseOut(evt)"/>    	
+        
+        <path id="indicatorpath" visibility="hidden" stroke="grey" stroke-width="2" stroke-opacity="1" stroke-dasharray="4 2" fill="none" d="M50 130 L200 100 L300 150" />  
+      <!--  <use id="mark1" x="200" y="100" xlink:href="#mymarker" pointer-event="fill"  visibility="hidden" data-index="" 
+        pointer-events="fill" onmousemove="OnMyMarkerMouseMove(evt)" onclick="OnMyMarkerMouseDown(evt)" onmouseout="OnMyMarkerMouseOut(evt)"/> 
+        
+        --> 
+       <path id="mypath" d="" fill="none" stroke="green" stroke-width="3"/>
+      <!-- <path id="mypath"  fill="none" stroke="green" stroke-width="3"/>-->
+      <!--  <use x="150" y="100" xlink:href="#mymarker" pointer-event="fill"  />
+        <use x="200" y="100" xlink:href="#mymarker" pointer-event="fill"  />
+        <use x="300" y="150" xlink:href="#mymarker" pointer-event="fill"  />
+        <use x="350" y="200" xlink:href="#mymarker" pointer-event="fill"  /> -->
+    </svg>   
+        
+       
+</svg>
+
+<button onclick="OnToggleGrid(event)" data-gridshow="true">Toggle Grid</button>
+<button onclick="OnToggleMarker(event)">Toggle Markers</button>
+<button onclick="OnPathInfo()">Path Info</button>
+<button onclick="OnDrawPolygon(event)" data-gridshow="true">Draw Polygon</button>
+<button onclick="OnDrawCubicBezier(event)" data-gridshow="true">Draw Cubic Bezier</button>
+<button onclick="OnDrawQuadaraticBezier(event)" data-gridshow="true">Draw Quadratic Bezier</button>
+<button onclick="OnDrawEllipticCurve(event)" data-gridshow="true">Draw Elliptic Curve</button>
+<button onclick="OnSplice(event)" data-gridshow="true">Splice</button>
+
+<p>Mouse Point:<span id="mouselocation"></span></p>
+</body>
+</html>

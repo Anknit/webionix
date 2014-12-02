@@ -1,0 +1,34 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="500" height="500" viewBox="0 0 500 500"
+     xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <title>Example triangle01- simple example of a 'path'</title>
+  <desc>A path that draws a triangle</desc>
+ <!-- <g>
+      <rect x="1" y="1" width="398" height="398"
+            fill="none" stroke="blue" />
+      <path d="M 100 100 L 300 100 L 200 300 z " fill="none" stroke="blue" stroke-width="3" />
+      
+      <path d="M 100 150 L 300 150 M 100 200 L 300 200  " fill="none" stroke="red" stroke-width="6" /> 
+      
+   <path d="M 10 150 h 20  v 50 z  " fill="none" stroke="green" stroke-width="6" />
+  
+  </g>
+  <g>
+    <rect x="10" y="25" width="398" height="398"  fill="none" stroke="brown" />
+    <path d="M13 150 C17 160 70 170  100 150 z" fill="none" stroke="grey" stroke-width="3"/>
+  </g>-->
+  <desc>Example of Quadratic bezier curve </desc>
+  <g>
+    <rect x="10" y="25" width="398" height="398"  fill="none" stroke="brown">
+    </rect>
+
+    <!--    <path d="M20 150 Q60 100  100 150 T150 150" fill="none" stroke="grey" stroke-width="3"> -->
+    <!--<path d="M20,150 Q60,70  100,250 T150,350" fill="red" stroke="grey" stroke-width="3"/>-->
+    <path id="SVG_743" class="SVG_PATH_OBJECT" transform="translate(0,0)" d="M50,80 L100,110 L140,130" stroke="black" stroke-width="3"/>
+  
+  </g>
+    
+ 
+</svg>

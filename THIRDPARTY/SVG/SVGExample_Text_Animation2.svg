@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg width="12cm" height="3.6cm" viewBox="0 0 1000 300" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+
+  <text x="250" y="150"  font-family="Verdana" font-size="55" fill="blue" >
+    <tspan dx="1">Hello
+      <animate attributeType="XML" attributeName="dx" from="1" to="0" dur="1s" fill="freeze"/>
+    </tspan>
+    
+  </text>
+  
+</svg>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+
+  <svg  width="800px" height="800px" viewBox = "0 0 1000 1000" version = "1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+      <linearGradient id="MyGradient" x1="0" y1="0" x2="60%" y2="50%" spreadMethod="pad">
+        <stop offset="10%" stop-color="#F60" />
+        <stop offset="98%" stop-color="#FF6" />
+      </linearGradient>
+    </defs>
+    <rect id="rect1" x="210" y="170" width="256" height="256"  stroke="red" fill="url(#MyGradient)"/>
+    <defs>      
+      <filter id="myin" filterUnits="objectBoundingBox">
+        <feImage xlink:href="rect1" result="rectout"/>
+       <!--<feComposite in="rectout" in2="SourceGraphic"  operator="over"/> -->
+       <!--<feComposite in="rectout" in2="SourceGraphic"  operator="xor"/>-->
+        <feComposite in="rectout" in2="SourceGraphic"  operator="arithmetic" k1="0" k2="0.80" k3="0.60" k4="0.2"/>
+      </filter>
+      
+      <filter id="filter1">
+        <feComponentTransfer type="identity" result="myoutput" />
+      </filter>
+      <filter id="compfilter">
+        <feComposite operator="over" in="myoutput" in2="SourceGraphic"/>      
+      </filter>
+      
+    </defs>
+
+    <g>      
+      <circle cx="240" cy="300" r="120" stroke-width="4" stroke="blue" fill="blue" filter="url(#myin)" fill-opacity="0.4"  />     
+    </g>
+  </svg>
+
+

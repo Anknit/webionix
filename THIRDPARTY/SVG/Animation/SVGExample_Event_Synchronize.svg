@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+
+<svg width="2400px" height="2400px"  version="1.1"  viewBox="0 0 2400 2400" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+  <script type="application/ecmascript">
+    <![CDATA[
+    
+    function OnClickForAnimate(evt)
+    {   
+      
+    }
+    ]]>
+  </script>
+
+
+  <desc>
+    Example ViewBox - uses the viewBox
+    attribute to automatically create an initial user coordinate
+    system which causes the graphic to scale to fit into the
+    viewport no matter what size the viewport is.
+  </desc>
+  <defs>
+    <linearGradient id="MyGradient" x1="0%" y1="0%" x2="15%" y2="15%" >
+   
+      <animate id='x2_anim' attributeType="XML" attributeName="x2" begin="myellipse.click" to="100%" dur="3s" fill="freeze" />
+      <animate id='y2_anim' attributeType="XML" attributeName="y2" begin="myellipse.click" to="100%" dur="3s" fill="freeze"/>
+      <!-- 
+      <animate id='x2_anim' attributeType="XML" attributeName="x2" begin='accessKey(a)' to="100%" dur="3s" fill="freeze" />
+      <animate id='y2_anim' attributeType="XML" attributeName="y2" begin='accessKey(a)' to="100%" dur="3s" fill="freeze"/>
+      --> 
+      <stop offset="5%" stop-color="#FFFFEE" />
+      <stop offset="100%" stop-color="#551100" />     
+    </linearGradient>
+
+    <linearGradient id="MyGradient1" x1="0%" y1="0%" x2="100%" y2="100%" >      
+      <stop offset="5%" stop-color="#00FFEE" />
+      <stop offset="95%" stop-color="#FFFFFF" >
+        <animate attributeType="XML" attributeName="offset" from="10%" to="95%" begin="x2_anim.end" dur="1s" fill="freeze"/>
+        <animate attributeType="XML" attributeName="stop-color" from="#551100" begin="y2_anim.end" to="#FFFFFF" dur="2s" fill="freeze"/>
+      </stop>
+    </linearGradient>
+    
+  </defs>
+  <symbol id="group1">
+    <rect x="0" y="0" width="154" height="154"   fill="#000000" stroke="blue" stroke-width="1"  />
+   
+  </symbol>
+  <defs>
+    <rect id="myrect1" x="0" y="0" width="150" height="150"   fill="url(#MyGradient1)" stroke="blue" stroke-width="1" />  
+  </defs>
+  <g>
+    <use xlink:href="#group1" x="10"  y="10" title="An Egg being displayed" />
+  </g>
+  <ellipse id="myellipse" cx="75" cy="77" rx="60" ry="75" fill="url(#MyGradient)" title="An Egg being displayed"  />
+  <g transform="translate(10, 200)" >
+    <use xlink:href="#myrect1" title="An animated Gradient Display" />
+  </g>
+</svg>
+
+

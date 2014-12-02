@@ -1,0 +1,12 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="12cm" height="12cm" viewBox="0 0 1200 1200" version="1.1"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ 
+  <path id="SVG_57" class="SVG_PATH_OBJECT LINE_PATH ROTATE,0" transform="translate(0,0) scale(1,1) rotate(0 0,0)" d="M397,75 L461,131 L513,75 L623,100" stroke="black" stroke-width="60" fill="none" stroke-linejoin="round"/>
+  <rect x="300" y="400" width="300" height="400" stroke="black" fill="none" stroke-width="20" stroke-linejoin="round" stroke-dasharray="14,16" />
+  
+  <!--<use class="thick" xlink:href="#SVG_56" stroke-linejoin="miter"/>-->
+ 
+</svg>

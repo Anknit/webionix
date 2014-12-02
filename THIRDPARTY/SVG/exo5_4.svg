@@ -1,0 +1,66 @@
+<svg width='400' height='400' viewBox="0 0 400 400" onload="init()">
+<script type="text/ecmascript"><![CDATA[
+var text=new Array('We are very happy','to see you','at','this workshop','about animation');
+var style="font-weight:bold;font-size:40;font-family:Arial;fill:red;stroke:black";
+var x_text=10,y_text=55,height_text=50;
+
+function init(evt)
+{parent_node=document.getElementById("txt");
+parent_node2=document.getElementById("text");
+linefeed=parent_node.getFirstChild();
+nb_lines=text.length;
+for (i=0;i<nb_lines;i++)
+{nb_letters=text[i].length;values="";
+for (j=0;j<=nb_letters;j++)
+{node=document.createElement("text");
+node.setAttribute("id","p"+i.toString()+"_"+j.toString());
+data=document.createTextNode(text[i].substring(0,j));
+node.appendChild(data);
+parent_node.appendChild(node);
+lf=linefeed.cloneNode(false);
+parent_node.appendChild(lf);
+values=values+"#p"+i.toString()+"_"+j.toString();
+if (j<nb_letters) values=values+";";
+}
+node=document.createElement("text");
+node.setAttribute("x",x_text);
+node.setAttribute("y",y_text+i*height_text);
+node.setAttribute("style",style);
+lf=linefeed.cloneNode(false);
+node.appendChild(lf);
+tref=document.createElement("tref");
+tref.setAttribute("xlink:href","#p"+i.toString()+"_0");
+lf=linefeed.cloneNode(false);
+tref.appendChild(lf);
+anim=document.createElement("animate");
+anim.setAttribute("id","a"+i.toString());
+anim.setAttribute("attributeName","xlink:href");
+anim.setAttribute("fill","freeze");
+anim.setAttribute("values",values);
+anim.setAttribute("dur",0.25*nb_letters);
+if (i==0)
+anim.setAttribute("begin","go.click")
+else
+anim.setAttribute("begin","a"+(i-1).toString()+".end");
+lf=linefeed.cloneNode(false);
+anim.appendChild(lf);
+tref.appendChild(anim);
+node.appendChild(tref);
+parent_node2.appendChild(node);
+lf=linefeed.cloneNode(false);
+parent_node2.appendChild(lf);
+};
+};
+]]></script>
+<defs>
+<g id="txt">
+</g>
+</defs>
+<rect x='0' y='0' width='400' height='400' style='stroke:green;fill:yellow'/>
+<g id="text">
+</g>
+<rect x="10" y="380" width="50" height="18" fill="black"/>
+<text x="35" y="395" style="text-anchor:middle;font-weight:bold;font-size:15;font-family:Arial;fill:white;stroke:black">
+GO</text>
+<rect id="go" x="10" y="380" width="50" height="18" opacity="0.1"/>
+</svg>

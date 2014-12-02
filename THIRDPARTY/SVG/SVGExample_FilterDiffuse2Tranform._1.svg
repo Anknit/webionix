@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+
+  <svg  width="800px" height="800px" viewBox = "0 0 800 800" version = "1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+      <path id="curve" d="M 0 0 Q 5 20 10 10 T 20 20"   style="stroke: black; fill: none;"/>
+      <circle id="green-light" cx="150" cy="150" r="150" fill="#006000"/>
+    </defs>
+
+    <!--<circle id="green-light" cx="350" cy="350" r="200" fill="#006000"/> -->
+    <!--<rect id="green-light" x="100" y="150" width="200" height="250"  fill="#006000" /> -->
+    <defs> 
+      <filter id="diff-light" color-interpolation-filters="sRGB"  x="0" y="0" width="100%" height="100%">
+        <feImage xlink:href="#curve" result="tile"  width="20" height="20"/>
+        <feTile in="tile" result="tile"/>
+        <feColorMatrix type="luminanceToAlpha" in="tile"  result="alphaTile"/>
+
+        <feDiffuseLighting in="alphaTile" lighting-color="#ffffcc"  surfaceScale="1" diffuseConstant="0.5"  result="diffuseOutput">
+             <fePointLight x="250" y="220" z="50"/>    
+        </feDiffuseLighting>    
+
+        <feComposite in="diffuseOutput" in2="SourceGraphic"  operator="in" result="diffuseOutput"/>
+
+        <feBlend in="diffuseOutput" in2="SourceGraphic"     mode="screen"/>
+      </filter>
+    </defs>
+
+    <g filter="url(#diff-light)">
+      <use xlink:href="#green-light" style="filter: url(#diff-light);"/>
+      
+      
+    </g>
+   <!-- <use xlink:href="#green-light" style="filter: url(#diff-light);"/>-->
+  </svg>
+
+

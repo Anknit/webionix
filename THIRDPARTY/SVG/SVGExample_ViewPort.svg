@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+
+<svg width="300px" height="300px"  version="1.1"  viewBox="10 10 200 200" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+  <desc>
+    Example ViewBox - uses the viewBox
+    attribute to automatically create an initial user coordinate
+    system which causes the graphic to scale to fit into the
+    viewport no matter what size the viewport is.
+  </desc>
+  <!-- This rectangle goes from (0,0) to (1500,1000) in user space.
+       Because of the viewBox attribute above,
+       the rectangle will end up filling the entire area
+       reserved for the SVG content. -->
+  <rect x="25" y="25" width="150" height="150"   fill="yellow" stroke="blue" stroke-width="6"  />
+  
+</svg>
+
+

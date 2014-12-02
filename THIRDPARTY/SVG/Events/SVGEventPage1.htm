@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SVG Page </title>
+    <script type="text/javascript">
+        function OnDomBtnClick() {
+            var svgNode = document.getElementById("SVG1");
+            var text = svgNode.outerHTML;
+            alert(text); 
+        }
+    </script>
+</head>
+<body>
+<p>Hello World .. this is indeed great to
+ <svg id="SVG1" width="400px" height="400px"  version="1.1"  viewBox="0 0 400 400" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+ 
+  <script type="application/javascript">
+    <![CDATA[
+    /* Remember putting anything other than evt does not work resons unknown*/
+    function OnRectMouseMove(evt){
+      var rect = evt.target;
+      rect.setAttribute("stroke", "blue"); 
+      rect.setAttribute("stroke-dasharray","3"); 
+      rect.setAttribute("cursor","crosshair"); 
+    //  alert("Event Trapped");      
+    }
+    
+    function OnRectMouseOut(evt){
+    var rect = evt.target;
+      rect.setAttribute("stroke", "red");
+      rect.setAttribute("stroke-dasharray","none");
+       rect.setAttribute("cursor","auto"); 
+    }
+  ]]>
+  </script>
+  <g id="mygroup1">
+    <rect x="0" y="0" width="300" height="200" stroke="red" stroke-width="6" fill="yellow" onmouseover="OnRectMouseMove(evt)" onmouseout="OnRectMouseOut(evt)" pointer-events="stroke" />
+    <ellipse cx="150" cy="100" rx="150" ry="100" stroke="blue" stroke-width="3" fill="green" />
+  </g>
+</svg>
+
+ have the SVG on the horizon </p>
+<p>Having seen the world dying every day it is important to use it for benfit of fellow beings </p>
+
+<button onclick="OnDomBtnClick()">DOmBtn</button>
+</body>
+</html>
