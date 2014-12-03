@@ -93,6 +93,8 @@ var gCenterNode = 0;
 var gFocusNode=0; 
 var gInitFocusPoint=0; 
 var gWidgetHeight = '22'; 
+var gInitFillColor = 0; 
+var gInitFillValue = 0; 
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -1151,6 +1153,13 @@ function GX_Initialize()
     WAL_setNumberInputValue("polynSidesIP", '3', false);
     WAL_setNumberInputValue("polyLengthIP", '50', false);
     
+    
+    //fill color interface
+    WAL_createButton('fillcolAnimAddBtn', 'GX_FillBtnHandler', '60', 24, true);
+    WAL_createButton('fillcolAnimPreviewBtn', 'GX_FillBtnHandler', '60', 24, true);
+    WAL_createCheckBox('animateFillColor', 'GX_FillColorAnimCheckValueChange', '50', gWidgetHeight, '13', false, false);
+    WAL_createModelessWindow('fillcolorDlg', '250', '150', 'fillcolOK', 'fillcolCancel');
+   
     
    // Debug_Message("DBM Initialized Successfully"); 
    
@@ -3750,6 +3759,24 @@ function GX_ToolbarHandler(Node)
 	 //case 'anim_copy_icon':
 	//	 break; 
 		 
+	 case 'fill_color_icon':
+		 if(!gCurrentObjectSelected)
+				return ; 
+		 
+		 var btnNode = document.getElementById('fill_colorbtn'); 
+		 gInitFillValue = gCurrentObjectSelected.getAttribute('fill');
+		 var str = gInitFillValue.substring(0,3); 
+		 if(str != 'url')
+		 {
+			 gInitFillColor = gInitFillValue;			 
+		 }
+		 else
+		 {
+			 gInitFillColor = 'grey'; 
+		 }
+		 btnNode.style.backgroundColor = gInitFillColor;
+		 WAL_showModalWindow('fillcolorDlg','GX_FillColorDlgOK', 'GX_FillColorDlgCancel'); 
+		 break; 
 	default:
 		break; 
 		
@@ -6437,4 +6464,91 @@ function GX_RemoveGradient(gradID, gradTitle)
 	gGradientList = GX_RemoveGradFromList(gradTitle, gGradientList);
 	gGradientList = GX_GetGradientList(); 
 	GX_UpdateGradientList(gGradientList);
+}
+
+
+function GX_FillColorDlgOK()
+{
+	//Debug_Message("Fill Color Dialog"); 
+}
+function GX_FillColorDlgCancel()
+{
+	gCurrentObjectSelected.setAttribute('fill', gInitFillValue); 
+	
+}
+function GX_FillColorHandler(event)
+{
+	var btnID =  event.target.id; 
+	var attrName = 'fill';
+	if(!gCurrentObjectSelected)
+		return ; 
+	var tgtNode = gCurrentObjectSelected;    
+	gPrevAttributeList = EL_getObjectAttributes(tgtNode);
+	 WAL_showColorPickerWidget('gradcolorpickwidget', '', btnID, attrName, gInitFillColor, tgtNode.id);
+}
+function GX_FillColorAnimCheckValueChange(event)
+{
+	 var CBID = event.target.id;
+	 var state = event.args.checked;
+	 if(CBID == 'animateFillColor')
+	 {
+		if(state == true)
+		{
+			 
+		}
+		else
+		{
+			//remove the animation 
+		}
+	 }
+}
+
+function GX_FillBtnHandler(event)
+{
+	var btnID = event.target.id; 
+	
+	if(btnID == 'fillcolAnimAddBtn')
+	{
+		if(!gCurrentObjectSelected)
+			return ;
+		//first the animation structure here 
+		gInitAnimParam = new sAnimParams(); 		
+	//	gNewAnimObject = true; 
+		var objID = gCurrentObjectSelected.id; 		
+	    gInitAnimParam.animID = GXRDE_GetUniqueID('ANIM_');  
+	    gInitAnimParam.objectID = gCurrentObjectSelected.id;  
+	    gInitAnimParam.duration = 1;
+	    gInitAnimParam.animType = 'ANIM_ATTRIBUTE'; //ATTRIBUTE, MOTION,TRANSFORM
+	    gInitAnimParam.attribute = 'fill';
+	    gInitAnimParam.startValue = '#000000'
+	    gInitAnimParam.endValue = gCurrentObjectSelected.getAttribute('fill');;
+	    gInitAnimParam.refPathID = '';
+	    gInitAnimParam.bPathVisible = false;
+	    gInitAnimParam.startType = 'ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
+	    gInitAnimParam.startTime = 0;
+	    gInitAnimParam.UIEventType = 'M_MOVE'; //M_CLICK, M_MOVE
+	    gInitAnimParam.UIObjectID = gInitAnimParam.objectID; 
+	    gInitAnimParam.AnimEventType = 'END'; //BEGIN, END
+	    gInitAnimParam.AnimID = 0;
+	    gInitAnimParam.calcMode = 'linear';
+	    gInitAnimParam.restart = 'never';
+	    gInitAnimParam.repeatCount = 0;
+	    gInitAnimParam.endState = 'freeze'; //FREEZE, REMOVE
+	    gInitAnimParam.PathObjectOffset=0;
+	    gInitAnimParam.PathStartPoint=new sPoint();
+	    gInitAnimParam.center = '';  //centre of rotation 
+	    gInitAnimParam.title = 'Default';      
+		
+		//then call for add animation 
+	    GX_AddAnimationElement(gInitAnimParam, false); 
+	}
+	else if(btnID == 'fillcolAnimPreviewBtn')
+	{
+		var animnode = gCurrentObjectSelected.firstElementChild; 
+		if('ANIMATE' == animnode.nodeName.toUpperCase())
+		{
+			GX_PreviewAnimation(animnode.id);
+		}		
+	}
+	
 }
