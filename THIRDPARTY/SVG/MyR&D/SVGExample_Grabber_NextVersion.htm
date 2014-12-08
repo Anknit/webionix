@@ -679,7 +679,7 @@
             <circle cx="5" cy="5" r="5" fill="black" />
         </marker>
     </defs>    
-    <rect id="gridrect" x="0" y="0" width="100%" height="100%"  fill="url(#bigrectpattern)" onclick="OnSVGParentClick(evt)"/>
+    <rect id="gridrect" x="0" y="0" width="100%" height="100%"  fill="url(#bigrectpattern)" onclick="OnSVGParentClick(evt)" onmousemove="OnObjectMove(evt)" onmouseup="OnObjectMouseUp(evt)"/>
     
   </svg>  
   <svg id="svgcontent" x="0px" y="0px" width="600px" height="600px" version="1.1"  viewBox="0% 0% 150% 150%" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -696,7 +696,7 @@
          pointer-events="fill"   onclick="OnSelection(evt)"/>     
          
          <rect id="grabber" x="0" y="0" width="50" height="50" stroke="blue" stroke-width="3" fill='white' fill-opacity='0.1' stroke-dasharray="none"   
-        visibility="hidden"  pointer-events="visible" onmousemove="OnObjectMove(evt)" onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)" onmouseup="OnObjectMouseUp(evt)"/>        
+        visibility="hidden"  pointer-events="visible"  onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)" onmousemove="OnObjectMove(evt)" onmouseup="OnObjectMouseUp(evt)"/>        
         <circle id="markerTL" class="CUSTOM_MARKER" cx="0" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1"  visibility="hidden" data-direction='nw-resize' 
         onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)" />
         <circle id="markerTM" class="CUSTOM_MARKER" cx="25" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction='n-resize'
