@@ -3405,7 +3405,7 @@ function GX_InitializeToolbar()
     var dashValue; 
     for (i = 0; i < 9; i++) {
        image = 'dash' + i + '.svg';          
-        var html = "<div style='padding: 0px; margin: 0px; height: 20px; float: left;'><img width='auto' style='float: left; margin-top: 1px; margin-right: 2px;' src='http://localhost/ECLIPSE_WORKSPACE/CDOCApps/USER_DATA/shared/Stroke_Dash/" + image + "'/></div>";
+        var html = "<div style='padding: 0px; margin: 0px; height: 20px; float: left;'><img width='auto' style='float: left; margin-top: 1px; margin-right: 2px;' src='../USER_DATA/shared/Stroke_Dash/" + image + "'/></div>";
         
         switch(i)
         {
