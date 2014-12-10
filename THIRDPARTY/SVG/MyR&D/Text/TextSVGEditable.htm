@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Untitled Page</title>
+     <script type="text/javascript" src="http://localhost/CDOCAppsCommonJS/jquery-1.8.3.js"></script>
+    <script type="text/javascript" >
+    function OnTextBtnclick(event)
+    {
+    	var btnID =  event.target.id; 
+    	
+    	if(btnID == 'selectbtn' )
+    	{
+    		var node = document.getElementById('text1');
+        	var dim = node.getBBox(); 
+        	var bdryRectNode = document.getElementById('bdryRect'); 
+        	bdryRectNode.setAttribute('x',Math.round(dim.x)); 
+        	bdryRectNode.setAttribute('y' , Math.round(dim.y)); 
+        	bdryRectNode.setAttribute('width' , Math.round(dim.width)); 
+        	bdryRectNode.setAttribute('height' , Math.round(dim.height)); 
+    	}
+    	else if(btnID == 'editbtn' )
+    	{
+    		var node = document.getElementById('text1');
+    		var dim = node.getBBox(); 
+    		var editornode = document.getElementById('texteditor'); 
+    		var str = node.firstChild.data; 
+    		editornode.value= str; 
+    		editornode.style.position = 'absolute'; 
+    		editornode.style.left = Math.round(dim.x ) + 'px'; 
+    		editornode.style.top = Math.round(dim.y ) + 'px';  
+    		
+    	}
+    	else if(btnID == 'savebtn' )
+    	{
+    		var node = document.getElementById('text1');
+    		var editornode = document.getElementById('texteditor'); 
+    		//var str = editornode.innerHTML ;//node.firstChild.data;
+    		var str = editornode.value ;
+    		node.firstChild.data  = str;    		
+    	}
+    	
+    	
+    }
+    </script>
+</head>
+<body>
+
+<svg width="10cm" height="10cm" viewBox="0 0 1000 1000" version="1.1"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+  <defs>
+   
+    
+  </defs>
+  <desc>Example toap01 - simple text on a path</desc>
+
+  <use xlink:href="#VerticalPath" fill="none" stroke="red"  />
+  <text id='text1' font-family="Verdana" font-size="45" fill="blue" x='40' y='100' contenteditable='true'>We go up, then we go down, 
+  then up again</text>
+
+  <!-- Show outline of canvas using 'rect' element -->
+  <rect id='bdryRect' x="1" y="1" width="998" height="298"
+        fill="none" stroke="blue" stroke-width="2" />
+</svg>
+
+<input type='button' id='selectbtn' onclick='OnTextBtnclick(event)' value='Select' />
+<input type='button' id='editbtn' onclick='OnTextBtnclick(event)' value='Edit' />
+<textarea id='texteditor' value='Hello world'></textarea>
+<input type='button' id='savebtn' onclick='OnTextBtnclick(event)' value='Save' />
+<div id='textdiv' border='solid thin red'>
+	
+</div>
+</body>
+</html>
+
+

@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Untitled Page</title>
+    <script type="text/javascript" >
+    function OnTextBtnclick(event)
+    {
+    	var node = document.getElementById('text1'); 
+    	var dim = node.getBBox(); 
+    	var bdryRectNode = document.getElementById('bdryRect'); 
+    	bdryRectNode.setAttribute('x',Math.round(dim.x)); 
+    	bdryRectNode.setAttribute('y' , Math.round(dim.y)); 
+    	bdryRectNode.setAttribute('width' , Math.round(dim.width)); 
+    	bdryRectNode.setAttribute('height' , Math.round(dim.height)); 
+    	alert('Length=' +  Math.round(dim.width) + 'Height=' + Math.round(dim.height)); 
+    }
+    </script>
+</head>
+<body>
+
+<svg width="20cm" height="20cm" viewBox="0 0 2000 2000" version="1.1"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <path id="MyPath" d="M 100 200 C 100 300 " />
+    <path id="VerticalPath" d="M200,50 L800,50 " />
+    
+  </defs>
+  <desc>Example toap01 - simple text on a path</desc>
+
+  <use xlink:href="#VerticalPath" fill="none" stroke="red"  />
+  <text id='text1' font-family="Verdana" font-size="45" fill="blue" x='40' y='100' >    
+       We go up, then we go down, then up again     
+ <!-- <animate id="ANIM_1374" dur="1s" calcMode="linear" restart="never" repeatCount="0" fill="freeze" begin="0s" attributeType="XML" attributeName="rotate"  from="45" to="0">-->
+  </text>
+
+  <!-- Show outline of canvas using 'rect' element -->
+  <rect id='bdryRect' x="1" y="1" width="998" height="298"
+        fill="none" stroke="blue" stroke-width="2" />
+</svg>
+
+<input type='button' id='textbtn1' onclick='OnTextBtnclick(event)' value='Button1' />
+</body>
+</html>
+
+
