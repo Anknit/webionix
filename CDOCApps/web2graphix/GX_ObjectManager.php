@@ -214,8 +214,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 				return ; 
 			//<stop id="MyGradient_stop0" offset="5%" stop-color="#F60000"/>
 			//now adding grad animation as topmost node 
-			$topnodeid = $objectIDVal . '_TOP_GRAD_ANIM'; 
-			//<animate id="SVG_16_TOP_GRAD_ANIM" dur="0.2s" calcMode="linear" restart="never" repeatCount="0" fill="freeze" begin="0s" attributeType="XML" attributeName="x1" from="0%" to="1%"/>
+			$topnodeid = $objectIDVal . '_TOP_GRAD_ANIM'; 			
 			$attrdefinition = array('id'=>$topnodeid, 'dur'=>'0.2s', 'calcMode'=>"linear", 'restart'=>'never','repeatCount'=>"0", 'fill'=>"freeze", 'begin'=>"0s", 'attributeType'=>"XML", 
 				'attributeName'=>"x1", 'from'=>"0%", 'to'=>"1%");
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'animate',$topnodeid, 0, $objectIDVal, $attrdefinition,'');
@@ -256,7 +255,11 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 				$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'radialGradient',$objectIDVal,0, $parentIDVal, $attrdefinition,$tagval);
 				if(!$respData)
 					return ;
-				//<stop id="MyGradient_stop0" offset="5%" stop-color="#F60000"/>
+				$topnodeid = $objectIDVal . '_TOP_GRAD_ANIM';
+				$attrdefinition = array('id'=>$topnodeid, 'dur'=>'0.2s', 'calcMode'=>"linear", 'restart'=>'never','repeatCount'=>"0", 'fill'=>"freeze", 'begin'=>"0s", 'attributeType'=>"XML",
+						'attributeName'=>"cx", 'from'=>"0%", 'to'=>"1%");
+				$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'animate',$topnodeid, 0, $objectIDVal, $attrdefinition,'');
+				
 				for($i=0; $i < 4; $i++)
 				{
 					$stopid = $objectIDVal . '_STOP' . $i;
