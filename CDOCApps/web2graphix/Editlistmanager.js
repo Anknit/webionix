@@ -314,7 +314,7 @@ function EL_CompareAndAddtoList(prevAttrList, currAttrList, editList, compactLis
 	
 	if(prevAttrList.length !=currAttrList.length)
 	{
-		Debug_Message("List Length mismatch in Previous and Current List"); 
+		//Debug_Message("List Length mismatch in Previous and Current List"); 
 		return;
 	}
 	if(prevAttrList[0][0] != currAttrList[0][0])
