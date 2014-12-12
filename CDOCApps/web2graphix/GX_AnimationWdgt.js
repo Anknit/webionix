@@ -28,7 +28,7 @@ sAnimParams.prototype.center = '';
 
 function sAnimParams() {	
 	sAnimParams.prototype.animID = 0;
-	sAnimParams.prototype.objectID = 0; 
+	sAnimParams.prototype.objectID = 0;  
 	sAnimParams.prototype.siblingID = 0; 
 	sAnimParams.prototype.duration = 0;
 	sAnimParams.prototype.animType =''; //ANIM_ATTRIBUTE, ANIM_MOTION,ANIM_TRANSFORM
