@@ -136,7 +136,8 @@ function GX_SetAnimParamOnUI(animParam) {
     var animlist=[]; 
     for(var i =0; i <gAnimList.length; i++)
 	 {
-    	if( (animParam.title  !=  gAnimList[i][5]) && (gAnimList[i][5] != 'Invisible Animation') )
+    	//if( (animParam.title  !=  gAnimList[i][5]) && (gAnimList[i][5] != 'Invisible Animation') )
+    	if(animParam.title  !=  gAnimList[i][5])
     		animlist.push(gAnimList[i][5]); 
 	 }
     WAL_UpdateDropDownList('animlistDDL', animlist);
@@ -509,7 +510,7 @@ function GX_GetAnimParamsFromUI()
                 var animlist = new Array(); 
                 for(var k=0; k < gAnimList.length; k++)
             	{
-                	if(gAnimList[k][0] != 'Invisible Animation')
+                	//if(gAnimList[k][0] != 'Invisible Animation')
                 		animlist.push(gAnimList[k][0]); 
             	}
                 
@@ -723,7 +724,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	var animlist=[];
  	for(var k=0; k < gAnimList.length; k++)
  	{
- 		if(gAnimList[k][5] != 'Invisible Animation')
+ 		//if(gAnimList[k][5] != 'Invisible Animation')
  			animlist.push(gAnimList[k][5]); 
  	}
  	
@@ -1236,7 +1237,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		newAttr.push(attrData); 
 		attrData = ['to',"visible"]; 
 		newAttr.push(attrData); 		
-		attrData = ['onend',"ChangeAnimateMotionSettings(evt.target);"]; 
+		attrData = ['onend',"GX_ChangeAnimateMotionSettings(evt.target);"]; 
 		newAttr.push(attrData); 
 		GX_AddNewAnimElementInDOM(newAnimID, animParams.objectID,'ANIM_ATTRIBUTE', newAttr, bUpdateUI); 		
 		
@@ -1412,7 +1413,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 	var animlist=[];
 	 	for(var k=0; k < gAnimList.length; k++)
 	 	{
-	 		if(gAnimList[k][5] != 'Invisible Animation')
+	 		//if(gAnimList[k][5] != 'Invisible Animation')
 	 			animlist.push(gAnimList[k][5]); 
 	 	}
 	 	WAL_UpdateDropDownList('listanimDDL', animlist);
@@ -1825,7 +1826,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	 */
 	 
 	 
-	 setTimeout(function(){			
+	 setTimeout(function(){		
+		 gCurrAnimNode.setAttribute('fill', 'remove');
 		 GX_RestoreAnimationObject(gCurrAnimNode.id); 
 		 GX_RestoreMotionObject(gCurrAnimNode);
 		 gbAnimationEnd = true; 
@@ -1865,8 +1867,8 @@ function GX_RemoveAnimInfoFromList(animID)
   //	var animInfo = GX_GetAnimInfoByID(animID); 
   	var restartval =  animnode.getAttribute('restart');
   	animnode.setAttribute('restart', 'whenNotActive');
-     animnode.setAttribute('fill', 'freeze'); 
-     animnode.beginElement();
+    animnode.setAttribute('fill', 'remove'); 
+    animnode.beginElement();
      //now set it back to the original fill 
      //animnode.setAttribute('fill', animInfo[3]); 
    //  animnode.setAttribute('restart', restartval);
@@ -1934,7 +1936,10 @@ function GX_RemoveAnimInfoFromList(animID)
 	 if(objType == 'ELLIPSE')
 	 {
 		  objNode.setAttribute("cx", origValueArr[0]); 
-	      objNode.setAttribute("cy", origValueArr[1]);   
+	      objNode.setAttribute("cy", origValueArr[1]);  
+		 //suspecting chrome is not applying fill=remove properly 
+		// objNode.setAttribute("cx", '0'); 
+	    // objNode.setAttribute("cy", '0');   
 	 }
 	 else if(objType == "RECTANGLE")
 	 {
@@ -1968,7 +1973,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	var animlist=[]; 	
 	for(var i =0; i <gAnimList.length; i++)
 	{
-	    if( (animParam.title  !=  gAnimList[i][5]) && (gAnimList[i][5] != 'Invisible Animation') )
+	    //if( (animParam.title  !=  gAnimList[i][5]) && (gAnimList[i][5] != 'Invisible Animation') )
+	    if(animParam.title  !=  gAnimList[i][5])
 	    	animlist.push(gAnimList[i][5]); 
 	}
 	WAL_UpdateDropDownList('animlistDDL', animlist);

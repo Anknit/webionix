@@ -1273,7 +1273,7 @@ function GX_InitializeDocument(svgFileName)
 		 var animlist = new Array(); 
 		 for(var i =0; i <gAnimList.length; i++)
 		 {
-			 if(gAnimList[i][5] != 'Invisible Animation')
+			 //if(gAnimList[i][5] != 'Invisible Animation')
 				 animlist.push(gAnimList[i][5]); 
 		 }
 		 WAL_UpdateDropDownList('listanimDDL', animlist);
