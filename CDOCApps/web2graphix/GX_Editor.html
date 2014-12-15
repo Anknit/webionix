@@ -223,7 +223,7 @@
 				       <circle cx="5" cy="5" r="5" fill="black" />
 				   </marker>  				    
 				 </defs>   
-			<rect id="gridpattern" x="0" y="0" width="100%" height="100%" fill="url(#bigrectpattern)" onclick="OnSVGParentClick(evt)" pointer-events="fill"/>
+			<rect id="gridpattern" x="0" y="0" width="100%" height="100%" fill="url(#bigrectpattern)" onclick="OnSVGParentClick(evt)" pointer-events="fill" onmousemove="OnObjectMove(evt)" onmouseup="OnObjectMouseUp(evt)"/>
 		<!-- <rect id="svgborder" x="0" y="0" width="800" height="800" stroke="red" stroke-width="6" fill="none" visibility="visible"/>-->
 		  </svg>
 		<svg id="objectcontainer" width="100%" height="100%"  visibility="visible"></svg>
@@ -234,7 +234,7 @@
         	<path id="erasepath" visibility="hidden" class='ERASE_PATH' stroke="white" stroke-width="4" fill="none" d="" />
         	<rect id='eraser1_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
         	<rect id='eraser2_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
-			<rect id="gripper_orig" x="10" y="10" width="50" height="50" stroke="blue" stroke-width="3" fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible" onmousemove="OnObjectMove(evt)" onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)"></rect>
+			<rect id="gripper_orig" x="10" y="10" width="50" height="50" stroke="blue" stroke-width="3" fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible" onmousemove="OnObjectMove(evt)" onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)" onmouseup='OnObjectMouseUp(evt)'></rect>
 			
 			<circle id="markerTL_orig" class="CUSTOM_MARKER_ORIG" cx="0" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="nw-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
 	        <circle id="markerTM_orig" class="CUSTOM_MARKER_ORIG" cx="25" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="n-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
