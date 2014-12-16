@@ -1325,6 +1325,7 @@ function GX_MenuItemShow(menuid, itemText)
 	 case 'cbezier_path':
 	 case 'qbezier_path':	
 	 case 'elliptic_path':	
+	
 		 GX_AddNewSVGObject(menuid); 
 		 GX_StartFreeDraw();
 		 break;	
@@ -1335,6 +1336,9 @@ function GX_MenuItemShow(menuid, itemText)
 		 GX_AddNewSVGObject(menuid); 
 		 GX_StartFreeDraw();
 		 break;
+	 case 'text':
+		 GX_AddNewSVGObject(menuid); 
+		 break; 		 
 	 case 'save':
 		 EL_SaveEditList(gCompactEditList, true); 
 		 break; 
