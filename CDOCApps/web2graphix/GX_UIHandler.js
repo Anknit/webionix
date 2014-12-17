@@ -1753,7 +1753,7 @@ function GX_AddNewSVGObject(Type)
 			//hence in between while new object is createdthe list should not be recreated
 			var objNode = document.getElementById(ObjID); 
 			var objType = objNode.classList[0]; 
-			if( (objType == 'SVG_SHAPE_OBJECT') || (objType == 'SVG_PATH_OBJECT' ) )
+			if( (objType == 'SVG_SHAPE_OBJECT') || (objType == 'SVG_PATH_OBJECT' ) || (objType == 'SVG_TEXT_OBJECT' ) )
 				gObjectList.push([ObjID, objType]); 
 		}
 		
@@ -1838,7 +1838,7 @@ function GX_SetSelection(objNode, bFlag) {
     //play around witth the opacity of objects 
   
     
-    if( (nodeClass == 'SVG_SHAPE_OBJECT')  || (nodeClass == 'SVG_PATH_OBJECT') )
+    if( (nodeClass == 'SVG_SHAPE_OBJECT')  || (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT') )
     {
     	gCurrLayerNode = objNode.parentNode;    	
     	gCurrLayerID = gCurrLayerNode.id; 
@@ -1922,7 +1922,7 @@ function GX_SetSelection(objNode, bFlag) {
     var x,y, w, h; 
     x = y = w = h = 0;
     
-    if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_PATH_OBJECT'))
+    if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT'))
     {
     	 gCurrSelectedObjectDim = GX_GetObjectAttribute(node, 'DIMENSION');
     	 if(gCurrSelectedObjectDim)
@@ -1934,10 +1934,13 @@ function GX_SetSelection(objNode, bFlag) {
         	 x = x  + gCurrLayerTranslateValues.x;
          	 y = y  + gCurrLayerTranslateValues.y;  
     	 }
-    	  var JQSel = '.SVG_SHAPE_OBJECT'; gOpacityUnSelect
+    	  var JQSel = '.SVG_SHAPE_OBJECT'; 
     	  $(JQSel).attr('opacity', gOpacityUnSelect); 
     	    
     	  JQSel = '.SVG_PATH_OBJECT';
+    	  $(JQSel).attr('opacity', gOpacityUnSelect); 
+    	  
+    	  var JQSel = '.SVG_TEXT_OBJECT'; 
     	  $(JQSel).attr('opacity', gOpacityUnSelect); 
     	   
     	 JQSel = '#' + node.id; 
@@ -1976,11 +1979,8 @@ function GX_SetSelection(objNode, bFlag) {
     	var pathType = node.classList[1]; 
     	GX_AddPathMarker(node.id, gPathDataArray, true);  
     	var bClose = GX_IsPathClose(node); 
-    	WAL_setCheckBoxValue('pathclose', bClose); 
-    	
-    	
-    	GX_UpdateEllipticParam(gCurrentObjectSelected); 
-    	
+    	WAL_setCheckBoxValue('pathclose', bClose);    	
+    	GX_UpdateEllipticParam(gCurrentObjectSelected);     	
     }
     	
     	
@@ -2027,6 +2027,10 @@ function GX_updateEditAttributes()
 	JQSel = ".SVG_PATH_OBJECT"; 
 	$(JQSel).attr('onclick','OnShapeObjectSelection(evt)' ); 		
 	$(JQSel).attr('pointer-events','all' );
+	
+	var JQSel = ".SVG_TEXT_OBJECT"; 
+	$(JQSel).attr('onclick','OnShapeObjectSelection(evt)' ); 		
+	$(JQSel).attr('pointer-events','visible' ); 
 	
 }
 function OnSVGParentClick(evt)
@@ -2313,7 +2317,7 @@ function OnObjectMouseDown(evt) {
 	gGrabberDim = GX_GetObjectAttribute(gCurrGrabber, 'DIMENSION');
 	
 	//Debug_Message("x=" + gGrabberDim.x + "y=" +gGrabberDim.y); 
-	if(objectType == 'SVG_SHAPE_OBJECT')
+	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ) 
 		gCurrSelectedObjectDim = GX_GetObjectAttribute(gCurrentObjectSelected, 'DIMENSION');
 		
 	else if(objectType == 'LAYER')
@@ -2446,25 +2450,20 @@ function OnObjectMove(evt) {
         if(objectType == 'SVG_SHAPE_OBJECT')	
         	GX_UpdateMarkers(newObjDim, true); 
          
-        if(objectType == 'SVG_SHAPE_OBJECT')
+        if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
         {
         	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
             newObjDim.y = gCurrSelectedObjectDim.y + relY; 
             newObjDim.width = gCurrSelectedObjectDim.width; 
             newObjDim.height =  gCurrSelectedObjectDim.height; 
-            newObjDim.rotate = gCurrSelectedObjectDim.rotate; 
-          //  newObjDim.rotCentreX = Math.round(gCurrSelectedObjectDim.rotCentreX + relX);
-          //  newObjDim.rotCentreY = Math.round(gCurrSelectedObjectDim.rotCentreY + relY);
+            newObjDim.rotate = gCurrSelectedObjectDim.rotate;          
             newObjDim.rotCentreX = Math.round(newObjDim.x + newObjDim.width/2);
             newObjDim.rotCentreY = Math.round(newObjDim.y + newObjDim.height/2);
             if(gCurrentObjectSelected.classList[1]== 'ELLIPSE')
             {
             	newObjDim.x = newObjDim.rotCentreX;
                 newObjDim.y = newObjDim.rotCentreY; 
-            }
-             
-           // GX_SetTransformProperty(gCurrentObjectSelected, 'translate', newObjDim); 
-        	//retVal = GX_SetRectObjectDim(gCurrentObjectSelected,newObjDim);
+            }          
             retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
                       
         }        	
@@ -2978,7 +2977,12 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 			gTransfArray[2]= str;		
 			str = transfDim.rotCentreX +',' + transfDim.rotCentreY + ')';
 			gTransfArray[3]= str;
-		}		
+		}	
+		else if(objectType == 'SVG_TEXT_OBJECT')
+		{
+			gNode.setAttribute('x',transfDim.x); 
+			gNode.setAttribute('y',transfDim.y); 
+		}
 		/*
 		if((transfDim.x == 0) || (transfDim.y ==0) )
 		{
@@ -3141,6 +3145,10 @@ function GX_GetRectObjectDim(ObjNode)
 	        mypoint.width = 2*mypoint.width; 
 	        mypoint.height = 2* mypoint.height; 
 	    }  
+	    else if(ObjNode.nodeName == 'text')
+	    {
+	    	mypoint = ObjNode.getBBox(); 
+	    }
 	    else if(ObjNode.nodeName == 'g')
 	    {
 	    	var tempDim = GX_GetTransformProperty(ObjNode, 'translate'); 
