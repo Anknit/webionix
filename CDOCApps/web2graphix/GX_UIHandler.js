@@ -6607,24 +6607,18 @@ function GX_MakeTextEditable(srcTextNode)
 
 function GX_SaveText(editedTextNode)
 {
-	/*
-	var origTextID = editedTextNode.id; 
-	var origTextNode = editedTextNode;
-	var editedTextNode = document.getElementById(origTextID + '_EDIT'); 
-	var parentEditnode = editedTextNode.parentNode;	
-	var str = editedTextNode.firstChild.data;	
-	origTextNode.firstChild.data  = str;    
-	parentEditnode.removeChild(editedTextNode);
-	origTextNode.style.display = 'block';     		
-	var divNode = document.getElementById('texteditableDiv');   		  		
-	divNode.style.display = 'none';
-	*/
 	var temptextNode = document.getElementById('tempText');	
-	var str = temptextNode.innerHTML;	
-	if(str == '<br>')
+	var str = temptextNode.firstChild.data;	
+	if(str == undefined)
+	{
 		str = 'Default Text'; 
-	temptextNode.innerHTML = str; 
-	editedTextNode.innerHTML = str; 
+		Debug_Message('Undefined String'); 
+	}
+		
+	//temptextNode.innerHTML = str; 
+	//editedTextNode.innerHTML = str;
+	temptextNode.firstChild.data = str; 
+	editedTextNode.firstChild.data = str; 
 	var divNode = document.getElementById('texteditableDiv');   		  		
 	divNode.style.display = 'none';
 	editedTextNode.setAttribute('visibility', 'visible'); 	
