@@ -65,9 +65,8 @@
 	       <li id="insert"><a href="#Insert">Insert</a>
 	       	<ul>
 	       		<li id="layer"><a href="#Layer">Layer</a>
-	       		</li><li id="text"><a href="#text">Text</a>
-	       		
-	       	</li><li id="shape"><a href="#Shape">Shape</a>
+	       		<li id="text"><a href="#text">Text</a>
+	       		<li id="shape"><a href="#Shape">Shape</a>
 		       		<ul>
 		       			<li id="rectangle"><a href="#Rectangle">Rectangle</a>
 		       			<li id="ellipse"><a href="#Ellipse">Ellipse</a>
@@ -83,7 +82,9 @@
 	       				<li id="freedraw_path"><a href="#freedraw_path">Free Hand</a>
 	       			</ul>
 	       		</li>
-	       		</ul>
+	       		
+	       		
+	       	</ul>
 	       </li>
 	       <li id="layout"><a href="#Layout">Layout</a>
 	       <!-- <ul>
@@ -207,9 +208,10 @@
        </div><!-- toolbar -->
        <div>
        <div id="dataContainerSplitter">  
-          <div id="objectdata_panel" class="splitter-panel" >            
+          <div id="objectdata_panel" class="splitter-panel" >     
+          	<div id='texteditableDiv' style='position:absolute; border:solid grey 3px; top:0px; left:0px; width:1000px; height:80px; display:none' contenteditable='true'><svg id='texteditablesvg' version="1.1" width='100%' height='100%' viewBox='0 0 1000  20' xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ><text id='tempText' font-family="Verdana" font-size="20" fill="blue" x='0' y='0'>Default Text</text></svg></div>       
     		<svg id="SVGContainer" x="0px" y="0px" width="1000px" height="1000px" version="1.1"  viewBox="0 0 1000 1000" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" 
-     				xmlns="http://www.w3.org/2000/svg"  cursor="auto" )>
+     				xmlns="http://www.w3.org/2000/svg"  cursor="auto">
 
 			<svg id="background" width="100%" height="100%" visibility="visible" >
 				<defs>
@@ -223,7 +225,7 @@
 				       <circle cx="5" cy="5" r="5" fill="black" />
 				   </marker>  				    
 				 </defs>   
-			<rect id="gridpattern" x="0" y="0" width="100%" height="100%" fill="url(#bigrectpattern)" onclick="OnSVGParentClick(evt)" pointer-events="fill" onmousemove="OnObjectMove(evt)"/>
+			<rect id="gridpattern" x="0" y="0" width="100%" height="100%" fill="url(#bigrectpattern)" onclick="OnSVGParentClick(evt)" pointer-events="fill" onmousemove="OnObjectMove(evt)" />
 		<!-- <rect id="svgborder" x="0" y="0" width="800" height="800" stroke="red" stroke-width="6" fill="none" visibility="visible"/>-->
 		  </svg>
 		<svg id="objectcontainer" width="100%" height="100%"  visibility="visible"></svg>
@@ -688,6 +690,11 @@
 	           </div>
 	     </div>
  	 </div>  
+ 	 
+ 	
   <div id='dummyNode'></div>
+  
+
+  
 </body>
 </html>
