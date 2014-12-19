@@ -1382,7 +1382,13 @@ function GX_MenuItemShow(menuid, itemText)
 		 GX_showEditorInterface('ZOOMPAN_MODE'); 
 		 break; 
 	 case 'modify':
-		 GX_showEditorInterface('MODIFY_SHAPE_MODE');		
+		 if('TEXT' == gCurrentObjectSelected.nodeName.toUpperCase())
+		 {
+			 GX_showEditorInterface('MODIFY_TEXT_MODE');
+			 GX_MakeTextEditable(gCurrentObjectSelected); 
+		 }			  
+		 else
+			  GX_showEditorInterface('MODIFY_SHAPE_MODE');		
 		 break; 
 	 case 'stroke':
 		  GX_showEditorInterface('STROKE_MODE'); 
@@ -2039,6 +2045,9 @@ function OnSVGParentClick(evt)
 	if(ID!= 'gridpattern')
 		return ;
 	
+	//if it is text node then do the needful 
+	if( (gCurrentObjectSelected) && (gCurrentObjectSelected.nodeName.toUpperCase() == 'TEXT') && (gObjectEditMode == 'MODIFY_TEXT_MODE') )
+		GX_SaveText(gCurrentObjectSelected); 
 	//check if the click is outside the gripper rectangle only then act
 	var status = gCurrGrabber.getAttribute('visibility'); 
 	if(status == 'visible')
@@ -3827,6 +3836,9 @@ function GX_showEditorInterface(Mode)
 		WAL_hideWidget('animate_interface', false); 		
 		gObjectEditMode = 'ANIMATION_EDIT_MODE';		
 		break;
+	case 'MODIFY_TEXT_MODE':
+		gObjectEditMode = 'MODIFY_TEXT_MODE';		
+		break; 
 	default:
 		break; 	
 	}	
@@ -6559,6 +6571,61 @@ function GX_FillBtnHandler(event)
 		{
 			GX_PreviewAnimation(animnode.id);
 		}		
-	}
+	}	
+}
+
+function GX_MakeTextEditable(srcTextNode)
+{	
+	var editSVGNode  = document.getElementById('texteditablesvg');		 
+	var dim = srcTextNode.getBBox();	
+	//now hide the original text node 
+	var srcTexNodeattr =  EL_getObjectAttributes(srcTextNode); 
 	
+	var temptextNode = document.getElementById('tempText');	
+	var str = srcTextNode.firstChild.data;	
+	temptextNode.firstChild.data = str; 
+	/*for(var j= 0;  j < srcTexNodeattr.length; j++)
+	{
+		if( (srcTexNodeattr[j][1] != 'id') && (srcTexNodeattr[j][1] != 'x') && (srcTexNodeattr[j][1] != 'y') )
+			temptextNode.setAttribute(srcTexNodeattr[j][1], srcTexNodeattr[j][2]); 
+	}
+	*/
+	var divNode = document.getElementById('texteditableDiv'); 
+	divNode.setAttribute('contenteditable', 'true'); 	
+	divNode.style.left = dim.x + 'px'; 
+	divNode.style.top = dim.y + 'px'; 
+	//divNode.style.height = dim.height + 'px'; 
+	//divNode.style.width = 'auto';
+	divNode.style.display = 'block';
+	srcTextNode.setAttribute('visibility', 'hidden'); 	
+	for(var j= 0;  j < srcTexNodeattr.length; j++)
+	{
+		if( (srcTexNodeattr[j][1] != 'id') && (srcTexNodeattr[j][1] != 'x') && (srcTexNodeattr[j][1] != 'y') )
+			temptextNode.setAttribute(srcTexNodeattr[j][1], srcTexNodeattr[j][2]); 
+	}
+}
+
+function GX_SaveText(editedTextNode)
+{
+	/*
+	var origTextID = editedTextNode.id; 
+	var origTextNode = editedTextNode;
+	var editedTextNode = document.getElementById(origTextID + '_EDIT'); 
+	var parentEditnode = editedTextNode.parentNode;	
+	var str = editedTextNode.firstChild.data;	
+	origTextNode.firstChild.data  = str;    
+	parentEditnode.removeChild(editedTextNode);
+	origTextNode.style.display = 'block';     		
+	var divNode = document.getElementById('texteditableDiv');   		  		
+	divNode.style.display = 'none';
+	*/
+	var temptextNode = document.getElementById('tempText');	
+	var str = temptextNode.innerHTML;	
+	if(str == '<br>')
+		str = 'Default Text'; 
+	temptextNode.innerHTML = str; 
+	editedTextNode.innerHTML = str; 
+	var divNode = document.getElementById('texteditableDiv');   		  		
+	divNode.style.display = 'none';
+	editedTextNode.setAttribute('visibility', 'visible'); 	
 }
