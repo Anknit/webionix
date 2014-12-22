@@ -2325,9 +2325,15 @@ function OnObjectMouseDown(evt) {
 	gGrabberDim = GX_GetObjectAttribute(gCurrGrabber, 'DIMENSION');
 	
 	//Debug_Message("x=" + gGrabberDim.x + "y=" +gGrabberDim.y); 
-	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ) 
+	if(objectType == 'SVG_SHAPE_OBJECT') 
 		gCurrSelectedObjectDim = GX_GetObjectAttribute(gCurrentObjectSelected, 'DIMENSION');
-		
+	else if(objectType == 'SVG_TEXT_OBJECT')
+	{
+		gCurrSelectedObjectDim = GX_GetObjectAttribute(gCurrentObjectSelected, 'DIMENSION');
+		//_rm to override the boundary box dimension 
+		gCurrSelectedObjectDim.x = gCurrentObjectSelected.getAttribute('x'); 
+		gCurrSelectedObjectDim.y = gCurrentObjectSelected.getAttribute('y');		
+	}
 	else if(objectType == 'LAYER')
 	{
 		gCurrSelectedObjectDim = GX_GetTransformProperty(gCurrentObjectSelected, 'translate'); 
@@ -6607,7 +6613,7 @@ function GX_SaveText(editedTextNode)
 	if(str == undefined)
 	{
 		str = 'Default Text'; 
-		Debug_Message('Undefined String'); 
+		Debug_Message('Undefined String'); 		
 	}
 		
 	//temptextNode.innerHTML = str; 
