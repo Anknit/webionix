@@ -47,93 +47,11 @@ function GX_OBJ_ProcessRequest($reqid, &$respdata )
 		$retval = GX_OBJ_UpdateSVGAnimation($respdata);
 		return $retval;
 	}
-	
-	
-	
-	/*
-	else if($reqid == '300')
+	else if($reqid == '311')
 	{
-		$retval = OBJM_GetPageSCXMLData($respdata);
+		$retval = GX_TEXT_OBJ_UpdateData($respdata);
 		return $retval;
 	}
-	else if($reqid == '302')
-	{
-		$retval = OBJM_DeleteObject($respdata); 
-		return $retval;
-	}
-	else if($reqid == '303')
-	{
-		$retval = OBJM_MoveUp($respdata);		
-		return $retval;
-	}
-	else if($reqid == '304')
-	{
-		$retval = OBJM_MoveDown($respdata);	
-		return $retval;
-	}
-	
-	else if($reqid == '306')
-	{
-		$retval = OBJM_AddLayerReference($respdata);	
-		return $retval;
-	}
-	else if($reqid == '307')
-	{
-		
-		$retval = OBJM_UpdateObject($respdata);
-		return $retval;
-	}
-	else if($reqid == '308')
-	{	
-		$retval = OBJM_setCurrentSessionState($respdata);
-		return $retval;
-	}
-	else if($reqid == '309')
-	{	
-		$retval = OBJM_getCurrentEditableObjectData($respdata); 
-		return $retval;
-	}
-	else if($reqid == '310')
-	{	
-		$retval = OBJM_getCurrentSessionState($respdata); 
-		return $retval;
-	}
-	else if ($reqid == '311')
-	{
-		$retval = OBJM_UpdateObjectAttributeToSCXML($respdata); 
-		return $retval; 
-	}
-	else if ($reqid == '312')
-	{
-		$retval = OBJM_updateSlideShowInfo($respdata);
-		return $retval; 
-	}
-	else if ($reqid == '313')
-	{
-		$retval = OBJM_moveObject($respdata);
-		return $retval; 
-	}
-	else if ($reqid == '314')
-	{
-		$retval = OBJM_copyObject($respdata);
-		return $retval;
-	}	
-	else if ($reqid == '315')
-	{
-		$retval = OBJM_UpdateNodeText($respdata);
-		return $retval;
-	}
-	else if ($reqid == '316')
-	{
-		$retval = OBJM_updateAutoSlideShowInfo($respdata);
-		return $retval;
-	}		
-	else if ($reqid == '317')
-	{
-		$retval = OBJM_updateSlideEffectInfo($respdata);
-		return $retval;
-	}		
-	*/ 
 }
 	
 /*
@@ -640,5 +558,41 @@ function GX_OBJ_UpdateSVGAnimation(&$respData)
 	return true; 
 }
 
+
+function GX_TEXT_OBJ_UpdateData(&$respdata)
+{
+	
+	if(!isset($_SESSION['svg_xml_dom']))
+		return false;
+	if(!isset($_SESSION['svg_xml_FileName']))
+		return false;
+	
+	$retval = $_SESSION['svg_xml_dom']->load($_SESSION['svg_xml_FileName']);
+	if(!$retval)
+	{
+		$respdata = 'FAIL: LoadXML';
+		return false;
+	}
+	if (!$_SESSION['svg_xml_dom']->validate())
+	{
+		$respdata = 'FAIL: validate';
+		return false;
+	}
+	
+	parse_str($respdata) ;
+	$objID       = $OBJECTID;
+	$dataValue   = $DATA;
+	$Node = $_SESSION['svg_xml_dom']->getElementById($objID);
+	if(!$Node)
+		return False;
+	$name = strtoupper($Node->nodeName); 
+	if($name =='TEXT')
+	{
+		$Node->firstChild->data = $dataValue; 
+	}
+	$retval = $_SESSION['svg_xml_dom']->save($_SESSION['svg_xml_FileName']);
+	$respdata = 'OK';
+	return true; 
+}
 
 ?>
