@@ -138,3 +138,10 @@ function GXRDE_updateAnimationObject(animID, attrArray)
 	}	
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "310", reqbody);	
 }
+
+function GXRDE_updateTextObjectData(objID, string)
+{	
+	
+	var reqbody  = "&OBJECTID=" + objID + "&DATA=" + string;	
+	var respstring = AJX_RequestWithReponseData("text", "OBJM", "311", reqbody);	
+}
