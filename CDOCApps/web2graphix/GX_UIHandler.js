@@ -6583,13 +6583,7 @@ function GX_MakeTextEditable(srcTextNode)
 	
 	var temptextNode = document.getElementById('tempText');	
 	var str = srcTextNode.firstChild.data;	
-	temptextNode.firstChild.data = str; 
-	/*for(var j= 0;  j < srcTexNodeattr.length; j++)
-	{
-		if( (srcTexNodeattr[j][1] != 'id') && (srcTexNodeattr[j][1] != 'x') && (srcTexNodeattr[j][1] != 'y') )
-			temptextNode.setAttribute(srcTexNodeattr[j][1], srcTexNodeattr[j][2]); 
-	}
-	*/
+	temptextNode.firstChild.data = str; 	
 	var divNode = document.getElementById('texteditableDiv'); 
 	divNode.setAttribute('contenteditable', 'true'); 	
 	divNode.style.left = dim.x + 'px'; 
@@ -6600,9 +6594,10 @@ function GX_MakeTextEditable(srcTextNode)
 	srcTextNode.setAttribute('visibility', 'hidden'); 	
 	for(var j= 0;  j < srcTexNodeattr.length; j++)
 	{
-		if( (srcTexNodeattr[j][1] != 'id') && (srcTexNodeattr[j][1] != 'x') && (srcTexNodeattr[j][1] != 'y') )
+		if( (srcTexNodeattr[j][1] != 'id') && (srcTexNodeattr[j][1] != 'x') && (srcTexNodeattr[j][1] != 'y'))
 			temptextNode.setAttribute(srcTexNodeattr[j][1], srcTexNodeattr[j][2]); 
 	}
+	temptextNode.setAttribute('opacity', '1.0'); 
 }
 
 function GX_SaveText(editedTextNode)
@@ -6621,5 +6616,8 @@ function GX_SaveText(editedTextNode)
 	editedTextNode.firstChild.data = str; 
 	var divNode = document.getElementById('texteditableDiv');   		  		
 	divNode.style.display = 'none';
-	editedTextNode.setAttribute('visibility', 'visible'); 	
+	editedTextNode.setAttribute('visibility', 'visible'); 		
+	//reset the dit mode to layout mode 
+	GX_showEditorInterface('None'); 	
+	GXRDE_updateTextObjectData(editedTextNode.id, editedTextNode.firstChild.data); 
 }
