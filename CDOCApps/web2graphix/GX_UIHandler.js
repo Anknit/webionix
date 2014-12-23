@@ -3250,6 +3250,12 @@ function GX_SetRectObjectDim(ObjNode, newDim)
             ObjNode.setAttribute('y', modDim.y);
             ObjNode.setAttribute('width', modDim.width);
             ObjNode.setAttribute('height', myheight);              
+    }      
+    else if (ObjNode.nodeName == 'text') {
+        ObjNode.setAttribute('x', modDim.x);
+        ObjNode.setAttribute('y', modDim.y);
+       // ObjNode.setAttribute('width', modDim.width);
+       // ObjNode.setAttribute('height', myheight);              
     }       
        //assuming that a container rectangle dim is passed  
     else if(ObjNode.nodeName == 'ellipse') {
@@ -3526,10 +3532,11 @@ function GX_EditBoxValueChange(value, widgetnode)
 			default:
 				break; 
 			}
-			retVal = GX_SetObjectAttribute(currnodeSel, "DIMENSION", DimValue, true, false);
-			return ; 
-			
-			
+			if(nodeClass == 'SVG_SHAPE_OBJECT')
+				retVal = GX_SetObjectAttribute(currnodeSel, "DIMENSION", DimValue, true, false);
+			else (nodeClass == 'SVG_TEXT_OBJECT')			
+				retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, true, false);
+			return ; 			
 		}//if(wdgtType == 'DIMENSION')				
 	} //(nodeClass == 'SVG_SHAPE_OBJECT')
 	var objType = currnodeSel.classList[1]; 
