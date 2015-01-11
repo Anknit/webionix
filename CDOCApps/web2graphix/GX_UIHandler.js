@@ -142,6 +142,12 @@ var gObjectTolerance = new Number(20);
 var gPathDataArray =[]; 
 var gTransfArray=[]; 
 var gClosePath = false; 
+
+var gTE_ButtonWidth = '20'; 
+var gTE_ButtonHeight='18'; 
+var gTE_DDLHeight = '24' ; //'26px'
+var gTE_EditWidth = "35"
+	
 /*var ClientX = new Number(0);
 var ClientY = new Number(0);
 var newObjDim = new sDimension();
@@ -1293,7 +1299,10 @@ function GX_MenuItemShow(menuid, itemText)
 	//var itemtext = $(args).text();
   //  var menuid = args.getAttribute("id");
     var spannode = document.getElementById('itemtextinfo'); 
-    spannode.innerHTML = itemText; 
+    spannode.innerHTML = itemText;
+    if(gCurrentObjectSelected)
+    	objectType =  gCurrentObjectSelected.classList[0];  
+    //SVG_TEXT_OBJECT 
     var retval;
 	switch(menuid)
 	{
@@ -1382,7 +1391,7 @@ function GX_MenuItemShow(menuid, itemText)
 		 GX_showEditorInterface('ZOOMPAN_MODE'); 
 		 break; 
 	 case 'modify':
-		 if('TEXT' == gCurrentObjectSelected.nodeName.toUpperCase())
+		 if(objectType == 'SVG_TEXT_OBJECT')
 		 {
 			 GX_showEditorInterface('MODIFY_TEXT_MODE');
 			 GX_MakeTextEditable(gCurrentObjectSelected); 
@@ -1399,7 +1408,12 @@ function GX_MenuItemShow(menuid, itemText)
 	 case 'animate':
 		 GX_showEditorInterface('ANIM_MODE'); 
 		 break;
-	
+	 case 'fontproperty':
+		 if(objectType == 'SVG_TEXT_OBJECT')
+			 GX_showEditorInterface('FONT_STYLE_MODE');
+		 else
+			 Debug_Message('Select a Text Object'); 
+		 break; 
 	 default:
 		 break; 
 	 }
@@ -3496,7 +3510,48 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('anim_edit_icon', 'GX_ToolbarHandler'); 
     WAL_createCustomButton('anim_preview_icon', 'GX_ToolbarHandler'); 
     WAL_createCustomButton('anim_delete_icon', 'GX_ToolbarHandler'); 
-   // WAL_createCustomButton('anim_copy_icon', 'GX_ToolbarHandler');    
+   // WAL_createCustomButton('anim_copy_icon', 'GX_ToolbarHandler');  
+    
+    //TEXT OBJECT INTERFACE 
+    var fontFamilyValue = ['default','Georgia','Palatino Linotype','Book Antiqua','Palatino','Times New Roman','Times','Arial','Helvetica','Arial Black','Gadget','Comic Sans MS','Cursive','Impact','Charcoal', 'Lucida Sans Unicode','Lucida Grande','Tahoma','Geneva','Trebuchet MS','Verdana' ,'Courier New' ,'Lucida Console'];
+    
+    var fontFamilyDisplay =["Default", 
+                            "<span style='font-family:Georgia'>Georgia</span>",
+                            "<span style='font-family:\"Palatino Linotype\", serif'>Palatino Linotype</span>",
+                            "<span style='font-family:\"Book Antiqua\", serif' >Book Antiqua</span>",
+                            "<span style='font-family:Palatino, serif'>Palatino</span>",
+                            "<span style='font-family:\"Times New Roman\",serif'>Times New Roman</span>",
+                            "<span style='font-family:Times, serif'>Times</span>",
+                            "<span style='font-family:Arial, sans-serif'>Arial</span>",
+                            "<span style='font-family:Helvetica, sans-serif'>Helvetica</span>",
+                            "<span style='font-family:\"Arial Black\", sans-serif'>Arial Black</span>",                              
+                            "<span style='font-family:Gadget, sans-serif'>Gadget</span>",
+                            "<span style='font-family:\"Comic Sans MS\", sans-serif'>Comic Sans MS</span>",
+                            "<span style='font-family:cursive'>Cursive</span>",
+                            "<span style='font-family:Impact'>Impact</span>",
+                            "<span style='font-family:Charcoal, sans-serif'>Charcoal</span>",
+                            "<span style='font-family:\"Lucida Sans Unicode\", sans-serif'>Lucida Sans Unicode</span>",
+                            "<span style='font-family:\"Lucida Grande\", sans-serif'>Lucida Grande</span>",
+                            "<span style='font-family:Tahoma, sans-serif'>Tahoma</span>",
+                            "<span style='font-family:Geneva, sans-serif'>Geneva</span>",
+                            "<span style='font-family:\"Trebuchet MS\", sans-serif'>Trebuchet MS</span>",
+                            "<span style='font-family:Verdana, Geneva, sans-serif'>Verdana</span>",
+                            "<span style='font-family:\"Courier New\", Courier, monospace'>Courier New</span>",
+                            "<span style='font-family:\"Lucida Console\", Monaco, monospace'>Lucida Console</span>",
+                            ]; 
+    
+    WAL_createDropdownListWithItemStyle("fontNameDDL", '170px', '24', false, "GX_DDLHandler", '200',fontFamilyValue, 'fontFamilyValue',fontFamilyDisplay, 'fontFamilyDisplay');
+    
+    //var fontSizeValue = ['xx-small','x-small','small','medium','large','x-large','xx-large'];    
+   // WAL_createDropdownListwithButton("fontsizeDDL", '0','0',fontSizeValue,  "GX_DDLHandler", '100', '100', 'fontsize_icon', gTE_ButtonWidth, gTE_ButtonHeight);
+    WAL_createNumberInput("fontSizeIP", '58px', '24', "GX_EditBoxValueChange",true, 100,8,1);
+    WAL_setNumberInputValue('fontSizeIP', 18, false);
+    WAL_createCustomButton('bold_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('italic_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('underline_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('strikethrough_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('blink_icon', 'GX_ToolbarHandler');
+   
     
 }
 
@@ -3511,6 +3566,18 @@ function GX_EditBoxValueChange(value, widgetnode)
 	DimValue = GX_GetRectObjectDim(gCurrentObjectSelected); 
 	var currnodeSel = gCurrentObjectSelected; 
 	
+	if(nodeClass == 'SVG_TEXT_OBJECT')
+	{
+		switch(widgetnode.id)
+		{
+			case 'fontSizeIP':
+				GX_SetObjectAttribute(gCurrentObjectSelected, "font-size", value, true, false);
+				return; 
+				break; 
+			default:
+				break; 
+		}
+	}
 	if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT') )
 	{
 		if(wdgtType == 'DIMENSION')
@@ -3851,6 +3918,10 @@ function GX_showEditorInterface(Mode)
 		break;
 	case 'MODIFY_TEXT_MODE':
 		gObjectEditMode = 'MODIFY_TEXT_MODE';		
+		break; 
+	case 'FONT_STYLE_MODE':
+		gObjectEditMode = 'FONT_STYLE_MODE'; 
+		WAL_hideWidget('texteditinterface', false); 
 		break; 
 	default:
 		break; 	
