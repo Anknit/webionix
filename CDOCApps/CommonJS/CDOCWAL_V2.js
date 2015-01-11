@@ -569,14 +569,12 @@ function WAL_createDropdownList(ID, Width, Height, AutoOpen, DataSource, handler
     $(JQSel).jqxDropDownList({ width: Width, height: Height, theme: gTheme, autoOpen: AutoOpen, source: DataSource,  animationType: 'slide', openDelay:256, autoDropDownHeight:false,incrementalSearch : true, selectedIndex:1,
     	  dropDownHeight: DDLdropDownHeight });
     $(JQSel).attr(widgetType, "true");
-
-  
-
+    $(JQSel).attr('data-internalevent', 'false');
     $(JQSel).on('select', function(event) {
     	 var flag = $(JQSel).attr('data-internalevent');
 	     if(flag ==  'true')
 	     {
-	    	 $(JQSel).attr('data-internalevent', false);
+	    	 $(JQSel).attr('data-internalevent', 'false');
 	    	 return ;  
 	     }   
         var item = $(this).jqxDropDownList('getSelectedItem');
@@ -629,6 +627,10 @@ function WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource, 
 	    var btnJQSel = "#"+buttonID; 
 	    WAL_createCustomButton(buttonID, ""); 
 	    $(btnJQSel).on('click', function(){
+	    	var node =  document.getElementById(ID); 
+	    	node = node.parentNode; 
+	    	var pos = $(btnJQSel).position(); 
+	    	node.style.left = pos.left + 'px'; 
 	    	$(JQSel).show(); 
 	    	$(JQSel).jqxDropDownList('open'); 
 	    });
@@ -702,7 +704,9 @@ function WAL_createDropdownListWithItemStyle(ID, Width, Height, AutoOpen, handle
         var dataAdapter = new $.jqx.dataAdapter(source);
         
 	    
-	    $(JQSel).jqxDropDownList({ width: Width, height: Height, theme: gTheme, autoOpen: AutoOpen, source: dataAdapter,  animationType: 'slide', openDelay:256, autodropDownHeight:false,incrementalSearch : true, selectedIndex:1,
+	  //  $(JQSel).jqxDropDownList({ width: Width, height: Height, theme: gTheme, autoOpen: AutoOpen, source: dataAdapter,  animationType: 'slide', openDelay:256, autodropDownHeight:false,incrementalSearch : true, selectedIndex:1,
+	   //	  dropDownHeight: DDLdropDownHeight, displayMember: DisplayNameString, valueMember:ValueNameString });
+	    $(JQSel).jqxDropDownList({ width: Width, height: Height, theme: gTheme, autoOpen: AutoOpen, source: dataAdapter,  animationType: 'slide', openDelay:256,incrementalSearch : true, selectedIndex:1,
 	    	  dropDownHeight: DDLdropDownHeight, displayMember: DisplayNameString, valueMember:ValueNameString });
 	    $(JQSel).attr(widgetType, "true");
 
@@ -1741,7 +1745,7 @@ function WAL_showModalWindow(windowID, handlerFnOK, handlerFnCancel)
 			eval(expr); 
 		}	
 		$(JQSel).jqxWindow('close'); 
-		Debug_Message("Closed from Inside");
+		
 	});
 	
 	$(JQSel).jqxWindow('open'); 
@@ -2684,6 +2688,8 @@ function WAL_SetItemByValueInList(ID, value, bInternalEvent)
 		var index = item.index;
 		$(JQSel).attr('data-internalevent', bInternalEvent); 
 		$(JQSel).jqxDropDownList({selectedIndex: index });
+		if(bInternalEvent == 'true')
+			$(JQSel).attr('data-internalevent', 'false');
 	}
 }
 function WAL_createCustomButton(buttonID, clickHandler)
@@ -2713,7 +2719,7 @@ function WAL_createCustomButton(buttonID, clickHandler)
             	 $('#'+gLastClickedButtonNodeID).removeAttr('style'); 
              gLastClickedButtonNodeID = node.id; 
            //  $('.IMAGE_BUTTON').removeAttr('style'); 
-             node.style.border = 'ridge 3px #e0e9f5';      
+             node.style.border = 'ridge 2px #e0e9f5';      
              node.style.bordeRadius = '5px'; 
              node.style.boxShadow = '5px 8px 7px #888888';   
              
