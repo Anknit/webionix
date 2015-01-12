@@ -3544,13 +3544,16 @@ function GX_InitializeToolbar()
     
     //var fontSizeValue = ['xx-small','x-small','small','medium','large','x-large','xx-large'];    
    // WAL_createDropdownListwithButton("fontsizeDDL", '0','0',fontSizeValue,  "GX_DDLHandler", '100', '100', 'fontsize_icon', gTE_ButtonWidth, gTE_ButtonHeight);
+    
     WAL_createNumberInput("fontSizeIP", '58px', '24', "GX_EditBoxValueChange",true, 100,8,1);
     WAL_setNumberInputValue('fontSizeIP', 18, false);
     WAL_createCustomButton('bold_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('italic_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('underline_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('strikethrough_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('blink_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('smallcaps_icon', 'GX_ToolbarHandler');
+    
+    //WAL_createCustomButton('blink_icon', 'GX_ToolbarHandler');
    
     
 }
@@ -3684,7 +3687,9 @@ function GX_EditBoxValueChange(value, widgetnode)
 }
 function GX_ToolbarHandler(Node)
 {
-	var btnID = Node.id; 
+	var btnID = Node.id;
+	if(gCurrentObjectSelected)
+		var objectType = gCurrentObjectSelected.classList[0];
 	
 	switch(btnID)
 	{
@@ -3874,7 +3879,59 @@ function GX_ToolbarHandler(Node)
 		 btnNode.style.backgroundColor = gInitFillColor;
 		 WAL_showModalWindow('fillcolorDlg','GX_FillColorDlgOK', 'GX_FillColorDlgCancel'); 
 		 break; 
-	default:
+		 
+	 case 'bold_icon':
+		 var Prop = gCurrentObjectSelected.getAttribute('font-weight'); 
+		 if(Prop == 'bold')
+			 Prop = 'normal'; 
+		 else
+			 Prop = 'bold'; 
+		GX_SetObjectAttribute(gCurrentObjectSelected, "font-weight", Prop, true, false);
+		 break;
+	 case 'italic_icon':
+		 var Prop = gCurrentObjectSelected.getAttribute('font-style'); 
+		 if(Prop == 'italic')
+			 Prop = 'normal'; 
+		 else
+			 Prop = 'italic'; 
+		 GX_SetObjectAttribute(gCurrentObjectSelected, "font-style", Prop, true, false);
+		 break;
+	 case 'underline_icon':
+		 var Prop = gCurrentObjectSelected.getAttribute('text-decoration'); 
+		 if(Prop == 'underline')
+			 Prop = 'normal'; 
+		 else
+			 Prop = 'underline'; 
+		 GX_SetObjectAttribute(gCurrentObjectSelected, "text-decoration", Prop, true, false);
+		 break;
+	 case 'strikethrough_icon':
+		 var Prop = gCurrentObjectSelected.getAttribute('text-decoration'); 
+		 if(Prop == 'line-through')
+			 Prop = 'normal'; 
+		 else
+			 Prop = 'line-through'; 
+		 GX_SetObjectAttribute(gCurrentObjectSelected, "text-decoration", Prop, true, false);
+		 break;
+	 case 'smallcaps_icon':
+		 var Prop = gCurrentObjectSelected.getAttribute('font-variant'); 
+		 if(Prop == 'small-caps')
+			 Prop = 'normal'; 
+		 else
+			 Prop = 'small-caps'; 
+		 GX_SetObjectAttribute(gCurrentObjectSelected, "font-variant", Prop, true, false);
+		 break; 
+		 //not supported yet
+	/* case 'blink_icon':	 
+		 var Prop = gCurrentObjectSelected.getAttribute('text-decoration'); 
+		 if(Prop == 'blink')
+			 Prop = 'normal'; 
+		 else
+			 Prop = 'blink'; 
+		 GX_SetObjectAttribute(gCurrentObjectSelected, "text-decoration", Prop, true, false);
+		 break;
+		 */
+		 
+	 default:
 		break; 
 		
 	}
@@ -4644,6 +4701,9 @@ function GX_ApplyZoom(zoomFactor)
 function GX_DDLHandler(Node, value)
 {
 	var wdgtId  = Node.id; 
+	//var objectType = gCurrentObjectSelected.classList[0]; 
+	if(gCurrentObjectSelected)
+		var objectType =  gCurrentObjectSelected.classList[0];
 	//animation related 
 	if(wdgtId == 'listanimDDL')
 	{
@@ -4709,7 +4769,7 @@ function GX_DDLHandler(Node, value)
 		//add it to the list items		
 		if(gCurrentObjectSelected) 
 		{
-			var objectType = gCurrentObjectSelected.classList[0]; 
+			 
 			if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
 			{
 				var fillurl = 'url(#' + gradID + ')';				
@@ -4717,6 +4777,17 @@ function GX_DDLHandler(Node, value)
 			}			
 		}		
 	}
+	else if(wdgtId == 'fontNameDDL')
+	{
+		if(objectType == 'SVG_TEXT_OBJECT')
+			GX_SetObjectAttribute(gCurrentObjectSelected, "font-family", value, true, false);
+	}
+	else if(wdgtId == 'fontboldDDL')
+	{
+		if(objectType == 'SVG_TEXT_OBJECT')
+			GX_SetObjectAttribute(gCurrentObjectSelected, "font-weight", value, true, false);
+	}
+	
 	
 }
 
