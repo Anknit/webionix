@@ -113,7 +113,8 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			break;
 		case 'TEXT';
 		//<text id='text1' font-family="Verdana" font-size="45" fill="blue" x='40' y='100' >
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_TEXT_OBJECT ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'font-family'=>"Verdana", 'font-size'=>"20", 'fill'=>'blue', 'x'=>'5', 'y'=>'25', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter','stroke-opacity'=>'1',  'fill'=>'none','visibility'=>'visible');
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_TEXT_OBJECT ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'font-family'=>"Verdana", 'font-size'=>"20", 'fill'=>'none', 'font-weight'=>'normal',
+				'font-style'=>'normal', 'font-variant'=>'normal', 'text-decoration'=>'normal', 'x'=>'5', 'y'=>'25', 'stroke'=>'black', 'stroke-width'=>'1', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter','stroke-opacity'=>'1',  'fill'=>'none','visibility'=>'visible');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'text',$objectIDVal, 0, $parentIDVal, $attrdefinition,'Default Text');
 			break; 
 		case 'POLYGON_PATH':
