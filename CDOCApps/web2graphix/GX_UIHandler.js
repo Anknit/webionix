@@ -3064,13 +3064,23 @@ function GX_UpdateLayerChildElements(layerNode)
 	{
 		node = childnodes.item(j);	
 		var nodeclass = node.classList[0];		
-		if( (nodeclass == 'SVG_SHAPE_OBJECT')  || (nodeclass == 'SVG_TEXT_OBJECT') )
+		//if( (nodeclass == 'SVG_SHAPE_OBJECT')  || (nodeclass == 'SVG_TEXT_OBJECT') )
+		if(nodeclass == 'SVG_SHAPE_OBJECT')
 		{	
 			nodeDim = GX_GetObjectAttribute(node, 'DIMENSION');
 			nodeDim.x = nodeDim.x + transprop.x; 
 			nodeDim.y = nodeDim.y + transprop.y; 
 			//GX_SetRectObjectDim(node, nodeDim); 
 			retVal = GX_SetObjectAttribute(node, "DIMENSION", nodeDim, true);			
+		}
+		else if (nodeclass == 'SVG_TEXT_OBJECT')
+		{
+			//this is done as a special case since getBBox returns coord different form x,y attribute
+			nodeDim.x = new Number(node.getAttribute('x')); 
+			nodeDim.y = new Number(node.getAttribute('y'));
+			nodeDim.x = nodeDim.x + transprop.x; 
+			nodeDim.y = nodeDim.y + transprop.y;			
+			retVal = GX_SetObjectAttribute(node, "DIMENSION", nodeDim, true);
 		}
 		else if(nodeclass = 'SVG_PATH_OBJECT')
 		{
@@ -3173,6 +3183,10 @@ function GX_GetRectObjectDim(ObjNode)
 	    else if(ObjNode.nodeName == 'text')
 	    {
 	    	mypoint = ObjNode.getBBox(); 
+	    	var y = ObjNode.getAttribute('y');
+	    	//Debug_Message('BoundingRect Y=' + mypoint.y + ' Text Y=' + y + ' Brect Height=' +mypoint.height ); 
+	    	//mypoint.x = ObjNode.getAttribute('x');
+	    	//mypoint.y = ObjNode.getAttribute('y');
 	    }
 	    else if(ObjNode.nodeName == 'g')
 	    {
@@ -3267,6 +3281,7 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     }      
     else if (ObjNode.nodeName == 'text') {
         ObjNode.setAttribute('x', modDim.x);
+       // modDim.y = modDim.y + modDim.height; 
         ObjNode.setAttribute('y', modDim.y);
        // ObjNode.setAttribute('width', modDim.width);
        // ObjNode.setAttribute('height', myheight);              
