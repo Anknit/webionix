@@ -2042,7 +2042,11 @@ function GX_SetSelection(objNode, bFlag) {
 		var fontsize = gCurrentObjectSelected.getAttribute('font-size'); 
 	 	GX_UpdatePropertyOnUI('FONT_SIZE', fontsize);
 	 	var fontname = gCurrentObjectSelected.getAttribute('font-family');
-	 	GX_UpdatePropertyOnUI('FONT_NAME', fontname); 
+	 	GX_UpdatePropertyOnUI('FONT_NAME', fontname); 	
+	 	var pointpos =  new sPoint(); 
+	 	pointpos.x = gCurrentObjectSelected.getAttribute('x'); 
+	 	pointpos.y = gCurrentObjectSelected.getAttribute('y'); 
+	 	GX_UpdatePropertyOnUI('POSITION', pointpos);
 	}
     return;
     
@@ -3193,8 +3197,7 @@ function GX_GetRectObjectDim(ObjNode)
 	    else if(ObjNode.nodeName == 'text')
 	    {
 	    	mypoint = ObjNode.getBBox(); 
-	    	var y = ObjNode.getAttribute('y');
-	    	//Debug_Message('BoundingRect Y=' + mypoint.y + ' Text Y=' + y + ' Brect Height=' +mypoint.height ); 
+	    	var y = ObjNode.getAttribute('y');	    	 
 	    	//mypoint.x = ObjNode.getAttribute('x');
 	    	//mypoint.y = ObjNode.getAttribute('y');
 	    }
@@ -3589,6 +3592,12 @@ function GX_EditBoxValueChange(value, widgetnode)
 	var nodeClass =  gCurrentObjectSelected.classList[0]; //('class');	
 	var wdgtType = widgetnode.getAttribute('type'); 
 	DimValue = GX_GetRectObjectDim(gCurrentObjectSelected); 
+	if(nodeClass == 'SVG_TEXT_OBJECT' )
+	{
+		DimValue.x = gCurrentObjectSelected.getAttribute('x'); 
+		DimValue.y = gCurrentObjectSelected.getAttribute('y'); 
+	}
+		
 	var currnodeSel = gCurrentObjectSelected; 
 	
 	if(nodeClass == 'SVG_TEXT_OBJECT')
@@ -3626,8 +3635,15 @@ function GX_EditBoxValueChange(value, widgetnode)
 			}
 			if(nodeClass == 'SVG_SHAPE_OBJECT')
 				retVal = GX_SetObjectAttribute(currnodeSel, "DIMENSION", DimValue, true, false);
-			else (nodeClass == 'SVG_TEXT_OBJECT')			
-				retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, true, false);
+			else (nodeClass == 'SVG_TEXT_OBJECT')	
+		    {
+				//here we want to shift the text hence querying on the x,y attribute 
+				//var newValue = 
+				
+				retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", DimValue, true, false);
+				//retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "DIMENSION", DimValue, true, false);
+		    }
+				
 			return ; 			
 		}//if(wdgtType == 'DIMENSION')				
 	} //(nodeClass == 'SVG_SHAPE_OBJECT')
