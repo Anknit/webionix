@@ -1964,7 +1964,10 @@ function GX_SetSelection(objNode, bFlag) {
     	  $(JQSel).attr('opacity', gOpacityUnSelect); 
     	   
     	 JQSel = '#' + node.id; 
-    	 $(JQSel).removeAttr('opacity');    	 
+    	 $(JQSel).removeAttr('opacity');   
+    	 
+    	
+    	
     }
     else if(nodeClass == 'LAYER')
     {
@@ -2034,6 +2037,13 @@ function GX_SetSelection(objNode, bFlag) {
     	GX_UpdatePropertyOnUI('GRADIENT', ""); 
     }
     gCurrentObjectSelected.setAttribute('pointer-events', 'none'); 
+    if(nodeClass == 'SVG_TEXT_OBJECT')
+	{    	
+		var fontsize = gCurrentObjectSelected.getAttribute('font-size'); 
+	 	GX_UpdatePropertyOnUI('FONT_SIZE', fontsize);
+	 	var fontname = gCurrentObjectSelected.getAttribute('font-family');
+	 	GX_UpdatePropertyOnUI('FONT_NAME', fontname); 
+	}
     return;
     
 }
@@ -3280,11 +3290,8 @@ function GX_SetRectObjectDim(ObjNode, newDim)
             ObjNode.setAttribute('height', myheight);              
     }      
     else if (ObjNode.nodeName == 'text') {
-        ObjNode.setAttribute('x', modDim.x);
-       // modDim.y = modDim.y + modDim.height; 
-        ObjNode.setAttribute('y', modDim.y);
-       // ObjNode.setAttribute('width', modDim.width);
-       // ObjNode.setAttribute('height', myheight);              
+        ObjNode.setAttribute('x', modDim.x);      
+        ObjNode.setAttribute('y', modDim.y);                   
     }       
        //assuming that a container rectangle dim is passed  
     else if(ObjNode.nodeName == 'ellipse') {
@@ -3994,6 +4001,12 @@ function GX_showEditorInterface(Mode)
 	case 'FONT_STYLE_MODE':
 		gObjectEditMode = 'FONT_STYLE_MODE'; 
 		WAL_hideWidget('texteditinterface', false); 
+		var fontsize = currObjectNode.getAttribute('font-size'); 
+		GX_UpdatePropertyOnUI('FONT_SIZE', fontsize);
+		var fontname = currObjectNode.getAttribute('font-family');
+		GX_UpdatePropertyOnUI('FONT_NAME', fontname);
+		
+		
 		break; 
 	default:
 		break; 	
@@ -4169,8 +4182,7 @@ function GX_SetObjectAttribute(ObjNode, AttrName, AttrValue, bListStore, bUpdate
 	{		
 		gCurrAttributeList = EL_getObjectAttributes(ObjNode);         
         EL_CompareAndAddtoList(gPrevAttributeList, gCurrAttributeList, gObjectEditList, gCompactEditList);    
-	}
-	
+	}	
 	return retVal; 	
 	//if bListStore true then get currentList and call EditManager functions to store in the list 
 }
@@ -4478,12 +4490,15 @@ function GX_UpdatePropertyOnUI(AttrName, AttrVal)
 		if(info[0])
 			WAL_SetItemByValueInList('gradlistDDL', info[0], 'true'); 
 		return ; 
-		
-		
 		//if none then none 
 		//look for url(# string if found then get the 
 		break; 
-		
+	case 'FONT_SIZE':
+		WAL_setNumberInputValue('fontSizeIP', AttrVal, false);
+		break; 
+	case 'FONT_NAME':
+		WAL_SetItemByValueInList('fontNameDDL', AttrVal, true);
+		break; 
 	default: 
 		break; 
 	}
