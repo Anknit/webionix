@@ -2047,6 +2047,10 @@ function GX_SetSelection(objNode, bFlag) {
 	 	pointpos.x = gCurrentObjectSelected.getAttribute('x'); 
 	 	pointpos.y = gCurrentObjectSelected.getAttribute('y'); 
 	 	GX_UpdatePropertyOnUI('POSITION', pointpos);
+	 	var dim =  new sDimension(); 
+	 	dim = GX_GetRectObjectDim(gCurrentObjectSelected);
+	 	GX_UpdatePropertyOnUI('HEIGHT', dim.height);
+	 	GX_UpdatePropertyOnUI('WIDTH', dim.width);
 	}
     return;
     
