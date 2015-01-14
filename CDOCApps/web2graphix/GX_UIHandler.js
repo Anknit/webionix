@@ -77,7 +77,7 @@ var gCurrentObjectDim ;
 var gMouseMoveCounter=0; 
 var bMarkerSelected=false; 
 var gCurrentMarkerNode= 0;
-
+var gTextEditorNode = 0;  
 var gGradientList = [];
 var gInitMousePoint = 0;
 var bGradPointMove = false;
@@ -2078,8 +2078,8 @@ function OnSVGParentClick(evt)
 		return ;
 	
 	//if it is text node then do the needful 
-	if( (gCurrentObjectSelected) && (gCurrentObjectSelected.nodeName.toUpperCase() == 'TEXT') && (gObjectEditMode == 'MODIFY_TEXT_MODE') )
-		GX_SaveText(gCurrentObjectSelected); 
+	//if( (gCurrentObjectSelected) && (gCurrentObjectSelected.nodeName.toUpperCase() == 'TEXT') && (gObjectEditMode == 'MODIFY_TEXT_MODE') )
+		//GX_SaveText(gCurrentObjectSelected); 
 	//check if the click is outside the gripper rectangle only then act
 	var status = gCurrGrabber.getAttribute('visibility'); 
 	if(status == 'visible')
@@ -3094,8 +3094,10 @@ function GX_UpdateLayerChildElements(layerNode)
 		else if (nodeclass == 'SVG_TEXT_OBJECT')
 		{
 			//this is done as a special case since getBBox returns coord different form x,y attribute
-			nodeDim.x = new Number(node.getAttribute('x')); 
-			nodeDim.y = new Number(node.getAttribute('y'));
+			nodeDim = new sDimension(); 
+			nodeDim.x  = new Number(node.getAttribute('x')); 
+			//nodeDim.x = node.getAttribute('x');
+			nodeDim.y  = new Number(node.getAttribute('y'));			
 			nodeDim.x = nodeDim.x + transprop.x; 
 			nodeDim.y = nodeDim.y + transprop.y;			
 			retVal = GX_SetObjectAttribute(node, "DIMENSION", nodeDim, true);
@@ -6779,6 +6781,7 @@ function GX_FillBtnHandler(event)
 	}	
 }
 
+/*
 function GX_MakeTextEditable(srcTextNode)
 {	
 	var editSVGNode  = document.getElementById('texteditablesvg');		 
@@ -6804,6 +6807,36 @@ function GX_MakeTextEditable(srcTextNode)
 	}
 	temptextNode.setAttribute('opacity', '1.0'); 
 }
+*/
+function GX_MakeTextEditable(srcTextNode)
+{
+	var node = srcTextNode;
+	var dim = node.getBBox(); 
+	//var editornode = document.getElementById('texteditor');
+	if(!gTextEditorNode)
+		gTextEditorNode = document.getElementById('texteditor');
+	
+	var editJQSel = '#texteditor'; 
+	var editorParentNode = gTextEditorNode.parentNode; 
+	var str = node.firstChild.data; 	
+	gTextEditorNode.value = str; 
+	editorParentNode.style.position = 'absolute'; 
+	editorParentNode.style.left = Math.round(dim.x ) + 'px';	
+	var toppos=  new Number();
+	toppos = Math.round(dim.y); 
+	toppos += Math.round(dim.height); 
+	editorParentNode.style.top = toppos + 'px';	
+	gTextEditorNode.style.width = Math.round(dim.width) + 'px'; 
+	gTextEditorNode.style.height = Math.round(dim.height) + 'px'; 
+	gTextEditorNode.style.fontFamily = node.getAttribute('font-family');
+	
+	//_rm dont know why it is not working 
+	var fontsize = node.getAttribute('font-size');
+	//$(editJQSel).prop('font-size', '35');	//$x.prop("color","FF0000");editornode.style.fontSize = "34" ;//+fontsize; 
+	//editornode.style.color = node.getAttribute('fill');
+	editorParentNode.style.display = 'block';  
+	node.setAttribute('opacity', '0.3'); 
+}
 
 function GX_SaveText(editedTextNode)
 {
@@ -6825,4 +6858,25 @@ function GX_SaveText(editedTextNode)
 	//reset the dit mode to layout mode 
 	GX_showEditorInterface('None'); 	
 	GXRDE_updateTextObjectData(editedTextNode.id, editedTextNode.firstChild.data); 
+}
+
+
+function OnTextEditKeyPress(event)
+{		
+	var str = gTextEditorNode.value ;
+	gCurrentObjectSelected.firstChild.data  = str; 
+}
+
+function OnTextEditFocusOut(event)
+{	
+	var str = gTextEditorNode.value ;
+	gCurrentObjectSelected.firstChild.data  = str;    
+	//node.style.display = 'block';
+	gTextEditorNode.parentNode.style.display = 'none'; 
+	gCurrGrabber
+	
+	var dim = gCurrentObjectSelected.getBBox(); 
+	gCurrGrabber.setAttribute('width', dim.width); 
+	gCurrentObjectSelected.setAttribute('opacity', '1.0');
+	GXRDE_updateTextObjectData(gCurrentObjectSelected.id, gCurrentObjectSelected.firstChild.data);
 }
