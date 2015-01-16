@@ -289,7 +289,7 @@ function GX_WKS_CreateSVGFile(&$respData)
 		       <script type="application/ecmascript">
 			          <![CDATA[
 			                   
-			                   function ChangeAnimateMotionSettings(node)
+			                   function GX_ChangeAnimateMotionSettings(node)
 			                   {    	
 				               	    var motionanimNode = node.nextElementSibling;       
 				               	    var fromval = motionanimNode.getAttribute("from");
@@ -306,6 +306,12 @@ function GX_WKS_CreateSVGFile(&$respData)
 				               	  	  objNode.setAttribute("x", fromval[0]); 
 				               	      objNode.setAttribute("y", fromval[1]);   	  
 				               	    }
+				               	    else if(objType == "TEXT")
+				               	    {
+				               	  	  objNode.setAttribute("x", fromval[0]); 
+				               	      objNode.setAttribute("y", fromval[1]);   	  
+				               	    }
+				               	    
 				               	    			
 			                   }                 
 							
