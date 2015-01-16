@@ -186,7 +186,7 @@ function AJX_SessionRequestWithReponseData(sessionName, sessionID, RespDataType,
 }
 
 
-
+/*
 function AJX_RequestWithNoReponseData(RespDataType, ModID, RequestId, RequestBody)
 //function AJX_RequestWithPureTextReponse(RespDataType, ModID, RequestId, RequestBody)
 {
@@ -215,6 +215,34 @@ function AJX_RequestWithNoReponseData(RespDataType, ModID, RequestId, RequestBod
 	
 	 
 	 return respstr;  
+}
+*/
+
+function AJX_RequestWithNoReponseData(RespDataType, ModID, RequestId, RequestBody)
+//function AJX_RequestWithPureTextReponse(RespDataType, ModID, RequestId, RequestBody)
+{
+	var xhr = new XMLHttpRequest();
+    var newURI = gAppURI + "?modid=" + ModID + "&reqid=" + RequestId + "&type=" + RespDataType;
+   // gAsyncAJXObj.onreadystatechange = AJX_DataLoadCallback; 
+    xhr.open("POST", newURI, true);  
+    //Debug_Message("Sending the Async Request ReqID=" +RequestId ); 
+    xhr.onload = function(e) {
+    	if (xhr.status != 200) {
+    		 respstr = 'FAIL'; 
+    	      Debug_Message("Unexpected status code " + xhr.status );
+    	      return respstr;
+    	}
+    	else
+    	{
+    		 respstr = 'OK';
+    		 return respstr;
+    	}
+  	};
+  	
+  	xhr.send(RequestBody);	    
+   // BlockUIinAjax(false); 
+    return 'OK' ; 	    
+
 }
 
 
@@ -247,12 +275,20 @@ function AJX_DataLoadCallback()
 }
 function AJX_AsyncRequestWithPureTextReponse(RespDataType, ModID, RequestId, RequestBody) {
 	      
-	   //BlockUIinAjax(true);	  
+	   //BlockUIinAjax(true);
+		var xhr = new XMLHttpRequest();
 	    var newURI = gAppURI + "?modid=" + ModID + "&reqid=" + RequestId + "&type=" + RespDataType;
-	    gAsyncAJXObj.onreadystatechange = AJX_DataLoadCallback; 
-	    gAsyncAJXObj.open("POST", newURI, true);  
+	   // gAsyncAJXObj.onreadystatechange = AJX_DataLoadCallback; 
+	    xhr.open("POST", newURI, true);  
 	    //Debug_Message("Sending the Async Request ReqID=" +RequestId ); 
-	    gAsyncAJXObj.send(RequestBody);	    
+	    xhr.onload = function(e) {
+	    	if (xhr.status != 200) {
+	    	      Debug_Message("Unexpected status code " + xhr.status );
+	    	      return false;
+	    	}
+	  	};
+	  	
+	  	xhr.send(RequestBody);	    
 	   // BlockUIinAjax(false); 
 	    return ; 	    
 }
