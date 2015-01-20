@@ -589,7 +589,27 @@ function GX_PopulateObjectList(ObjectType)
  	 			childNode = childNode.nextSibling; 
  	 			
  	 		} 	//while
- 	 	 } 	 			
+ 	 	 } 	 	
+ 	 	 
+ 	 	 //text object 
+ 	 	JQSel = '.SVG_TEXT_OBJECT'; 
+	 	 var size = $(JQSel).size(); 
+	     var num = $(JQSel).size();
+	 	 var DOMArr1 = $(JQSel).toArray(); 
+	 	 for(var k=0; k < DOMArr1.length; k++)
+	 	 {
+	 		var objID = DOMArr1[k].getAttribute('id'); 		
+	 		var objarr = [objID, 'SVG_TEXT_OBJECT']; 		 
+	 		ObjectList.push(objarr); 
+	 		
+	 		var childNode = DOMArr1[k].firstElementChild;  		
+	 		while(childNode)
+	 		{
+	 			GX_UpdateAnimInfoInList(childNode);	
+	 			childNode = childNode.nextSibling; 
+	 			
+	 		} 	//while
+	 	 } 	 			
  	} 		
  	return ObjectList;  	
  	
@@ -1342,6 +1362,11 @@ function GX_RemoveAnimInfoFromList(animID)
 	{
 		origPos.x = objDim.x;
 		origPos.y = objDim.y;
+	} 
+	else if(objType == "TEXT")
+	{
+		origPos.x = objDim.x;
+		origPos.y = objDim.y;
 	} 	
 	var X = WAL_getMaskedInputValue('offsetFromPathX'); 
 	var Y = WAL_getMaskedInputValue('offsetFromPathY'); 
@@ -1372,7 +1397,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	
 	//AND SET THE OBJECT ACCORDIGNLY 
 	GX_SetRectObjectDim(objNode, objDim) ; 
-	Debug_Message('Aligning Object'); 
+	//Debug_Message('Aligning Object'); 
 	 
  }
  function GX_AddNewAnimElementInDOM(animID, ObjID, animType, attrArray, bUIUpdate)
@@ -1800,7 +1825,12 @@ function GX_RemoveAnimInfoFromList(animID)
  	    {
  	 	  	  objNode.setAttribute("x", fromval[0]); 
  	 	      objNode.setAttribute("y", fromval[1]);   	  
- 	 	    }
+ 	 	 }
+ 	   else if(objType == "TEXT")
+	    {
+	 	  	  objNode.setAttribute("x", fromval[0]); 
+	 	      objNode.setAttribute("y", fromval[1]);   	  
+	 	}
  }    
  
  
@@ -1942,6 +1972,11 @@ function GX_RemoveAnimInfoFromList(animID)
 	    // objNode.setAttribute("cy", '0');   
 	 }
 	 else if(objType == "RECTANGLE")
+	 {
+	  	  objNode.setAttribute("x", origValueArr[0]); 
+	      objNode.setAttribute("y", origValueArr[1]);   	  
+	 } 
+	 else if(objType == "TEXT")
 	 {
 	  	  objNode.setAttribute("x", origValueArr[0]); 
 	      objNode.setAttribute("y", origValueArr[1]);   	  
