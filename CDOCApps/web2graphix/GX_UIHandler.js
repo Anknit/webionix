@@ -6368,8 +6368,8 @@ function GX_AddNewAnimation()
     gInitAnimParam.endState = 'freeze'; //FREEZE, REMOVE
     gInitAnimParam.PathObjectOffset=0;
     gInitAnimParam.PathStartPoint=new sPoint();
-    gInitAnimParam.center = '';  //centre of rotation 
-    gInitAnimParam.title = 'Default';        
+    gInitAnimParam.center = '';  //centre of rotation       
+    gInitAnimParam.title = '';   
     GX_ResetUI(gInitAnimParam); 
    // GX_SetAnimParamOnUI(gInitAnimParam);         
     
@@ -6773,7 +6773,8 @@ function GX_FillBtnHandler(event)
 	    gInitAnimParam.PathObjectOffset=0;
 	    gInitAnimParam.PathStartPoint=new sPoint();
 	    gInitAnimParam.center = '';  //centre of rotation 
-	    gInitAnimParam.title = 'Default';      
+	    
+	    gInitAnimParam.title = '';
 		
 		//then call for add animation 
 	    GX_AddAnimationElement(gInitAnimParam, false); 
