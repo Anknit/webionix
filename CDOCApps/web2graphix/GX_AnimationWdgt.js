@@ -417,7 +417,8 @@ function GX_GetAnimParamsFromUI()
                 WAL_CreateTextInput('objectIDIP', '100', gInputHeight,true, ''); 
                 
                 WAL_CreateTextInput('animtitleIP', '100', gInputHeight,false, '');
-                WAL_setTextInputValue('animtitleIP', 'Default', true);
+               
+                WAL_setTextInputValue('animtitleIP', '', true);
                 
                 //WAL_createNumberInput('durationIP', '100', gInputHeight, 'GX_AnimDlgEditHdlr', true, 100, 1, 1);
                 
@@ -964,9 +965,11 @@ function GX_RemoveAnimInfoFromList(animID)
  {	 
 	 var JQSel = "#" + "animtitleIP";	
 		var animName  = $(JQSel).val();	
-		if(animName == 'Default')
+		var firstchar
+		
+		if ( (animName == '') || (animName[0] == " ") )
 		{
-			Debug_Message("Please Assign a Name to the Animation");		
+			Debug_Message("Please Assign a Title to the Animation");		
 			setTimeout(function(){			
 				WAL_showModalWindow('animationwidget',"", "" );		
 				}, 250); 
@@ -1023,7 +1026,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 
 	var JQSel = "#" + "animtitleIP";	
 	var animName  = $(JQSel).val();	
-	if(animName == 'Default')
+	if ( (animName == '') || (animName[0] == " ") )
 	{
 		Debug_Message("Please Assign a Name to the Animation");		
 		setTimeout(function(){			
@@ -1110,9 +1113,9 @@ function GX_RemoveAnimInfoFromList(animID)
 	 	 
 	var JQSel = "#" + "animtitleIP";	
 	var animName  = $(JQSel).val();	
-	if(animName == 'Default')
+	if ( (animName == '') || (animName[0] == " ") )
 	{
-		Debug_Message("Please Assign a Name to the Animation");		
+		Debug_Message("Please Assign a Title to the Animation");		
 		setTimeout(function(){			
 			WAL_showModalWindow('animationwidget',"", "" );		
 			}, 250); 
