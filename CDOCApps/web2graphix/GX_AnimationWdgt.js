@@ -897,18 +897,7 @@ function GX_RemoveAnimInfoFromList(animID)
  
  function GX_AnimDlgOK()
  {
-	/*
-	 * var JQSel = "#" + "animtitleIP";	
-	var animName  = $(JQSel).val();	
-	if(animName == 'Default')
-	{
-		Debug_Message("Please Assign a Name to the Animation");		
-		setTimeout(function(){			
-			WAL_showModalWindow('animationwidget',"", "" );		
-			}, 250); 
-		return ; 
-	} 
-	*/	 
+	
 	 if(gNewAnimObject == false)
 		 return ; 
 	if(gCurrAnimParam.animType == 'ANIM_MOTION')
