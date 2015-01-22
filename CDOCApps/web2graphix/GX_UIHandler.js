@@ -1671,6 +1671,13 @@ function GX_AddNodes(CurrentNode, parentNode)
 		return ; 
 	}	
 	elem = parentNode.appendChild(elem);	
+	var nodeName = elem.nodeName.toUpperCase(); 
+	/*if ((nodeName == 'ANIMATE') || (nodeName == 'ANIMATEMOTION') )
+	{
+		elem.endElement(0); 
+		Debug_Message('Ending Animation'); 
+	}*/
+	
 	var childlist = CurrentNode.childNodes;
 	for(var j=0; j < childlist.length; j++)
 	{
