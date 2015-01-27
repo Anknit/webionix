@@ -13,8 +13,8 @@ $serverloc = $SERVER_LOCATION;
 if($serverloc == "LOCAL")
 {
 	$author = 'rajarshi';
-	$user = 'cdoc';
-	$pwd = 'cdoc';
+	$user = 'cdocuser'; //'cdocadmin';
+	$pwd = NULL;
 	$dbname = 'cdocapptestdb';
 	$hostaddr = 'localhost:3306';
 }
@@ -46,15 +46,23 @@ $hostaddr = 'fdb4.runhosting.com';
 */
 /* Initialisation of the database and the corresposndin tables */
 
-$dbhandle = mysql_connect($hostaddr, $user, $pwd);
+//$dbhandle = mysql_connect($hostaddr, $user, $pwd);
+$dbhandle = mysqli_connect($hostaddr, $user, $pwd, $dbname);
+if(!$dbhandle)
+{
+	//echo "Database Server could not be connected </br>";
+	LogString("Database could not be connected");
+	return ;
+}
 if(!$dbhandle)
 	echo "Database Server could not be connected </br>";
 
-
-if(!mysql_select_db($dbname,$dbhandle))
+/*
+if(!mysqli_select_db($dbname,$dbhandle))
 	echo "Database  ".$dbname." could not be Used </br>";
 else
 	echo "Database  ".$dbname." Success!!! </br>";
+*/
 
 $usrname = "'".$_POST['txtUsername']."'";
 $usrpwd = "'".md5($_POST['txtpassword'])."'";
@@ -64,7 +72,8 @@ $wksname = "'".$_POST['txtUsername'] ."_dir"."'";
 
 //$query = "INSERT INTO userinfo VALUES(NULL, $usrname, $usrpwd,$usrfname, $usrlname)";
 $query = "INSERT INTO userinfo (id, username, password, loginstatus, fname, lname, workspacename) VALUES(NULL, $usrname, $usrpwd,'N', $usrfname, $usrlname, $wksname)";
-$result = mysql_query($query);
+//$result = mysql_query($query);
+$result = mysqli_query($dbhandle, $query);
 if(!$result)
 	echo "Error in Registration";
 else
