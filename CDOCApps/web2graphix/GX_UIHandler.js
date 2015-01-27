@@ -3917,7 +3917,7 @@ function GX_ToolbarHandler(Node)
 				return ; 
 		 gInitFillValue = gCurrentObjectSelected.getAttribute('fill');
 		 if(gInitFillValue == 'none')
-			 gInitFillValue = 'grey';
+			 gInitFillValue = '#aaaaaa';
 		 
 		 var str = gInitFillValue.substring(0,3); 
 		 if(str != 'url')
@@ -3926,7 +3926,7 @@ function GX_ToolbarHandler(Node)
 		 }
 		 else
 		 {
-			 gInitFillColor = 'grey'; 
+			 gInitFillColor = '#aaaaaa'; 
 		 }
 		 GX_ShowFillColorWidget(); 
 		 /*
@@ -6745,10 +6745,8 @@ function GX_ShowFillColorWidget()
 	if(!gCurrentObjectSelected)
 		return ; 
 	var tgtNode = gCurrentObjectSelected;    
-	gPrevAttributeList = EL_getObjectAttributes(tgtNode);
-	if(!gInitFillColor)
-		
-	WAL_showColorPickerWidget('gradcolorpickwidget', '', '', attrName, gInitFillColor, tgtNode.id);
+	gPrevAttributeList = EL_getObjectAttributes(tgtNode);		
+	WAL_showColorPickerWidget('gradcolorpickwidget', '', 'fill_color_icon', attrName, gInitFillColor, tgtNode.id);
 }
 function GX_FillColorAnimCheckValueChange(event)
 {
