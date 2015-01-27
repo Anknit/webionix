@@ -1134,7 +1134,7 @@ function GX_Initialize()
     }
    
     //now create the menu here 
-   WAL_createMenu("GXmenu", '800px', '30px', "horizontal", "GX_MenuItemHandler", 'actionText');
+    WAL_createMenu("GXmenu", '900px', '30px', "horizontal", "GX_MenuItemHandler", 'actionText');
     WAL_createListBox('svgfileopenlistbox', '270', '250', "GX_LBItemsSelectHandler");
  	 	
     WAL_createWindow(gSVGFileOpenDlg,"Asset List", true, '282', '350', false,	true, false, false, false, "", 'SVGFO_LB_okbtn', 'SVGFO_LB_cancelbtn');
@@ -3915,7 +3915,21 @@ function GX_ToolbarHandler(Node)
 	 case 'fill_color_icon':
 		 if(!gCurrentObjectSelected)
 				return ; 
+		 gInitFillValue = gCurrentObjectSelected.getAttribute('fill');
+		 if(gInitFillValue == 'none')
+			 gInitFillValue = 'grey';
 		 
+		 var str = gInitFillValue.substring(0,3); 
+		 if(str != 'url')
+		 {
+			 gInitFillColor = gInitFillValue;			 
+		 }
+		 else
+		 {
+			 gInitFillColor = 'grey'; 
+		 }
+		 GX_ShowFillColorWidget(); 
+		 /*
 		 var btnNode = document.getElementById('fill_colorbtn'); 
 		 gInitFillValue = gCurrentObjectSelected.getAttribute('fill');
 		 var str = gInitFillValue.substring(0,3); 
@@ -3928,7 +3942,8 @@ function GX_ToolbarHandler(Node)
 			 gInitFillColor = 'grey'; 
 		 }
 		 btnNode.style.backgroundColor = gInitFillColor;
-		 WAL_showModalWindow('fillcolorDlg','GX_FillColorDlgOK', 'GX_FillColorDlgCancel'); 
+		 WAL_showModalWindow('fillcolorDlg','GX_FillColorDlgOK', 'GX_FillColorDlgCancel');
+		 */ 
 		 break; 
 		 
 	 case 'bold_icon':
@@ -6721,6 +6736,19 @@ function GX_FillColorHandler(event)
 	var tgtNode = gCurrentObjectSelected;    
 	gPrevAttributeList = EL_getObjectAttributes(tgtNode);
 	 WAL_showColorPickerWidget('gradcolorpickwidget', '', btnID, attrName, gInitFillColor, tgtNode.id);
+}
+
+function GX_ShowFillColorWidget()
+{
+	//var btnID =  event.target.id; 
+	var attrName = 'fill';
+	if(!gCurrentObjectSelected)
+		return ; 
+	var tgtNode = gCurrentObjectSelected;    
+	gPrevAttributeList = EL_getObjectAttributes(tgtNode);
+	if(!gInitFillColor)
+		
+	WAL_showColorPickerWidget('gradcolorpickwidget', '', '', attrName, gInitFillColor, tgtNode.id);
 }
 function GX_FillColorAnimCheckValueChange(event)
 {
