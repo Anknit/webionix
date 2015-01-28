@@ -55,7 +55,7 @@ function sAnimParams() {
 	sAnimParams.prototype.title = ''; 
 }
 
-var gAnimEndTimer = 100; 
+var gAnimEndTimer = 400; 
 var gbAnimationEnd =  true; 
 var gInitAnimParam = 0; 
 var gObjectList = 0; 
@@ -1802,7 +1802,7 @@ function GX_RemoveAnimInfoFromList(animID)
  }
  
 
- function GX_ChangeAnimateMotionSettings(animNode)
+ function GX_ChangeAnimateMotionSettingsFromcode(animNode)
  {    	 	         
  	    var fromval = animNode.getAttribute("from");
  	    fromval = fromval.split(",");       
@@ -1828,26 +1828,9 @@ function GX_RemoveAnimInfoFromList(animID)
  
  
  function GX_OnAnimationEndHandler(evt)
- {
-	/* var animNode = evt.target; 
-	 var objNode =  animNode.parentNode; 
-	 var objType = objNode.classList[1]; 
-	 var origValueArr = animNode.getAttribute('to'); 
-	 origValueArr = origValueArr.split(',')
-	 if(objType == 'ELLIPSE')
-	 {
-		  objNode.setAttribute("cx", origValueArr[0]); 
-	      objNode.setAttribute("cy", origValueArr[1]);   
-	 }	 
-	 animNode.removeAttribute('onend'); 
-	 */
-	 gCurrAnimNode = evt.target; 
-	/* var animTimer = setInterval(function() {
-		 GX_AnimEndTimerHandler(); 
-     }, gAnimEndTimer); 
-	 */
+ {	
 	 
-	 
+	 gCurrAnimNode = evt.target; 	 
 	 setTimeout(function(){		
 		 gCurrAnimNode.setAttribute('fill', 'remove');
 		 GX_RestoreAnimationObject(gCurrAnimNode.id); 
@@ -1855,9 +1838,9 @@ function GX_RemoveAnimInfoFromList(animID)
 		 gbAnimationEnd = true; 
 		
 		}, 
-		gAnimEndTimer); 
-		
+		gAnimEndTimer); 	
  }
+ 
  function GX_AnimEndTimerHandler()
  {
 	 GX_RestoreMotionObject(gCurrAnimNode); 
@@ -1884,7 +1867,7 @@ function GX_RemoveAnimInfoFromList(animID)
   			 return ; 
   		gbAnimationEnd = false; 
   		animnode.setAttribute('onend', 'GX_OnAnimationEndHandler(evt)'); 
-  		GX_ChangeAnimateMotionSettings(animnode);  		 
+  		GX_ChangeAnimateMotionSettingsFromcode(animnode);  		 
   	}
   //	var animInfo = GX_GetAnimInfoByID(animID); 
   	var restartval =  animnode.getAttribute('restart');
@@ -2037,3 +2020,24 @@ function GX_RemoveAnimInfoFromList(animID)
 	
 	//hide ahow buttons here
  }
+ 
+ function OnBeginMotionAnim(evt)
+ {
+ 	alert('Begin Animation from UIHandler.js'); 
+ 	var animNode = evt.target; 
+ 	animNode.endElement(0); 
+ 	GX_ChangeAnimateMotionSettings(animNode, 'from'); 
+ 	animNode.beginElement(0); 
+ 	//alert('End of Begin Animation'); 
+// 	animNode	
+ }  
+
+ function OnEndMotionAnim(evt)
+ {
+ 	alert('End of Animation from UIHandler.js'); 
+ 	var node= evt.target;
+ 	var motionanimNode = node; 
+ 	motionanimNode.endElement(0); 
+ 	GX_ChangeAnimateMotionSettings(motionanimNode , 'to');       
+  
+ }              
