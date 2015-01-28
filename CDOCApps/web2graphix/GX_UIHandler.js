@@ -1174,7 +1174,7 @@ function GX_Initialize()
 function GX_InitializeDocument(svgFileName)
 {
 	//update the container SVg dimension 
-	var svgdatanode = document.getElementById('SVGOBJECTCONTAINER');
+	//var svgdatanode = document.getElementById('SVGOBJECTCONTAINER');
 	
 	var svgcontainer = document.getElementById('objectcontainer'); 	
 	var svgassetnode = document.getElementById('editingassets_orig'); 
@@ -1220,11 +1220,9 @@ function GX_InitializeDocument(svgFileName)
 			
 		}		
 	}
-	
+	var svgdatanode = document.getElementById('SVGOBJECTCONTAINER');
 	if(!svgdatanode)
-		return ; 
-	
-	
+		return ; 	
 	var attrvalue; 
 	attrvalue = svgdatanode.getAttribute('width'); 
 	attrvalue = attrvalue.substring(0, attrvalue.length-2); 	
