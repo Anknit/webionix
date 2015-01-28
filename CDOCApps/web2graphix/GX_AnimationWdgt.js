@@ -1839,6 +1839,8 @@ function GX_RemoveAnimInfoFromList(animID)
 		
 		}, 
 		gAnimEndTimer); 	
+	 
+	 
  }
  
  function GX_AnimEndTimerHandler()
