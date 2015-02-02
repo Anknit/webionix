@@ -84,7 +84,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 	switch($objectTypeVal)
 	{
 		case 'RECTANGLE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT RECTANGLE ROTATE,0', 'x'=> '10','y'=>'10', 'width'=>'0', 'height'=>'0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT RECTANGLE ROTATE,0', 'x'=> '10','y'=>'10', 'width'=>'0', 'height'=>'0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0', 'fill-opacity'=>'1.0');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'rect',$objectIDVal,0, $parentIDVal, $attrdefinition,''); 
 			break; 
 		case 'ELLIPSE':
