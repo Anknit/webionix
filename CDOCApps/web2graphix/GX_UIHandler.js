@@ -121,7 +121,7 @@ var gPreviousTreeNode =0;
 var gCurrentTreeNode = 0;
 var gPrevTreeItemSel = 0;
 var gCurrentTreeItemSel=0; 
-var gOpacityUnSelect = '0.3';
+var gOpacityUnSelect = '0.4';
 var gCurrLayerID=0; 
 var gCurrLayerNode=0; 
 var gCurrLayerTranslateValues = 0;
@@ -2022,7 +2022,7 @@ function GX_SetSelection(objNode, bFlag) {
     	GX_UpdatePropertyOnUI('DIMENSION',gCurrSelectedObjectDim);      	
     }
    //update the UI if valid 
-    if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_PATH_OBJECT'))
+    if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT'))
     {
     	var rotateparam = node.classList[2]; 
     	var rotatearr = rotateparam.split(','); 
@@ -2035,6 +2035,10 @@ function GX_SetSelection(objNode, bFlag) {
     	var strokeopacity = gCurrentObjectSelected.getAttribute('stroke-opacity'); 
     	strokeopacity = Math.round(strokeopacity * 100);
     	WAL_setNumberInputValue('strokeOpacityIP', strokeopacity, false); 
+    	
+    	var fillopacity = gCurrentObjectSelected.getAttribute('fill-opacity'); 
+    	//fillopacity = Math.round(fillopacity);
+    	WAL_setNumberInputValue('fillopacityIP', fillopacity, false);
     	
     	//var colorval = gCurrentObjectSelected.getAttribute('stroke-opacity'); 
     	//WAL_setColorPickerValue('colorpickwidget', colorval); 
@@ -3468,13 +3472,13 @@ function GX_InitializeToolbar()
     
     
     //STROKE INTERFACE 
-    WAL_createNumberInput("strokeWeightIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,1,1);
+    WAL_createNumberInput("strokeWeightIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,0,1);
     WAL_setNumberInputValue('strokeWeightIP', 1, false);
     WAL_createCustomButton('stroke_dash_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('stroke_color_icon', 'GX_ToolbarHandler');
     WAL_createColorPickerWindow("colorpickwidget", "colorpicker", '350', '250', "okbtn", "cancelbtn");
     
-    
+     
     WAL_createCustomButton('stroke_linjoin_icon', 'GX_ToolbarHandler');
     var linecapValues = ['round','miter', 'bevel']; 
     WAL_createDropdownListwithButton("strokeLinejoinDDL", '0','0',linecapValues, "GX_DDLHandler", '80', '80','stroke_linjoin_icon', gButtonWidth, gButtonHeight);
@@ -3532,6 +3536,9 @@ function GX_InitializeToolbar()
     //fill interface 
    // var gradList = ['New:Linear', 'New:Radial']; 
     var gradList = ['none'];
+   // WAL_createDecimalNumberInput("durStartPosIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
+    WAL_createDecimalNumberInput("fillopacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1.0,0.0,0.1);
+    WAL_setNumberInputValue('fillopacityIP', 1.0, false);
     
     WAL_createDropdownList('gradlistDDL', '160', '24', false, gradList, "GX_DDLHandler", '50');
     WAL_createCustomButton('edit_grad_icon', 'GX_ToolbarHandler');  
@@ -3674,6 +3681,14 @@ function GX_EditBoxValueChange(value, widgetnode)
 			GX_SetObjectAttribute(gCurrentObjectSelected, 'stroke-opacity', opacity, true, false);
 			return; 
 		} 
+		else if(widgetnode.id == 'fillopacityIP')
+		{
+			var opacity = value; 
+			GX_SetObjectAttribute(gCurrentObjectSelected, 'fill-opacity', opacity, true, false);
+			return; 
+		} 
+		
+		
 		
 		
 		if(objType == 'FREEDRAW_PATH')
