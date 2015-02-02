@@ -121,7 +121,7 @@ var gPreviousTreeNode =0;
 var gCurrentTreeNode = 0;
 var gPrevTreeItemSel = 0;
 var gCurrentTreeItemSel=0; 
-var gOpacityUnSelect = '0.5';
+var gOpacityUnSelect = '0.3';
 var gCurrLayerID=0; 
 var gCurrLayerNode=0; 
 var gCurrLayerTranslateValues = 0;
@@ -2149,10 +2149,12 @@ function GX_ResetAllSelections()
 		gbMultiSelection = false;
 		
 	}
-	
-	
-	
-		
+	var JQSel = '.SVG_SHAPE_OBJECT'; 
+	$(JQSel).removeAttr('opacity');   
+	JQSel = '.SVG_PATH_OBJECT';
+	$(JQSel).removeAttr('opacity');   
+	JQSel = '.SVG_TEXT_OBJECT'; 
+	$(JQSel).removeAttr('opacity');		
 }
 
 function GX_UpdateMarkers(GrabberDim, bShow)
@@ -5053,7 +5055,7 @@ function OnPathMarkerMouseDown(evt) {
     if (bMarkerMove == false) {
         gsvgRootNode.setAttribute("cursor", "pointer");
         bMarkerMove = true;          
-        markerNode.setAttribute('r', '8'); 
+        markerNode.setAttribute('r', '12'); 
 	    markerNode.setAttribute('opacity', '1'); 
         var index = markerNode.getAttribute("data-index");
         if (!index)
