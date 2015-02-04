@@ -940,13 +940,19 @@ added . God knows why .
     	        		var srcnode = item.element;
     	        		var destnode = dropItem.element; 
     	        		var srcType = srcnode.getAttribute('type');
-    	        		var destType = destnode.getAttribute('type'); 
+    	        		var destType = destnode.getAttribute('type');     	        		
     	        		if( (dropPosition == 'before') || (dropPosition == 'after'))
     	        	    {
-    	        			if(srcType != 'OBJECT')
+    	        			
+    	        			if( ((srcType == 'OBJECT') && (destType == 'OBJECT')) 
+    	        					|| ((srcType == 'OBJECT') && (destType == 'LAYER')) )
+    	        			{
+    	        				return true; 
+    	        			}
+    	        			else 
+    	        				       			
     	        				return false; 
-    	        			if(destType != 'OBJECT')
-    	        				return false;  
+    	        			
     	        			
     	        		/*	var nextSibNode = destNode.nextSibling; 
     	        			if(!nextSibNode)
