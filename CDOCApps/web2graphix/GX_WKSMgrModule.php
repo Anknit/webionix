@@ -47,6 +47,11 @@ function GX_WKS_ProcessRequest($ReqID, &$responseData)
 		$retval = GX_WKS_GetSVGXMLMetaData($responseData);
 		return $retval;
 	}
+	else if($ReqID == '107')
+	{
+		$retval = GX_WKS_GetPageLink($responseData);
+		return $retval;
+	}
 	
 	
 	/*else if($ReqID == '103')
@@ -381,6 +386,7 @@ function GX_WKS_OpenSVGFile(&$respData)
 		return false; 
 	
 	$respData = $_SESSION['svg_xml_dom']->saveXML($svgNode);
+	$_SESSION['pathHTMLFile'] = $_SESSION['baseWKSURI'] . '/' . 'SVG' . '/' . $svgFileName; 
 	return true;
 }
 
@@ -532,4 +538,16 @@ function GX_WKS_GetSVGXMLMetaData(&$respData)
 	$respData = $XMLMetaDOM->saveXML($rootNode);
 	
 	return true; 
+}
+
+function  GX_WKS_GetPageLink(&$respData)
+{
+
+	if(!isset($_SESSION['pathHTMLFile']))
+	{
+		$respData = "FAIL";
+		return False;
+	}
+	$respData = $_SESSION['pathHTMLFile'];
+	return true;
 }
