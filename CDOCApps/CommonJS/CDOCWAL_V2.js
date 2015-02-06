@@ -944,45 +944,14 @@ added . God knows why .
     	        		if( (dropPosition == 'before') || (dropPosition == 'after'))
     	        	    {
     	        			
-    	        			if( ((srcType == 'OBJECT') && (destType == 'OBJECT')) 
-    	        					|| ((srcType == 'OBJECT') && (destType == 'LAYER')) )
+    	        			if(! (((srcType == 'OBJECT') && (destType == 'OBJECT')) 
+    	        					|| ((srcType == 'OBJECT') && (destType == 'LAYER'))) )
     	        			{
-    	        				return true; 
-    	        			}
-    	        			else 
-    	        				       			
-    	        				return false; 
-    	        			
-    	        			
-    	        		/*	var nextSibNode = destNode.nextSibling; 
-    	        			if(!nextSibNode)
-    	        			{
-    	        				Debug_Message("Last Node, hence node cannot be added");
     	        				return false; 
     	        			}
-
-    	        			*/
-    	        			
     	        	    }  
-    	        	/*	else if(dropPosition == 'inside')
-    	        		{
-    	        			if( (srcType == 'OBJECT') && (destType != 'LAYER') )
-    	        			{
-    	        				return false; 
-    	        			}
-    	        			if((srcType == 'LAYER') && (destType != 'SVGROOT') )
-    	        			{
-    	        				return false; 
-    	        			}
-    	        			if(srcType == 'SVGROOT')
-    	        				return false; 
-    	        			
-    	        		}
-    	        		*/
-    	        		else
-    	        		{
-    	        			return false ; 
-    	        		}
+    	        	
+    	        		
     	        		setTimeout(function(){
     	        			var expr = fnDropHandler + "(item, dropItem, args, dropPosition, tree)";
     	        			eval(expr);
