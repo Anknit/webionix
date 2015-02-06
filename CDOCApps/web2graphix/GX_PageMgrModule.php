@@ -2,7 +2,7 @@
 include_once "GX_scenecomposer.php"; 
 include_once "GX_CommonAPI.php";
 include_once "GX_ObjectManager.php"; 
-include_once "GX_fileexplorer.php"; 
+//include_once "GX_fileexplorer.php"; 
 function CDOC_PRJ_ProcessRequest($reqid, &$respdata )
 {
 	if($reqid == '201')
