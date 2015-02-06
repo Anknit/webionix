@@ -145,3 +145,13 @@ function GXRDE_updateTextObjectData(objID, string)
 	var reqbody  = "&OBJECTID=" + objID + "&DATA=" + string;	
 	var respstring = AJX_RequestWithReponseData("text", "OBJM", "311", reqbody);	
 }
+
+function GXRDE_getPageURL()
+{
+	 //get the Page link from the server
+    var respstring = AJX_RequestWithReponseData("text", "WKSM", "107");
+    if (respstring == "FAIL") {
+        return null; 
+    }    
+    return respstring; 
+}
