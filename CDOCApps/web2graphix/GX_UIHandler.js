@@ -1134,7 +1134,7 @@ function GX_Initialize()
     }
    
     //now create the menu here 
-    WAL_createMenu("GXmenu", '900px', '30px', "horizontal", "GX_MenuItemHandler", 'actionText');
+    WAL_createMenu("GXmenu", '1000px', '30px', "horizontal", "GX_MenuItemHandler", 'actionText');
     WAL_createListBox('svgfileopenlistbox', '270', '250', "GX_LBItemsSelectHandler");
  	 	
     WAL_createWindow(gSVGFileOpenDlg,"Asset List", true, '282', '350', false,	true, false, false, false, "", 'SVGFO_LB_okbtn', 'SVGFO_LB_cancelbtn');
@@ -1412,6 +1412,16 @@ function GX_MenuItemShow(menuid, itemText)
 		 else
 			 Debug_Message('Select a Text Object'); 
 		 break; 
+	 case 'preview':
+		 var URLstr = GXRDE_getPageURL();
+		if(!URLstr)
+			return;			
+		    //open a new window with page title
+		  var myWindow = window.open(URLstr, '', '');
+		  myWindow.resizeTo(screen.width, screen.height);
+		  myWindow.moveTo(50, 50);
+		  myWindow.focus(); 
+		 break;
 	 default:
 		 break; 
 	 }
