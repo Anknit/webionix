@@ -95,6 +95,7 @@ var gInitFocusPoint=0;
 var gWidgetHeight = '22'; 
 var gInitFillColor = 0; 
 var gInitFillValue = 0; 
+var bNewObjectAdding = false; 
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -1158,15 +1159,15 @@ function GX_Initialize()
     WAL_createModalWindow(gPolyInputDlg, '250', '150', 'polynSidesOK', 'polyLengthCancel');
     WAL_setNumberInputValue("polynSidesIP", '3', false);
     WAL_setNumberInputValue("polyLengthIP", '50', false);
-    
-    
     //fill color interface
     WAL_createButton('fillcolAnimAddBtn', 'GX_FillBtnHandler', '60', 24, true);
     WAL_createButton('fillcolAnimPreviewBtn', 'GX_FillBtnHandler', '60', 24, true);
     WAL_createCheckBox('animateFillColor', 'GX_FillColorAnimCheckValueChange', '50', gWidgetHeight, '13', false, false);
-    WAL_createModelessWindow('fillcolorDlg', '250', '150', 'fillcolOK', 'fillcolCancel');
-   
-    
+    WAL_createModelessWindow('fillcolorDlg', '250', '150', 'fillcolOK', 'fillcolCancel');   
+    $(document).on('contextmenu', function (e) {
+        return false;
+    });
+      
    // Debug_Message("DBM Initialized Successfully"); 
    
 }
@@ -1721,6 +1722,7 @@ function GX_AddNewSVGObject(Type)
 	var ObjID =  GXRDE_GetUniqueID('SVG_'); 
 	var objectType = Type.toUpperCase(); 
 	gNewObjectID = ObjID;
+	bNewObjectAdding =  true; 
 	var retval; 
 	//send out the request and get the XML from server
 	if ( (objectType == 'LINEAR_GRADIENT')|| (objectType == 'RADIAL_GRADIENT') )
@@ -5815,15 +5817,20 @@ function GX_FindAnchorPointIndex(pathArray, boundary, pointX, pointY, startIndex
 }
 
 
-function OnWindowScroll()
+function OnWindowScroll(event)
 {	
-	if( (window.pageXOffset != 0) || (window.pageYOffset != 0 ))
+	if(bNewObjectAdding ==  true)
 	{
-		var horScroll = 0 - window.pageXOffset;
-		var vertScroll = 0 - window.pageYOffset;	
-		if( (horScroll != 0) || (vertScroll != 0) )
-			window.scrollTo(horScroll, vertScroll);
-	}	
+		if( (window.pageXOffset != 0) || (window.pageYOffset != 0 ))
+		{
+			var horScroll = 0 - window.pageXOffset;
+			var vertScroll = 0 - window.pageYOffset;	
+			if( (horScroll != 0) || (vertScroll != 0) )
+				window.scrollTo(horScroll, vertScroll);
+		}
+		bNewObjectAdding = false; 
+	}
+	
 }
 
 function GX_SetClosePath(pathNode, bCloseFlag)
