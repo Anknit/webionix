@@ -46,6 +46,8 @@ var gUIBlock = false;
 var gInitColorValue = 0; 
 var gTargetColorObj = 0; 
 var gTargetAttrname = 0;
+var gLastSelected = 0; 
+var gMenuSelectionCol = '#c6d600'; //#c6d6ec
 
 function WAL_Initialize() {
     if(!gTheme)
@@ -2125,6 +2127,8 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
      return '#' + r + g + b;
 }
  
+
+ 
  function WAL_createMenu(ID, Width, Height, Mode, HandlerMenuItemClick, itemclickstatusdisplayID) {
 
      if (gInitialized != true)
@@ -2136,7 +2140,8 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
      if (retval == true)
          return false;
 
-     $(JQSel).jqxMenu({ width: Width, height: Height, theme: gTheme, mode: Mode, showTopLevelArrows: true });
+     $(JQSel).jqxMenu({ width: Width, height: Height, theme: gTheme, mode: Mode, showTopLevelArrows: true,
+    	 easing: 'easeInOutSine', animationShowDuration: 500 });
      $(JQSel).attr(widgetType, "true");
      $(JQSel).css('visibility', 'visible');
 
@@ -2156,6 +2161,14 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
          if(statusdisp)
         	 $(statusdisp).html(itemtext); 
          
+         //new trial code 
+         // get the clicked LI element.
+         var element = event.args;
+         if (gLastSelected) {
+        	 gLastSelected.css("background-color", "inherit");
+         };
+         gLastSelected = $("#" + element.id);
+         gLastSelected.css("background-color", gMenuSelectionCol);         
          if (state == true)
              return;
          if (HandlerMenuItemClick) {
@@ -2266,7 +2279,12 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
      var node = event.target;    
      if(HandlerFnForValueChange)     
      {
+    	 if(value >maxValue )
+    	{
+    		 Debug_Message('Exceeds Max Value'); 
+    	}
          var expr = HandlerFnForValueChange + "(value, node)";
+         
              eval(expr);
      }
      
@@ -2311,6 +2329,10 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
      var node = event.target;    
      if(HandlerFnForValueChange)     
      {
+    	if(value >maxValue )
+     	{
+     		 Debug_Message('Exceeds Max Value'); 
+     	}
          var expr = HandlerFnForValueChange + "(value, node)";
              eval(expr);
      }
