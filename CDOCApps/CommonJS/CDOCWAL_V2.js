@@ -2316,9 +2316,7 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
     	 */
      $(JQSel).jqxNumberInput({ width: Width, height: Height, theme: gTheme, spinButtons: mySpinBtn,  spinMode: mode, 
     	 spinButtonsWidth: 20, inputMode: 'simple',decimalDigits:1,  max:maxValue, min: minValue, spinButtonsStep: stepValue});
-    	
-     
-        
+    	        
      $(JQSel).attr(widgetType, "true");
      
     // $(JQSel).on('valuechanged', function(event) {
