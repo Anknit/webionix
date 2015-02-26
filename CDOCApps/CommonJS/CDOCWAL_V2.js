@@ -2265,9 +2265,9 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
      
      $(JQSel).attr(widgetType, "true");
      
-     $(JQSel).on('valuechanged', function(event) {
+   //  $(JQSel).on('valuechanged', function(event) {
     //$(JQSel).on('textchanged', function(event){
-   // $(JQSel).on('change', function(event)		 {
+    $(JQSel).on('change', function(event)		 {
      var flag = $(JQSel).attr('data-internalevent');
      if(flag ==  'true')
      {
@@ -2275,7 +2275,7 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
     	 return ;  
      }   	
     
-     var value = $(this).jqxNumberInput('val'); 
+     var value = event.args.value ;//$(this).jqxNumberInput('val'); 
      var node = event.target;    
      if(HandlerFnForValueChange)     
      {
@@ -2311,21 +2311,27 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
      
     // $(JQSel).jqxNumberInput({ width: Width, height: Height, theme: gTheme, spinButtons: bSpinButton,  spinMode: mode, inputMode: 'simple', decimalDigits: 0, digits: 4 });
      
+   /*  $(JQSel).jqxNumberInput({ width: Width, height: Height, theme: gTheme, spinButtons: mySpinBtn,  spinMode: mode, 
+    	 spinButtonsWidth: 20, inputMode: 'simple', decimal:3, decimalDigits:1, digits: 3, max:maxValue, min: minValue, spinButtonsStep: stepValue});
+    	 */
      $(JQSel).jqxNumberInput({ width: Width, height: Height, theme: gTheme, spinButtons: mySpinBtn,  spinMode: mode, 
-    	 spinButtonsWidth: 20, inputMode: 'simple', decimal:3, decimalDigits:1, digits: 3, max:maxValue, min: minValue, spinButtonsStep: stepValue});     
+    	 spinButtonsWidth: 20, inputMode: 'simple',decimalDigits:1,  max:maxValue, min: minValue, spinButtonsStep: stepValue});
+    	
+     
         
      $(JQSel).attr(widgetType, "true");
      
-     $(JQSel).on('valuechanged', function(event) {
+    // $(JQSel).on('valuechanged', function(event) {
     //$(JQSel).on('textchanged', function(event){
-   // $(JQSel).on('change', function(event)		 {
+     //in version 3.7 'valuechanged does not work 
+    $(JQSel).on('change', function(event)		 {
      var flag = $(JQSel).attr('data-internalevent');
      if(flag ==  'true')
      {
     	 $(JQSel).attr('data-internalevent', false);
     	 return ;  
      }   	
-     var value = $(this).jqxNumberInput('val'); 
+     var value = event.args.value ; //$(this).jqxNumberInput('val'); 
      var node = event.target;    
      if(HandlerFnForValueChange)     
      {
