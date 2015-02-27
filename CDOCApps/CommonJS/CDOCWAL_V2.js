@@ -48,7 +48,9 @@ var gTargetColorObj = 0;
 var gTargetAttrname = 0;
 var gLastSelected = 0; 
 var gMenuSelectionCol = '#c6d600'; //#c6d6ec
-
+var gTooltipHideDelay = 2000; 
+var gCurrentTooltipOwnerID = 0; 
+var gCurrTooltipID = 0; 
 function WAL_Initialize() {
     if(!gTheme)
         gTheme = getTheme();
@@ -1437,13 +1439,45 @@ function WAL_createSplitter(ID, Width, Height, Orientation, bshowSplitBar, bresi
 	    return true; 
 }
 
-function WAL_createTooltip(ID, tipText) {
-
-
+function WAL_createTooltip(ID, tipText, hideDelay) {
+	
     var JQSel = "#" + ID;
-    $(JQSel).jqxTooltip({ content: tipText });
+    var delay; 
+    if(hideDelay == 0)
+    	delay =gTooltipHideDelay; 
+    
+    $(JQSel).jqxTooltip({ content: tipText, position:'bottom', theme: gTheme, name: 'tooltip' + ID, autoHide:true, 
+     	autoHideDelay:delay, closeOnClick: true, showArrow: true});
+    $(JQSel).jqxTooltip('close');
 }
 
+function WAL_ShowTooltip(ID, bFlag)
+{
+	var JQSel = "#" + ID; 
+	if(bFlag == true){
+		$(JQSel).jqxTooltip('open'); 
+	}else{
+		$(JQSel).jqxTooltip('close'); 
+	}
+}
+
+function WAL_UpdateTooltipText(ID, tipText){
+	var JQSel = "#" + ID; 
+	$(JQSel).jqxTooltip({ content: tipText});	
+}
+
+function WAL_SetTooltipPosition(ID, position, x, y)
+{
+	var JQSel = "#" + ID; 
+	if(position == 'absolute')
+	{
+		$(JQSel).jqxTooltip({position:'absolute', absolutePositionX:x, absolutePositionY:y });		
+	}
+	else
+	{
+		$(JQSel).jqxTooltip({position:position});
+	}
+}
 
 function WAL_createWindow(ID,titleID, bTitleBar, Width, Height, Resizable, Draggable, Modal, Collapsable, showClose,  HandlerFnClose, OKButtonID, CancelButtonID ) {
     if (gInitialized != true)
@@ -2693,7 +2727,7 @@ function WAL_SetItemByValueInList(ID, value, bInternalEvent)
 			$(JQSel).attr('data-internalevent', 'false');
 	}
 }
-function WAL_createCustomButton(buttonID, clickHandler)
+function WAL_createCustomButton(buttonID, clickHandler, tooltipID)
 {
 
     if (gInitialized != true)
@@ -2710,6 +2744,12 @@ function WAL_createCustomButton(buttonID, clickHandler)
     // $(JQSel).attr('data-clickhandler', attrVal);
      $(JQSel).addClass('IMG_BTN_ACTIVE');
      $(JQSel).addClass('IMAGE_BUTTON'); 
+     if(tooltipID != 0)
+    {
+    	 $(JQSel).attr('data-tooltipID', tooltipID);
+    	
+    }
+    	 
      
      $(JQSel).on('click', function(event) { 	 
          if (clickHandler) {
@@ -2722,12 +2762,65 @@ function WAL_createCustomButton(buttonID, clickHandler)
            //  $('.IMAGE_BUTTON').removeAttr('style'); 
              node.style.border = 'ridge 2px #e0e9f5';      
              node.style.bordeRadius = '5px'; 
-             node.style.boxShadow = '5px 8px 7px #888888';   
-             
+             node.style.boxShadow = '5px 8px 7px #888888';            
              eval(expr);
          }
      });
+     
+     $(JQSel).on('mousemove', function(event){
+    	var node = event.target; 
+    	var tooltipID = $(JQSel).attr('data-tooltipID'); 
+     	if(!tooltipID)
+     		return ;    
+     	 gCurrTooltipID = tooltipID; 
+     	var tiptext = node.getAttribute('data-tooltiptext'); 
+     	gCurrentTooltipOwnerID = node.id; 
+     	var tooltipsrc = '<p>'+tiptext + '<span class="LINK_TYPES" onclick="OnHelpButton(event)" style="color:blue">  Help..</span>' + '</p>';     	 
+     	var top =  new Number(node.offsetTop + node.offsetHeight +  6); 
+     	var left =  new Number(node.offsetLeft + 6);      	
+     	var tipSel = '#' + tooltipID; 
+     	$(tipSel).jqxTooltip({content: tooltipsrc, position:'absolute', absolutePositionX:left, absolutePositionY:top});
+     	$(tipSel).jqxTooltip('open');//open(); 
+     });     
 }
+
+function OnHelpButton(event){
+	 
+	// alert('Clicked on me'); 
+	 var tooltipSel = '#'+ gCurrTooltipID; 
+	 var tooltipOwnerNode = document.getElementById(gCurrentTooltipOwnerID); 
+	 $(tooltipSel).jqxTooltip('destroy');  
+	 var top =  new Number(tooltipOwnerNode.offsetTop + tooltipOwnerNode.offsetHeight +  6); 
+	 var left =  new Number(tooltipOwnerNode.offsetLeft + 6); 
+	 var tiptext =  tooltipOwnerNode.getAttribute('data-helptext'); 
+	 $(tooltipSel).jqxTooltip({ content: tiptext, position: 'absolute', theme: gTheme, name: 'movieTooltip', autoHide:true, 
+	     	autoHideDelay:10000, closeOnClick: true, showArrow: true, animationShowDelay: 1000,absolutePositionX:left, absolutePositionY:top});
+	 $(tooltipSel).jqxTooltip('open'); 
+/* 	var origsrc = $("#mydiv").jqxTooltip('content');         	
+	$('#mydiv').jqxTooltip('destroy');    
+	var currBtnNode =  document.getElementById(currentBtnId); 
+	var top =  new Number(currBtnNode.offsetTop + currBtnNode.offsetHeight +  6); 
+	var left =  new Number(currBtnNode.offsetLeft + 6); 
+	switch(currentBtnId)
+	{
+	case 'tooltipBtn1':
+		var specText  = '<p>For Button-1To Move : Just click once and then move your mouse without</br> pressing any Mouse button<p>';
+		origsrc += specText;         		 
+		break; 
+	case 'tooltipBtn2':
+		var specText  = '<p>For Button-2To Do MultiSelect </br> User Ctrl+shift and then select the objects<p>';
+		origsrc += specText;      
+		break; 
+	default:
+		break;
+	}
+	$("#mydiv").jqxTooltip({ content: origsrc, position: 'absolute', theme: gTheme, name: 'movieTooltip', autoHide:true, 
+     	autoHideDelay:15000, closeOnClick: true, showArrow: true, animationShowDelay: 1000,absolutePositionX:left, absolutePositionY:top});
+	$('#mydiv').jqxTooltip('open'); 
+}*/
+	 
+}
+
 
 function DisableCustomButton(btnID, bFlag) {
     var node = document.getElementById(btnID);
