@@ -3095,3 +3095,49 @@ function WAL_SetMenuItem(menuID, itemID)
 	var JQSel = '#' + menuID; 		
 	$(JQSel).jqxMenu('openItem', itemID);	
 }
+
+function WAL_createContextMenu(ID, HandlerMenuItemClick)
+{
+	   var JQSel = '#'+ID; 
+	   var contextMenu = $(JQSel).jqxMenu({ width: '120px', height: '140px', autoOpenPopup: false, mode: 'popup',theme: gTheme});
+    // open the context menu when the user presses the mouse right button.
+    var menuNode =  document.getElementById(ID); 
+    var parSel = '#' + menuNode.parentNode.previousElementSibling.id;            
+    $(parSel).on('mousedown', function (event) {
+        var rightClick = isRightClick(event) || $.jqx.mobile.isTouchDevice();
+        if (rightClick) {
+            var scrollTop = $(window).scrollTop();
+            var scrollLeft = $(window).scrollLeft();
+            contextMenu.jqxMenu('open', parseInt(event.clientX) + 5 + scrollLeft, parseInt(event.clientY) + 5 + scrollTop);
+            return false;
+        }              
+    }); 
+    
+    $(document).on('contextmenu', function (e) {
+        return false;
+    }); 
+    
+   
+    
+    $(JQSel).on('itemclick', function(event) {
+        var args = event.args;
+        var itemtext = $(args).text();
+        var menuid = args.getAttribute("id");
+        var nodesel = "#" + menuid;
+        var state = $(nodesel).hasClass('jqx-menu-disabled');            
+        if (state == true)
+            return;
+        if (HandlerMenuItemClick) {
+            var expr = HandlerMenuItemClick + "(event)";
+            eval(expr);
+        }
+    });
+}
+
+function isRightClick(event) {
+    var rightclick;
+    if (!event) var event = window.event;
+    if (event.which) rightclick = (event.which == 3);
+    else if (event.button) rightclick = (event.button == 2);
+    return rightclick;
+}
