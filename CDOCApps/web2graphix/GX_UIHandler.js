@@ -96,6 +96,7 @@ var gWidgetHeight = '22';
 var gInitFillColor = 0; 
 var gInitFillValue = 0; 
 var bNewObjectAdding = false; 
+var gWidgetTooltipID = 'widgettooltip' ; // 'dataContainerSplitter'; 
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -2102,6 +2103,8 @@ function OnSVGParentClick(evt)
 	//if( (gCurrentObjectSelected) && (gCurrentObjectSelected.nodeName.toUpperCase() == 'TEXT') && (gObjectEditMode == 'MODIFY_TEXT_MODE') )
 		//GX_SaveText(gCurrentObjectSelected); 
 	//check if the click is outside the gripper rectangle only then act
+	 WAL_ShowTooltip(gWidgetTooltipID, false); 
+	
 	var status = gCurrGrabber.getAttribute('visibility'); 
 	if(status == 'visible')
 	{
@@ -3434,66 +3437,68 @@ function GX_InitializeToolbar()
 {
 	//INITALIZING LAYOUT INTERFACE
 	//second row item layout_interface
-	
-	WAL_createCustomButton('svgdim_icon', 'GX_ToolbarHandler');
-	WAL_createCheckBox('snaptogrid', 'GX_CheckValueChange', '110', '20' , '13', false, false);
+	//WAL_createTooltip('widgettooltip', 'div', 1000); 
+	WAL_createTooltip(gWidgetTooltipID, 'div', 1000); 	 
+	WAL_createCustomButton('svgdim_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
+	WAL_createCheckBox('snaptogrid', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
 		
-	WAL_createNumberInput("widthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1280, 0,1);
-    WAL_createNumberInput("heightIP", '58px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1);     
-    WAL_createCustomButton('alignwidth_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('alignheight_icon', 'GX_ToolbarHandler');    
+	WAL_createNumberInput("widthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1280, 0,1, gWidgetTooltipID);
+    WAL_createNumberInput("heightIP", '58px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID);     
+    WAL_createCustomButton('alignwidth_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
+    WAL_createCustomButton('alignheight_icon', 'GX_ToolbarHandler',gWidgetTooltipID);    
     
     //position group 
-    WAL_createNumberInput("lposIP", '58px', gDDLHeight,  "GX_EditBoxValueChange", true, 1280, 0,1);
-    WAL_createNumberInput("tposIP", '58px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1); 
-    WAL_createCustomButton('alignleft_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('aligntop_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('alignright_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('alignbottom_icon', 'GX_ToolbarHandler');
+    WAL_createNumberInput("lposIP", '58px', gDDLHeight,  "GX_EditBoxValueChange", true, 1280, 0,1, gWidgetTooltipID);
+    WAL_createNumberInput("tposIP", '58px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID); 
+    WAL_createCustomButton('alignleft_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
+    WAL_createCustomButton('aligntop_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
+    WAL_createCustomButton('alignright_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
+    WAL_createCustomButton('alignbottom_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
   
-    WAL_createCustomButton('alignhorcenter_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('alignvertcenter_icon', 'GX_ToolbarHandler');  
+    WAL_createCustomButton('alignhorcenter_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
+    WAL_createCustomButton('alignvertcenter_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);  
     
     
     //zoompan interface 
     var zoomeValueDisplay = ['1','1.25','1.5','2.0', '2.25', '2.5', '3.0']; 
-    WAL_createDropdownListwithButton("zoomDDL", '0','0',zoomeValueDisplay, "GX_DDLHandler", '80', '80','zoom_icon', gButtonWidth, gButtonHeight);
-    WAL_createCustomButton('panright_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('panleft_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('panup_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('pandown_icon', 'GX_ToolbarHandler');
+    WAL_createDropdownListwithButton("zoomDDL", '0','0',zoomeValueDisplay, "GX_DDLHandler", '80', '80','zoom_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
+    WAL_createCustomButton('panright_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('panleft_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('panup_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('pandown_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     
     
     //modify interface 
-    WAL_createCustomButton('erase_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('modify_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('addpoint_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('deletepoint_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('erase_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('modify_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('addpoint_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('deletepoint_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     
     
-    WAL_createCheckBox('pathclose', 'GX_CheckValueChange', '110', '20' , '13', false, false);
-    WAL_createNumberInput("rotateIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 180, -180,5);    
+    WAL_createCheckBox('pathclose', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
+    WAL_createNumberInput("rotateIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 180, -180,5, gWidgetTooltipID);    
     //WAL_createNumberInput("rotateIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 180, -180,5);
     WAL_setNumberInputValue('rotateIP', 0, false);
-    WAL_createNumberInput("lengthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 500,0,1);
-    WAL_createNumberInput("radiusXIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true,300,0,1);
+    WAL_createNumberInput("lengthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 500,0,1, gWidgetTooltipID);
+    WAL_createNumberInput("radiusXIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true,300,0,1, gWidgetTooltipID);
     
-    WAL_createNumberInput("radiusYIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 300,0, 1);
-    WAL_createCheckBox('largearcCheckBox', 'GX_CheckValueChange', '90', '20' , '13', false, false);
-    WAL_createCheckBox('sweepCheckBox', 'GX_CheckValueChange', '110', '20' , '13', false, false);   
+    WAL_createNumberInput("radiusYIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 300,0, 1, gWidgetTooltipID);
+    WAL_createCheckBox('largearcCheckBox', 'GX_CheckValueChange', '90', '20' , '13', false, false, gWidgetTooltipID);
+    WAL_createCheckBox('sweepCheckBox', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);   
     
     
     //STROKE INTERFACE 
-    WAL_createNumberInput("strokeWeightIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,0,1);
+    WAL_createNumberInput("strokeWeightIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,0,1, gWidgetTooltipID);
     WAL_setNumberInputValue('strokeWeightIP', 1, false);
-    WAL_createCustomButton('stroke_dash_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('stroke_color_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('stroke_dash_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('stroke_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createColorPickerWindow("colorpickwidget", "colorpicker", '350', '250', "okbtn", "cancelbtn");
     
      
-    WAL_createCustomButton('stroke_linjoin_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('stroke_linjoin_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     var linecapValues = ['round','miter', 'bevel']; 
-    WAL_createDropdownListwithButton("strokeLinejoinDDL", '0','0',linecapValues, "GX_DDLHandler", '80', '80','stroke_linjoin_icon', gButtonWidth, gButtonHeight);
+    WAL_createDropdownListwithButton("strokeLinejoinDDL", '0','0',linecapValues, "GX_DDLHandler", '80', '80','stroke_linjoin_icon', gButtonWidth, 
+    		gButtonHeight, gWidgetTooltipID);
     
     
    // var listBoxSrc = []; 
@@ -3540,33 +3545,33 @@ function GX_InitializeToolbar()
         listBoxSrc[i] = { html: html, value:dashValue};
     }
     //WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource,  handlerFnName, DDLdropDownWidth, DDLdropDownHeight, buttonID, buttonwidth, buttonheight)
-    WAL_createDropdownListwithButton("strokedashDDL", '0','0',listBoxSrc, "GX_DDLHandler", '140', '80','stroke_dash_icon', gButtonWidth, gButtonHeight);
+    WAL_createDropdownListwithButton("strokedashDDL", '0','0',listBoxSrc, "GX_DDLHandler", '140', '80','stroke_dash_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
       
-    WAL_createNumberInput("strokeOpacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,1,1);
+    WAL_createNumberInput("strokeOpacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,1,1, gWidgetTooltipID);
     WAL_setNumberInputValue('strokeOpacityIP', 100, false);
     
     //fill interface 
    // var gradList = ['New:Linear', 'New:Radial']; 
     var gradList = ['none'];
    // WAL_createDecimalNumberInput("durStartPosIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
-    WAL_createDecimalNumberInput("fillopacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1.0,0.0,0.1);
+    WAL_createDecimalNumberInput("fillopacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1.0,0.0,0.1, gWidgetTooltipID);
     WAL_setNumberInputValue('fillopacityIP', 1.0, false);
     
     WAL_createDropdownList('gradlistDDL', '160', '24', false, gradList, "GX_DDLHandler", '50');
-    WAL_createCustomButton('edit_grad_icon', 'GX_ToolbarHandler');  
-    WAL_createCustomButton('fill_color_icon', 'GX_ToolbarHandler'); 
-    WAL_createCustomButton('linear_grad_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('radial_grad_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('delete_grad_icon', 'GX_ToolbarHandler');    
+    WAL_createCustomButton('edit_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);  
+    WAL_createCustomButton('fill_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
+    WAL_createCustomButton('linear_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('radial_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('delete_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);    
     GX_CreateGradientWidget('gradientDlg');
     
    // 
-    WAL_createCustomButton('anim_new_icon', 'GX_ToolbarHandler');   
+    WAL_createCustomButton('anim_new_icon', 'GX_ToolbarHandler', gWidgetTooltipID);   
     var animlist = []; 
     WAL_createDropdownList('listanimDDL', '160', '24', false, animlist, "GX_DDLHandler", '50');
-    WAL_createCustomButton('anim_edit_icon', 'GX_ToolbarHandler'); 
-    WAL_createCustomButton('anim_preview_icon', 'GX_ToolbarHandler'); 
-    WAL_createCustomButton('anim_delete_icon', 'GX_ToolbarHandler'); 
+    WAL_createCustomButton('anim_edit_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
+    WAL_createCustomButton('anim_preview_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
+    WAL_createCustomButton('anim_delete_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
    // WAL_createCustomButton('anim_copy_icon', 'GX_ToolbarHandler');  
     
     //TEXT OBJECT INTERFACE 
@@ -3602,13 +3607,13 @@ function GX_InitializeToolbar()
     //var fontSizeValue = ['xx-small','x-small','small','medium','large','x-large','xx-large'];    
    // WAL_createDropdownListwithButton("fontsizeDDL", '0','0',fontSizeValue,  "GX_DDLHandler", '100', '100', 'fontsize_icon', gTE_ButtonWidth, gTE_ButtonHeight);
     
-    WAL_createNumberInput("fontSizeIP", '58px', '24', "GX_EditBoxValueChange",true, 100,8,1);
+    WAL_createNumberInput("fontSizeIP", '58px', '24', "GX_EditBoxValueChange",true, 100,8,1, gWidgetTooltipID);
     WAL_setNumberInputValue('fontSizeIP', 18, false);
-    WAL_createCustomButton('bold_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('italic_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('underline_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('strikethrough_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('smallcaps_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('bold_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('italic_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('underline_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('strikethrough_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('smallcaps_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     
     //WAL_createCustomButton('blink_icon', 'GX_ToolbarHandler');
    
