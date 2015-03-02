@@ -56,6 +56,7 @@ function WAL_Initialize() {
         gTheme = getTheme();
    // gTheme = 'metrodark';
     gTheme = 'energyblue';
+   // gTheme = 'mycustom';   
     //gTheme = 'ui-redmond'; 
     //gTheme = 'ui-redmond'; 
 
@@ -436,7 +437,7 @@ function WAL_createButtonGroupSelectable(buttonGrpID, selectMode, handlerFnNameS
 
 
 
-function WAL_createCheckBox(buttonID, handlerFnName, Width, Height, boxSize, disabled, checked) {
+function WAL_createCheckBox(buttonID, handlerFnName, Width, Height, boxSize, disabled, checked, tooltipID) {
 
     if (gInitialized != true)
         return;
@@ -460,6 +461,12 @@ function WAL_createCheckBox(buttonID, handlerFnName, Width, Height, boxSize, dis
             eval(expr);
         }
     });
+    
+    if(tooltipID)
+    {
+    	//var parentNode =  document.getElementById(ID).parentNode; 
+    	WAL_createWidgetTooltip(buttonID, tooltipID); 
+    }
     return;
 
 
@@ -604,7 +611,7 @@ function WAL_createDropdownList(ID, Width, Height, AutoOpen, DataSource, handler
     
     return;
 }
-function WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource,  handlerFnName, DDLdropDownWidth, DDLdropDownHeight, buttonID, buttonwidth, buttonheight) {
+function WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource,  handlerFnName, DDLdropDownWidth, DDLdropDownHeight, buttonID, buttonwidth, buttonheight, tooltipID) {
 	 if (gInitialized != true)
 	        return;
 	    var widgetType = gWidgetType['jqxDropDownList']; 
@@ -629,7 +636,7 @@ function WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource, 
 	    $(JQSel).attr(widgetType, "true");
 
 	    var btnJQSel = "#"+buttonID; 
-	    WAL_createCustomButton(buttonID, ""); 
+	    WAL_createCustomButton(buttonID, "", tooltipID); 
 	    $(btnJQSel).on('click', function(){
 	    	var node =  document.getElementById(ID); 
 	    	node = node.parentNode; 
@@ -666,11 +673,10 @@ function WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource, 
 	    });
 	    
 	    $(JQSel).on('close', function(event) {
-	    	$(JQSel).hide(); 
-	    	 
-	           
+	    	$(JQSel).hide();            
 	    });
 	    
+	   
 	    
 
 	  
@@ -2274,7 +2280,7 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
      
  }
  
- function WAL_createNumberInput(ID, Width, Height, HandlerFnForValueChange, bSpinButton, maxValue, minValue, stepValue) {
+ function WAL_createNumberInput(ID, Width, Height, HandlerFnForValueChange, bSpinButton, maxValue, minValue, stepValue, tooltipID) {
 
      var JQSel = "#" + ID;
      var widgetType = gWidgetType['jqxNumberInput'];
@@ -2317,16 +2323,20 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
     	{
     		 Debug_Message('Exceeds Max Value'); 
     	}
-         var expr = HandlerFnForValueChange + "(value, node)";
-         
+         var expr = HandlerFnForValueChange + "(value, node)";         
              eval(expr);
-     }
-     
+     }     
      });
+    if(tooltipID)
+    {
+    	var parentNode =  document.getElementById(ID).parentNode; 
+    	WAL_createWidgetTooltip(parentNode.id, tooltipID); 
+    }
+    	
 
  }
  
- function WAL_createDecimalNumberInput(ID, Width, Height, HandlerFnForValueChange, bSpinButton, maxValue, minValue, stepValue) {
+ function WAL_createDecimalNumberInput(ID, Width, Height, HandlerFnForValueChange, bSpinButton, maxValue, minValue, stepValue, tooltipID) {
 
      var JQSel = "#" + ID;
      var widgetType = gWidgetType['jqxNumberInput'];
@@ -2377,6 +2387,12 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
      
      });
 
+    
+    if(tooltipID)
+    {
+    	var parentNode =  document.getElementById(ID).parentNode; 
+    	WAL_createWidgetTooltip(parentNode.id, tooltipID); 
+    }
  }
  
  
@@ -2744,11 +2760,12 @@ function WAL_createCustomButton(buttonID, clickHandler, tooltipID)
     // $(JQSel).attr('data-clickhandler', attrVal);
      $(JQSel).addClass('IMG_BTN_ACTIVE');
      $(JQSel).addClass('IMAGE_BUTTON'); 
-     if(tooltipID != 0)
+   /* if(tooltipID != 0)
     {
     	 $(JQSel).attr('data-tooltipID', tooltipID);
     	
-    }
+    }*/
+     
     	 
      
      $(JQSel).on('click', function(event) { 	 
@@ -2767,6 +2784,8 @@ function WAL_createCustomButton(buttonID, clickHandler, tooltipID)
          }
      });
      
+     WAL_createWidgetTooltip(buttonID, tooltipID); 
+  /*   
      $(JQSel).on('mousemove', function(event){
     	var node = event.target; 
     	var tooltipID = $(JQSel).attr('data-tooltipID'); 
@@ -2774,25 +2793,72 @@ function WAL_createCustomButton(buttonID, clickHandler, tooltipID)
      		return ;    
      	 gCurrTooltipID = tooltipID; 
      	var tiptext = node.getAttribute('data-tooltiptext'); 
+     	if(!tiptext)
+     		return ; 
      	gCurrentTooltipOwnerID = node.id; 
-     	var tooltipsrc = '<p>'+tiptext + '<span class="LINK_TYPES" onclick="OnHelpButton(event)" style="color:blue">  Help..</span>' + '</p>';     	 
-     	var top =  new Number(node.offsetTop + node.offsetHeight +  6); 
-     	var left =  new Number(node.offsetLeft + 6);      	
+     	var tooltipsrc = '<p>'+tiptext + '<span class="LINK_TYPES" onclick="OnHelpButton(event)" style="color:blue">  Help..</span>' + '</p>';
+     	var nodeSel = '#'+ node.id; 
+     	var pos = $(nodeSel).offset();  
+     	var height =  new Number($(nodeSel).outerHeight()); 
+     	var top =  new Number(pos.top + height + 6); //   new Number(node.offsetTop + node.offsetHeight +  6); 
+     	var left =  new Number(pos.left + 6);  //new Number(node.offsetLeft + 6);      	
      	var tipSel = '#' + tooltipID; 
      	$(tipSel).jqxTooltip({content: tooltipsrc, position:'absolute', absolutePositionX:left, absolutePositionY:top});
      	$(tipSel).jqxTooltip('open');//open(); 
-     });     
+     });   
+     */  
 }
 
+var gShowDelay = 300; 
+
+function WAL_createWidgetTooltip(ID, tooltipID)
+{
+	//var node = document.getElementById(ID); 
+	var JQSel = '#' + ID; 
+	 if(tooltipID != 0){
+	    $(JQSel).attr('data-tooltipID', tooltipID);	    	
+	}
+	
+	 $(JQSel).on('mousemove', function(event){
+	    	var node = event.target; 
+	    	var nodeSel = '#'+ node.id; 
+	    	var tooltipID = $(nodeSel).attr('data-tooltipID'); 
+	     	if(!tooltipID)
+	     		return ;    
+	     	 gCurrTooltipID = tooltipID; 
+	     	 var tooltipSel = '#' + gCurrTooltipID; 
+	     	//$(tooltipSel).jqxTooltip('destroy'); 
+	     	var tiptext = node.getAttribute('data-tooltiptext'); 
+	     	if(!tiptext)
+	     		return ; 
+	     	gCurrentTooltipOwnerID = node.id; 
+	     	var tooltipsrc = '<p><b>'+tiptext + '</b><span class="LINK_TYPES" onclick="OnHelpButton(event)" style="color:blue">  Help..</span>' + '</p>';
+	     	
+	     	var pos = $(nodeSel).offset();  
+	     	var height =  new Number($(nodeSel).outerHeight()); 
+	     	var top =  new Number(pos.top + height + 6); //   new Number(node.offsetTop + node.offsetHeight +  6); 
+	     	var left =  new Number(pos.left + 6);  //new Number(node.offsetLeft + 6);      	
+	     	var tipSel = '#' + tooltipID; 	     	
+	     	$(tipSel).jqxTooltip({content: tooltipsrc, theme: gTheme, position:'absolute', showArrow:true,  absolutePositionX:left, absolutePositionY:top, showDelay:gShowDelay});
+	     	$(tipSel).jqxTooltip('open');//open(); 
+	     	//$(tipSel).jqxTooltip('refresh');
+	     });     
+}
 function OnHelpButton(event){
 	 
 	// alert('Clicked on me'); 
 	 var tooltipSel = '#'+ gCurrTooltipID; 
 	 var tooltipOwnerNode = document.getElementById(gCurrentTooltipOwnerID); 
 	 $(tooltipSel).jqxTooltip('destroy');  
-	 var top =  new Number(tooltipOwnerNode.offsetTop + tooltipOwnerNode.offsetHeight +  6); 
-	 var left =  new Number(tooltipOwnerNode.offsetLeft + 6); 
-	 var tiptext =  tooltipOwnerNode.getAttribute('data-helptext'); 
+	 var nodeSel = '#' +gCurrentTooltipOwnerID;  
+	 var pos = $(nodeSel).offset();  
+  	 var height =  new Number($(nodeSel).outerHeight()); 
+  	 var top =  new Number(pos.top + height + 6); //   new Number(node.offsetTop + node.offsetHeight +  6); 
+  	 var left =  new Number(pos.left + 6);	
+	 
+  	 var ttsummary = tooltipOwnerNode.getAttribute('data-tooltiptext'); 
+  	 var tthelp = tooltipOwnerNode.getAttribute('data-helptext'); 
+	 var tiptext = '<p><b>' + ttsummary + '</b></p>' +  '<p>' + tthelp + '</p>'; // tooltipOwnerNode.getAttribute('data-helptext'); 
 	 $(tooltipSel).jqxTooltip({ content: tiptext, position: 'absolute', theme: gTheme, name: 'movieTooltip', autoHide:true, 
 	     	autoHideDelay:10000, closeOnClick: true, showArrow: true, animationShowDelay: 1000,absolutePositionX:left, absolutePositionY:top});
 	 $(tooltipSel).jqxTooltip('open'); 
