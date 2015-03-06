@@ -97,6 +97,7 @@ var gInitFillColor = 0;
 var gInitFillValue = 0; 
 var bNewObjectAdding = false; 
 var gWidgetTooltipID = 'widgettooltip' ; // 'dataContainerSplitter'; 
+var gSelectorTooltipID = 'selectortooltip' ; 
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -1854,12 +1855,8 @@ function OnShapeObjectSelection(evt) {
     }
     //_rm this is to force repeate selection in case of free drawing mode 
     else if(gCurrentObjectSelected == node)
-    	GX_SetSelection(node,true); 
-    	
-   
-    	
-         return;
-                          
+    	GX_SetSelection(node,true);    	
+         return;                        
  }
 
 
@@ -1948,6 +1945,12 @@ function GX_SetSelection(objNode, bFlag) {
     		gCurrAnimNode=0;
     	}
       
+    	 var TTSel ='#' +  gSelectorTooltipID; 
+    	 //$(TTSel).jqxTooltip({content: ttText, theme: gTheme, position:'absolute', showArrow:true,  absolutePositionX:graberOffset.left, absolutePositionY:graberOffset.top, showDelay:gShowDelay});
+    	 //$(TTSel).jqxTooltip('close');//open(); 
+    	 $(TTSel).jqxTooltip('destroy');//open();
+    	// Debug_Message('Tooltip Closed');
+    	 	
     	return ; 
     }
     gCurrGrabber.setAttribute("visibility", "visible");
@@ -2005,6 +2008,22 @@ function GX_SetSelection(objNode, bFlag) {
     gCurrGrabber.setAttribute("y", y-6);
     gCurrGrabber.setAttribute("width", w+10);
     gCurrGrabber.setAttribute("height", h+10);
+   // WAL_ShowTooltip(gSelectorTooltipID, false); 
+    //set the tooltip here
+    var TTSel ='#' +  gSelectorTooltipID; 
+    var ttText = 'To Move or Resize Click Once and then Move the mouse without any Button down </br>' + 
+    'Click once again to freeze the final value' ;//'Object=' + gCurrentObjectSelected.id; 
+    var grabSel = '#' + gCurrGrabber.id;
+    var graberOffset = $(grabSel).offset(); 
+    var ttHeight = 45; //$(TTSel).jqxTooltip('height'); 
+    var top = new Number(graberOffset.top -ttHeight-5); 
+    $(TTSel).jqxTooltip({content: ttText, theme: gTheme, position:'absolute', showArrow:true,  
+    	absolutePositionX:graberOffset.left, absolutePositionY:top, showDelay:gShowDelay, autoHide:5000});
+ 	//$(TTSel).jqxTooltip('refresh');//open(); 
+    //WAL_ShowTooltip(gSelectorTooltipID, true); 
+ 	$(TTSel).jqxTooltip('open');//open(); 
+ 	//Debug_Message('Tooltip opened');
+    
     
   
     //this is to ensure while a new object is being added with 0 Dim. doesnt show up 
@@ -2059,6 +2078,8 @@ function GX_SetSelection(objNode, bFlag) {
     	GX_UpdatePropertyOnUI('GRADIENT', ""); 
     }
     gCurrentObjectSelected.setAttribute('pointer-events', 'none'); 
+    //set the tooltip here 
+    
     if(nodeClass == 'SVG_TEXT_OBJECT')
 	{    	
 		var fontsize = gCurrentObjectSelected.getAttribute('font-size'); 
@@ -3438,7 +3459,9 @@ function GX_InitializeToolbar()
 	//INITALIZING LAYOUT INTERFACE
 	//second row item layout_interface
 	//WAL_createTooltip('widgettooltip', 'div', 1000); 
-	WAL_createTooltip(gWidgetTooltipID, 'div', 1000); 	 
+	WAL_createTooltip(gWidgetTooltipID, 'div', 1000,0); 	 
+	WAL_createTooltip(gSelectorTooltipID, 'div', 1000, 50);
+	
 	WAL_createCustomButton('svgdim_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
 	WAL_createCheckBox('snaptogrid', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
 		
