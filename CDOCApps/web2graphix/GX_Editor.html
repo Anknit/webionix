@@ -31,8 +31,10 @@
     <div id="splitterContainer" width="600px" height="600px"> 
   	    
      <div id="toolbar" style= "background-image: linear-gradient(0deg, #c6d6ec 80%,  #e0e9f5 100%)">
-     <div id='menuinfo' style='display:inline-block; position:absolute; left:10px; top:5px'>Current Menu:<span id='itemtextinfo' style='font-weight:bold'></span></div>
-     <div id="GXmenu" style='visibility: hidden; float: left; margin-left: 230px; font-variant:small-caps; font-weight: bold'>
+   <!-- <div id='menuinfo' style='display:inline-block; position:absolute; left:10px; top:5px'>Current Menu:<span id='itemtextinfo' style='font-weight:bold'></span></div>-->
+   
+   <!-- 
+     <div id="GXmenu" style='visibility: hidden; float: left; margin-left: 10px; font-variant:small-caps; font-weight: bold'>
 	   <ul>
 	       <li id="home"> <a href="#Home">Home</a>
 	       	<ul>
@@ -85,13 +87,7 @@
 	       	</ul>
 	       </li>
 	       <li id="layout"><a href="#Layout">Layout</a>
-	       <!-- <ul>
-	       		<li id="move_fwd"><a href="#move_fwd">Bring Forward</a></li>
-	       		<li id="move_bwd"><a href="#move_bwd">Send Backward</a></li>
-	       		<li id="move_top"><a href="#move_top">Bring to Top</a></li>
-	       		<li id="move_bottom"><a href="#move_bottom">Send to Bottom</a></li>
-	       	</ul>
-	       	-->
+	       
 	       </li>
 	       <li id="modify"><a href="#modify">Modify</a></li><li id="stroke"><a href="#Stroke">Stroke</a></li>
 	       <li id="fontproperty"><a href="#font">Font-Style</a></li>
@@ -105,6 +101,41 @@
 	       <li id="help"><a href="#Help">Help</a></li>
 	    </ul>
 	  </div>  		
+   		--> 
+   <div id="GXmenu" style='visibility: hidden; float: left; margin-left: 5px; font-variant:small-caps; font-weight: bold'>
+	   <ul>
+	       <li id="file"> <a href="#File">File</a>
+	       	<ul>
+	       		<li id="new" title='A New File is created'><a href="#New">New File</a>
+	       		<li id="open"><a href="#Open">Open File</a>
+	       		<li id="import"><a href="#Import">Import</a>
+	       		<li id="export"><a href="#Export">Export</a>
+	       		<li id="publish"><a href="#Publish">Publish</a>
+	       		<li id="remove"><a href="#Remove">Remove</a>	
+	       		<li id="close"><a href="#Close">Close File</a>  
+	       		<li id="exit"><a href="#Exite">Exit</a>          		
+	       	</ul>
+	       </li>
+	       <li id='edit'><a href="#Edit">Edit</a>
+	       	<ul>
+	       		<li id="copy"><a href="#Copy">Copy</a></li>
+	       		<li id="paste"><a href="#Paste">Paste</a></li>
+	       		<li id="removenode"><a href="#removenode">Delete</a></li>
+	       		<li id="group"><a href="#Group">Group</a></li>
+	       		<li id="undo"><a href="#Undo">Undo</a></li>
+	       		<li id="redo"><a href="#Redo">Redo</a></li>	       		
+	       	</ul>
+	       </li>	       
+	       <li id='object'><a href="#Object">Object</a></li>
+	       <li id="properties"><a href="#Properties">Properties</a></li>
+	       <li id="layout"><a href="#Layout">Layout</a></li>	       
+	       <li id="animate"><a href="#Animate">Animate</a></li>	       
+	       <li id="filters"><a href="#Filters">Filters</a></li>	      
+	       <li id="preview"><a href="#Preview">Preview</a></li>
+	       <li id="help"><a href="#Help">Help</a></li>
+	    </ul>
+	  </div>  	
+   		
    		<!-- <div id='toolbar_icons' style='border-bottom:solid 2px #e0e9f5;'>-->
    		<div id='toolbar_icons' style='border:solid 2px #e0e9f5;'>
    		  
