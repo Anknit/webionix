@@ -330,7 +330,7 @@ function WAL_createToggleButton(buttonID, handlerFnName, Width, Height, RCFlag) 
 
     var tipText = $(JQSel).attr('data-tooltip');
     if (tipText)
-        WAL_createTooltip(buttonID, tipText); 
+        WAL_createTooltip(buttonID, tipText,0); 
     
     expr = handlerFnName + "()";
     $(JQSel).on('click', function() {
@@ -357,7 +357,7 @@ function WAL_createButton(buttonID, handlerFnName, Width, Height, RCFlag) {
 
     var tipText = $(JQSel).attr('data-tooltip');     
     if (tipText)
-        WAL_createTooltip(buttonID, tipText);
+        WAL_createTooltip(buttonID, tipText,0);
 
     expr = handlerFnName + "()";
 
@@ -451,7 +451,7 @@ function WAL_createCheckBox(buttonID, handlerFnName, Width, Height, boxSize, dis
     $(JQSel).attr("data-cbvalue", checked);
     var tipText = $(JQSel).attr('data-tooltip');
     if (tipText)
-        WAL_createTooltip(buttonID, tipText); 
+        WAL_createTooltip(buttonID, tipText,0); 
 
     $(JQSel).on('change', function(event) {
         var state = event.args.checked;
@@ -494,7 +494,7 @@ function WAL_createRadioButton(buttonID, handlerFnName, Width, Height, disabled,
     node.setAttribute("data-type", "radiogroup");
     var tipText = $(JQSel).attr('data-tooltip');
     if (tipText)
-        WAL_createTooltip(buttonID, tipText); 
+        WAL_createTooltip(buttonID, tipText,0); 
     
     $(JQSel).jqxRadioButton({groupName: groupName,  width: Width, height: Height, theme: gTheme, disabled: disabled, animationShowDelay: 10, animationHideDelay: 10, checked: checked });
     $(JQSel).attr(widgetType, "true");
@@ -846,7 +846,7 @@ function WAL_createDropdownListWithIcons(ID, Width, Height, AutoOpen, DataSource
     $(JQSel).attr(widgetType, "true");
     var tipText = $(JQSel).attr('data-tooltip');
     if (tipText)
-        WAL_createTooltip(ID, tipText); 
+        WAL_createTooltip(ID, tipText,0); 
 
     $(JQSel).on('select', function(event) {
         var item = $(this).jqxDropDownList('getSelectedItem');
@@ -1445,23 +1445,50 @@ function WAL_createSplitter(ID, Width, Height, Orientation, bshowSplitBar, bresi
 	    return true; 
 }
 
-function WAL_createTooltip(ID, tipText, hideDelay) {
+function WAL_createTooltip(ID, tipText, hideDelay, height) {
 	
     var JQSel = "#" + ID;
     var delay; 
     if(hideDelay == 0)
     	delay =gTooltipHideDelay; 
-    
+    var newHeight='auto'; 
+    if(height != 0 )
+    	newHeight =  height; 
     $(JQSel).jqxTooltip({ content: tipText, position:'bottom', theme: gTheme, name: 'tooltip' + ID, autoHide:true, 
-     	autoHideDelay:delay, closeOnClick: true, showArrow: true});
-    $(JQSel).jqxTooltip('close');
+     	autoHideDelay:delay, closeOnClick: true, showArrow: true, height: newHeight});
+    newHeight = $(JQSel).jqxTooltip('height');
+    $(JQSel).jqxTooltip('close'); 
+    $(JQSel).attr('data-close', 'true'); 
+    
+    $(JQSel).on('close', function(event){
+    	$(JQSel).attr('data-close', 'true'); 
+    }); 
+    $(JQSel).on('open', function(event){
+    	$(JQSel).attr('data-close', 'false'); 
+    });
+   // alert('height=' +  newHeight); 
+   // $(JQSel).jqxTooltip('open');
 }
 
-function WAL_ShowTooltip(ID, bFlag)
+function WAL_IsTooltipOpen(ID)
+{
+	var JQSel = "#" + ID;
+	var bflag = $(JQSel).attr('data-close'); 
+	if(bflag == 'true')
+		return true;
+	else
+		return false; 
+}
+
+function WAL_ShowTooltip(ID, bShowFlag)
 {
 	var JQSel = "#" + ID; 
-	if(bFlag == true){
-		$(JQSel).jqxTooltip('open'); 
+	if(bShowFlag == true){
+		//var bFlag = WAL_IsTooltipOpen(ID); 
+		//if(bFlag == true)
+			$(JQSel).jqxTooltip('open');			
+		//else
+		//	$(JQSel).jqxTooltip('refresh');			
 	}else{
 		$(JQSel).jqxTooltip('close'); 
 	}
