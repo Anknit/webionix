@@ -55,8 +55,8 @@ function WAL_Initialize() {
     if(!gTheme)
         gTheme = getTheme();
    // gTheme = 'metrodark';
-    gTheme = 'energyblue';
-   // gTheme = 'mycustom';   
+  // gTheme = 'energyblue';
+   gTheme = 'mywhite';   
     //gTheme = 'ui-redmond'; 
     //gTheme = 'ui-redmond'; 
 
@@ -1454,7 +1454,8 @@ function WAL_createTooltip(ID, tipText, hideDelay, height) {
     var newHeight='auto'; 
     if(height != 0 )
     	newHeight =  height; 
-    $(JQSel).jqxTooltip({ content: tipText, position:'bottom', theme: gTheme, name: 'tooltip' + ID, autoHide:true, 
+    var mytheme = 'black'; 
+    $(JQSel).jqxTooltip({ content: tipText, position:'bottom', theme: gTooltipTheme, name: 'tooltip' + ID, autoHide:true, 
      	autoHideDelay:delay, closeOnClick: true, showArrow: true, height: newHeight});
     newHeight = $(JQSel).jqxTooltip('height');
     $(JQSel).jqxTooltip('close'); 
@@ -1466,8 +1467,7 @@ function WAL_createTooltip(ID, tipText, hideDelay, height) {
     $(JQSel).on('open', function(event){
     	$(JQSel).attr('data-close', 'false'); 
     });
-   // alert('height=' +  newHeight); 
-   // $(JQSel).jqxTooltip('open');
+   
 }
 
 function WAL_IsTooltipOpen(ID)
@@ -2859,14 +2859,14 @@ function WAL_createWidgetTooltip(ID, tooltipID)
 	     	if(!tiptext)
 	     		return ; 
 	     	gCurrentTooltipOwnerID = node.id; 
-	     	var tooltipsrc = '<p><b>'+tiptext + '</b><span class="LINK_TYPES" onclick="OnHelpButton(event)" style="color:blue">  Help..</span>' + '</p>';
+	     	var tooltipsrc = '<p><b>'+tiptext + '</b><span class="LINK_TYPES" onclick="OnHelpButton(event)" style="color:white; font-weight:bold">  Help..</span>' + '</p>';
 	     	
 	     	var pos = $(nodeSel).offset();  
 	     	var height =  new Number($(nodeSel).outerHeight()); 
 	     	var top =  new Number(pos.top + height + 6); //   new Number(node.offsetTop + node.offsetHeight +  6); 
 	     	var left =  new Number(pos.left + 6);  //new Number(node.offsetLeft + 6);      	
 	     	var tipSel = '#' + tooltipID; 	     	
-	     	$(tipSel).jqxTooltip({content: tooltipsrc, theme: gTheme, position:'absolute', showArrow:true,  absolutePositionX:left, absolutePositionY:top, showDelay:gShowDelay});
+	     	$(tipSel).jqxTooltip({content: tooltipsrc, theme:gTooltipTheme, position:'absolute', showArrow:true,  absolutePositionX:left, absolutePositionY:top, showDelay:gShowDelay});
 	     	$(tipSel).jqxTooltip('open');//open(); 
 	     	//$(tipSel).jqxTooltip('refresh');
 	     });     
@@ -2886,31 +2886,10 @@ function OnHelpButton(event){
   	 var ttsummary = tooltipOwnerNode.getAttribute('data-tooltiptext'); 
   	 var tthelp = tooltipOwnerNode.getAttribute('data-helptext'); 
 	 var tiptext = '<p><b>' + ttsummary + '</b></p>' +  '<p>' + tthelp + '</p>'; // tooltipOwnerNode.getAttribute('data-helptext'); 
-	 $(tooltipSel).jqxTooltip({ content: tiptext, position: 'absolute', theme: gTheme, name: 'movieTooltip', autoHide:true, 
+	 $(tooltipSel).jqxTooltip({ content: tiptext, position: 'absolute', theme: gTooltipTheme, name: 'movieTooltip', autoHide:true, 
 	     	autoHideDelay:10000, closeOnClick: true, showArrow: true, animationShowDelay: 1000,absolutePositionX:left, absolutePositionY:top});
 	 $(tooltipSel).jqxTooltip('open'); 
-/* 	var origsrc = $("#mydiv").jqxTooltip('content');         	
-	$('#mydiv').jqxTooltip('destroy');    
-	var currBtnNode =  document.getElementById(currentBtnId); 
-	var top =  new Number(currBtnNode.offsetTop + currBtnNode.offsetHeight +  6); 
-	var left =  new Number(currBtnNode.offsetLeft + 6); 
-	switch(currentBtnId)
-	{
-	case 'tooltipBtn1':
-		var specText  = '<p>For Button-1To Move : Just click once and then move your mouse without</br> pressing any Mouse button<p>';
-		origsrc += specText;         		 
-		break; 
-	case 'tooltipBtn2':
-		var specText  = '<p>For Button-2To Do MultiSelect </br> User Ctrl+shift and then select the objects<p>';
-		origsrc += specText;      
-		break; 
-	default:
-		break;
-	}
-	$("#mydiv").jqxTooltip({ content: origsrc, position: 'absolute', theme: gTheme, name: 'movieTooltip', autoHide:true, 
-     	autoHideDelay:15000, closeOnClick: true, showArrow: true, animationShowDelay: 1000,absolutePositionX:left, absolutePositionY:top});
-	$('#mydiv').jqxTooltip('open'); 
-}*/
+
 	 
 }
 
