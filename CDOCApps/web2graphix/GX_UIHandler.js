@@ -1140,7 +1140,7 @@ function GX_Initialize()
     }
    
     //now create the menu here 
-    WAL_createMenu("GXmenu", '1000px', '30px', "horizontal", "GX_MenuItemHandler", 'actionText');
+    WAL_createMenu("GXmenu", '700px', '30px', "horizontal", "GX_MenuItemHandler", 'actionText');
     WAL_createListBox('svgfileopenlistbox', '270', '250', "GX_LBItemsSelectHandler");
  	 	
     WAL_createWindow(gSVGFileOpenDlg,"Asset List", true, '282', '350', false,	true, false, false, false, "", 'SVGFO_LB_okbtn', 'SVGFO_LB_cancelbtn');
@@ -6991,4 +6991,9 @@ function OnTextEditFocusOut(event)
 	gCurrGrabber.setAttribute('width', dim.width); 
 	gCurrentObjectSelected.setAttribute('opacity', '1.0');
 	GXRDE_updateTextObjectData(gCurrentObjectSelected.id, gCurrentObjectSelected.firstChild.data);
+}
+
+function OnLogoutButton(event)
+{
+	Debug_Message('Log-out'); 
 }
