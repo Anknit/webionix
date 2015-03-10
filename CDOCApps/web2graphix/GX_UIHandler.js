@@ -98,6 +98,9 @@ var gInitFillValue = 0;
 var bNewObjectAdding = false; 
 var gWidgetTooltipID = 'widgettooltip' ; // 'dataContainerSplitter'; 
 var gSelectorTooltipID = 'selectortooltip' ; 
+var gTooltipTheme = 'black'; 
+var gSVGContainerbordercol = 'blue';  
+
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -1129,7 +1132,7 @@ function GX_Initialize()
  //   $('#dataContainerSplitter').jqxSplitter({ height: '100%', width: '100%', orientation: 'vertical', theme: gTheme, panels: [{ size: '30%' }] });
    //WAL_createSplitter(ID, Width, Height, Orientation, bshowSplitBar, bresizable, panelSize1, panelSize2, bCollaplible, minSize) 
     var retval = WAL_createSplitter('splitterContainer', winWidth, winHeight, 'horizontal', false, false, '8%', '92%', false, '8%');
-    var retval = WAL_createSplitter('dataContainerSplitter', winWidth, '80%', 'vertical', true, false, '80%', '20%', true, '0');
+    var retval = WAL_createSplitter('dataContainerSplitter', winWidth, '80%', 'vertical', true, false, '73%', '27%', true, '0');
     if(retval != true)
     {
     	Debug_Message("Unable to create Splitter");
@@ -1169,9 +1172,22 @@ function GX_Initialize()
     $(document).on('contextmenu', function (e) {
         return false;
     });
-      
-   // Debug_Message("DBM Initialized Successfully"); 
+    
+    GX_MenuDisable(true);
+    
    
+   // Debug_Message("DBM Initialized Successfully");    
+}
+
+function GX_MenuDisable(bFlag)
+{
+	WAL_DisableMenuItem('GXmenu', 'edit', bFlag);
+	WAL_DisableMenuItem('GXmenu', 'object', bFlag);
+	WAL_DisableMenuItem('GXmenu', 'properties', bFlag);
+	WAL_DisableMenuItem('GXmenu', 'layout', bFlag);
+	WAL_DisableMenuItem('GXmenu', 'animate', bFlag);
+	WAL_DisableMenuItem('GXmenu', 'filters', bFlag);
+	WAL_DisableMenuItem('GXmenu', 'preview', bFlag);
 }
 
 function GX_InitializeDocument(svgFileName)
@@ -1241,7 +1257,7 @@ function GX_InitializeDocument(svgFileName)
 	var rectBorderNode =  document.getElementById('svgborder'); 
 	if(!rectBorderNode)
 	{
-		var rectBorder = '<rect id="svgborder" x="0" y="0" width="100%" height="100%" stroke="red" stroke-width="6" fill="none" visibility="visible"/>';
+		var rectBorder = '<rect id="svgborder" x="0" y="0" width="100%" height="100%" stroke="' + gSVGContainerbordercol + '" stroke-width="3" fill="none" visibility="visible"/>';
 		GX_AddNewNodeFromXMLString('objectcontainer', rectBorder);		
 	}
 	WAL_SetItemInDropDownList('zoomDDL', 0, true);
@@ -1287,7 +1303,7 @@ function GX_InitializeDocument(svgFileName)
 	 }
 	 
 	
-	 
+	 GX_MenuDisable(false);
 //	WAL_setCheckBoxValue('snaptogrid', false); 
 	GX_showEditorInterface('MODIFY_SHAPE_MODE'); 
 	
@@ -1299,8 +1315,8 @@ function GX_MenuItemShow(menuid, itemText)
 	//var args =  event.args;
 	//var itemtext = $(args).text();
   //  var menuid = args.getAttribute("id");
-    var spannode = document.getElementById('itemtextinfo'); 
-    spannode.innerHTML = itemText;
+  //  var spannode = document.getElementById('itemtextinfo'); 
+   // spannode.innerHTML = itemText;
     if(gCurrentObjectSelected)
     	objectType =  gCurrentObjectSelected.classList[0];  
     //SVG_TEXT_OBJECT 
@@ -2017,7 +2033,7 @@ function GX_SetSelection(objNode, bFlag) {
     var graberOffset = $(grabSel).offset(); 
     var ttHeight = 45; //$(TTSel).jqxTooltip('height'); 
     var top = new Number(graberOffset.top -ttHeight-5); 
-    $(TTSel).jqxTooltip({content: ttText, theme: gTheme, position:'absolute', showArrow:true,  
+    $(TTSel).jqxTooltip({content: ttText, theme: gTooltipTheme, position:'absolute', showArrow:true,  
     	absolutePositionX:graberOffset.left, absolutePositionY:top, showDelay:gShowDelay, autoHide:5000});
  	//$(TTSel).jqxTooltip('refresh');//open(); 
     //WAL_ShowTooltip(gSelectorTooltipID, true); 
@@ -3637,6 +3653,8 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('underline_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('strikethrough_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('smallcaps_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    
+    
     
     //WAL_createCustomButton('blink_icon', 'GX_ToolbarHandler');
    
