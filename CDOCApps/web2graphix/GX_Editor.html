@@ -30,82 +30,11 @@
 </head>
 <body onscroll="OnWindowScroll(event)">
 	  <!-- #e0e9f5, #cde6f9 -->
-    <div id="splitterContainer" width="600px" height="600px" style='border: inset 1px #fefefe;' > 
+    <div id="splitterContainer" width="600px" height="600px" style='border:none;' > 
   	    
-    <!-- <div id="toolbar" style= "background-image: linear-gradient(0deg, #c6d6ec 80%,  #e0e9f5 100%)">-->
-   <div id="toolbar"> 
-   <!-- <div id='menuinfo' style='display:inline-block; position:absolute; left:10px; top:5px'>Current Menu:<span id='itemtextinfo' style='font-weight:bold'></span></div>-->
    
-   <!-- 
-     <div id="GXmenu" style='visibility: hidden; float: left; margin-left: 10px; font-variant:small-caps; font-weight: bold'>
-	   <ul>
-	       <li id="home"> <a href="#Home">Home</a>
-	       	<ul>
-	       		<li id="new" title='A New File is created'><a href="#New">New File</a>
-	       		<li id="open"><a href="#Open">Open File</a>
-	       		<li id="save"><a href="#Save">Save File</a>
-	       		<li id="delete"><a href="#Delete">Delete File</a>	
-	       		<li id="close"><a href="#Close">Close File</a>  
-	       		<li id="exit"><a href="#Exite">Exit</a>      		
-	       		
-	       	</ul>
-	       </li>
-	       <li id='edit'><a href="#Edit">Edit</a>
-	       	<ul>
-	       		<li id="undo"><a href="#Undo">Undo</a></li>
-	       		<li id="redo"><a href="#Redo">Redo</a></li>
-	       		<li id="copy"><a href="#Copy">Copy</a></li>
-	       		<li id="paste"><a href="#Paste">Paste</a></li>
-	       		<li id="removenode"><a href="#removenode">Remove</a></li>	       		
-	       	</ul>
-	       </li>	       
-	       <li id='view'><a href="#View">View</a>
-	       	<ul>
-	       		<li id="zoom"><a href="#Zoom">Zoom & Pan</a></li>
-	       		<li id="grid"><a href="#Grid">Show Grid</a></li>
-	       	</ul>
-	       </li>
-	       <li id="insert"><a href="#Insert">Insert</a>
-	       	<ul>
-	       		<li id="layer"><a href="#Layer">Layer</a>
-	       		<li id="text"><a href="#text">Text</a>
-	       		<li id="shape"><a href="#Shape">Shape</a>
-		       		<ul>
-		       			<li id="rectangle"><a href="#Rectangle">Rectangle</a>
-		       			<li id="ellipse"><a href="#Ellipse">Ellipse</a>
-		       		</ul>
-	       		</li>
-	       		<li id="path"><a href="#path">Paths</a>
-	       			<ul>
-	       				<li id="line_path"><a href="#Path">Line Path</a>	
-	       				<li id="cbezier_path"><a href="#cbezier_path">Cubic Bezier Path</a>
-	       				<li id="qbezier_path"><a href="#qbezier_path">Quadratic Bezier Path</a>
-	       				<li id="elliptic_path"><a href="#elliptic_path">Elliptic Path</a>
-	       				<li id="polygon_path"><a href="#polygon_path">Polygon Path</a>
-	       				<li id="freedraw_path"><a href="#freedraw_path">Free Hand</a>
-	       			</ul>
-	       		</li>
-	       		
-	       		
-	       	</ul>
-	       </li>
-	       <li id="layout"><a href="#Layout">Layout</a>
-	       
-	       </li>
-	       <li id="modify"><a href="#modify">Modify</a></li><li id="stroke"><a href="#Stroke">Stroke</a></li>
-	       <li id="fontproperty"><a href="#font">Font-Style</a></li>
-	       
-	       <li id="fill"><a href="#Fill">Fill</a></li>
-	        <li id="animate"><a href="#Animate">Animate</a></li>
-	       <li id="transform"><a href="#Transform">Transform</a></li>
-	       <li id="filters"><a href="#Filters">Filters</a></li>
-	      
-	       <li id="preview"><a href="#Preview">Preview</a></li>
-	       <li id="help"><a href="#Help">Help</a></li>
-	    </ul>
-	  </div>  		
-   		--> 
-   <div id="GXmenu" style='visibility: hidden; float: left; margin-left:0px; font-variant:small-caps; font-weight: bold'>
+   <div id="toolbar">    
+   <div id="GXmenu" style='visibility: hidden; float: left; margin-left:0px; font-variant:small-caps; font-weight: bold; border:none'>
 	   <ul>
 	       <li id="file"> <a href="#File">File</a>
 	       	<ul>
@@ -138,7 +67,11 @@
 	       <li id="help"><a href="#Help">Help</a></li>
 	    </ul>
 	  </div>  	
+   	<div id='usermessage' style='display:inline-block; width:300px; height:40px; position:relative; left:350px; border:none'>
+   		<div id='welcome'>Welcome <span id='username' style='font-weight:bold'>Roger</span> | <span id='logout' class="LINK_TYPES" onclick="OnLogoutButton(event)" style="color:blue;">Logout</span>
+   		| <span id='about' class="LINK_TYPES" onclick="OnLogoutButton(event)" style="color:blue;">About</span></div>
    		
+   	</div>	
    		<!-- <div id='toolbar_icons' style='border-bottom:solid 2px #e0e9f5;'>-->
    		<div id='toolbar_icons' style='border:solid 2px #00000;'>
    		  
@@ -152,7 +85,7 @@
     		</div>    		
     		<div id='dimaligngroup' style="display:inline-block; width:auto; height:32px; border-right: ridge 2px #c6d6ec;" >
     			<div class="BTN_CONTAINER"><input class='dimaligngroup'  type = "image" id='alignwidth_icon' value=''  src='../CommonCSS/icons/Version1/alignwidth.png' data-tooltiptext='Align Width' data-helptext='Select Multiple Objects using Ctrl+click  to </br> Align Width of the Objects'/></div>
-    			<div class="BTN_CONTAINER"><input class='dimaligngroup'  type = "image" id='alignheight_icon' value=''  src='../CommonCSS/icons/Version1/alignheight.png' data-tooltiptext='Align Height' data-helptext='Select Multiple Objects using Ctrl+click  to </br> Align Height of the Objects'/></div>    			
+   <div class="BTN_CONTAINER"><input class='dimaligngroup'  type = "image" id='alignheight_icon' value=''  src='../CommonCSS/icons/Version1/alignheight.png' data-tooltiptext='Align Height' data-helptext='Select Multiple Objects using Ctrl+click  to </br> Align Height of the Objects'/></div>    			
     		</div>    		
     		<div id='poseditgroup'  style="display:inline-block; vertical-align: top; border:none; width:auto; padding-top:3px; padding-right:3px"> 		
    				<div id='LPosEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Left Position' data-helptext='Left Edge Position'>Left-Position<div id='lposIP' class='EDIT_BOX group7' type='DIMENSION'></div></div>
@@ -262,8 +195,9 @@
     	</div> <!-- text interface  -->
     
     
-  		</div> <!-- toolbar_icons -->
-       </div><!-- toolbar -->
+  		</div> 
+    </div>
+       
        <div>
        <div id="dataContainerSplitter">  
           <div id="objectdata_panel" class="splitter-panel" >     
