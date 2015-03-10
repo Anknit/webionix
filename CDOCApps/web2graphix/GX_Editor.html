@@ -4,7 +4,9 @@
 <meta charset="ISO-8859-1">
 <title id="filename">Web2.0 Graphics Editor :</title>
  <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.base.css" type="text/css" /> 
- <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.energyblue.css" type="text/css" />
+ <!-- <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.energyblue.css" type="text/css" />-->
+ <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.mywhite.css" type="text/css" />
+  <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.black.css" type="text/css" />
  <link rel="stylesheet" href="../CommonCSS/CDOCStyle.css">   
  <script type="text/javascript" src="../ThirdParty/jqwidget_ver3.7/scripts/jquery-1.11.1.min.js"></script>    
  <script type="text/javascript" src="../ThirdParty/jqwidget_ver3.7/jqwidgets/jqxcore.js"></script> 
@@ -28,9 +30,10 @@
 </head>
 <body onscroll="OnWindowScroll(event)">
 	  <!-- #e0e9f5, #cde6f9 -->
-    <div id="splitterContainer" width="600px" height="600px"> 
+    <div id="splitterContainer" width="600px" height="600px" style='border: inset 1px #fefefe;' > 
   	    
-     <div id="toolbar" style= "background-image: linear-gradient(0deg, #c6d6ec 80%,  #e0e9f5 100%)">
+    <!-- <div id="toolbar" style= "background-image: linear-gradient(0deg, #c6d6ec 80%,  #e0e9f5 100%)">-->
+   <div id="toolbar"> 
    <!-- <div id='menuinfo' style='display:inline-block; position:absolute; left:10px; top:5px'>Current Menu:<span id='itemtextinfo' style='font-weight:bold'></span></div>-->
    
    <!-- 
@@ -102,7 +105,7 @@
 	    </ul>
 	  </div>  		
    		--> 
-   <div id="GXmenu" style='visibility: hidden; float: left; margin-left: 5px; font-variant:small-caps; font-weight: bold'>
+   <div id="GXmenu" style='visibility: hidden; float: left; margin-left:0px; font-variant:small-caps; font-weight: bold'>
 	   <ul>
 	       <li id="file"> <a href="#File">File</a>
 	       	<ul>
@@ -137,7 +140,7 @@
 	  </div>  	
    		
    		<!-- <div id='toolbar_icons' style='border-bottom:solid 2px #e0e9f5;'>-->
-   		<div id='toolbar_icons' style='border:solid 2px #e0e9f5;'>
+   		<div id='toolbar_icons' style='border:solid 2px #00000;'>
    		  
    		  <div id='layout_interface' style="display: none; position:absolute; left:10px; top: 40px;" class='PROPERTY_INTERFACE'>
    		    <div class="BTN_CONTAINER"><input class='dimaligngroup'  type = "image" id='svgdim_icon' value=''  src='../CommonCSS/icons/Version1/svgdim.png'  data-tooltiptext='Container Dimension' data-helptext='Modifies Dimensions of the Containing Rectangle'/></div>
@@ -311,6 +314,7 @@
 	</svg>
   </div> 
   	  <div style= "background-image: linear-gradient(0deg, #eeeeee 80%,  #efefef 100%)">
+  	 
   	  	<div id="filename" style="font-weight:bold">File Name: <span id='fname'></span></div>
   	  	<div id="node_panel" >Node Panel</div>
   	  </div>   
