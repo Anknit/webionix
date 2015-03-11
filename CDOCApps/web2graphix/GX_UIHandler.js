@@ -99,7 +99,8 @@ var bNewObjectAdding = false;
 var gWidgetTooltipID = 'widgettooltip' ; // 'dataContainerSplitter'; 
 var gSelectorTooltipID = 'selectortooltip' ; 
 var gTooltipTheme = 'black'; 
-var gSVGContainerbordercol = 'blue';  
+var gSVGContainerbordercol = 'blue';
+var gUsername = ''; 
 
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
@@ -1118,6 +1119,14 @@ function GX_Initialize()
 	  {
 		Debug_Message("Unable To Determine Browser Type");   
 	  }
+	  gUsername = GXRDE_getUsername(); 
+	  if(!gUsername)
+	  {
+		  Debug_Message('Valid user name not found'); 
+		  return; 
+	  }
+	 // Debug_Message('Welcome:' +gUsername ); 
+		
   //  WAL_createMenu("mainMenu", '450px', '25px', 'horizontal', "UIH_MenuItemClick", "actionText");  
     //set the version number here 
 	  var NodeList = document.getElementsByTagName('title');
@@ -3654,7 +3663,8 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('strikethrough_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('smallcaps_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     
-    
+    var usernameNode = document.getElementById('username'); 
+    usernameNode.innerHTML = gUsername; 
     
     //WAL_createCustomButton('blink_icon', 'GX_ToolbarHandler');
    
@@ -6995,10 +7005,15 @@ function OnTextEditFocusOut(event)
 
 function OnLogoutButton(event)
 {
-	Debug_Message('Log-out'); 	
-	GXRDE_sessionEnd(); 
-	window.close(); 
-	
-	
+	var nodeid = event.target.id; 	
+	if(nodeid == 'logout')
+	{
+		GXRDE_sessionEnd(); 
+		window.close(); 
+	}
+	else if(nodeid == 'about')
+	{
+		Debug_Message('About'); 
+	}
 	
 }
