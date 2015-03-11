@@ -50,6 +50,14 @@ include_once "Debuglog.php";
    	{
    		GX_OBJ_ProcessRequest($reqid, $respdata );
    	}
+   	else if($modid == 'SMGR')
+   	{
+   		if($reqid == '500')
+   		{
+   			$retval  = CDOC_Session_Close();   
+   			$respdata = 'OK'; 
+   		}   					
+   	}
    
    //now send the status code
    if($retval == true)
