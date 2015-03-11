@@ -1332,6 +1332,16 @@ function GX_MenuItemShow(menuid, itemText)
     var retval;
 	switch(menuid)
 	{
+	
+	 case 'object':
+		 GX_showEditorInterface('OBJECT_MODE'); 
+		 break; 
+	 case 'layout':
+		 GX_showEditorInterface('LAYOUT_MODE'); 
+		 break; 
+	 case 'animate':
+		 GX_showEditorInterface('ANIM_MODE'); 
+		 break;
 	 case 'grid':
 		 var menuname =  WAL_getMenuItemText(args); 
 		 menuname = menuname.toUpperCase(); 
@@ -1340,11 +1350,9 @@ function GX_MenuItemShow(menuid, itemText)
 		 else
 			 WAL_setMenuItemText(args, "Show Grid"); 
 		 break;
-	 case 'new':
-		 
+	 case 'new':		 
 		 var JQSel = "#" + "pageNameIP";	
-		 $(JQSel).val("");		
-		
+		 $(JQSel).val("");				
 		 WAL_showModalWindow(gSVGFileNameDlgID,"GX_SVGFileDlgNameOK", "" );				
 		 break; 
 	 case 'open':			 
@@ -1359,8 +1367,7 @@ function GX_MenuItemShow(menuid, itemText)
 	 case 'line_path':
 	 case 'cbezier_path':
 	 case 'qbezier_path':	
-	 case 'elliptic_path':	
-	
+	 case 'elliptic_path':		
 		 GX_AddNewSVGObject(menuid); 
 		 GX_StartFreeDraw();
 		 break;	
@@ -1404,9 +1411,7 @@ function GX_MenuItemShow(menuid, itemText)
 	 case 'removenode':
 		 GX_RemoveObject(gCurrentObjectSelected); 
 		 break; 
-	 case 'layout':
-		 GX_showEditorInterface('LAYOUT_MODE'); 
-		 break; 
+	
 	 case 'copy':
 		 GX_CopyObject(gCurrentObjectSelected); 
 		 break; 
@@ -1431,9 +1436,7 @@ function GX_MenuItemShow(menuid, itemText)
 	 case 'fill':
 		  GX_showEditorInterface('FILL_MODE'); 
 		  break;
-	 case 'animate':
-		 GX_showEditorInterface('ANIM_MODE'); 
-		 break;
+	 
 	 case 'fontproperty':
 		 if(objectType == 'SVG_TEXT_OBJECT')
 			 GX_showEditorInterface('FONT_STYLE_MODE');
@@ -3490,14 +3493,14 @@ function GX_InitializeToolbar()
 	WAL_createCustomButton('svgdim_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
 	WAL_createCheckBox('snaptogrid', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
 		
-	WAL_createNumberInput("widthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1280, 0,1, gWidgetTooltipID);
-    WAL_createNumberInput("heightIP", '58px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID);     
+	//WAL_createNumberInput("widthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1280, 0,1, gWidgetTooltipID);
+   // WAL_createNumberInput("heightIP", '58px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID);     
     WAL_createCustomButton('alignwidth_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
     WAL_createCustomButton('alignheight_icon', 'GX_ToolbarHandler',gWidgetTooltipID);    
     
     //position group 
-    WAL_createNumberInput("lposIP", '58px', gDDLHeight,  "GX_EditBoxValueChange", true, 1280, 0,1, gWidgetTooltipID);
-    WAL_createNumberInput("tposIP", '58px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID); 
+   // WAL_createNumberInput("lposIP", '58px', gDDLHeight,  "GX_EditBoxValueChange", true, 1280, 0,1, gWidgetTooltipID);
+   // WAL_createNumberInput("tposIP", '58px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID); 
     WAL_createCustomButton('alignleft_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
     WAL_createCustomButton('aligntop_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
     WAL_createCustomButton('alignright_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
@@ -3608,8 +3611,8 @@ function GX_InitializeToolbar()
     WAL_createDropdownList('gradlistDDL', '160', '24', false, gradList, "GX_DDLHandler", '50');
     WAL_createCustomButton('edit_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);  
     WAL_createCustomButton('fill_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
-    WAL_createCustomButton('linear_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('radial_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+   // WAL_createCustomButton('linear_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+   // WAL_createCustomButton('radial_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('delete_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);    
     GX_CreateGradientWidget('gradientDlg');
     
@@ -3666,8 +3669,17 @@ function GX_InitializeToolbar()
     var usernameNode = document.getElementById('username'); 
     usernameNode.innerHTML = gUsername; 
     
+    //object toolbar interface
+    WAL_createCustomButton('circle_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('square_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('line_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('path_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('text_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     //WAL_createCustomButton('blink_icon', 'GX_ToolbarHandler');
-   
+    WAL_createCustomButton('grid_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    
     
 }
 
@@ -3901,6 +3913,7 @@ function GX_ToolbarHandler(Node)
 		}
 		
 		break; 
+		/*
 	case 'linear_grad_icon':
 	{
 		 var gradID = GX_AddNewSVGObject('LINEAR_GRADIENT');		
@@ -3943,6 +3956,7 @@ function GX_ToolbarHandler(Node)
 		}		
 	}
 		break;		
+		*/
 	case 'delete_grad_icon':
 		var currgradTitle = WAL_getDropdownListSelection('gradlistDDL');
 		var gradInfo = GX_GetGradInfoByTitle(currgradTitle); 
@@ -4096,13 +4110,31 @@ function GX_showEditorInterface(Mode)
 	switch(Mode)
 	{
 	case 'LAYOUT_MODE':
-		WAL_hideWidget('layout_interface', false); 
+		WAL_hideWidget('zoompan_interface', false); 
+		var width = $('#zoompan_interface').width(); 
+		var left = $('#zoompan_interface').position().left; 
+		
+		var node = document.getElementById('layout_interface');		
+		left += width + 5; 
+		node.style.left = left+'px' ;		 
+		WAL_hideWidget('layout_interface', false); 		
 		gObjectEditMode = 'LAYOUT_MODE';
 		break;
 	case 'ZOOMPAN_MODE':
 		WAL_hideWidget('zoompan_interface', false); 
 		//gObjectEditMode = 'ZOOMPAN_MODE';
 		break;	
+	case 'OBJECT_MODE':
+		WAL_hideWidget('zoompan_interface', false); 
+		var width = $('#zoompan_interface').width(); 
+		var left = $('#zoompan_interface').position().left; 
+		
+		var node = document.getElementById('object_interface');		
+		left += width + 5; 
+		node.style.left = left+'px' ;		 
+		WAL_hideWidget('object_interface', false); 				
+		gObjectEditMode = 'OBJECT_MODE';
+		break;		
 	case 'MODIFY_SHAPE_MODE':		
 		gObjectEditMode = 'MODIFY_SHAPE_MODE';
 		WAL_hideWidget('zoompan_interface', false);
