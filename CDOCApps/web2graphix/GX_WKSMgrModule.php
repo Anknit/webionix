@@ -551,3 +551,4 @@ function  GX_WKS_GetPageLink(&$respData)
 	$respData = $_SESSION['pathHTMLFile'];
 	return true;
 }
+
