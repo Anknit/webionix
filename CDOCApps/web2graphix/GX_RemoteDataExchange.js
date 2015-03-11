@@ -155,3 +155,11 @@ function GXRDE_getPageURL()
     }    
     return respstring; 
 }
+
+function GXRDE_sessionEnd()
+{
+	var respstring = AJX_RequestWithReponseData("text", "SMGR", "500");
+    if (respstring == "FAIL") {
+        return null; 
+    }    
+}
