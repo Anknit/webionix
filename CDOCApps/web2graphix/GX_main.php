@@ -107,7 +107,8 @@ if($nrow > 0)
 			$name = $dbusrname;
 			$id = $dbusrId; 
 			//$name = "CDOCAPP"; 
-			$name = "GXAPP";
+			//ensuring the usename is passed
+			//$name = "GXAPP";
 			$retval  = CDOC_Session_Init($name, $id, $row->workspacename);
 			if($retval == False)
 			{
