@@ -123,7 +123,28 @@
 	<div>		
 		</div id='pangroup' style="display:inline-block; height:36px; vertical-align: top; ">    	
     	</div>
-    	
+    	<div id='common_property_interface' style="display: none; position:absolute; left:10px; top: 40px;" class='PROPERTY_INTERFACE'>
+    		<div id='stroke_interface' style="display:inline-block; width:auto; height:32px;  border-right: ridge 2px #f0f0f0;" >
+		    	<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='stroke_color_icon' value=''  src='../CommonCSS/icons/Version1/bordercolor.png' data-tooltiptext='Stroke Color' data-helptext='Select any color from the pallete to apply as stroke color'/></div>
+		    	<div id='strokeweightEdit' style='display:inline-block; margin-left:5px; margin-right:5px;' data-tooltiptext='Stroke Width' data-helptext='Select value to modify the stroke width'>Thickness<div id='strokeWeightIP' class='EDIT_BOX group6' type='STROKE_WEIGHT' ></div></div>
+		    	<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='stroke_dash_icon' value=''  src='../CommonCSS/icons/Version1/stroke_dash.png' data-tooltiptext='Dash Pattern' data-helptext='Select stroke pattern'/></div>
+		    	<div id='strokedashdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><div id='strokedashDDL' class='EDIT_BOX' type='STROKE_DASH'></div></div>
+		    	<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='stroke_linjoin_icon' value=''  src='../CommonCSS/icons/Version1/stroke_linejoin.png' data-tooltiptext='Line Joining Values' data-helptext='Select value to modify the stroke line joining values'/></div>
+		    	<div id='strokelinejoindiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><div id='strokeLinejoinDDL' class='EDIT_BOX' type='STROKE_LINEJOIN'></div></div>
+		    <!-- <div id='strokeOpacityEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Stroke Opacity' data-helptext='Modify the Opacity of the stroke'>Stroke Opacity<div id='strokeOpacityIP' class='EDIT_BOX group6' type='STROKE_OPACITY' ></div></div>-->
+    		</div>
+    		<div id='fill_interface' style="display:inline-block; padding-right:3px; border-right: ridge 2px #f0f0f0;">
+		    	<div id='fillopacityEdit' style='display:inline-block;width:auto; height:32px; margin-left:5px;' data-tooltiptext='Fill  Opacity' data-helptext='Modify the Opacity'>Fill-Opacity<div id='fillopacityIP' class='EDIT_BOX group6' type='FILLOPACITY'></div></div>
+		    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='fill_color_icon' value=''  src='../CommonCSS/icons/Version1/fillcolor.png'  data-tooltiptext='Solid Color' data-helptext='Puts Solid Color as the background fill'/></div>
+		    	<!-- <div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='linear_grad_icon' value=''  src='../CommonCSS/icons/Version1/grad_linear.png' data-tooltiptext='Linear Gradient' data-helptext='Puts Linear Gradient as the background fill' /></div>
+		    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='radial_grad_icon' value=''  src='../CommonCSS/icons/Version1/grad_radial.png' data-tooltiptext='Radial Gradient' data-helptext='Puts Radial Gradient as the background fill'/></div>
+		    	-->
+		    	<div id='gradlistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Select Gradient<div id='gradlistDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
+		    	<div style= 'display:inline-block;margin-left:1px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='edit_grad_icon' value=''  src='../CommonCSS/icons/Version1/linecolor.png' data-tooltiptext='Edit Gradient Properties' data-helptext='Edit Gradient Properties'/></div></div> 	
+		    	<div style= 'display:inline-block;margin-left:1px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='delete_grad_icon' value=''  src='../CommonCSS/icons/Version1/delete.png' data-tooltiptext='Remove Gradient' data-helptext='Remove Gradient' /></div></div>
+    		</div> 
+    	</div>   	
+       	
     	<div id='modify_interface' style="display: none; position:absolute; left:295px; top: 40px;" class='PROPERTY_INTERFACE'>
     		<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='erase_icon' value=''  src='../CommonCSS/icons/Version1/erase.png' data-tooltiptext='Erase' data-helptext='Move the mouse cursor on the intended area to be erased frm free hand drawing object'/></div>
     		<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='modify_icon' value=''  src='../CommonCSS/icons/Version1/modify.png' data-tooltiptext='Modify' data-helptext='Move the mouse cursor to redraw portion of the free hand drawing object'/></div>
@@ -140,16 +161,8 @@
    		   <div id='largearcCheckBox' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Large Arc' data-helptext='Check to Enable Large arc'>Large-Arc</div>
    		   <div id='sweepCheckBox' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Sweep' data-helptext='Check to Enable Sweep'>Sweep-Flag</div>
     	</div>
+   
     
-    <div id='stroke_interface' style="display: none; position:absolute; left:295px; top: 40px;" class='PROPERTY_INTERFACE'>
-    	<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='stroke_color_icon' value=''  src='../CommonCSS/icons/Version1/bordercolor.png' data-tooltiptext='Stroke Color' data-helptext='Select any color from the pallete to apply as stroke color'/></div>
-    	<div id='strokeweightEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Stroke Width' data-helptext='Select value to modify the stroke width'>Thickness<div id='strokeWeightIP' class='EDIT_BOX group6' type='STROKE_WEIGHT' ></div></div>
-    	<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='stroke_dash_icon' value=''  src='../CommonCSS/icons/Version1/stroke_dash.png' data-tooltiptext='Dash Pattern' data-helptext='Select stroke pattern'/></div>
-    	<div id='strokedashdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><div id='strokedashDDL' class='EDIT_BOX' type='STROKE_DASH'></div></div>
-    	<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='stroke_linjoin_icon' value=''  src='../CommonCSS/icons/Version1/stroke_linejoin.png' data-tooltiptext='Line Joining Values' data-helptext='Select value to modify the stroke line joining values'/></div>
-    	<div id='strokelinejoindiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><div id='strokeLinejoinDDL' class='EDIT_BOX' type='STROKE_LINEJOIN'></div></div>
-    	<div id='strokeOpacityEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Stroke Opacity' data-helptext='Modify the Opacity of the stroke'>Stroke Opacity<div id='strokeOpacityIP' class='EDIT_BOX group6' type='STROKE_OPACITY' ></div></div>
-    </div>
     
     <div id='animate_interface' style="display: none; position:absolute; left:10px; top: 40px;" class='PROPERTY_INTERFACE'>    	
     	<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='anim_new_icon' value=''  src='../CommonCSS/icons/Version1/anim_new.png' data-tooltiptext='New Animation' data-helptext='Define Animation on Selected Object'/></div>
@@ -201,16 +214,7 @@
 	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='text_icon' value=''  src='../CommonCSS/icons/Version1/textobject.png' data-tooltiptext='Text' data-helptext='Adds Text object'/></div>
     	</div>	    	   	 	
      </div>
-    	<div id='fill_interface' style="display:none; top: 40px; padding-right:3px; border-right: ridge 2px #f0f0f0;">
-	    	<div id='fillopacityEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Fill  Opacity' data-helptext='Modify the Opacity'>Fill-Opacity<div id='fillopacityIP' class='EDIT_BOX group6' type='FILLOPACITY'></div></div>
-	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='fill_color_icon' value=''  src='../CommonCSS/icons/Version1/fillcolor.png'  data-tooltiptext='Solid Color' data-helptext='Puts Solid Color as the background fill'/></div>
-	    	<!-- <div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='linear_grad_icon' value=''  src='../CommonCSS/icons/Version1/grad_linear.png' data-tooltiptext='Linear Gradient' data-helptext='Puts Linear Gradient as the background fill' /></div>
-	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='radial_grad_icon' value=''  src='../CommonCSS/icons/Version1/grad_radial.png' data-tooltiptext='Radial Gradient' data-helptext='Puts Radial Gradient as the background fill'/></div>
-	    	-->
-	    	<div id='gradlistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Select Gradient<div id='gradlistDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
-	    	<div style= 'display:inline-block;margin-left:1px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='edit_grad_icon' value=''  src='../CommonCSS/icons/Version1/linecolor.png' data-tooltiptext='Edit Gradient Properties' data-helptext='Edit Gradient Properties'/></div></div> 	
-	    	<div style= 'display:inline-block;margin-left:1px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='delete_grad_icon' value=''  src='../CommonCSS/icons/Version1/delete.png' data-tooltiptext='Remove Gradient' data-helptext='Remove Gradient' /></div></div>
-    	</div> 
+    	
     
   		</div> 
     </div>
