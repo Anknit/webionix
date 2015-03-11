@@ -6995,5 +6995,10 @@ function OnTextEditFocusOut(event)
 
 function OnLogoutButton(event)
 {
-	Debug_Message('Log-out'); 
+	Debug_Message('Log-out'); 	
+	GXRDE_sessionEnd(); 
+	window.close(); 
+	
+	
+	
 }
