@@ -163,3 +163,12 @@ function GXRDE_sessionEnd()
         return null; 
     }    
 }
+
+function GXRDE_getUsername()
+{
+	var respstring = AJX_RequestWithReponseData("text", "SMGR", "501");
+    if (respstring == "FAIL") {
+        return null; 
+    }   
+    return respstring; 
+}
