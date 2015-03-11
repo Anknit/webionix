@@ -141,6 +141,7 @@ if (ini_get("session.use_cookies")) {
 
 // Finally, destroy the session.
 	$retval = session_destroy();
+	//header("Location:GX_Home.htm");
 	
 	return $retval; 	
 }
