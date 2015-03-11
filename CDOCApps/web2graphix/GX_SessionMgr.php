@@ -145,3 +145,13 @@ if (ini_get("session.use_cookies")) {
 	
 	return $retval; 	
 }
+function CDOC_Session_GetUsername(&$respstr)
+{
+	if(!$_SESSION['username'])
+	{
+		$respstr = 'FAIL';
+		return false; 
+	}	
+	$respstr = $_SESSION['username'];
+	return true; 	
+}
