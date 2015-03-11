@@ -56,7 +56,13 @@ include_once "Debuglog.php";
    		{
    			$retval  = CDOC_Session_Close();   
    			$respdata = 'OK'; 
-   		}   					
+   		}   
+   		else if($reqid == '501')
+   		{   			
+   			$retval  = CDOC_Session_GetUsername($respdata);   			
+   		}
+
+   		
    	}
    
    //now send the status code
