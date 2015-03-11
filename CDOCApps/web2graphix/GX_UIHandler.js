@@ -137,7 +137,7 @@ var gButtonHeight='24';
 var gDDLHeight = '24' ; //'26px'
 
 var gEditWidth = "35";
-var gObjectEditMode = 'MODIFY_SHAPE_MODE';
+var gObjectEditMode = 'PROPERTIES_MODE';
 var gSnapToGrid =  false; 
 var gSnapRes = new Number(10);
 var gbMultiSelection = false; 
@@ -1314,7 +1314,7 @@ function GX_InitializeDocument(svgFileName)
 	
 	 GX_MenuDisable(false);
 //	WAL_setCheckBoxValue('snaptogrid', false); 
-	GX_showEditorInterface('MODIFY_SHAPE_MODE'); 
+	GX_showEditorInterface('PROPERTIES_MODE'); 
 	
 	// reset all variables to default state 
 }
@@ -1338,6 +1338,15 @@ function GX_MenuItemShow(menuid, itemText)
 		 break; 
 	 case 'layout':
 		 GX_showEditorInterface('LAYOUT_MODE'); 
+		 break; 
+	 case 'properties':
+		 if(objectType == 'SVG_TEXT_OBJECT')
+		 {
+			 GX_showEditorInterface('MODIFY_TEXT_MODE');
+			 GX_MakeTextEditable(gCurrentObjectSelected); 
+		 }			  
+		 else
+			  GX_showEditorInterface('PROPERTIES_MODE');		
 		 break; 
 	 case 'animate':
 		 GX_showEditorInterface('ANIM_MODE'); 
@@ -1421,15 +1430,7 @@ function GX_MenuItemShow(menuid, itemText)
 	 case 'zoom':
 		 GX_showEditorInterface('ZOOMPAN_MODE'); 
 		 break; 
-	 case 'modify':
-		 if(objectType == 'SVG_TEXT_OBJECT')
-		 {
-			 GX_showEditorInterface('MODIFY_TEXT_MODE');
-			 GX_MakeTextEditable(gCurrentObjectSelected); 
-		 }			  
-		 else
-			  GX_showEditorInterface('MODIFY_SHAPE_MODE');		
-		 break; 
+	 
 	 case 'stroke':
 		  GX_showEditorInterface('STROKE_MODE'); 
 		  break; 
@@ -2092,9 +2093,9 @@ function GX_SetSelection(objNode, bFlag) {
     	var strokewidth = gCurrentObjectSelected.getAttribute('stroke-width'); 
     	WAL_setNumberInputValue('strokeWeightIP', strokewidth, false); 
     	
-    	var strokeopacity = gCurrentObjectSelected.getAttribute('stroke-opacity'); 
-    	strokeopacity = Math.round(strokeopacity * 100);
-    	WAL_setNumberInputValue('strokeOpacityIP', strokeopacity, false); 
+    //	var strokeopacity = gCurrentObjectSelected.getAttribute('stroke-opacity'); 
+    	//strokeopacity = Math.round(strokeopacity * 100);
+    	//WAL_setNumberInputValue('strokeOpacityIP', strokeopacity, false); 
     	
     	var fillopacity = gCurrentObjectSelected.getAttribute('fill-opacity'); 
     	//fillopacity = Math.round(fillopacity);
@@ -2175,13 +2176,9 @@ function OnSVGParentClick(evt)
 	}
 	
 	var selItemID ; 
-	//if(gObjectEditMode == 'MODIFY_SHAPE_MODE')
-	//	return; 
+	
 	GX_ResetAllSelections();
-	/*if(gCurrLayerNode)
-		selItemID = gCurrLayerNode.id; 
-	else
-	*/
+	
 	selItemID = 'SVGOBJECTCONTAINER'; 
 	WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+selItemID); 	
 	
@@ -2236,8 +2233,7 @@ function GX_UpdateMarkers(GrabberDim, bShow)
 	  }    
 	  if( (GrabberDim.width == 0) || (GrabberDim.height == 0))
 		  return; 
-	  //if(gObjectEditMode != 'MODIFY_SHAPE_MODE')
-	//	  return ; 
+	  
 	  $(JQSel).attr("visibility", "visible"); 
 	  
 	 //get the top left coordinate of grabber
@@ -2312,7 +2308,7 @@ function OnMarkerMouseDown(evt)
 	  if(!gCurrDirection)
 		  return ; 
 	gsvgRootNode.setAttribute("cursor", gCurrDirection);
-	if(gObjectEditMode == 'MODIFY_SHAPE_MODE')
+	if(gObjectEditMode == 'PROPERTIES_MODE')
 		gCurrGrabber.setAttribute('pointer-events', 'visible');
 	else
 		gCurrGrabber.setAttribute('pointer-events', 'none');
@@ -2475,7 +2471,7 @@ function OnObjectMouseDown(evt) {
         evt.target.setAttribute("pointer-events", "visible");
         bResize = false;
         gCurrDirection = 'none';     
-        if(gObjectEditMode == 'MODIFY_SHAPE_MODE')
+        if(gObjectEditMode == 'PROPERTIES_MODE')
     		gCurrGrabber.setAttribute('pointer-events', 'none');
         GX_SetSelection(gCurrentObjectSelected, true); 
     }
@@ -3598,8 +3594,8 @@ function GX_InitializeToolbar()
     //WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource,  handlerFnName, DDLdropDownWidth, DDLdropDownHeight, buttonID, buttonwidth, buttonheight)
     WAL_createDropdownListwithButton("strokedashDDL", '0','0',listBoxSrc, "GX_DDLHandler", '140', '80','stroke_dash_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
       
-    WAL_createNumberInput("strokeOpacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,1,1, gWidgetTooltipID);
-    WAL_setNumberInputValue('strokeOpacityIP', 100, false);
+   // WAL_createNumberInput("strokeOpacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,1,1, gWidgetTooltipID);
+   // WAL_setNumberInputValue('strokeOpacityIP', 100, false);
     
     //fill interface 
    // var gradList = ['New:Linear', 'New:Radial']; 
@@ -3608,7 +3604,7 @@ function GX_InitializeToolbar()
     WAL_createDecimalNumberInput("fillopacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1.0,0.0,0.1, gWidgetTooltipID);
     WAL_setNumberInputValue('fillopacityIP', 1.0, false);
     
-    WAL_createDropdownList('gradlistDDL', '160', '24', false, gradList, "GX_DDLHandler", '50');
+    WAL_createDropdownList('gradlistDDL', '120', '24', false, gradList, "GX_DDLHandler", '50');
     WAL_createCustomButton('edit_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);  
     WAL_createCustomButton('fill_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
    // WAL_createCustomButton('linear_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -3755,12 +3751,12 @@ function GX_EditBoxValueChange(value, widgetnode)
 			GX_SetObjectAttribute(gCurrentObjectSelected, 'stroke-width', value, true, false);
 			return; 
 		}
-		else if(widgetnode.id == 'strokeOpacityIP')
+		/*else if(widgetnode.id == 'strokeOpacityIP')
 		{
 			var opacity = value/100; 
 			GX_SetObjectAttribute(gCurrentObjectSelected, 'stroke-opacity', opacity, true, false);
 			return; 
-		} 
+		} */
 		else if(widgetnode.id == 'fillopacityIP')
 		{
 			var opacity = value; 
@@ -4135,10 +4131,9 @@ function GX_showEditorInterface(Mode)
 		WAL_hideWidget('object_interface', false); 				
 		gObjectEditMode = 'OBJECT_MODE';
 		break;		
-	case 'MODIFY_SHAPE_MODE':		
-		gObjectEditMode = 'MODIFY_SHAPE_MODE';
-		WAL_hideWidget('zoompan_interface', false);
-		WAL_hideWidget('modify_interface', false); 				
+	case 'PROPERTIES_MODE':		
+		gObjectEditMode = 'PROPERTIES_MODE';		
+		WAL_hideWidget('common_property_interface', false); 				
 		break;			
 	case 'STROKE_MODE':
 		WAL_hideWidget('zoompan_interface', false);
@@ -5318,7 +5313,7 @@ function GX_UpdatePathMarker(pathID, pathParam, bShow)
     	$(JQSel).attr('visibility', 'hidden'); 
     	 return ;
     }
-    if(gObjectEditMode != 'MODIFY_SHAPE_MODE')
+    if(gObjectEditMode != 'PROPERTIES_MODE')
 		  return ; 
     var pathNode = document.getElementById(pathID);  
     var pathType = pathNode.classList[1]; 
@@ -5352,7 +5347,7 @@ function GX_AddPathMarker(pathID, pathParam) {
     var pathType = pathNode.classList[1]; 
     //if(pathType == 'FREEDRAW_PATH')
     //	return ; 
-    if(gObjectEditMode != 'MODIFY_SHAPE_MODE')
+    if(gObjectEditMode != 'PROPERTIES_MODE')
 		  return ; 
     if(pathParam.length < 1)
     	return ;
