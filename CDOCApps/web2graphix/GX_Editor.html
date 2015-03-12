@@ -131,8 +131,9 @@
 		    	<div id='strokedashdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><div id='strokedashDDL' class='EDIT_BOX' type='STROKE_DASH'></div></div>
 		    	<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='stroke_linjoin_icon' value=''  src='../CommonCSS/icons/Version1/stroke_linejoin.png' data-tooltiptext='Line Joining Values' data-helptext='Select value to modify the stroke line joining values'/></div>
 		    	<div id='strokelinejoindiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><div id='strokeLinejoinDDL' class='EDIT_BOX' type='STROKE_LINEJOIN'></div></div>
-		    <!-- <div id='strokeOpacityEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Stroke Opacity' data-helptext='Modify the Opacity of the stroke'>Stroke Opacity<div id='strokeOpacityIP' class='EDIT_BOX group6' type='STROKE_OPACITY' ></div></div>-->
+		    	<!-- <div id='strokeOpacityEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Stroke Opacity' data-helptext='Modify the Opacity of the stroke'>Stroke Opacity<div id='strokeOpacityIP' class='EDIT_BOX group6' type='STROKE_OPACITY' ></div></div>-->
     		</div>
+    		
     		<div id='fill_interface' style="display:inline-block; padding-right:3px; border-right: ridge 2px #f0f0f0;">
 		    	<div id='fillopacityEdit' style='display:inline-block;width:auto; height:32px; margin-left:5px;' data-tooltiptext='Fill  Opacity' data-helptext='Modify the Opacity'>Fill-Opacity<div id='fillopacityIP' class='EDIT_BOX group6' type='FILLOPACITY'></div></div>
 		    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='fill_color_icon' value=''  src='../CommonCSS/icons/Version1/fillcolor.png'  data-tooltiptext='Solid Color' data-helptext='Puts Solid Color as the background fill'/></div>
@@ -143,6 +144,18 @@
 		    	<div style= 'display:inline-block;margin-left:1px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='edit_grad_icon' value=''  src='../CommonCSS/icons/Version1/linecolor.png' data-tooltiptext='Edit Gradient Properties' data-helptext='Edit Gradient Properties'/></div></div> 	
 		    	<div style= 'display:inline-block;margin-left:1px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='delete_grad_icon' value=''  src='../CommonCSS/icons/Version1/delete.png' data-tooltiptext='Remove Gradient' data-helptext='Remove Gradient' /></div></div>
     		</div> 
+    		<div id='radius_property' class='RADIUS ELLIPSE_PROPERTY ELLIPTIC_PROPERTY' style="display:none; padding-right:3px; border-right: ridge 2px #f0f0f0;">
+    			<div id='radiusXEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Horizontal Radius' data-helptext='Modify the Horizontal Radius'>Radius-X<div id='radiusXIP' class='EDIT_BOX group6' type='RADIUSX' ></div></div>	
+   		   		<div id='radiusYEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Vertical Radius' data-helptext='Modify the Vertical Radius'>Radius-Y<div id='radiusYIP' class='EDIT_BOX group6' type='RADIUSY'></div></div>
+    		</div>
+    		<div id='dimension_property' class='RECTANGLE_PROPERTY ELLIPSE_PROPERTY' style="display:none; padding-right:3px; border-right: ridge 2px #f0f0f0;">
+    			<div id='WidthEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Width' data-helptext='Width of the Tightest Rectangle'>Width<div id='widthIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+    			<div  id='HeightEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Height' data-helptext='Height of the Tightest Rectangle' >Height<div id='heightIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>    			
+    		</div>
+    		
+    		
+    		<!-- <div id='radius_property' class='RADIUS ELLIPTIC_PROPERTY ELLIPSE_PROPERTY'style="display:none; padding-right:3px; border-right: ridge 2px #f0f0f0;">-->
+    		
     	</div>   	
        	
     	<div id='modify_interface' style="display: none; position:absolute; left:295px; top: 40px;" class='PROPERTY_INTERFACE'>
@@ -156,8 +169,7 @@
    		   </div>  
    		   <div id='rotateEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Rotate' data-helptext='Rotate the Object by given angle'>Rotate<div id='rotateIP' class='EDIT_BOX group6' type='ROTATION'></div></div>  	
    		   <div id='lengthEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Length of Sides' data-helptext='Change the length of the sides of Polygon object'>Length<div id='lengthIP' class='EDIT_BOX group6' type='LENGTH' ></div></div>	
-   		   <div id='radiusXEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Horizontal Radius' data-helptext='Modify the Horizontal Radius'>Radius-X<div id='radiusXIP' class='EDIT_BOX group6' type='RADIUSX' ></div></div>	
-   		   <div id='radiusYEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Vertical Radius' data-helptext='Modify the Vertical Radius'>Radius-Y<div id='radiusYIP' class='EDIT_BOX group6' type='RADIUSY'></div></div>
+   		   
    		   <div id='largearcCheckBox' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Large Arc' data-helptext='Check to Enable Large arc'>Large-Arc</div>
    		   <div id='sweepCheckBox' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Sweep' data-helptext='Check to Enable Sweep'>Sweep-Flag</div>
     	</div>
