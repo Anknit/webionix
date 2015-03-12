@@ -1962,6 +1962,8 @@ function GX_SetSelection(objNode, bFlag) {
     	}
     	GX_SetObjectAttribute(node, "", "", true, false);
     	GX_SaveObjectProperties(node, true);  
+    	var objectType = gCurrentObjectSelected.classList[1]; 
+    	GX_ShowObjectPropertyInterface(objectType, false); 
     	gCurrentObjectSelected = 0; 
     	bMove = false;
     	bResize = false; 
@@ -1979,7 +1981,8 @@ function GX_SetSelection(objNode, bFlag) {
     	 //$(TTSel).jqxTooltip('close');//open(); 
     	 $(TTSel).jqxTooltip('destroy');//open();
     	// Debug_Message('Tooltip Closed');
-    	 	
+    	 
+    	 
     	return ; 
     }
     gCurrGrabber.setAttribute("visibility", "visible");
@@ -2105,6 +2108,8 @@ function GX_SetSelection(objNode, bFlag) {
     	//WAL_setColorPickerValue('colorpickwidget', colorval); 
     	//update the Gradient Values 
     	GX_UpdatePropertyOnUI('GRADIENT', ""); 
+    	var objectType = gCurrentObjectSelected.classList[1]; 
+    	GX_ShowObjectPropertyInterface(objectType, true); 
     }
     gCurrentObjectSelected.setAttribute('pointer-events', 'none'); 
     //set the tooltip here 
@@ -3489,8 +3494,8 @@ function GX_InitializeToolbar()
 	WAL_createCustomButton('svgdim_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
 	WAL_createCheckBox('snaptogrid', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
 		
-	//WAL_createNumberInput("widthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1280, 0,1, gWidgetTooltipID);
-   // WAL_createNumberInput("heightIP", '58px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID);     
+	WAL_createNumberInput("widthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1280, 0,1, gWidgetTooltipID);
+    WAL_createNumberInput("heightIP", '58px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID);     
     WAL_createCustomButton('alignwidth_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
     WAL_createCustomButton('alignheight_icon', 'GX_ToolbarHandler',gWidgetTooltipID);    
     
@@ -7042,5 +7047,20 @@ function OnLogoutButton(event)
 	{
 		Debug_Message('About'); 
 	}
+	
+}
+
+function GX_ShowObjectPropertyInterface(objectType, bShow)
+{
+	var JQSel = '.' + objectType + '_PROPERTY'; 
+	//if(objectType == 'ELLIPSE')
+	//{		
+		//var JQSel = '.ELLIPSE_PROPERTY';
+		if(bShow == true)
+			$(JQSel).css('display','inline-block'); 
+		else
+			$(JQSel).css('display','none');
+	//}
+
 	
 }
