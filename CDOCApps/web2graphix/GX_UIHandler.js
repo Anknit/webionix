@@ -103,6 +103,8 @@ var gSVGContainerbordercol = 'blue';
 var gUsername = ''; 
 var gShowTooltip =  true; 
 
+var gShowGrid =  true; 
+
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -3684,7 +3686,12 @@ function GX_InitializeToolbar()
     //WAL_createCustomButton('blink_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('grid_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     
-    
+    ///set the checkbox enu of settings 
+    document.getElementById('buttontooltip_cb').checked = true;
+    document.getElementById('editortooltip_cb').checked = true;
+    document.getElementById('showgrid_cb').checked = true;
+        
+        
 }
 
 function GX_EditBoxValueChange(value, widgetnode)
@@ -7072,6 +7079,25 @@ function OnTooltipButton(event){
 	if(nodeID = 'selectortooltip')
 	{
 		gShowTooltip = false; 
-	}
+	}	
+}
+
+function OnMenuCBChange(event){
 	
+	var CBID = event.target.id;
+	var bChecked = event.target.checked;	 
+	switch(CBID)
+	{
+	case 'buttontooltip_cb':
+		gContextTooltip = bChecked
+		break; 
+	case 'editortooltip_cb':
+		gShowTooltip = bChecked; 
+		break; 
+	case 'showgrid_cb':
+		gShowGrid = bChecked; 
+		break;
+	default:
+		break; 
+	}	
 }
