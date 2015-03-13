@@ -7095,7 +7095,12 @@ function OnMenuCBChange(event){
 		gShowTooltip = bChecked; 
 		break; 
 	case 'showgrid_cb':
+		var gridNode = document.getElementById('gridpattern'); 		
 		gShowGrid = bChecked; 
+		if(gShowGrid == true)
+			gridNode.setAttribute('visibility', 'visible'); 
+		else
+			gridNode.setAttribute('visibility', 'hidden'); 
 		break;
 	default:
 		break; 
