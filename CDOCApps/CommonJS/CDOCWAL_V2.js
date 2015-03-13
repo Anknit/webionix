@@ -51,16 +51,12 @@ var gMenuSelectionCol = '#c6d600'; //#c6d6ec
 var gTooltipHideDelay = 2000; 
 var gCurrentTooltipOwnerID = 0; 
 var gCurrTooltipID = 0; 
+var gContextTooltip =  true; 
 function WAL_Initialize() {
     if(!gTheme)
-        gTheme = getTheme();
-   // gTheme = 'metrodark';
-  // gTheme = 'energyblue';
-   gTheme = 'mywhite';   
-    //gTheme = 'ui-redmond'; 
-    //gTheme = 'ui-redmond'; 
-
-    gInitialized = true; 
+      gTheme = getTheme();   
+    gTheme = 'bootstrap';     
+    gInitialized = true;
 }
 
 
@@ -2836,7 +2832,7 @@ function WAL_createCustomButton(buttonID, clickHandler, tooltipID)
      */  
 }
 
-var gShowDelay = 300; 
+var gShowDelay = 1000; 
 
 function WAL_createWidgetTooltip(ID, tooltipID)
 {
@@ -2847,6 +2843,8 @@ function WAL_createWidgetTooltip(ID, tooltipID)
 	}
 	
 	 $(JQSel).on('mousemove', function(event){
+		 if(gContextTooltip == false)
+			 return ; 
 	    	var node = event.target; 
 	    	var nodeSel = '#'+ node.id; 
 	    	var tooltipID = $(nodeSel).attr('data-tooltipID'); 
@@ -2859,7 +2857,7 @@ function WAL_createWidgetTooltip(ID, tooltipID)
 	     	if(!tiptext)
 	     		return ; 
 	     	gCurrentTooltipOwnerID = node.id; 
-	     	var tooltipsrc = '<p><b>'+tiptext + '</b><span class="LINK_TYPES" onclick="OnHelpButton(event)" style="color:white; font-weight:bold">  Help..</span>' + '</p>';
+	     	var tooltipsrc = '<p><b>'+tiptext + '</b><span class="LINK_TYPES" onclick="OnHelpButton(event)" style="color:#ffff88; font-weight:bold">  Help..</span>' + '</p>';
 	     	
 	     	var pos = $(nodeSel).offset();  
 	     	var height =  new Number($(nodeSel).outerHeight()); 
