@@ -140,7 +140,7 @@ var gButtonHeight='24';
 var gDDLHeight = '24' ; //'26px'
 
 var gEditWidth = "35";
-var gObjectEditMode = 'PROPERTIES_MODE';
+var gObjectEditMode = 'OBJECT_MODE';//'PROPERTIES_MODE';
 var gSnapToGrid =  false; 
 var gSnapRes = new Number(10);
 var gbMultiSelection = false; 
@@ -1317,7 +1317,7 @@ function GX_InitializeDocument(svgFileName)
 	
 	 GX_MenuDisable(false);
 //	WAL_setCheckBoxValue('snaptogrid', false); 
-	GX_showEditorInterface('PROPERTIES_MODE'); 
+	GX_showEditorInterface('OBJECT_MODE'); 
 	
 	// reset all variables to default state 
 }
@@ -1375,6 +1375,8 @@ function GX_MenuItemShow(menuid, itemText)
 	 case 'delete':		 
 		 GX_menu_delete_svgfrom_remote();
 		 break;
+		 
+		 /*
 	 case 'rectangle':
 	 case 'ellipse':
 	 case 'line_path':
@@ -1383,7 +1385,8 @@ function GX_MenuItemShow(menuid, itemText)
 	 case 'elliptic_path':		
 		 GX_AddNewSVGObject(menuid); 
 		 GX_StartFreeDraw();
-		 break;	
+		 break;
+		
 	 case 'polygon_path':
 		 WAL_showModalWindow(gPolyInputDlg,"GX_PolyInputDlgOK", "" );
 		 break; 
@@ -1393,7 +1396,8 @@ function GX_MenuItemShow(menuid, itemText)
 		 break;
 	 case 'text':
 		 GX_AddNewSVGObject(menuid); 
-		 break; 		 
+		 break; 	
+		  */		 
 	 case 'save':
 		 EL_SaveEditList(gCompactEditList, true); 
 		 break; 
@@ -3602,10 +3606,8 @@ function GX_InitializeToolbar()
         listBoxSrc[i] = { html: html, value:dashValue};
     }
     //WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource,  handlerFnName, DDLdropDownWidth, DDLdropDownHeight, buttonID, buttonwidth, buttonheight)
-    WAL_createDropdownListwithButton("strokedashDDL", '0','0',listBoxSrc, "GX_DDLHandler", '140', '80','stroke_dash_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
-      
-   // WAL_createNumberInput("strokeOpacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,1,1, gWidgetTooltipID);
-   // WAL_setNumberInputValue('strokeOpacityIP', 100, false);
+    WAL_createDropdownListwithButton("strokedashDDL", '0','0',listBoxSrc, "GX_DDLHandler", '140', '80','stroke_dash_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);     
+  
     
     //fill interface 
    // var gradList = ['New:Linear', 'New:Radial']; 
@@ -3679,9 +3681,11 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('circle_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('square_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('freehand_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('line_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('path_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    var curveTypes = ['Cubic Bezier','Quadratic Bezier','Elliptic']; 
+    WAL_createDropdownListwithButton("curveDDL", '0','0',curveTypes, "GX_DDLHandler", '140', '80','curve_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
+  //  WAL_createCustomButton('path_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('text_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     //WAL_createCustomButton('blink_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('grid_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -3924,6 +3928,29 @@ function GX_ToolbarHandler(Node)
 		}
 		
 		break; 
+	case 'circle_icon':
+		 GX_AddNewSVGObject('ellipse'); 
+		 GX_StartFreeDraw();
+		break; 
+	case 'square_icon':
+		 GX_AddNewSVGObject('rectangle'); 
+		 GX_StartFreeDraw();
+		break; 
+	case 'line_icon':
+		 GX_AddNewSVGObject('line_path'); 
+		 GX_StartFreeDraw();
+		break;
+	case 'polygon_icon':
+		WAL_showModalWindow(gPolyInputDlg,"GX_PolyInputDlgOK", "" );
+		break; 
+	case 'text_icon':
+		GX_AddNewSVGObject('text'); 
+		break; 
+	case 'freehand_icon':
+		GX_AddNewSVGObject('freedraw_path'); 
+		GX_StartFreeDraw();
+		break; 
+		
 		/*
 	case 'linear_grad_icon':
 	{
@@ -4904,6 +4931,29 @@ function GX_DDLHandler(Node, value)
 	if(gCurrentObjectSelected)
 		var objectType =  gCurrentObjectSelected.classList[0];
 	//animation related 
+	
+
+	if(wdgtId == 'zoomDDL')
+	{
+		var zoomval = new Number(value); 
+		gZoomFactor = 1.0/zoomval; 
+		GX_ApplyZoom(gZoomFactor); 		
+	}
+	else if(wdgtId == 'curveDDL')
+	{
+		if(value =='Cubic Bezier' )
+			var drawType = 'cbezier_path'
+		else if(value =='Quadratic Bezier' )
+			var drawType = 'cbezier_path';
+		else if(value =='Elliptic' )
+			var drawType = 'cbezier_path';	
+		GX_AddNewSVGObject(drawType); 
+		GX_StartFreeDraw();
+		return; 
+		
+	}
+	
+	
 	if(wdgtId == 'listanimDDL')
 	{
 		if(gCurrentObjectSelected)
@@ -4913,19 +4963,13 @@ function GX_DDLHandler(Node, value)
 		if(!animNode)
 			return ;				
 		GX_SetSelection(animNode.targetElement, true);		
-		return ; 
+		return ; 	
 	}
+	
 	if(!gCurrentObjectSelected)
 		return ; 
 	
-	
-	if(wdgtId == 'zoomDDL')
-	{
-		var zoomval = new Number(value); 
-		gZoomFactor = 1.0/zoomval; 
-		GX_ApplyZoom(gZoomFactor); 		
-	}
-	else if(wdgtId == 'strokedashDDL')
+	if(wdgtId == 'strokedashDDL')
 	{
 		//GX_SetObjectAttribute(gCurren, AttrName, AttrValue, bListStore, bUpdateUI)
 		GX_SetObjectAttribute(gCurrentObjectSelected, "stroke-dasharray", value, true, false);
@@ -4986,6 +5030,7 @@ function GX_DDLHandler(Node, value)
 		if(objectType == 'SVG_TEXT_OBJECT')
 			GX_SetObjectAttribute(gCurrentObjectSelected, "font-weight", value, true, false);
 	}
+	
 	
 	
 }
