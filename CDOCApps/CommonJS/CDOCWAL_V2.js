@@ -634,6 +634,10 @@ function WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource, 
 	    var btnJQSel = "#"+buttonID; 
 	    WAL_createCustomButton(buttonID, "", tooltipID); 
 	    $(btnJQSel).on('click', function(){
+	    	
+	    	var toolSel = '#'+gCurrTooltipID; 
+            $(toolSel).jqxTooltip('close');
+            
 	    	var node =  document.getElementById(ID); 
 	    	node = node.parentNode; 
 	    	var pos = $(btnJQSel).position(); 
@@ -2799,6 +2803,8 @@ function WAL_createCustomButton(buttonID, clickHandler, tooltipID)
              if(gLastClickedButtonNodeID)
             	 $('#'+gLastClickedButtonNodeID).removeAttr('style'); 
              gLastClickedButtonNodeID = node.id; 
+             var toolSel = '#'+gCurrTooltipID; 
+             $(toolSel).jqxTooltip('close'); 
            //  $('.IMAGE_BUTTON').removeAttr('style'); 
              node.style.border = 'ridge 2px #e0e9f5';      
              node.style.bordeRadius = '5px'; 
@@ -2832,7 +2838,7 @@ function WAL_createCustomButton(buttonID, clickHandler, tooltipID)
      */  
 }
 
-var gShowDelay = 1000; 
+var gShowDelay = 3000; 
 
 function WAL_createWidgetTooltip(ID, tooltipID)
 {
