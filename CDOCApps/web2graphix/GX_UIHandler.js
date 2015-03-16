@@ -1372,7 +1372,8 @@ function GX_MenuItemShow(menuid, itemText)
 		 GX_menu_open_svgfrom_remote();
 		 
 		 break; 
-	 case 'delete':		 
+	 //case 'delete':	
+	 case "deletefile":
 		 GX_menu_delete_svgfrom_remote();
 		 break;
 		 
