@@ -1344,12 +1344,12 @@ function GX_MenuItemShow(menuid, itemText)
 		 GX_showEditorInterface('LAYOUT_MODE'); 
 		 break; 
 	 case 'properties':
-		 if((objectType) && (objectType == 'SVG_TEXT_OBJECT'))
-		 {
-			 GX_showEditorInterface('MODIFY_TEXT_MODE');
-			 GX_MakeTextEditable(gCurrentObjectSelected); 
-		 }			  
-		 else
+		// if((objectType) && (objectType == 'SVG_TEXT_OBJECT'))
+		// {
+			// GX_showEditorInterface('MODIFY_TEXT_MODE');
+			/// GX_MakeTextEditable(gCurrentObjectSelected); 
+		// }			  
+		// else
 			  GX_showEditorInterface('PROPERTIES_MODE');		
 		 break; 
 	 case 'animate':
@@ -1835,8 +1835,11 @@ function GX_AddNewSVGObject(Type)
 		
 		
 	}
-	WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+ObjID);
-		
+	if(objType == 'SVG_TEXT_OBJECT'){
+		//WAL_SetMenuItem('GXmenu', 'properties');
+		GX_showEditorInterface('PROPERTIES_MODE');
+	}
+	WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+ObjID);		
 }
 
 function GX_CloseSVGFile()
@@ -1971,7 +1974,8 @@ function GX_SetSelection(objNode, bFlag) {
     	GX_SetObjectAttribute(node, "", "", true, false);
     	GX_SaveObjectProperties(node, true);  
     	var objectType = gCurrentObjectSelected.classList[1]; 
-    	GX_ShowObjectPropertyInterface(objectType, false); 
+    	if(gObjectEditMode == 'PROPERTIES_MODE')
+    		GX_ShowObjectPropertyInterface(objectType, false); 
     	gCurrentObjectSelected = 0; 
     	bMove = false;
     	bResize = false; 
@@ -2117,7 +2121,8 @@ function GX_SetSelection(objNode, bFlag) {
     	//update the Gradient Values 
     	GX_UpdatePropertyOnUI('GRADIENT', ""); 
     	var objectType = gCurrentObjectSelected.classList[1]; 
-    	GX_ShowObjectPropertyInterface(objectType, true); 
+    	if(gObjectEditMode == 'PROPERTIES_MODE')
+    		GX_ShowObjectPropertyInterface(objectType, true); 
     }
     gCurrentObjectSelected.setAttribute('pointer-events', 'none'); 
     //set the tooltip here 
@@ -4191,9 +4196,10 @@ function GX_showEditorInterface(Mode)
 		WAL_hideWidget('animate_interface', false); 		
 		gObjectEditMode = 'ANIMATION_EDIT_MODE';		
 		break;
-	case 'MODIFY_TEXT_MODE':
+	/*case 'MODIFY_TEXT_MODE':
 		gObjectEditMode = 'MODIFY_TEXT_MODE';		
-		break; 
+		break;
+		*/ 
 	case 'FONT_STYLE_MODE':
 		gObjectEditMode = 'FONT_STYLE_MODE'; 
 		WAL_hideWidget('texteditinterface', false); 
@@ -7078,16 +7084,17 @@ function OnTextEditKeyPress(event)
 
 function OnTextEditFocusOut(event)
 {	
-	var str = gTextEditorNode.value ;
-	gCurrentObjectSelected.firstChild.data  = str;    
+	var str = gTextEditorNode.value ;	
 	//node.style.display = 'block';
 	gTextEditorNode.parentNode.style.display = 'none'; 
-	gCurrGrabber
-	
-	var dim = gCurrentObjectSelected.getBBox(); 
-	gCurrGrabber.setAttribute('width', dim.width); 
-	gCurrentObjectSelected.setAttribute('opacity', '1.0');
-	GXRDE_updateTextObjectData(gCurrentObjectSelected.id, gCurrentObjectSelected.firstChild.data);
+	if(gCurrentObjectSelected)
+	{
+		gCurrentObjectSelected.firstChild.data  = str;    
+		var dim = gCurrentObjectSelected.getBBox(); 
+		gCurrGrabber.setAttribute('width', dim.width); 
+		gCurrentObjectSelected.setAttribute('opacity', '1.0');
+		GXRDE_updateTextObjectData(gCurrentObjectSelected.id, gCurrentObjectSelected.firstChild.data);
+	}	
 }
 
 function OnLogoutButton(event)
@@ -7116,6 +7123,24 @@ function GX_ShowObjectPropertyInterface(objectType, bShow)
 		else
 			$(JQSel).css('display','none');
 	//}	
+		if(objectType == 'TEXT') 
+		{
+			if(bShow == true){
+				WAL_hideWidget('texteditinterface', false); 
+				var fontsize = gCurrentObjectSelected.getAttribute('font-size'); 
+				GX_UpdatePropertyOnUI('FONT_SIZE', fontsize);
+				var fontname = gCurrentObjectSelected.getAttribute('font-family');
+				GX_UpdatePropertyOnUI('FONT_NAME', fontname);
+				GX_MakeTextEditable(gCurrentObjectSelected); 
+			}
+			else{
+				gTextEditorNode.parentNode.style.display = 'none'; 
+				WAL_hideWidget('texteditinterface', true); 
+			}
+				
+			
+		}
+		
 }
 
 function OnTooltipButton(event){
