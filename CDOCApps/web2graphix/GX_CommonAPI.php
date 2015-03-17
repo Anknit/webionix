@@ -849,7 +849,7 @@ function GX_COMMON_AddXMLUniqueCopyID(&$XMLDOM, &$Node, $NodeTypeToCopy, $destPa
 			$Node->setAttribute('dataid', $newNodeID);
 			$TMNodeID = "TM_" . $newNodeID;			
 			$Node->setAttribute('id', $TMNodeID);
-			if( ($NodeTypeToCopy == 'LAYER') || ($NodeTypeToCopy == 'SCENE') )
+			if( ($NodeTypeToCopy == 'GROUP') || ($NodeTypeToCopy == 'SCENE') )
 			{
 				if($nodetype == 'HTMLOBJECT')
 				{
@@ -860,7 +860,7 @@ function GX_COMMON_AddXMLUniqueCopyID(&$XMLDOM, &$Node, $NodeTypeToCopy, $destPa
 					$parentNode = $parentNode->parentNode;
 					$nodeType = $parentNode->getAttribute('type');
 					$nodeType = strtoupper($nodeType);
-					if($nodeType != 'LAYER')
+					if($nodeType != 'GROUP')
 						return false;
 					$layerID = $parentNode->getAttribute('dataid');
 					$newLayerID = GX_COMMON_GeneratedUniqueCopyXMLDataID($XMLDOM, $layerID);
