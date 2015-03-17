@@ -2834,7 +2834,7 @@ function GX_MoveObjectZIndex(objNode, Direction)
 		objParam.prevValue = 0; 		
 		
 	EL_AddToEditList(gObjectEditList, gCompactEditList, objParam);
-	GX_MoveObjectNode(objNode.id, objParam.currValue); 	
+	GX_MoveObjectNode(objNode.id, objParam.currValue, parentNode.id); 	
 	
 }
 
@@ -2857,6 +2857,29 @@ function GX_MoveObjectNode(currobjID, beforeID, beforeParentID)
 	var retNode = destparentNode.insertBefore(clonedNode, beforeNode);		
 	GX_SetSelection(retNode, true);
 	GXRDE_MoveZIndex(currobjID, beforeID, beforeParentID);
+}
+
+function GX_MoveObjectToGroup(objectID, destparentID){
+	
+	var currNode, beforeNode; 
+	var destParentNode = document.getElementById(destparentID); 
+	currNode = document.getElementById(objectID);
+	if(!currNode)
+	{
+		Debug_Message("Curr Node Null"); 
+		return ; 
+	}
+	var srcparentNode = currNode.parentNode;
+	var clonedNode = currNode.cloneNode(true);
+	if(srcparentNode == destparentNode)
+		return; 
+	var destparentNode = document.getElementById(destparentID); 	
+	srcparentNode.removeChild(currNode); 
+	var retNode = destparentNode.appendChild(clonedNode);		
+	GX_SetSelection(retNode, true);
+	GXRDE_MoveObjectToGroup(objectID,destparentID );
+	//GXRDE_MoveZIndex(currobjID, beforeID, beforeParentID);
+
 }
 
 function GX_updateTreeWidget(string)
@@ -2926,29 +2949,63 @@ function GX_TreeHandlerDragEnd(item, dropItem, args, dropPosition, tree)
 	 var srcNode = item.element; 
 	 var nodeID = item.id; 
 	 var dropNode = dropItem.element;
+	 var dropType = dropNode.getAttribute('type'); 
 	 var objectID, destParentID, objectType;
 	 objectID = srcNode.getAttribute('dataid'); 
-	 destID = dropNode.getAttribute('dataid'); 
+	 var dropNodeID = dropNode.getAttribute('dataid'); 
 	 objectType = srcNode.getAttribute('type'); 
 	 var objPosition  = dropPosition; 	
 	 if(objectType != 'OBJECT')
 		 return; 
 	 
 	 srcNode = document.getElementById(objectID);
-	 destNode = document.getElementById(destID);
-	 var destParentNode = destNode.parentNode; 
+	 var destParentNode = document.getElementById(dropNodeID);
+	 //var destParentNode = destNode.parentNode; 
+	
 	 if(dropPosition == 'after')
 	 {
-		destNode = destNode.nextSibling; 
-		if(!destNode)
-			destID = 0; 
-		else
-			destID = destNode.id;	
+		if(dropType == 'OBJECT')
+		{
+			destParentNode = destParentNode.parentNode; 
+			var currType = destParentNode.getAttribute('type'); 
+			if(currType != 'LAYER')
+				return ; 		
+		}		
 	 }
+	 else if(dropPosition == 'inside'){
+		if(dropType == 'OBJECT')
+		{
+				destParentNode = destParentNode.parentNode; 
+				var currType = destParentNode.getAttribute('type'); 
+				if(currType != 'LAYER')
+					return ; 		
+		}			 
+	 }
+	 GX_MoveObjectToGroup(objectID, destParentNode.id); 
+	 var xmlstr = GXRDE_GetSVGMetaXML(gSVGFilename);    
+     if(xmlstr)
+      	 GX_updateTreeWidget(xmlstr);   
+     retval  = GX_setTreeItemSelection(nodeID);	 
 	
-	 GX_MoveObjectNode(objectID,destID, destParentNode.id); 
-	 WAL_expandTreeItem(gTreeNodeID,dropItem.id, true); 
-	 retval  = GX_setTreeItemSelection(nodeID);	 
+	 /*
+	 else if(dropPosition == 'before'){
+		 destNode = destNode.nextSibling;
+	 }
+	 else if(dropPosition == 'inside'){
+		 destNode = destNode.nextSibling;
+	 }
+	 */
+	 
+	 if(dropPosition != 'inside'){
+		 
+		 return ;
+	 }
+	 
+	
+	 //GX_MoveObjectNode(objectID,destID, destParentNode.id); 
+	
+	// WAL_expandTreeItem(gTreeNodeID,dropItem.id, true); 
+	 
 	//Debug_Message("Cleared and then created"); 
 	 
 	 return true; 
@@ -3684,6 +3741,8 @@ function GX_InitializeToolbar()
     usernameNode.innerHTML = gUsername; 
     
     //object toolbar interface
+    
+    WAL_createCustomButton('group_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('circle_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('square_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -3934,6 +3993,9 @@ function GX_ToolbarHandler(Node)
 		}
 		
 		break; 
+	case 'group_icon':
+		GX_AddNewSVGObject('LAYER'); 
+		break;
 	case 'circle_icon':
 		 GX_AddNewSVGObject('ellipse'); 
 		 GX_StartFreeDraw();
