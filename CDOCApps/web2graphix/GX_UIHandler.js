@@ -1423,9 +1423,11 @@ function GX_MenuItemShow(menuid, itemText)
 	 case 'move_bottom':
 		 GX_MoveObjectZIndex(gCurrentObjectSelected, 'BOTTOM'); 
 		 break;
-	 case 'layer':
-		 GX_AddNewSVGObject('LAYER'); 
-		 break; 
+	/* case 'layer':
+		 GX_AddNewSVGObject('GROUP'); 
+		 break;
+		 */
+		 
 	 case 'removenode':
 		 GX_RemoveObject(gCurrentObjectSelected); 
 		 break; 
@@ -1556,7 +1558,7 @@ function GX_SVGFileDlgNameOK()
       	 GX_updateTreeWidget(xmlstr);  
 	GX_InitializeDocument(svgfname); 
 	WAL_expandAllTreeItems(gTreeNodeID, true);
-	WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASELAYER'); 
+	WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP'); 
 	
 	/*gFileNameTitleNode.innerHTML = gInitTitle + svgfname;  
 	gFileNameHolder.innerHTML = svgfname;
@@ -1589,7 +1591,7 @@ function GX_LBOKHandler(){
      if(xmlstr)
       	 GX_updateTreeWidget(xmlstr);   
      WAL_expandAllTreeItems(gTreeNodeID, true);
-     WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASELAYER');
+     WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
     
 }
 
@@ -1777,14 +1779,14 @@ function GX_AddNewSVGObject(Type)
 	}
 	
 	var currNodeType = gCurrentTreeNode.getAttribute('type');
-	if ( (Type != 'LAYER') && (currNodeType != 'LAYER') )
+	if ( (Type != 'GROUP') && (currNodeType != 'GROUP') )
 	{
 		WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+gCurrLayerNode.id); 
 		currNodeType = gCurrentTreeNode.getAttribute('type');
 	}	
 	
 	
-	if(objectType == 'LAYER')
+	if(objectType == 'GROUP')
 	{
 		parentID = 'SVGOBJECTCONTAINER'; 
 		WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+parentID);
@@ -1806,10 +1808,10 @@ function GX_AddNewSVGObject(Type)
 		 if(!newNode)
 			 return ; 
 		  var nodename  = newNode.nodeName.toUpperCase(); 
-		  if(objectType == 'LAYER')
+		  if(objectType == 'GROUP')
 		  {
-			  myobjType = 'LAYER';
-			  nodeTitle = 'Layer'; 
+			  myobjType = 'GROUP';
+			  nodeTitle = 'Group'; 
 		  }			  
 		  else
 		  {
@@ -1950,7 +1952,7 @@ function GX_SetSelection(objNode, bFlag) {
     if ((!gCurrentObjectSelected) || (gCurrentObjectSelected != node)) {  
 	   	if(gCurrentObjectSelected)
 	   	{
-	   		if(nodeClass == 'LAYER')
+	   		if(nodeClass == 'GROUP')
 	   		{
 	   			gCurrLayerNode = node; //i.e. l;ayer node is set here 
 	   			GX_UpdateLayerChildElements(gCurrentObjectSelected); 
@@ -2035,7 +2037,7 @@ function GX_SetSelection(objNode, bFlag) {
     	
     	
     }
-    else if(nodeClass == 'LAYER')
+    else if(nodeClass == 'GROUP')
     {
     	var layerDim = GX_GetLayerDimension(node.id);
     	x = layerDim.x; 
@@ -2090,7 +2092,7 @@ function GX_SetSelection(objNode, bFlag) {
     	
     	
     
-    if(nodeClass == 'LAYER')
+    if(nodeClass == 'GROUP')
     {    	
     	GX_UpdatePropertyOnUI('DIMENSION',layerDim );    	
     }    	  
@@ -2206,14 +2208,14 @@ function OnSVGParentClick(evt)
 
 function GX_ResetAllSelections()
 {
-	 var JQSel = '.LAYER'; 
+	 var JQSel = '.GROUP'; 
 	 $(JQSel).removeAttr('opacity'); 
 	//restore the animation object
 	 
 	if(gCurrentObjectSelected)
 	{
 		var nodeclass = gCurrentObjectSelected.classList[0] ;//('class'); 
-    	if(nodeclass == 'LAYER')
+    	if(nodeclass == 'GROUP')
     		GX_UpdateLayerChildElements(gCurrentObjectSelected); 
     	
 		GX_SetSelection(gCurrentObjectSelected, false);	 
@@ -2456,7 +2458,7 @@ function OnObjectMouseDown(evt) {
 		gCurrSelectedObjectDim.x = gCurrentObjectSelected.getAttribute('x'); 
 		gCurrSelectedObjectDim.y = gCurrentObjectSelected.getAttribute('y');		
 	}
-	else if(objectType == 'LAYER')
+	else if(objectType == 'GROUP')
 	{
 		gCurrSelectedObjectDim = GX_GetTransformProperty(gCurrentObjectSelected, 'translate'); 
 		//Debug_Message("CurrX=" +gCurrSelectedObjectDim.x +"CuerrY=" +  gCurrSelectedObjectDim.y); 
@@ -2603,7 +2605,7 @@ function OnObjectMove(evt) {
             retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
                       
         }        	
-    	else if(objectType == 'LAYER')
+    	else if(objectType == 'GROUP')
     	{    		
     		newObjDim.x = gCurrSelectedObjectDim.x+relX; 
             newObjDim.y = gCurrSelectedObjectDim.y+relY;       
@@ -2926,7 +2928,7 @@ function GX_TreeItemClick(selectedItem)
 	case 'SVGROOT':
 		GX_ShowSVGRootInterface(nodeDataID); 
 		break;
-	case 'LAYER':
+	case 'GROUP':
 		GX_ShowLayerInterface(nodeDataID); 
 		var itemElemt = WAL_getTreeItemSelection(gTreeNodeID, false);
 		WAL_expandTreeItem(gTreeNodeID,'TM_'+nodeDataID, true);
@@ -2968,7 +2970,7 @@ function GX_TreeHandlerDragEnd(item, dropItem, args, dropPosition, tree)
 		{
 			destParentNode = destParentNode.parentNode; 
 			var currType = destParentNode.getAttribute('type'); 
-			if(currType != 'LAYER')
+			if(currType != 'GROUP')
 				return ; 		
 		}		
 	 }
@@ -2977,7 +2979,7 @@ function GX_TreeHandlerDragEnd(item, dropItem, args, dropPosition, tree)
 		{
 				destParentNode = destParentNode.parentNode; 
 				var currType = destParentNode.getAttribute('type'); 
-				if(currType != 'LAYER')
+				if(currType != 'GROUP')
 					return ; 		
 		}			 
 	 }
@@ -3021,7 +3023,7 @@ function GX_setTreeItemSelection(itemID)
 
 function GX_ShowLayerInterface(layerID)
 {
-	var JQSel = '.LAYER'; 
+	var JQSel = '.GROUP'; 
 	$(JQSel).attr('opacity', gOpacityUnSelect); 
 	JQSel = '#' +  layerID; 
 	$(JQSel).removeAttr('opacity'); 	
@@ -3040,7 +3042,7 @@ function GX_ShowObjectInterface(objectID)
 	var layerNode = currObjNode.parentNode; 
 	var layerID = layerNode.id; 
 	//reduce the opacity of all layers 
-	var JQSel = '.LAYER';
+	var JQSel = '.GROUP';
 	$(JQSel).attr('opacity', gOpacityUnSelect); 
 	//set the opacity of current layer 
 	JQSel= '#' + layerID; 
@@ -3148,7 +3150,7 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 	var shapeType = gNode.classList[1]; 
 	if(transfType == 'translate')
 	{
-		if( (objectType == 'SVG_PATH_OBJECT') || (objectType == 'LAYER') )
+		if( (objectType == 'SVG_PATH_OBJECT') || (objectType == 'GROUP') )
 		{
 			str = 'translate(' + transfDim.x + ','+ transfDim.y +')'; 
 			gTransfArray[0] = str; 
@@ -3994,7 +3996,7 @@ function GX_ToolbarHandler(Node)
 		
 		break; 
 	case 'group_icon':
-		GX_AddNewSVGObject('LAYER'); 
+		GX_AddNewSVGObject('GROUP'); 
 		break;
 	case 'circle_icon':
 		 GX_AddNewSVGObject('ellipse'); 
@@ -4374,7 +4376,7 @@ function GX_SetObjectAttribute(ObjNode, AttrName, AttrValue, bListStore, bUpdate
 				GX_UpdatePropertyOnUI('DIMENSION', AttrValue); 
 			break; 
 		case 'TRANSLATE':
-			//if(nodeClass != 'LAYER')
+			//if(nodeClass != 'GROUP')
 				//return false ; 
 			retVal = GX_SetTransformProperty(ObjNode, 'translate',AttrValue);
 			break;
@@ -4502,7 +4504,7 @@ function GX_GetObjectAttribute(ObjNode, AttrName)
 		   retVal = GX_GetRectObjectDim(ObjNode);
 		break; 
 	case 'TRANSLATE':
-		if(nodeClass != 'LAYER')
+		if(nodeClass != 'GROUP')
 			return false ; 
 		retVal = GX_GetTransformProperty(ObjNode, 'translate');
 		break;
