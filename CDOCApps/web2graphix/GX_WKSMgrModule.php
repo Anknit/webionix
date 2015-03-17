@@ -322,7 +322,7 @@ function GX_WKS_CreateSVGFile(&$respData)
 							
 					  ]]>
 	          </script>
-		<g id="BASELAYER" class="LAYER" transform="translate(0,0) scale(1,1) rotate(0 0,0)"></g></svg>' ; 
+		<g id="BASEGROUP" class="GROUP" transform="translate(0,0) scale(1,1) rotate(0 0,0)"></g></svg>' ; 
 		$retval = fwrite($fh, $prologstr);
 
 		if($retval == false){
@@ -488,14 +488,14 @@ function GX_WKS_GetSVGXMLMetaData(&$respData)
 		$nodeName = $childNode->nodeName; 
 		if($nodeName == 'g')
 		{
-			$type = 'LAYER';
+			$type = 'GROUP';
 			$class= "TREEMENU" ;
 			$level="2";
 			$dataid=$childNode->getAttribute('id');
 			$id = 'TM_' . $dataid;
-			$datatype="LAYER" ;
+			$datatype="GROUP" ;
 			$name=$dataid;
-			$nodetitle = 'Layer:'. $name;			
+			$nodetitle = 'Group:'. $name;			
 			$attrdefinition = array("id"=>$id, "type"=>$type,"class"=>$class,"level"=>$level, "dataid"=>$dataid, "data-type"=>$datatype, "name"=>$name);
 			$retval  = GX_COMMON_AddXMLElement($XMLMetaDOM, $xmlfilename, "li", $nodetitle, 'TM_'.$parentID, $attrdefinition, true);
 			if($retval != true)
