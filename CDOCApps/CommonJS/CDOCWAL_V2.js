@@ -950,18 +950,13 @@ added . God knows why .
     	        		var srcnode = item.element;
     	        		var destnode = dropItem.element; 
     	        		var srcType = srcnode.getAttribute('type');
-    	        		var destType = destnode.getAttribute('type');     	        		
-    	        		if( (dropPosition == 'before') || (dropPosition == 'after'))
-    	        	    {
-    	        			
-    	        			if(! (((srcType == 'OBJECT') && (destType == 'OBJECT')) 
-    	        					|| ((srcType == 'OBJECT') && (destType == 'LAYER'))) )
-    	        			{
-    	        				return false; 
-    	        			}
-    	        	    }  
-    	        	
+    	        		var destType = destnode.getAttribute('type');     
+    	        		/*if(dropPosition != 'inside'){
+    	        			Debug_Message('Not Inside');
+    	        			return ; 
+    	        		}*/
     	        		
+    	        		  	        		
     	        		setTimeout(function(){
     	        			var expr = fnDropHandler + "(item, dropItem, args, dropPosition, tree)";
     	        			eval(expr);
