@@ -52,6 +52,12 @@ function GX_OBJ_ProcessRequest($reqid, &$respdata )
 		$retval = GX_TEXT_OBJ_UpdateData($respdata);
 		return $retval;
 	}
+	else if($reqid == '312')
+	{
+		$retval = GX_OBJ_MoveToGroup($respdata);
+		return $retval;
+	}
+	
 }
 	
 /*
@@ -91,8 +97,8 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT ELLIPSE ROTATE,0', 'cx'=> '0','cy'=>'0', 'rx'=>'0', 'ry'=>'0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'opacity'=>'1.0');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'ellipse',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
-		case 'LAYER':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'LAYER', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)');
+		case 'GROUP':
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'GROUP', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'g',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;		
 		case 'LINE_PATH':
@@ -330,6 +336,58 @@ function GX_OBJ_MoveZIndex(&$respdata)
 	$respdata = "OK"; 
 	return $retval; 
 }
+
+function GX_OBJ_MoveToGroup(&$respdata)
+{
+	if(!isset($_SESSION['svg_xml_dom']))
+		return false;
+	if(!isset($_SESSION['svg_xml_FileName']))
+		return false;
+
+	$_SESSION['svg_xml_dom']->load($_SESSION['svg_xml_FileName']);
+	if (!$_SESSION['svg_xml_dom']->validate())
+	{
+		$respdata = 'FAIL';
+		return false;
+	}
+	
+	parse_str($respdata) ;
+	$objId = $CURROBJECTID;	
+	$destParentID = $DESTPARENTID;
+
+	$currNode = $_SESSION['svg_xml_dom']->getElementById($objId);
+	if(!$currNode)
+	{
+		$respdata = 'FAIL';
+		return false;
+	}
+
+	//NOW CLONE THE CURRENT NODE
+	$cloneCurrNode = $currNode->cloneNode(true);
+
+	//INSETBEFORE PREVIOUS SIBLING NODE
+	$srcparentNode = $currNode->parentNode; //$XMLDOM->documentElement;
+	if(!$srcparentNode)
+		return false;
+	//incase before Node is null which will be incase of last node
+	
+	$destparentNode = 	$_SESSION['svg_xml_dom']->getElementById($destParentID);
+	$retNode = $destparentNode->appendChild($cloneCurrNode);
+	if(!$retNode)
+	{
+		$respdata = 'FAIL';
+		return false;
+	}
+
+	//REMOVE CURRENT NODE
+	$srcparentNode->removeChild($currNode);
+
+	//SAVE THE CURRENT STATE
+	$retval = $_SESSION['svg_xml_dom']->save($_SESSION['svg_xml_FileName']);
+	$respdata = "OK";
+	return $retval;
+}
+
 function GX_OBJ_DeleteObjectx(&$respdata)
 {
 /*	if(!isset($_SESSION['svg_xml_dom']))
@@ -394,7 +452,7 @@ function GX_OBJ_CopyObject(&$respData)
 	parse_str($respData) ;
 	$objIDToCopy  = $OBJECTID; 
 	$newObjId	  = $NEWOBJDID; 
-	$layerID 	  =	$LAYERID;
+	$layerID 	  =	$GROUPID;
 
 	$respData =''; 
 	$ObjNode = $_SESSION['svg_xml_dom']->getElementById($objIDToCopy);
