@@ -85,6 +85,11 @@ function GXRDE_MoveZIndex(currobjID, beforeID,befParentID)
 	var reqbody = "&CURROBJECTID=" + currobjID + "&BEFOREID=" + beforeID + '&BEFOREPARENTID='+ befParentID;
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "306", reqbody);	
 }
+
+function GXRDE_MoveObjectToGroup(objectID,destparentID ){
+	var reqbody = "&CURROBJECTID=" + objectID + '&DESTPARENTID='+ destparentID;
+	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "312", reqbody);
+}
 function GXRDE_GetSVGMetaXML(svgFname)
 {	
 	var respstring = AJX_RequestWithReponseData("text", "WKSM", "106", svgFname);
@@ -100,9 +105,9 @@ function GXRDE_DeleteObject(currobjID)
 	var reqbody = "&CURROBJECTID=" + currobjID;
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "307", reqbody);	
 }
-function GXRDE_CopyShapeObject(objectID, layerID, newID)
+function GXRDE_CopyShapeObject(objectID, groupID, newID)
 {
-	var reqbody = "&OBJECTID=" + objectID + "&NEWOBJDID=" + newID + "&LAYERID=" + layerID ;
+	var reqbody = "&OBJECTID=" + objectID + "&NEWOBJDID=" + newID + "&GROUPID=" + groupID ;
 	var respstring = AJX_RequestWithReponseData("text", "OBJM", "308", reqbody);
 	if(respstring)
 		return respstring;
