@@ -322,7 +322,7 @@ function GX_WKS_CreateSVGFile(&$respData)
 							
 					  ]]>
 	          </script>
-		<g id="BASEGROUP" class="GROUP" transform="translate(0,0) scale(1,1) rotate(0 0,0)"></g></svg>' ; 
+		<g id="BASEGROUP" class="GROUP BaseGroup" transform="translate(0,0) scale(1,1) rotate(0 0,0)"></g></svg>' ; 
 		$retval = fwrite($fh, $prologstr);
 
 		if($retval == false){
@@ -494,7 +494,12 @@ function GX_WKS_GetSVGXMLMetaData(&$respData)
 			$dataid=$childNode->getAttribute('id');
 			$id = 'TM_' . $dataid;
 			$datatype="GROUP" ;
-			$name=$dataid;
+			$name = $childNode->getAttribute('class');
+			
+			$strarr = explode(" ", $name);
+			if($strarr[1])
+				$name=$strarr[1];
+			
 			$nodetitle = 'Group:'. $name;			
 			$attrdefinition = array("id"=>$id, "type"=>$type,"class"=>$class,"level"=>$level, "dataid"=>$dataid, "data-type"=>$datatype, "name"=>$name);
 			$retval  = GX_COMMON_AddXMLElement($XMLMetaDOM, $xmlfilename, "li", $nodetitle, 'TM_'.$parentID, $attrdefinition, true);
