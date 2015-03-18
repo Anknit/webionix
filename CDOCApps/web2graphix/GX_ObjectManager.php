@@ -57,7 +57,11 @@ function GX_OBJ_ProcessRequest($reqid, &$respdata )
 		$retval = GX_OBJ_MoveToGroup($respdata);
 		return $retval;
 	}
-	
+	else if($reqid == '313')
+	{
+		$retval = GX_UpdateGroupName($respdata);
+		return $retval;
+	}
 }
 	
 /*
@@ -79,7 +83,11 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 		$nSides = $NUMSIDES;
 		$length = $CIRCRADIUS;
 	}
-	
+	if($OBJECTTYPE == 'GROUP')
+	{
+		$groupName = $NAME; 
+	}
+		
 	
 	//create the new Node here 
 	//then add it to the SVG file at the appropriate parent 
@@ -98,7 +106,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'ellipse',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'GROUP':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'GROUP', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'GROUP '. $groupName, 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'g',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;		
 		case 'LINE_PATH':
@@ -454,6 +462,7 @@ function GX_OBJ_CopyObject(&$respData)
 	$newObjId	  = $NEWOBJDID; 
 	$layerID 	  =	$GROUPID;
 
+	
 	$respData =''; 
 	$ObjNode = $_SESSION['svg_xml_dom']->getElementById($objIDToCopy);
 	if(!$ObjNode)
@@ -654,4 +663,24 @@ function GX_TEXT_OBJ_UpdateData(&$respdata)
 	return true; 
 }
 
+
+function GX_UpdateGroupName(&$respData){
+	parse_str($respData);	
+	$groupID   = strtoupper($GROUPID);
+	$name     = $NAME;
+	
+	$SVGDom = $_SESSION['svg_xml_dom'];
+	$SVGFileName = $_SESSION['svg_xml_FileName'];	
+	
+	$attrname	   = 'class';
+	$attrval       = 'GROUP '.$name;
+	$attrdefinition[$attrname]= $attrval;
+	
+	$retval = GX_COMMON_UpdateSVGAttributes($SVGDom, $SVGFileName, $groupID, $attrdefinition);
+	if($retval == true)
+		$respData = 'OK';
+	else
+		$respData = 'FAILS';
+	
+}
 ?>
