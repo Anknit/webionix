@@ -68,6 +68,21 @@ function GXRDE_addNewSVGObject(objectID, parentID, objectType)
 	else
 		return 'ERROR';	
 }
+function GXRDE_addNewSVGGroupObject(objectID, parentID, objectType, name)
+{
+	var reqbody = "&OBJECTTYPE=" + objectType + "&OBJECTID=" + objectID + "&REFID=" + parentID +'&NAME=' + name;
+	var respstring = AJX_RequestWithReponseData("text", "OBJM", "301", reqbody);
+	if(respstring)
+		return respstring;
+	else
+		return 'ERROR';	
+}
+
+function GXRDE_updateGroupName(groupID, groupName)
+{		
+	var reqbody  = "&GROUPID=" + groupID + "&NAME=" + groupName ;	
+	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "313", reqbody);	
+}
 
 function GXRDE_addNewSVGPolygonObject(objectID, parentID, objectType, numSides, nLength)
 {
@@ -143,6 +158,7 @@ function GXRDE_updateAnimationObject(animID, attrArray)
 	}	
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "310", reqbody);	
 }
+
 
 function GXRDE_updateTextObjectData(objID, string)
 {	
