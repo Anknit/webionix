@@ -34,6 +34,7 @@ var gTreeWidgetID = 'node_panel';
 var gTreeNodeID = 'node_container'; 
 var gSVGFileOpenDlg = "svgfileopendlg"; 
 var gSVGFileNameDlgID = 'newSVGFileNameDlg'; 
+var gSVGGroupNameDlgID ='newGroupNameDlg'; 
 var gSVGFileDeleteDlg = "svgfiledeletedlg"; 
 var gSVGDimensionDlg = 'svgdimensiondlg'; 
 var gPolyInputDlg = 'polygonipdlg';
@@ -1158,6 +1159,10 @@ function GX_Initialize()
     WAL_createWindow(gSVGFileOpenDlg,"Asset List", true, '282', '350', false,	true, false, false, false, "", 'SVGFO_LB_okbtn', 'SVGFO_LB_cancelbtn');
     WAL_createModalWindow(gSVGFileNameDlgID, '250', '150', 'pageOK', 'pageCancel');
     
+    //create group name dialog
+    WAL_createModalWindow(gSVGGroupNameDlgID, '250', '150', 'groupOK', 'groupCancel');
+    
+    
     WAL_createListBox('svgfiledeletelistbox', '270', '250', "GX_LBItemsSelectHandler");
  	WAL_createButton('SVGFO_LB_deletebtn', '', '60', '24', true); 	
     WAL_createWindow(gSVGFileDeleteDlg,"Asset List", true, '282', '350', false,	true, false, false, false, "", '', 'SVGFD_LB_cancelbtn');
@@ -1558,12 +1563,10 @@ function GX_SVGFileDlgNameOK()
       	 GX_updateTreeWidget(xmlstr);  
 	GX_InitializeDocument(svgfname); 
 	WAL_expandAllTreeItems(gTreeNodeID, true);
-	WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP'); 
-	
-	/*gFileNameTitleNode.innerHTML = gInitTitle + svgfname;  
-	gFileNameHolder.innerHTML = svgfname;
-	GX_updateEditAttributes();*/  
+	WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');	
 }
+
+
 
 function GX_LBOKHandler(){
 	 var myitem = WAL_ListBoxGetSelectedItem('svgfileopenlistbox'); 
@@ -1757,7 +1760,7 @@ function GX_AddNewSVGNodeFromXMLString(objXMLStr)
 	return true;
 }
 
-function GX_AddNewSVGObject(Type)
+function GX_AddNewSVGObject(Type, name)
 {
 	//generate a unique ID 
 	var parentID; 
@@ -1796,7 +1799,10 @@ function GX_AddNewSVGObject(Type)
 	
 	if(objectType == 'POLYGON_PATH')
 		retval = GXRDE_addNewSVGPolygonObject(ObjID, parentID, objectType, gnPolygonSides, gPolygonLength); 
-	else
+	else if(objectType == 'GROUP'){
+		retval = GXRDE_addNewSVGGroupObject(ObjID, parentID, objectType, name); 		
+	}
+	else		
 		retval = GXRDE_addNewSVGObject(ObjID, parentID, objectType);
 	
 	var myobjType; 
@@ -3996,28 +4002,38 @@ function GX_ToolbarHandler(Node)
 		
 		break; 
 	case 'group_icon':
-		GX_AddNewSVGObject('GROUP'); 
+		//GX_AddNewSVGObject('GROUP'); 
+		var JQSel = "#" + "groupNameIP";	
+		if( (gCurrentObjectSelected) && (gCurrentObjectSelected.classList[0] == 'GROUP')
+				&&(gCurrentObjectSelected.id !='BASEGROUP') )
+		{
+			var name = gCurrentObjectSelected.classList[1]; 
+			$(JQSel).val(name);
+		}
+		else
+			$(JQSel).val("");				
+		 WAL_showModalWindow(gSVGGroupNameDlgID,"GX_SVGGroupDlgNameOK", "" );	
 		break;
 	case 'circle_icon':
-		 GX_AddNewSVGObject('ellipse'); 
+		 GX_AddNewSVGObject('ellipse',''); 
 		 GX_StartFreeDraw();
 		break; 
 	case 'square_icon':
-		 GX_AddNewSVGObject('rectangle'); 
+		 GX_AddNewSVGObject('rectangle',''); 
 		 GX_StartFreeDraw();
 		break; 
 	case 'line_icon':
-		 GX_AddNewSVGObject('line_path'); 
+		 GX_AddNewSVGObject('line_path',''); 
 		 GX_StartFreeDraw();
 		break;
 	case 'polygon_icon':
 		WAL_showModalWindow(gPolyInputDlg,"GX_PolyInputDlgOK", "" );
 		break; 
 	case 'text_icon':
-		GX_AddNewSVGObject('text'); 
+		GX_AddNewSVGObject('text',''); 
 		break; 
 	case 'freehand_icon':
-		GX_AddNewSVGObject('freedraw_path'); 
+		GX_AddNewSVGObject('freedraw_path',''); 
 		GX_StartFreeDraw();
 		break; 
 		
@@ -5018,7 +5034,7 @@ function GX_DDLHandler(Node, value)
 			var drawType = 'cbezier_path';
 		else if(value =='Elliptic' )
 			var drawType = 'cbezier_path';	
-		GX_AddNewSVGObject(drawType); 
+		GX_AddNewSVGObject(drawType,''); 
 		GX_StartFreeDraw();
 		return; 
 		
@@ -5064,7 +5080,7 @@ function GX_DDLHandler(Node, value)
 		}
 		else if(value == 'New:Radial')
 		{
-		  var gradID = GX_AddNewSVGObject('RADIAL_GRADIENT');	
+		  var gradID = GX_AddNewSVGObject('RADIAL_GRADIENT','');	
 		  GX_ShowGradWindow(gradID, 'RADIAL_GRAD'); 		 
 		}
 		else
@@ -5570,7 +5586,7 @@ function GX_PolyInputDlgOK()
 	var Length = WAL_getMaskedInputValue('polyLengthIP');
 	gnPolygonSides = nSides;
 	gPolygonLength = Length; 
-	GX_AddNewSVGObject('polygon_path'); 
+	GX_AddNewSVGObject('polygon_path',''); 
 }
 
 function GX_StartFreeDraw()
@@ -7240,4 +7256,57 @@ function OnMenuCBChange(event){
 	default:
 		break; 
 	}	
+}
+
+function GX_SVGGroupDlgNameOK()
+{
+	var JQSel = "#" + "groupNameIP";	
+	var svgGroupname  = $(JQSel).val();
+    if(!svgGroupname)
+    {
+    	Debug_Message("Please Enter a Valid Name ");
+    	$(JQSel).val("");
+    	WAL_showModalWindow(gSVGGroupNameDlgID,"GX_SVGGroupDlgNameOK", "" );
+    	return; 
+    }
+    var bretval = IsNameValid(svgGroupname); 
+    if(bretval == false)
+    {
+    	Debug_Message("Enter a Name without any Blank"); 
+    	$(JQSel).val("");
+    	WAL_showModalWindow(gSVGGroupNameDlgID,"GX_SVGGroupDlgNameOK", "" );
+    	return;     	
+    }
+    if( (gCurrentObjectSelected) && (gCurrentObjectSelected.classList[0] == 'GROUP')
+    		&& (gCurrentObjectSelected.id != 'BASEGROUP') ){
+    	 GXRDE_updateGroupName(gCurrentObjectSelected.id, svgGroupname);    
+    	 var xmlstr = GXRDE_GetSVGMetaXML(gSVGFilename);    
+         if(xmlstr)
+          	 GX_updateTreeWidget(xmlstr);   
+         var nodeID = 'TM_' + gCurrentObjectSelected.id; 
+         retval  = GX_setTreeItemSelection(nodeID);	 
+    }
+    else
+    	GX_AddNewSVGObject('GROUP', svgGroupname); 
+   
+  /*  GX_SetSelection(gCurrentObjectSelected, false);
+   	retval = GXRDE_addNewSVGFile(svgfname);	
+   	if(retval == "ALREADY_EXISTS")
+   	{
+   		Debug_Message("This File Name Already Exists");
+   		$(JQSel).val("");
+    	WAL_showModalWindow(gSVGFileNameDlgID,"GX_SVGFileDlgNameOK", "" );
+    	return; 
+   	}
+   	GX_CloseSVGFile(); 
+	var dataNode = document.getElementById('objectcontainer');
+	dataNode.innerHTML += retval;
+	 var xmlstr = GXRDE_GetSVGMetaXML(svgfname);    
+     if(xmlstr)
+      	 GX_updateTreeWidget(xmlstr);  
+	GX_InitializeDocument(svgfname); 
+	WAL_expandAllTreeItems(gTreeNodeID, true);
+	WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
+	*/
+    
 }
