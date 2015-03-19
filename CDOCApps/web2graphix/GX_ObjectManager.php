@@ -360,36 +360,38 @@ function GX_OBJ_MoveToGroup(&$respdata)
 	}
 	
 	parse_str($respdata) ;
-	$objId = $CURROBJECTID;	
-	$destParentID = $DESTPARENTID;
+	$groupId = $GROUPID;	
+	$arrLen= $ARRAY_LENGTH;
 
-	$currNode = $_SESSION['svg_xml_dom']->getElementById($objId);
-	if(!$currNode)
-	{
-		$respdata = 'FAIL';
-		return false;
-	}
+	for($k=0; $k < $arrLen; $k++){		
+		
+		//$objID = $OBJECTID[$k];		
+		$currNode = $_SESSION['svg_xml_dom']->getElementById($OBJECTID[$k]);
+		if(!$currNode)
+		{
+			$respdata = 'FAIL';
+			return false;
+		}
 
-	//NOW CLONE THE CURRENT NODE
-	$cloneCurrNode = $currNode->cloneNode(true);
-
-	//INSETBEFORE PREVIOUS SIBLING NODE
-	$srcparentNode = $currNode->parentNode; //$XMLDOM->documentElement;
-	if(!$srcparentNode)
-		return false;
-	//incase before Node is null which will be incase of last node
+		//NOW CLONE THE CURRENT NODE
+		$cloneCurrNode = $currNode->cloneNode(true);
 	
-	$destparentNode = 	$_SESSION['svg_xml_dom']->getElementById($destParentID);
-	$retNode = $destparentNode->appendChild($cloneCurrNode);
-	if(!$retNode)
-	{
-		$respdata = 'FAIL';
-		return false;
+		//INSETBEFORE PREVIOUS SIBLING NODE
+		$srcparentNode = $currNode->parentNode; //$XMLDOM->documentElement;
+		if(!$srcparentNode)
+			return false;
+		//incase before Node is null which will be incase of last node
+	
+		$destparentNode = 	$_SESSION['svg_xml_dom']->getElementById($groupId);
+		$retNode = $destparentNode->appendChild($cloneCurrNode);
+		if(!$retNode)
+		{
+			$respdata = 'FAIL';
+			return false;	
+		}
+		//REMOVE CURRENT NODE
+		$srcparentNode->removeChild($currNode);
 	}
-
-	//REMOVE CURRENT NODE
-	$srcparentNode->removeChild($currNode);
-
 	//SAVE THE CURRENT STATE
 	$retval = $_SESSION['svg_xml_dom']->save($_SESSION['svg_xml_FileName']);
 	$respdata = "OK";
