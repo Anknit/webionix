@@ -2238,6 +2238,12 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
              eval(expr);
          }
      });
+     
+     $(JQSel).on('shown', function(event){    	 
+    	 var toolSel = '#'+gCurrTooltipID; 
+         $(toolSel).jqxTooltip('close'); 
+     });
+    
  }
 
 //one will need to assign ID to the menu items which needs to be toogeld between hide and show 
@@ -3173,7 +3179,7 @@ function WAL_createContextMenu(ID, HandlerMenuItemClick)
 	   var contextMenu = $(JQSel).jqxMenu({ width: '120px', height: '140px', autoOpenPopup: false, mode: 'popup',theme: gTheme});
     // open the context menu when the user presses the mouse right button.
     var menuNode =  document.getElementById(ID); 
-    var parSel = '#' + menuNode.parentNode.previousElementSibling.id;            
+    var parSel = '#' + menuNode.parentNode.parentNode.id; //'#' + menuNode.parentNode.previousElementSibling.id;            
     $(parSel).on('mousedown', function (event) {
         var rightClick = isRightClick(event) || $.jqx.mobile.isTouchDevice();
         if (rightClick) {
@@ -3183,12 +3189,11 @@ function WAL_createContextMenu(ID, HandlerMenuItemClick)
             return false;
         }              
     }); 
-    
+    /*
     $(document).on('contextmenu', function (e) {
         return false;
-    }); 
-    
-   
+    });    
+    */
     
     $(JQSel).on('itemclick', function(event) {
         var args = event.args;
@@ -3199,7 +3204,7 @@ function WAL_createContextMenu(ID, HandlerMenuItemClick)
         if (state == true)
             return;
         if (HandlerMenuItemClick) {
-            var expr = HandlerMenuItemClick + "(event)";
+            var expr = HandlerMenuItemClick + "(menuid)";
             eval(expr);
         }
     });
