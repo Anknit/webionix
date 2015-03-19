@@ -2885,7 +2885,9 @@ function GX_MoveObjectToGroup(objectID, destparentID){
 	srcparentNode.removeChild(currNode); 
 	var retNode = destparentNode.appendChild(clonedNode);		
 	GX_SetSelection(retNode, true);
-	GXRDE_MoveObjectToGroup(objectID,destparentID );
+	var objectIDArr = [];
+	objectIDArr.push(objectID); 
+	GXRDE_MoveObjectToGroup(destparentID, objectIDArr);
 	//GXRDE_MoveZIndex(currobjID, beforeID, beforeParentID);
 
 }
