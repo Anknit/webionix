@@ -3768,6 +3768,8 @@ function GX_InitializeToolbar()
     document.getElementById('editortooltip_cb').checked = true;
     document.getElementById('showgrid_cb').checked = true;
         
+    WAL_createContextMenu('contextmenu', 'GX_ContextMenuClick'); 
+    
         
 }
 
@@ -7310,3 +7312,22 @@ function GX_SVGGroupDlgNameOK()
 	*/
     
 }
+
+function GX_ContextMenuClick(menuID){
+	
+	var menuItemID = menuID ; //event.target.id;	
+	switch(menuItemID)
+	{
+	case 'groupmenu':		
+		break; 
+	case 'copymenu':
+		break; 
+	case 'pastemenu':
+		break; 
+	default:
+		break; 
+	}
+	
+	Debug_Message('clicked= ' + menuItemID); 
+}
+
