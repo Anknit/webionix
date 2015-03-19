@@ -101,10 +101,18 @@ function GXRDE_MoveZIndex(currobjID, beforeID,befParentID)
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "306", reqbody);	
 }
 
-function GXRDE_MoveObjectToGroup(objectID,destparentID ){
-	var reqbody = "&CURROBJECTID=" + objectID + '&DESTPARENTID='+ destparentID;
-	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "312", reqbody);
+function GXRDE_MoveObjectToGroup(groupID,objectIDArray ){
+	
+	var arrLen = objectIDArray.length; 
+	var reqbody = "&GROUPID=" + groupID + '&ARRAY_LENGTH='+ arrLen;
+	for(var j=0; j < arrLen; j++)
+	{
+		var attrstr = "&OBJECTID[]=" +  objectIDArray[j]; 
+		reqbody += attrstr; 			
+	}
+	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "312", reqbody);	
 }
+
 function GXRDE_GetSVGMetaXML(svgFname)
 {	
 	var respstring = AJX_RequestWithReponseData("text", "WKSM", "106", svgFname);
