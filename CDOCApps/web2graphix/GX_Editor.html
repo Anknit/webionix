@@ -28,7 +28,7 @@
   </script> 
   
 </head>
-<body onscroll="OnWindowScroll(event)">
+<body id='mybody' onscroll="OnWindowScroll(event)">
 	  <!-- #e0e9f5, #cde6f9 -->
     <div id="splitterContainer" width="600px" height="600px" style='border:none;' > 
   	    
@@ -666,6 +666,17 @@
   <div id='widgettooltip' style='display:none'></div>
    <div id='selectortooltip' style='display:none'>Hello World</div>
 	
-  
+      
+	<div id='jqxContextMenuWidget' style='vertical-align: middle; text-align: center; background: #eee;
+            height: 400px; width: 400px;'>
+            <div id='contextmenu'>
+                <ul>
+			       <li id="groupmenu"> <a href="#Group">Group</a></li>
+			       <li id="copymenu"> <a href="#Copy">Copy</a></li>
+			       <li id="pastemenu"> <a href="#Paste">Paste</a></li>
+			       <li id="deletemenu"> <a href="#Delete">Delete</a></li>
+	     		</ul>
+              </div>
+     </div>
 </body>
 </html>
