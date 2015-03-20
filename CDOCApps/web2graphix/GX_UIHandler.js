@@ -158,7 +158,7 @@ var gTE_ButtonWidth = '20';
 var gTE_ButtonHeight='18'; 
 var gTE_DDLHeight = '24' ; //'26px'
 var gTE_EditWidth = "35"
-	
+var gGroupList=[]; 
 /*var ClientX = new Number(0);
 var ClientY = new Number(0);
 var newObjDim = new sDimension();
@@ -2887,9 +2887,7 @@ function GX_MoveObjectToGroup(objectID, destparentID){
 	GX_SetSelection(retNode, true);
 	var objectIDArr = [];
 	objectIDArr.push(objectID); 
-	GXRDE_MoveObjectToGroup(destparentID, objectIDArr);
-	//GXRDE_MoveZIndex(currobjID, beforeID, beforeParentID);
-
+	//GXRDE_MoveObjectToGroup(destparentID, objectIDArr);
 }
 
 function GX_updateTreeWidget(string)
@@ -2969,9 +2967,7 @@ function GX_TreeHandlerDragEnd(item, dropItem, args, dropPosition, tree)
 		 return; 
 	 
 	 srcNode = document.getElementById(objectID);
-	 var destParentNode = document.getElementById(dropNodeID);
-	 //var destParentNode = destNode.parentNode; 
-	
+	 var destParentNode = document.getElementById(dropNodeID);	
 	 if(dropPosition == 'after')
 	 {
 		if(dropType == 'OBJECT')
@@ -2991,21 +2987,16 @@ function GX_TreeHandlerDragEnd(item, dropItem, args, dropPosition, tree)
 					return ; 		
 		}			 
 	 }
-	 GX_MoveObjectToGroup(objectID, destParentNode.id); 
-	 var xmlstr = GXRDE_GetSVGMetaXML(gSVGFilename);    
+	 GX_MoveObjectToGroup(objectID, destParentNode.id);
+	 var objArr = []; 
+	 objArr.push(objectID); 
+	 GXRDE_MoveObjectToGroup(destParentNode.id, objArr);
+	 GX_UpdateTreeWidget(); 
+	/* var xmlstr = GXRDE_GetSVGMetaXML(gSVGFilename);    
      if(xmlstr)
-      	 GX_updateTreeWidget(xmlstr);   
-     retval  = GX_setTreeItemSelection(nodeID);	 
-	
-	 /*
-	 else if(dropPosition == 'before'){
-		 destNode = destNode.nextSibling;
-	 }
-	 else if(dropPosition == 'inside'){
-		 destNode = destNode.nextSibling;
-	 }
-	 */
+      	 GX_updateTreeWidget(xmlstr);*/
 	 
+     retval  = GX_setTreeItemSelection(nodeID);	
 	 if(dropPosition != 'inside'){
 		 
 		 return ;
@@ -3768,9 +3759,13 @@ function GX_InitializeToolbar()
     ///set the checkbox enu of settings 
     document.getElementById('buttontooltip_cb').checked = true;
     document.getElementById('editortooltip_cb').checked = true;
-    document.getElementById('showgrid_cb').checked = true;
-        
-    WAL_createContextMenu('contextmenu', 'GX_ContextMenuClick'); 
+    document.getElementById('showgrid_cb').checked = true;        
+   
+    WAL_createContextMenu('contextmenu', 'GX_ContextMenuClick');
+    
+    var groupList = ['group1', 'group2', 'group3']; 
+    WAL_createDropdownList('grouptoDDL', '140', '24', false, groupList, "GX_DDLHandler", '80');
+    WAL_createModalWindow('movetoGroupDlg', '250', '150', 'grouptoOK', 'grouptoCancel');
     
         
 }
@@ -7283,10 +7278,13 @@ function GX_SVGGroupDlgNameOK()
     }
     if( (gCurrentObjectSelected) && (gCurrentObjectSelected.classList[0] == 'GROUP')
     		&& (gCurrentObjectSelected.id != 'BASEGROUP') ){
+    	/*
     	 GXRDE_updateGroupName(gCurrentObjectSelected.id, svgGroupname);    
     	 var xmlstr = GXRDE_GetSVGMetaXML(gSVGFilename);    
          if(xmlstr)
-          	 GX_updateTreeWidget(xmlstr);   
+          	 GX_updateTreeWidget(xmlstr);
+          	 */
+    	GX_UpdateTreeWidget(); 
          var nodeID = 'TM_' + gCurrentObjectSelected.id; 
          retval  = GX_setTreeItemSelection(nodeID);	 
     }
@@ -7320,7 +7318,16 @@ function GX_ContextMenuClick(menuID){
 	var menuItemID = menuID ; //event.target.id;	
 	switch(menuItemID)
 	{
-	case 'groupmenu':		
+	case 'groupmenu':
+		if(gbMultiSelection == true){			
+			GX_UpdateGroupList();
+			var mygrpList = GX_GetGroupList('NAME'); 
+			if(gGroupList.length > 0){
+				WAL_UpdateDropDownList('grouptoDDL', mygrpList);
+				WAL_showModalWindow('movetoGroupDlg',"GX_MovetoGroupDlgOK", "" );	
+			}			
+		}
+		
 		break; 
 	case 'copymenu':
 		break; 
@@ -7330,6 +7337,60 @@ function GX_ContextMenuClick(menuID){
 		break; 
 	}
 	
-	Debug_Message('clicked= ' + menuItemID); 
+	//Debug_Message('clicked= ' + menuItemID); 
 }
 
+function GX_MovetoGroupDlgOK(){
+	
+	var groupName = WAL_getDropdownListSelection('grouptoDDL'); 
+	var groupID = GX_GetGroupIDfromList(groupName); 
+	for(var i=0; i <gMultiNodeArray.length; i++)
+		 GX_MoveObjectToGroup(gMultiNodeArray[i], groupID);
+	GXRDE_MoveObjectToGroup(groupID,gMultiNodeArray);
+	GX_UpdateTreeWidget(); 
+}
+
+function GX_UpdateGroupList(){
+	
+	gGroupList=[]; 
+	var JQSel = '.GROUP'; 
+	var size = $(JQSel).size(); 
+    var num = $(JQSel).size();
+ 	var DOMArr = $(JQSel).toArray(); 
+ 	for(var j=0; j <DOMArr.length; j++){
+ 		var groupInfo = [DOMArr[j].id, DOMArr[j].classList[1]]; 
+ 		gGroupList.push(groupInfo); 
+ 	}
+ 	//return groupList;
+}
+
+function GX_GetGroupList(byAttribute){
+	var grouplist=[]; 
+	if(byAttribute == 'NAME'){
+		for(var j=0; j< gGroupList.length; j++){
+			grouplist.push(gGroupList[j][1]); 
+		}
+	}
+	else if(byAttribute == 'ID'){
+		for(var j=0; j< gGroupList.length; j++){
+			grouplist.push(gGroupList[j][0]); 
+		}
+	}	
+	return grouplist;
+}
+
+function GX_GetGroupIDfromList(name){
+	for(var j=0; j <gGroupList.length; j++){
+		if(name == gGroupList[j][1])
+			return gGroupList[j][0]; 
+	}
+	return 0; 
+}
+
+function GX_UpdateTreeWidget(){
+	var xmlstr = GXRDE_GetSVGMetaXML(gSVGFilename);    
+    if(xmlstr)
+     	 GX_updateTreeWidget(xmlstr);  
+    WAL_expandAllTreeItems(gTreeNodeID, true); 
+	
+}
