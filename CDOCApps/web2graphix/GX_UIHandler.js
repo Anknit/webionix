@@ -2426,7 +2426,8 @@ function OnObjectMouseDown(evt) {
 	if(!gCurrentObjectSelected)
 		return ;
 	var objectType; 
-	
+	if(gbContextMenuShow == true)
+		return; 
 	objectType =  gCurrentObjectSelected.classList[0];  	
 	if (!gsvgRootNode)
     {
@@ -2566,7 +2567,9 @@ function OnObjectMove(evt) {
     var retVal=true;
     if(gCurrentObjectSelected)
     	var objectType = gCurrentObjectSelected.classList[0];
-   
+   if(gbContextMenuShow == true){
+	   bMove = false;
+   }
     var ClientX, ClientY; 
     ClientX = new Number(evt.clientX - gClientXOffset); 
     ClientY = new Number(evt.clientY- gClientYOffset);
@@ -2852,7 +2855,7 @@ function GX_MoveObjectNode(currobjID, beforeID, beforeParentID)
 	currNode = document.getElementById(currobjID);
 	if(!currNode)
 	{
-		Debug_Message("Curr Node Null"); 
+		Debug_Message("Curr Node Null");  
 		return ; 
 	}
 	var srcparentNode = currNode.parentNode;
@@ -3759,7 +3762,7 @@ function GX_InitializeToolbar()
     ///set the checkbox enu of settings 
     document.getElementById('buttontooltip_cb').checked = true;
     document.getElementById('editortooltip_cb').checked = true;
-    document.getElementById('showgrid_cb').checked = true;        
+    document.getElementById('showgrid_cb').checked = true;    
    
     WAL_createContextMenu('contextmenu', 'GX_ContextMenuClick');
     
@@ -7326,13 +7329,20 @@ function GX_ContextMenuClick(menuID){
 				WAL_UpdateDropDownList('grouptoDDL', mygrpList);
 				WAL_showModalWindow('movetoGroupDlg',"GX_MovetoGroupDlgOK", "" );	
 			}			
-		}
-		
+		}		
 		break; 
-	case 'copymenu':
-		break; 
-	case 'pastemenu':
-		break; 
+	case 'move_fwd':
+		 GX_MoveObjectZIndex(gCurrentObjectSelected, 'FORWARD'); 
+		 break; 
+	 case 'move_bwd':
+		 GX_MoveObjectZIndex(gCurrentObjectSelected, 'BACKWARD'); 
+		 break; 
+	 case 'move_top':
+		 GX_MoveObjectZIndex(gCurrentObjectSelected, 'TOP'); 
+		 break;
+	 case 'move_bottom':
+		 GX_MoveObjectZIndex(gCurrentObjectSelected, 'BOTTOM'); 
+		 break;
 	default:
 		break; 
 	}
