@@ -301,8 +301,6 @@ function GX_OBJ_MoveZIndex(&$respdata)
 		$respdata = 'FAIL'; 
 		return false;
 	}
-		
-
 	parse_str($respdata) ;
 	$objId = $CURROBJECTID; 
 	$beforId = $BEFOREID; 
@@ -315,10 +313,6 @@ function GX_OBJ_MoveZIndex(&$respdata)
 		return false;
 	}
 		
-
-	//GET THE BEFORE NODE WHERE CURRENT WILL BE INSERTED
-	
-
 	//NOW CLONE THE CURRENT NODE
 	$cloneCurrNode = $currNode->cloneNode(true);
 
@@ -329,7 +323,10 @@ function GX_OBJ_MoveZIndex(&$respdata)
 	//incase before Node is null which will be incase of last node 
 	$beforeNode =  $_SESSION['svg_xml_dom']->getElementById($beforId);
 	$destparentNode = 	$_SESSION['svg_xml_dom']->getElementById($beforeParentID);
-	$retNode = $destparentNode->insertBefore($cloneCurrNode,$beforeNode);
+	if($beforeNode)
+		$retNode = $destparentNode->insertBefore($cloneCurrNode,$beforeNode);
+	else
+		$retNode = $destparentNode->appendChild($cloneCurrNode);
 	if(!$retNode)
 	{
 		$respdata = 'FAIL';
