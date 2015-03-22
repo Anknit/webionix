@@ -2809,7 +2809,17 @@ function GX_MoveObjectZIndex(objNode, Direction)
 	//the current node needs to be moved down 
 	if(Direction == 'FORWARD')
 	{
-		beforeNode = objNode.nextSibling.nextSibling;	
+		if(!objNode.nextSibling.nextSibling)
+			beforeNode =0 ; 
+		else if(!objNode.nextSibling)
+			return;
+		else if(objNode.nextSibling.nextSibling)
+			beforeNode = objNode.nextSibling.nextSibling;	
+		prevNode = objNode.nextSibling; 
+	}
+	else if(Direction == 'TOP')
+	{
+		beforeNode = 0; 	
 		prevNode = objNode.nextSibling; 
 	}
 	else if(Direction == 'BACKWARD')
@@ -2819,15 +2829,12 @@ function GX_MoveObjectZIndex(objNode, Direction)
 			return; 
 		prevNode = objNode.nextSibling; 
 		//means this is a case of first node in the DOM		
-	}		
-	else if(Direction == 'TOP')
-	{
-		beforeNode = 0; 	
-		prevNode = objNode.nextSibling; 
-	}
+	}	
 	else if(Direction == 'BOTTOM')
 	{
 		beforeNode = parentNode.firstElementChild; 	
+		if(beforeNode == objNode)
+			return; 
 		prevNode = objNode.nextSibling; 
 	}
 	var objParam =  new sObjAttrParam();	
@@ -2843,9 +2850,11 @@ function GX_MoveObjectZIndex(objNode, Direction)
 		objParam.prevValue = prevNode.id;
 	else
 		objParam.prevValue = 0; 		
-		
+	GX_SetSelection(objNode, false);
 	EL_AddToEditList(gObjectEditList, gCompactEditList, objParam);
 	GX_MoveObjectNode(objNode.id, objParam.currValue, parentNode.id); 	
+	objNode = document.getElementById(objNode.id);
+	GX_SetSelection(objNode, true);
 	
 }
 
@@ -2862,12 +2871,18 @@ function GX_MoveObjectNode(currobjID, beforeID, beforeParentID)
 	var clonedNode = currNode.cloneNode(true);
 	
 	beforeNode = document.getElementById(beforeID);
-	var destparentNode =document.getElementById(beforeParentID); 
+	var destparentNode = document.getElementById(beforeParentID); 
 	
 	srcparentNode.removeChild(currNode); 
-	var retNode = destparentNode.insertBefore(clonedNode, beforeNode);		
-	GX_SetSelection(retNode, true);
+	if(beforeID)
+		var retNode = destparentNode.insertBefore(clonedNode, beforeNode);	
+	else
+		retNode = destparentNode.appendChild(clonedNode);
+	
 	GXRDE_MoveZIndex(currobjID, beforeID, beforeParentID);
+	GX_UpdateTreeWidget();
+	//GX_SetSelection(retNode, true);
+	
 }
 
 function GX_MoveObjectToGroup(objectID, destparentID){
