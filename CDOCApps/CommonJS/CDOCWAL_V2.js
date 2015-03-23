@@ -52,6 +52,7 @@ var gTooltipHideDelay = 2000;
 var gCurrentTooltipOwnerID = 0; 
 var gCurrTooltipID = 0; 
 var gContextTooltip =  true; 
+var gbContextMenuShow = false; 
 function WAL_Initialize() {
     if(!gTheme)
       gTheme = getTheme();   
@@ -3186,6 +3187,7 @@ function WAL_createContextMenu(ID, HandlerMenuItemClick)
             var scrollTop = $(window).scrollTop();
             var scrollLeft = $(window).scrollLeft();
             contextMenu.jqxMenu('open', parseInt(event.clientX) + 5 + scrollLeft, parseInt(event.clientY) + 5 + scrollTop);
+            gbContextMenuShow = true; 
             return false;
         }              
     }); 
@@ -3200,6 +3202,7 @@ function WAL_createContextMenu(ID, HandlerMenuItemClick)
         var itemtext = $(args).text();
         var menuid = args.getAttribute("id");
         var nodesel = "#" + menuid;
+        gbContextMenuShow = false; 
         var state = $(nodesel).hasClass('jqx-menu-disabled');            
         if (state == true)
             return;
