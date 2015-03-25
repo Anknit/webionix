@@ -622,7 +622,7 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
 sGradientWidget.prototype.OnGradSpreadDDLHandler = function(Node, value) {
 
     var nodeid = Node.id;
-    if (nodeid == 'LinearSpreadDDL') {
+    if (nodeid == 'gradSpreadDDL') {
         GX_SetObjectAttribute(this.GradResourceNode, 'spreadMethod', value, true, false);
     }
 };
@@ -945,8 +945,7 @@ function GX_CreateGradientWidget(wdgtID)
         
         
         WAL_createNumberInput("GradStopYIP", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        var spreadValueDisplay = ['pad', 'reflect', 'repeat'];
-        WAL_createDropdownList('LinearSpreadDDL', '110', '24', false, spreadValueDisplay, "GX_SpreadDDLHandler", '50');
+        
         
         //radial specific 
         WAL_createNumberInput("centerXIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
@@ -980,15 +979,7 @@ function GX_CreateGradientWidget(wdgtID)
         WAL_createButton('apply_Focus', '', '50', 25, true);
         WAL_createButton('animPreviewFocusBtn', '', '60', 25, true);
         
-        WAL_createCheckBox('stop0_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
-        WAL_createNumberInput("stop0_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-      //  WAL_createCheckBox('animateStop_col0', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
-      //  WAL_createDecimalNumberInput("durStopColIP0", '50px', '24', "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
         
-              
-        
-        WAL_createCheckBox('stop1_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
-        WAL_createNumberInput("stop1_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
         WAL_createCheckBox('animateStop_col', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
         WAL_createDecimalNumberInput("durStopColIP", '50px', '24', "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
         WAL_createButton('apply_Stop_Col', '', '50', 25, true);
@@ -3785,7 +3776,8 @@ function GX_InitializeToolbar()
     WAL_createDropdownList('grouptoDDL', '140', '24', false, groupList, "GX_DDLHandler", '80');
     WAL_createModalWindow('movetoGroupDlg', '250', '150', 'grouptoOK', 'grouptoCancel');
     
-        
+     //create the new filwdiget interface
+    GX_CreateFillWidget(); 
 }
 
 function GX_EditBoxValueChange(value, widgetnode)
@@ -4151,6 +4143,7 @@ function GX_ToolbarHandler(Node)
 	//	 break; 
 		 
 	 case 'fill_color_icon':
+		 /*
 		 if(!gCurrentObjectSelected)
 				return ; 
 		 gInitFillValue = gCurrentObjectSelected.getAttribute('fill');
@@ -4167,21 +4160,9 @@ function GX_ToolbarHandler(Node)
 			 gInitFillColor = '#aaaaaa'; 
 		 }
 		 GX_ShowFillColorWidget(); 
-		 /*
-		 var btnNode = document.getElementById('fill_colorbtn'); 
-		 gInitFillValue = gCurrentObjectSelected.getAttribute('fill');
-		 var str = gInitFillValue.substring(0,3); 
-		 if(str != 'url')
-		 {
-			 gInitFillColor = gInitFillValue;			 
-		 }
-		 else
-		 {
-			 gInitFillColor = 'grey'; 
-		 }
-		 btnNode.style.backgroundColor = gInitFillColor;
-		 WAL_showModalWindow('fillcolorDlg','GX_FillColorDlgOK', 'GX_FillColorDlgCancel');
-		 */ 
+		 */
+		 WAL_showModalWindow('fillwidget'); 
+		 
 		 break; 
 		 
 	 case 'bold_icon':
@@ -7417,5 +7398,38 @@ function GX_UpdateTreeWidget(){
     if(xmlstr)
      	 GX_updateTreeWidget(xmlstr);  
     WAL_expandAllTreeItems(gTreeNodeID, true); 
+	
+}
+
+function GX_CreateFillWidget(){
+	 WAL_createModelessWindow('fillwidget', '480', '480', 'fillOK', 'fillCancel');
+	 WAL_CreateTextInput('gradTitleIP', '100', gInputHeight,false, '');
+	 var spreadValueDisplay = ['pad', 'reflect', 'repeat'];
+     WAL_createDropdownList('gradSpreadDDL', '110', '24', false, spreadValueDisplay, "GX_SpreadDDLHandler", '50');
+     WAL_createCheckBox('stop0_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
+     WAL_createNumberInput("stop0_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);       
+     WAL_createCheckBox('stop1_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
+     WAL_createNumberInput("stop1_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
+	 WAL_createTab('fillTabContent', '310', 'GX_GradTabHandler');
+}
+
+function GX_GradTabHandler(tabIndex){
+	
+	//Debug_Message('You clicked Tab=' + tabIndex); 
+	switch(tabIndex)
+	{
+	case 0:
+		 $('#gradparam').hide(); 
+		break; 
+	case 1: 
+		$('#gradparam').show(); 
+		break;
+	case 2:
+		$('#gradparam').show(); 
+		break;
+	default:
+		break; 
+		
+	}
 	
 }
