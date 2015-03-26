@@ -3672,7 +3672,9 @@ function GX_InitializeToolbar()
     
     WAL_createDropdownList('gradlistDDL', '120', '24', false, gradList, "GX_DDLHandler", '50');
     WAL_createCustomButton('edit_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);  
-    WAL_createCustomButton('fill_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
+ 
+    var fillValue = ['Solid','Linear Gradient', 'Radial Gradient']; 
+    WAL_createDropdownListwithButton("fillcolorDDL", '0','0',fillValue, "GX_DDLHandler", '140', '80','fill_color_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);     
    // WAL_createCustomButton('linear_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
    // WAL_createCustomButton('radial_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('delete_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID);    
@@ -4123,7 +4125,7 @@ function GX_ToolbarHandler(Node)
 	 //case 'anim_copy_icon':
 	//	 break; 
 		 
-	 case 'fill_color_icon':
+	/* case 'fill_color_icon':
 		 /*
 		 if(!gCurrentObjectSelected)
 				return ; 
@@ -4140,7 +4142,8 @@ function GX_ToolbarHandler(Node)
 		 {
 			 gInitFillColor = '#aaaaaa'; 
 		 }
-		 GX_ShowFillColorWidget(); 
+		 GX_ShowFillColorWidget();
+		 */  
 		 */
 		 WAL_showModalWindow('fillwidget'); 
 		 
@@ -5096,7 +5099,65 @@ function GX_DDLHandler(Node, value)
 		if(objectType == 'SVG_TEXT_OBJECT')
 			GX_SetObjectAttribute(gCurrentObjectSelected, "font-weight", value, true, false);
 	}
-	
+	else if(wdgtId == 'fillcolorDDL')
+	{
+		if(value == 'Solid'){
+			if(!gCurrentObjectSelected)
+				return ; 
+		 gInitFillValue = gCurrentObjectSelected.getAttribute('fill');
+		 if(gInitFillValue == 'none')
+			 gInitFillValue = '#aaaaaa';
+		 
+		 var str = gInitFillValue.substring(0,3); 
+			 if(str != 'url')
+			 {
+				 gInitFillColor = gInitFillValue;			 
+			 }
+			 else
+			 {
+				 gInitFillColor = '#aaaaaa'; 
+			 }
+			 GX_ShowFillColorWidget();
+		}
+		else if(value == 'Linear Gradient'){
+			 var gradID = GX_AddNewSVGObject('LINEAR_GRADIENT');		
+			 GX_ShowGradWindow(gradID, 'LINEAR_GRAD');		
+			if(!gradID)
+			{
+				Debug_Message("Grad title not Found");
+				return; 
+			}
+			//add it to the list items		
+			if(gCurrentObjectSelected) 
+			{
+				var objectType = gCurrentObjectSelected.classList[0]; 
+				if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
+				{
+					var fillurl = 'url(#' + gradID + ')';				
+					GX_SetObjectAttribute(gCurrentObjectSelected, "fill", fillurl, true, false);				
+				}			
+			}		
+		}
+		else if(value == 'Radial Gradient'){
+			var gradID = GX_AddNewSVGObject('RADIAL_GRADIENT');		
+			 GX_ShowGradWindow(gradID, 'RADIAL_GRAD');		
+			if(!gradID)
+			{
+				Debug_Message("Grad title not Found");
+				return; 
+			}
+			//add it to the list items		
+			if(gCurrentObjectSelected) 
+			{
+				var objectType = gCurrentObjectSelected.classList[0]; 
+				if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
+				{
+					var fillurl = 'url(#' + gradID + ')';				
+					GX_SetObjectAttribute(gCurrentObjectSelected, "fill", fillurl, true, false);				
+				}			
+			}	
+		}
+	}
 	
 	
 }
