@@ -414,14 +414,7 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
         value = Math.round((value * gGradHeight)/100); 
         circNode.setAttribute('cy', value);        
         centerNode.setAttribute('cy', value);
-        radlineNode.setAttribute('y1', value); 
-        
-        
-                
-          
-       // 'RG_RADIUS_END_POINT'
-       // 'RG_FOCUS_POINT'  
-        
+        radlineNode.setAttribute('y1', value);         
     }
     
         
@@ -472,11 +465,7 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
             objProp =  gradProp.gradAnimList['stop-color'+index]; 
             if(objProp)
             {
-            	WAL_setCheckBoxValue('animateStop_col', objProp.bAnimate);   
-            	//var btnNode =  document.getElementById('stop_color_from' + index); 
-            	//btnNode.style.backgroundColor = objProp.fromValue;
-            	//btnNode =  document.getElementById('stop_color_to' + index); 
-            	//btnNode.style.backgroundColor = objProp.toValue;
+            	WAL_setCheckBoxValue('animateStop_col', objProp.bAnimate);             	
             	var durIPID= 'durStopColIP'; 
                 WAL_setNumberInputValue(durIPID, objProp.duration, false);
             }            
@@ -813,17 +802,9 @@ sGradientWidget.prototype.getGradientProperty = function() {
                     stopvalue.bFlag = true;
                 else
                     stopvalue.bFlag = false;
-                gradProp.StopParam[k] = stopvalue;
-                
-    //get stopanimnode related data here gradanimProp = this.getGradientAnimNode('LG','y2');
-                
-                gradanimProp = this.getGradientAnimNode('STOP'+ k,'stop-color');
-               /// if(gradanimProp)
-               // {
+                gradProp.StopParam[k] = stopvalue;               
+                gradanimProp = this.getGradientAnimNode('STOP'+ k,'stop-color');               
                 gradProp.gradAnimList['stop-color'+k] = gradanimProp; 
-               // }
-                
-                
             }
         }  
     
@@ -7411,6 +7392,7 @@ function GX_CreateFillWidget(){
      WAL_createCheckBox('stop1_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
      WAL_createNumberInput("stop1_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
 	 WAL_createTab('fillTabContent', '310', 'GX_GradTabHandler');
+	 
 }
 
 function GX_GradTabHandler(tabIndex){
