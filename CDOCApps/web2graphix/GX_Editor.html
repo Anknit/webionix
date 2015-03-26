@@ -145,12 +145,13 @@
     		<div id='fill_interface' style="display:inline-block; padding-right:3px; border-right: ridge 2px #f0f0f0;">
 		    	<div id='fillopacityEdit' style='display:inline-block;width:auto; height:32px; margin-left:5px;' data-tooltiptext='Fill  Opacity' data-helptext='Modify the Opacity'>Fill-Opacity<div id='fillopacityIP' class='EDIT_BOX group6' type='FILLOPACITY'></div></div>
 		    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='fill_color_icon' value=''  src='../CommonCSS/icons/Version1/fillcolor.png'  data-tooltiptext='Solid Color' data-helptext='Puts Solid Color as the background fill'/></div>
+		    	<div id='filldiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><div id='fillcolorDDL' class='EDIT_BOX'></div></div>
 		    	<!-- <div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='linear_grad_icon' value=''  src='../CommonCSS/icons/Version1/grad_linear.png' data-tooltiptext='Linear Gradient' data-helptext='Puts Linear Gradient as the background fill' /></div>
 		    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='radial_grad_icon' value=''  src='../CommonCSS/icons/Version1/grad_radial.png' data-tooltiptext='Radial Gradient' data-helptext='Puts Radial Gradient as the background fill'/></div>
 		    	-->
 		    	<div id='gradlistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Select Gradient<div id='gradlistDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
 		    	<div style= 'display:inline-block;margin-left:1px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='edit_grad_icon' value=''  src='../CommonCSS/icons/Version1/linecolor.png' data-tooltiptext='Edit Gradient Properties' data-helptext='Edit Gradient Properties'/></div></div> 	
-		    	<div style= 'display:inline-block;margin-left:1px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='delete_grad_icon' value=''  src='../CommonCSS/icons/Version1/delete.png' data-tooltiptext='Remove Gradient' data-helptext='Remove Gradient' /></div></div>
+		    	<div style= 'display:inline-block;margfiin-left:1px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='delete_grad_icon' value=''  src='../CommonCSS/icons/Version1/delete.png' data-tooltiptext='Remove Gradient' data-helptext='Remove Gradient' /></div></div>
     		</div> 
     		<div id='radius_property' class='RADIUS ELLIPSE_PROPERTY ELLIPTIC_PROPERTY' style="display:none; padding-right:3px; border-right: ridge 2px #f0f0f0;">
     			<div id='radiusXEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Horizontal Radius' data-helptext='Modify the Horizontal Radius'>Radius-X<div id='radiusXIP' class='EDIT_BOX group6' type='RADIUSX' ></div></div>	
@@ -359,14 +360,14 @@
  <div id='gradientDlg'style="overflow: hidden; display:none"><div id="LGtitle">Linear Gradient Settings</div>       
        <div id="linearcontent" style="overflow:hidden">
         
-              <div style= 'margin-left:2px; margin-top:10px;'>Title of Gradient<input  id='123gradTitleIP' style= 'margin-left:4px;' type=text value="Default" onblur='OnEditBoxFocusOut(event)'/>
+              <div style= 'margin-left:2px; margin-top:10px;'>Title of Gradient<input  id='gradTitleIP' style= 'margin-left:4px;' type=text value="Default" onblur='OnEditBoxFocusOut(event)'/>
               	
               </div>
-                 <div id='123linSpreaddiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Spread-Method<div id='123LinearSpreadDDL' class='EDIT_BOX' type='Spread Method to Apply' style='margin-top:8px' ></div></div>
+                 <div id='linSpreaddiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Spread-Method<div id='LinearSpreadDDL' class='EDIT_BOX' type='Spread Method to Apply' style='margin-top:8px' ></div></div>
                  <input type="button" id ='animTotalPreviewBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)'/>           
                                         
                  
-        <div id='LGSpecific' style='display:block'>       
+         <div id='LGSpecific' style='display:block'>       
                  <div style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:15px; margin-bottom:20px; margin-right:5px; width: auto'>
                       <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Gradient Start</div>
                       <div id='GradStartXEdit' style='margin-left:5px;margin-top:10px;'>X-Pos(%)<div id='GradStartXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
@@ -434,14 +435,26 @@
          
                   <div style='border:solid 1px grey;border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:10px; margin-bottom:5px; margin-right:5px; width: auto; '>
                     <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Color Offsets</div>
-                <!--    
+                   <div> 
+                    	<div id='stop0_CB' style="display:inline-block; margin-top: 5px;">Stop-1</div>
+                    	<div id='stop0_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop0_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    	<div style='display:inline-block; position:relative; top:-5px; margin-left:5px;'><button id='stop0_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>           	
+                  
+	               
+	               </div>
+                    
+                    <div style='display:inline-block;'>
+                    	<div id='stop1_CB' style="display:inline-block; margin-top: 5px;">Stop-2</div>
+                    	<div id='stop1_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop1_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    	<div style='display:inline-block; position:relative; top:-5px; margin-left:5px;'><button id='stop1_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                     </div>
                     <div style='display:inline-block; position:relative; top:-26px;'>	
                     	<div id='animateStop_col' style="display:inline-block;margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
                       	<div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>Dur(s)<div id='durStopColIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	               
 	                	<input type="button" id ='apply_Stop_Col' style='display:inline-block; margin-left:12px; position:relative; top:-7px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
 	                	<input type="button" id ='animPreviewStop' style='display:inline-block; margin-left:1px; position:relative; top:-7px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
 	                </div> 
-                 -->  
+                   
                     
                     <div style='display:none'>
                    		<div id='stop2_CB' style="display:inline-block; margin-top: 5px;">Stop-3</div>
@@ -470,7 +483,6 @@
                    
                   </div>
                   <div id='gradpreview' style='position:absolute; top:35px; left:490px; width:auto;'>
-             <!-- 
                     <?xml version="1.0"?><!DOCTYPE svg SYSTEM "svg11.dtd">
                     <svg xmlns="http://www.w3.org/2000/svg" id="GRAD_PREVIEW_SVG" x="0px" y="0px" width="75px" height="75px" viewBox="0 0 75 75" version="1.1">
 		            <title>New SVG File</title>
@@ -488,7 +500,6 @@
                     <circle id='RG_FOCUS_POINT' class="RG_MARKERS" cx='38' cy='38' r='10' stroke='black' stroke-width='2' fill='black' fill-opacity='0.5' pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
                     
                     </svg>
-                    -->
                   </div>
                     <div style='margin-top:3px'> 
                         <input type="button" id ='myOK'     value="OK"  onclick='GX_GradDlgOK()'/>
@@ -631,6 +642,7 @@
      <div id="fillcolorDlg" style='display:none'><div id="fillcoldlg">Fill Solid Color</div>
 	    <div id="fillcolcontent" style="overflow:hidden">
 			 	<label>Choose Color<button id='fill_colorbtn' type='BACKGROUND_COLOR'   onclick="GX_FillColorHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></label>
+			 	
 			 	<div id='animateFillColor' style="display:inline-block;margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
 			 	<input type="button" id ='fillcolAnimAddBtn'  value="Apply"  onclick='GX_FillBtnHandler(event)'/>
 			 	<input type="button" id ='fillcolAnimPreviewBtn'  value="Preview"  onclick='GX_FillBtnHandler(event)'/>	
@@ -679,7 +691,7 @@
             </div>
        </div>          
   	</div>
-  	
+  <!-- 
   	<div id='fillwidget' style="overflow: hidden; display:none">
     <div id='fillhrd' style='font-weight:bold; font-size:medium'>Fill Colors</div>      
     <div id='fillcontent'>	       
@@ -775,6 +787,6 @@
 	   </div> 
        </div>
       </div>
-      
+      --> 
 </body>
 </html>
