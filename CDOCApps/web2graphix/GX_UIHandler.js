@@ -245,34 +245,7 @@ sGradientWidget.prototype.OnGradEditBoxHdlr = function(value, wdgtNode) {
     if (!this.GradResourceNode)
         return;
 
-     switch (wdgtID) {
-        case "GradStartXIP":
-            GX_SetObjectAttribute(this.GradResourceNode, 'x1', value + '%', true, false);
-            break;
-        case "GradStartYIP":
-            GX_SetObjectAttribute(this.GradResourceNode, 'y1', value + '%', true, false);
-            break;
-        case "GradStopXIP":
-            GX_SetObjectAttribute(this.GradResourceNode, 'x2', value + '%', true, false);
-            break;
-        case "GradStopYIP":
-            GX_SetObjectAttribute(this.GradResourceNode, 'y2', value + '%', true, false);
-            break;
-        case "centerXIP":
-        	GX_SetObjectAttribute(this.GradResourceNode, 'cx', value + '%', true, false);
-        	break; 
-        case "centerYIP":
-        	GX_SetObjectAttribute(this.GradResourceNode, 'cy', value + '%', true, false);
-        	break; 
-        case "radiusIP":
-        	GX_SetObjectAttribute(this.GradResourceNode, 'r', value + '%', true, false);
-        	break; 
-        case "focusXIP":
-        	GX_SetObjectAttribute(this.GradResourceNode, 'fx', value + '%', true, false);
-        	break; 
-        case "focusYIP":
-        	GX_SetObjectAttribute(this.GradResourceNode, 'fy', value + '%', true, false);
-        	break; 
+     switch (wdgtID) {       
         case "stop0_Offset":
             var stopnodeid = this.GradResourceNode.id + '_STOP0';
             var stopnode = document.getElementById(stopnodeid);
@@ -283,16 +256,7 @@ sGradientWidget.prototype.OnGradEditBoxHdlr = function(value, wdgtNode) {
             var stopnode = document.getElementById(stopnodeid);
             GX_SetObjectAttribute(stopnode, 'offset', value + '%', true, false);
             break;
-        case "stop2_Offset":
-            var stopnodeid = this.GradResourceNode.id + '_STOP2';
-            var stopnode = document.getElementById(stopnodeid);
-            GX_SetObjectAttribute(stopnode, 'offset', value + '%', true, false);
-            break;
-        case "stop3_Offset":
-            var stopnodeid = this.GradResourceNode.id + '_STOP3';
-            var stopnode = document.getElementById(stopnodeid);
-            GX_SetObjectAttribute(stopnode, 'offset', value + '%', true, false);
-            break;    
+        
         
         default:
             break;
@@ -307,28 +271,16 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
      gGradWidth = new Number(rectNode.getAttribute('width'));
      gGradHeight = new Number(rectNode.getAttribute('height'));
     if (gradProp.GradMode == 'LINEAR') {
-        //update the title here     	
-        WAL_setNumberInputValue("GradStartXIP", gradProp.LGGradStart.x, false);
+       
       // if(gradProp.gradAnimList['x1'].bAnimate == true)
         var objProp =  gradProp.gradAnimList['x1']; 
-    	WAL_setCheckBoxValue('animateStartPos', objProp.bAnimate);   	    	
-    	//WAL_setNumberInputValue("StartfromXPosIP",objProp.fromValue, false);
-    	//WAL_setNumberInputValue("StarttoXPosIP", objProp.toValue, false);
-    	WAL_setNumberInputValue("durStartPosIP", objProp.duration, false);
     	
     	
-    	
-        WAL_setNumberInputValue("GradStartYIP", gradProp.LGGradStart.y, false);
-       
-    	
-    	
-        WAL_setNumberInputValue("GradStopXIP", gradProp.LGGradStop.x, false);
-        objProp =  gradProp.gradAnimList['x2']; 
-        WAL_setCheckBoxValue('animateStopPos', objProp.bAnimate);   
-    	WAL_setNumberInputValue("durStopPosIP", objProp.duration, false);
-    	
-        WAL_setNumberInputValue("GradStopYIP", gradProp.LGGradStop.y, false);      
         
+        
+    	
+    	
+       
         //linear specific indicator UIs\
         var indNode = document.getElementById('LG_INDICATOR_LINE');
         var markerNode = document.getElementById('START_POINT');
@@ -365,32 +317,6 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
         
     }
     else if (gradProp.GradMode == 'RADIAL') {
-        
-        WAL_setNumberInputValue("centerXIP", gradProp.center.x, false);
-        objProp =  gradProp.gradAnimList['cx']; 
-    	WAL_setCheckBoxValue('animatecenterPos', objProp.bAnimate);   	    	
-    	//WAL_setNumberInputValue("centerFromIP",objProp.fromValue, false);
-    	//WAL_setNumberInputValue("centerToIP", objProp.toValue, false);
-    	WAL_setNumberInputValue("durCenterIP", objProp.duration, false); 	
-    	
-        WAL_setNumberInputValue("centerYIP", gradProp.center.y, false);       
-        
-        WAL_setNumberInputValue("radiusIP", gradProp.radius, false);
-        objProp =  gradProp.gradAnimList['r']; 
-    	WAL_setCheckBoxValue('animateRadius', objProp.bAnimate);   	    	
-    //	WAL_setNumberInputValue("radiusFromIP",objProp.fromValue, false);
-    //	WAL_setNumberInputValue("radiusToIP", objProp.toValue, false);
-    	WAL_setNumberInputValue("durRadiusIP", objProp.duration, false); 
-    	
-    	objProp =  gradProp.gradAnimList['fx']; 
-        WAL_setNumberInputValue("focusXIP", gradProp.focus.x, false);
-        WAL_setNumberInputValue("focusYIP", gradProp.focus.y, false);
-        WAL_setCheckBoxValue('animateFocus', objProp.bAnimate);   	    	
-    	//WAL_setNumberInputValue("focusFromIP",objProp.fromValue, false);
-    //	WAL_setNumberInputValue("focusToIP", objProp.toValue, false);
-    	WAL_setNumberInputValue("durFocusIP", objProp.duration, false); 
-    	
-        
         var circNode =  document.getElementById('RG_CIRCLE'); 
         var centerNode = document.getElementById('RG_CENTER');
         var radlineNode = document.getElementById("RG_RADIUS_LINE");
@@ -479,81 +405,11 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     var state = event.args.checked;
     var index;
     var stopnodeid;
-    if (CBID == 'animateStartPos')
-    {
-    	//Debug_Message('Anim start X handled ');    	
-    	if(state ==  true)
-    	{    		
-             WAL_disableWidget('durStartPosIP', 'data-jqxNumberInput', false, false); 
-             WAL_setNumberInputValue("durStartPosIP", 0.5, false);
-             
-    	}
-    	else
-    	{
-            WAL_disableWidget('durStartPosIP', 'data-jqxNumberInput', false, true); 
-            WAL_setNumberInputValue("durStartPosIP", 0.0, false);
-    	}
-    	
-    	return ; 
-    }     	
-    else if (CBID == 'animateStopPos')
-    {
-    	//Debug_Message('Anim start X handled ');    	
-    	if(state ==  true)
-    	{
-             WAL_disableWidget('durStopPosIP', 'data-jqxNumberInput', false, false);
-             WAL_setNumberInputValue("durStopPosIP", 0.5, false);    
-    	}
-    	else
-    	{           
-    		WAL_disableWidget('durStopPosIP', 'data-jqxNumberInput', false, true); 
-    		 WAL_setNumberInputValue("durStopPosIP", 0.0, false);  
-    	}
-    	
-    	return ; 
-    }
     
-    else if(CBID == 'animatecenterPos')
-    {
-    	if(state ==  true)
-    	{
-    		WAL_disableWidget('durCenterIP', 'data-jqxNumberInput', false, false);
-    		WAL_setNumberInputValue("durCenterIP", 0.5, false); 
-    	}    		
-    	else
-    	{
-    		WAL_disableWidget('durCenterIP', 'data-jqxNumberInput', false, true);
-    		WAL_setNumberInputValue("durCenterIP", 0.0, false); 
-    	}
-    		
-    }
-    else if(CBID == 'animateRadius')
-    {
-    	if(state ==  true)
-    	{
-    		WAL_disableWidget('durRadiusIP', 'data-jqxNumberInput', false, false);
-    		WAL_setNumberInputValue("durRadiusIP", 0.5, false);
-    	}    		
-    	else
-    	{
-    		WAL_disableWidget('durRadiusIP', 'data-jqxNumberInput', false, true);
-    		WAL_setNumberInputValue("durRadiusIP", 0.0, false);
-    	}    		
-    }   
-    else if(CBID == 'animateFocus')
-    {
-    	if(state ==  true)
-    	{
-    		WAL_disableWidget('durFocusIP', 'data-jqxNumberInput', false, false);
-    		WAL_setNumberInputValue("durFocusIP", 0.5, false);
-    	}    		
-    	else
-    	{
-    		WAL_disableWidget('durFocusIP', 'data-jqxNumberInput', false, true);
-    		WAL_setNumberInputValue("durFocusIP", 0.0, false);
-    	}    		
-    }  
-    else if(CBID == 'animateStop_col')
+   
+   
+     
+    if(CBID == 'animateStop_col')
     {
     	if(state ==  true)
     	{
@@ -567,27 +423,7 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     	}    		
     }  
         
-    if (CBID == 'stop2_CB')
-        index = 2;
-    else if (CBID == 'stop3_CB')
-        index = 3;
-    if (state == false) {
-        stopnodeid = this.GradResourceNode.id + '_STOP' + index;
-        var stopNode = document.getElementById(stopnodeid);
-        GX_SetObjectAttribute(stopNode, 'offset', '100%', true, false); 
-        GX_SetObjectAttribute(stopNode, 'stop-color', 'none', true, false);       
-        //update the button color
-        var btnID = 'stop' + index + '_color';
-        var btnNode = document.getElementById(btnID);
-        btnNode.style.backgroundColor = 'grey';
-        WAL_disableWidget(btnID, 'button', false, true);
-        btnID = 'stop' + index + '_Offset';
-        WAL_disableWidget(btnID, 'data-jqxNumberInput', false, true);
-        WAL_setNumberInputValue(btnID, '100', false); 
-        
-        
-
-    }
+    
     else if (state == true) {
         stopnodeid = this.GradResourceNode.id + '_STOP' + index;
         var stopNode = document.getElementById(stopnodeid);
@@ -631,22 +467,8 @@ sGradientWidget.prototype.OnGradColorButtonHandler = function(event) {
     case 'stop1_color':
     	stopnodeid = this.GradResourceNode.id + '_STOP' + '1';
     	break;
-    case 'stop2_color':
-    	stopnodeid = this.GradResourceNode.id + '_STOP' + '2';
-    	break;
-    case 'stop3_color':
-    	stopnodeid = this.GradResourceNode.id + '_STOP' + '3';
-    	break;       	
-   /* case 'stop_color_from0': 
-    case 'stop_color_from1': 
-    case 'stop_color_to0': 
-    case 'stop_color_to1': 
-    	attrName = '' ; //'background-color';
-    	var Node = document.getElementById(btnID); 
-    	initColVal = Node.style.backgroundColor; //('background-color');
-    	bStopAnimColor = true; 
-    	break;
-    */    	    	    	
+       	
+      	    	
     default:
     	return ; 
     	break;     	
@@ -890,26 +712,6 @@ function GX_CreateGradientWidget(wdgtID)
 {
         WAL_createModelessWindow(wdgtID, '590', '530', 'myOK', 'myCancel');
         WAL_createButton('animTotalPreviewBtn', '', '60', 25, true);
-        
-      //  WAL_createTab('gradTabsContent', '425', 'TabSelectHandler');
-        WAL_createNumberInput("GradStartXIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
-      //  WAL_createNumberInput("StartfromXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
-        WAL_createDecimalNumberInput("durStartPosIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
-             
-        WAL_createCheckBox('animateStartPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
-      //  WAL_createNumberInput("StarttoXPosIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 99, 0, 1);
-        WAL_createButton('apply_StartPos', '', '50', 25, true);
-        WAL_createButton('animPreviewStartBtn', '', '60', 25, true);
-        
-      //  WAL_disableWidget('StartfromXPosIP', 'data-jqxNumberInput', false, true); 
-      //  WAL_disableWidget('StarttoXPosIP', 'data-jqxNumberInput', false, true);        
-        WAL_disableWidget('durStartPosIP', 'data-jqxNumberInput', false, true); 
-    //    WAL_disableWidget('apply_StartXPos', 'data-jqxButton', false, true); 
-        
-        
-        
-        WAL_createNumberInput("GradStartYIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 100, 0, 1);
-        
         WAL_CreateTextInput('gradTitleIP', '100', gInputHeight,false, '');
    	    var spreadValueDisplay = ['pad', 'reflect', 'repeat'];
         WAL_createDropdownList('gradSpreadDDL', '110', '24', false, spreadValueDisplay, "GX_SpreadDDLHandler", '50');
@@ -918,70 +720,11 @@ function GX_CreateGradientWidget(wdgtID)
         WAL_createCheckBox('stop1_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
         WAL_createNumberInput("stop1_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
         
-        WAL_createNumberInput("GradStopXIP", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);      
-        WAL_createCheckBox('animateStopPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);       
-        WAL_createDecimalNumberInput("durStopPosIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
-        
-        WAL_createButton('apply_StopPos', '', '50', 25, true);
-        WAL_createButton('animPreviewStopBtn', '', '60', 25, true);
-        
-        //WAL_disableWidget('StopfromXPosIP', 'data-jqxNumberInput', false, true); 
-        //WAL_disableWidget('StoptoXPosIP', 'data-jqxNumberInput', false, true); 
-      //  WAL_disableWidget('apply_StopXPos', 'data-jqxButton', false, true); 
-        
-        
-        
-        WAL_createNumberInput("GradStopYIP", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        
-        
-        //radial specific 
-        WAL_createNumberInput("centerXIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        WAL_createCheckBox('animatecenterPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
-       // WAL_createNumberInput("centerFromIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 100, 0, 1);
-       // WAL_createNumberInput("centerToIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 100, 0, 1);        
-        WAL_createDecimalNumberInput("durCenterIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
-        WAL_createButton('apply_CenterPos', '', '50', 25, true);
-        WAL_createButton('animPreviewCenterBtn', '', '60', 25, true);               
-       // WAL_setCheckBoxValue('animatecenterPos', false);
-            
-        WAL_createNumberInput("centerYIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        
-        WAL_createNumberInput("radiusIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        WAL_createCheckBox('animateRadius', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
-       // WAL_createNumberInput("radiusFromIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 100, 0, 1);
-       // WAL_createNumberInput("radiusToIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 100, 0, 1);        
-        WAL_createDecimalNumberInput("durRadiusIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
-        WAL_createButton('apply_Radius', '', '50', 25, true);
-        WAL_createButton('animPreviewRadiusBtn', '', '60', 25, true);      
-        
-       
-        
-        WAL_createNumberInput("focusXIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        WAL_createNumberInput("focusYIP", '58px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-        
-        WAL_createCheckBox('animateFocus', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);        
-       // WAL_createNumberInput("focusFromIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 100, 0, 1);
-      //  WAL_createNumberInput("focusToIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 100, 0, 1);        
-        WAL_createDecimalNumberInput("durFocusIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
-        WAL_createButton('apply_Focus', '', '50', 25, true);
-        WAL_createButton('animPreviewFocusBtn', '', '60', 25, true);
-        
         
         WAL_createCheckBox('animateStop_col', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
         WAL_createDecimalNumberInput("durStopColIP", '50px', '24', "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
         WAL_createButton('apply_Stop_Col', '', '50', 25, true);
         WAL_createButton('animPreviewStop', '', '60', 25, true);  
-        
-        WAL_createCheckBox('stop2_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
-        WAL_createNumberInput("stop2_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-       
-        
-        
-        WAL_createCheckBox('stop3_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
-        WAL_createNumberInput("stop3_Offset", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
-
-        
-
         WAL_setCheckBoxValue('stop0_CB', true);
         WAL_disableWidget('stop0_CB', 'data-jqxCheckBox', false, true);
         WAL_setCheckBoxValue('stop1_CB', true);
@@ -3672,7 +3415,7 @@ function GX_InitializeToolbar()
     //fill interface 
    // var gradList = ['New:Linear', 'New:Radial']; 
     var gradList = ['none'];
-   // WAL_createDecimalNumberInput("durStartPosIP", '50px', gWidgetHeight, "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
+   
     WAL_createDecimalNumberInput("fillopacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1.0,0.0,0.1, gWidgetTooltipID);
     WAL_setNumberInputValue('fillopacityIP', 1.0, false);
     
@@ -4248,7 +3991,9 @@ function GX_showEditorInterface(Mode)
 		gObjectEditMode = 'OBJECT_MODE';
 		break;		
 	case 'PROPERTIES_MODE':		
-		gObjectEditMode = 'PROPERTIES_MODE';		
+		gObjectEditMode = 'PROPERTIES_MODE';
+		gGradientList = GX_GetGradientList(); 
+		GX_UpdateGradientList(gGradientList);
 		WAL_hideWidget('common_property_interface', false); 				
 		break;			
 	case 'STROKE_MODE':
@@ -4256,8 +4001,7 @@ function GX_showEditorInterface(Mode)
 		WAL_hideWidget('stroke_interface', false); 			
 		break; 
 	case 'FILL_MODE':
-		gGradientList = GX_GetGradientList(); 
-		GX_UpdateGradientList(gGradientList);
+		
 		WAL_hideWidget('zoompan_interface', false);
 		WAL_hideWidget('fill_interface', false); 	
 		break;
@@ -6534,8 +6278,8 @@ function OnGradMouseMove(evt) {
                 	return ; 
                 gLineNode.setAttribute('x1', newX + '');
                 gLineNode.setAttribute('y1', newY + '');
-                WAL_setNumberInputValue("GradStartXIP", gradX1 + '', true);
-                WAL_setNumberInputValue("GradStartYIP", gradY1 + '', true);                
+                
+                        
             }
             else if(node.id == 'END_POINT') {
                // gLineNode.setAttribute('x2', newX + '');
@@ -6548,8 +6292,7 @@ function OnGradMouseMove(evt) {
                 	return ; 
                 gLineNode.setAttribute('x2', newX + '');
                 gLineNode.setAttribute('y2', newY + '');
-                WAL_setNumberInputValue("GradStopXIP", gradX2 + '', true);
-                WAL_setNumberInputValue("GradStopYIP", gradY2 + '', true); 
+               
             }
             else if(node.id == 'RG_RADIUS_END_POINT')
             {
@@ -6565,7 +6308,7 @@ function OnGradMouseMove(evt) {
             		{
             			gCircleNode.setAttribute('r',newX);        
             			newX = Math.round((newX * 100) / gGradWidth);
-            			WAL_setNumberInputValue("radiusIP", newX + '', true);
+            			
             		}
             			
             	}
@@ -6584,8 +6327,7 @@ function OnGradMouseMove(evt) {
                      gCenterNode.setAttribute('cy', newY+'');
                      var cx1 = Math.round((newX * 100) / gGradWidth); 
              		 var cx2 = Math.round((newY * 100) / gGradHeight); 
-                     WAL_setNumberInputValue("centerXIP", cx1+ '', true);
-                     WAL_setNumberInputValue("centerYIP", cx2 + '', true);
+                    
                      gLineNode.setAttribute('x1', newX+''); 
                      gLineNode.setAttribute('y1', newY+''); 
                      var radius = new Number(gCircleNode.getAttribute('r')); 
@@ -6610,8 +6352,7 @@ function OnGradMouseMove(evt) {
                 node.setAttribute('cy', newY+'');
                 var cx1 = Math.round((newX * 100) / gGradWidth); 
         		var cx2 = Math.round((newY * 100) / gGradHeight); 
-                WAL_setNumberInputValue("focusXIP", cx1+ '', true);
-                WAL_setNumberInputValue("focusYIP", cx2+ '', true);
+               
                 return; 
             }
 
@@ -6896,25 +6637,7 @@ function GX_UpdateGradAnimAttribute(bFlag, gradResID, attrName, from, to, durati
 function GX_GradAnimApplyBtnHdlr(event)
 {
 	var btnID = event.target.id; 
-	if(btnID == 'apply_StartPos')
-	{	
-		var bState = WAL_getCheckBoxValue('animateStartPos'); 
-		var X = WAL_getMaskedInputValue('GradStartXIP'); 
-		var Y = WAL_getMaskedInputValue('GradStartYIP'); 	
-		var dur = WAL_getMaskedInputValue('durStartPosIP');		
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'x1', '0%', X +'%', dur); 
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'y1', '0%', Y +'%', dur);
-	 }		
-	else if(btnID == 'apply_StopPos')
-	{	
-		var X = WAL_getMaskedInputValue('GradStopXIP'); 
-		var Y = WAL_getMaskedInputValue('GradStopXIP');		
-		var bState = WAL_getCheckBoxValue('animateStopPos'); 
-		var dur = WAL_getMaskedInputValue('durStopPosIP');
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'x2', '0%', X+'%', dur); 
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'Y2', '0%', Y+'%', dur); 
-	}
-	else if(btnID == 'apply_Stop_Col')
+	if(btnID == 'apply_Stop_Col')
 	{
 		var node = document.getElementById('stop0_color') ;  
 		var fromcolval = node.style.backgroundColor; 
@@ -6927,46 +6650,16 @@ function GX_GradAnimApplyBtnHdlr(event)
 		var dur = WAL_getMaskedInputValue('durStopColIP');		
 		GX_UpdateGradAnimAttribute(bState, stopNodeid, 'stop-color', fromcolval, tocolval, dur);		
 	}
-	else if(btnID == 'apply_CenterPos')
-	{
-		var X = WAL_getMaskedInputValue('centerXIP'); 
-		var Y = WAL_getMaskedInputValue('centerYIP'); 	
-		var bState = WAL_getCheckBoxValue('animatecenterPos'); 
-		var dur = WAL_getMaskedInputValue('durCenterIP');
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'cx',  '0' + '%',  X+'%', dur);
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'cy',  '0' + '%', Y+'%', dur);
-	}
-	else if(btnID == 'apply_Radius')
-	{
-		var to = WAL_getMaskedInputValue('radiusIP'); 	
-		var bState = WAL_getCheckBoxValue('animateRadius'); 
-		var dur = WAL_getMaskedInputValue('durRadiusIP');
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'r',   '0%', to+'%', dur);		
-	}
-	else if(btnID == 'apply_Focus')
-	{
-		var X = WAL_getMaskedInputValue('focusXIP'); 
-		var Y = WAL_getMaskedInputValue('focusYIP'); 	
-		var bState = WAL_getCheckBoxValue('animateFocus'); 
-		var dur = WAL_getMaskedInputValue('durFocusIP');
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'fx', '0%', X+'%', dur);
-		GX_UpdateGradAnimAttribute(bState, gGradientObj.GradResourceID, 'fy', '0%', Y+'%', dur);
-	}	
+	
 }
 
 function GX_GradAnimPreviewBtnHdlr(event){
 		//get the resource ID and then the top anim Id 
 	var nodeID = event.target.id; 
 	var resID = gGradientObj.GradResourceNode.id; 
-	if(nodeID == 'animPreviewStartBtn')
-	{
-		animID = resID + '_X1'; 
-		GX_PreviewAnimation(animID);
-		animID = resID + '_Y1'; 
-		GX_PreviewAnimation(animID);
-	}
 	
-	else if(nodeID == 'animPreviewStopBtn')
+	
+	if(nodeID == 'animPreviewStopBtn')
 	{
 		animID = resID + '_X2'; 
 		GX_PreviewAnimation(animID);
@@ -6978,23 +6671,7 @@ function GX_GradAnimPreviewBtnHdlr(event){
 		animID = resID + '_STOP1_STOP_COLOR';		
 		GX_PreviewAnimation(animID);
 	}
-	else if(nodeID == 'animPreviewCenterBtn')
-	{
-		animID = resID + '_CX';		
-		GX_PreviewAnimation(animID);
-		animID = resID + '_CY';		
-		GX_PreviewAnimation(animID);
-	}
-	else if(nodeID == 'animPreviewRadiusBtn')
-	{
-		animID = resID + '_R';		
-		GX_PreviewAnimation(animID);
-	}
-	else if(nodeID == 'animPreviewFocusBtn')
-	{
-		animID = resID + '_FY';		
-		GX_PreviewAnimation(animID);
-	}	
+		
 	else if(nodeID == 'animTotalPreviewBtn')
 	{
 		animID = resID + '_TOP_GRAD_ANIM';		
