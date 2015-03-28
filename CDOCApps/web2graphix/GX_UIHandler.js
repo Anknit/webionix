@@ -910,7 +910,13 @@ function GX_CreateGradientWidget(wdgtID)
         
         WAL_createNumberInput("GradStartYIP", '40px', gWidgetHeight, "GradientEditBoxValueChange", true, 100, 0, 1);
         
-        
+        WAL_CreateTextInput('gradTitleIP', '100', gInputHeight,false, '');
+   	    var spreadValueDisplay = ['pad', 'reflect', 'repeat'];
+        WAL_createDropdownList('gradSpreadDDL', '110', '24', false, spreadValueDisplay, "GX_SpreadDDLHandler", '50');
+        WAL_createCheckBox('stop0_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
+        WAL_createNumberInput("stop0_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);       
+        WAL_createCheckBox('stop1_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
+        WAL_createNumberInput("stop1_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
         
         WAL_createNumberInput("GradStopXIP", '40px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);      
         WAL_createCheckBox('animateStopPos', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);       
@@ -3760,7 +3766,7 @@ function GX_InitializeToolbar()
     WAL_createModalWindow('movetoGroupDlg', '250', '150', 'grouptoOK', 'grouptoCancel');
     
      //create the new filwdiget interface
-    GX_CreateFillWidget(); 
+    //GX_CreateFillWidget(); 
 }
 
 function GX_EditBoxValueChange(value, widgetnode)
@@ -4143,11 +4149,11 @@ function GX_ToolbarHandler(Node)
 			 gInitFillColor = '#aaaaaa'; 
 		 }
 		 GX_ShowFillColorWidget();
-		 */  
-		 */
+		 
+		 
 		 WAL_showModalWindow('fillwidget'); 
 		 
-		 break; 
+		 break; */  
 		 
 	 case 'bold_icon':
 		 var Prop = gCurrentObjectSelected.getAttribute('font-weight'); 
@@ -7445,13 +7451,7 @@ function GX_UpdateTreeWidget(){
 
 function GX_CreateFillWidget(){
 	 WAL_createModelessWindow('fillwidget', '480', '480', 'fillOK', 'fillCancel');
-	 WAL_CreateTextInput('gradTitleIP', '100', gInputHeight,false, '');
-	 var spreadValueDisplay = ['pad', 'reflect', 'repeat'];
-     WAL_createDropdownList('gradSpreadDDL', '110', '24', false, spreadValueDisplay, "GX_SpreadDDLHandler", '50');
-     WAL_createCheckBox('stop0_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
-     WAL_createNumberInput("stop0_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);       
-     WAL_createCheckBox('stop1_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
-     WAL_createNumberInput("stop1_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
+	 
 	 WAL_createTab('fillTabContent', '310', 'GX_GradTabHandler');
 	 
 }
