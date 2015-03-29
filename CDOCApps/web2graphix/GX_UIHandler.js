@@ -267,20 +267,14 @@ sGradientWidget.prototype.OnGradEditBoxHdlr = function(value, wdgtNode) {
 
 sGradientWidget.prototype.UpdateUI = function(gradProp) {
 
-	 var rectNode = document.getElementById('GRAD_PREVIEW_RECTANGLE');
-     gGradWidth = new Number(rectNode.getAttribute('width'));
-     gGradHeight = new Number(rectNode.getAttribute('height'));
-    if (gradProp.GradMode == 'LINEAR') {
-       
-      // if(gradProp.gradAnimList['x1'].bAnimate == true)
+	 var rectNode = document.getElementById('LINEAR_GRAD_PREVIEW_RECTANGLE');
+     
+     var prevNode;  
+     if (gradProp.GradMode == 'LINEAR') {   
+    	prevNode = document.getElementById('LINEAR_GRAD_PREVIEW_RECTANGLE');
+    	gGradWidth = new Number(rectNode.getAttribute('width'));
+        gGradHeight = new Number(rectNode.getAttribute('height'));
         var objProp =  gradProp.gradAnimList['x1']; 
-    	
-    	
-        
-        
-    	
-    	
-       
         //linear specific indicator UIs\
         var indNode = document.getElementById('LG_INDICATOR_LINE');
         var markerNode = document.getElementById('START_POINT');
@@ -317,30 +311,13 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
         
     }
     else if (gradProp.GradMode == 'RADIAL') {
-        var circNode =  document.getElementById('RG_CIRCLE'); 
-        var centerNode = document.getElementById('RG_CENTER');
-        var radlineNode = document.getElementById("RG_RADIUS_LINE");
-        
-        var value = gradProp.center.x; 
-        value = value.substring(0, value.length-1); 
-        value = new Number(value); 
-        value = Math.round((value * gGradWidth)/100); 
-        circNode.setAttribute('cx', value);        
-        centerNode.setAttribute('cx', value);
-        radlineNode.setAttribute('x1', value); 
-        
-        
-        var radius =  gradProp.radius; 
-        radius = radius.substring(0, radius.length-1); 
-        radius = new Number(radius); 
-        
-        value = gradProp.center.y; 
-        value = value.substring(0, value.length-1); 
-        value = new Number(value); 
-        value = Math.round((value * gGradHeight)/100); 
-        circNode.setAttribute('cy', value);        
-        centerNode.setAttribute('cy', value);
-        radlineNode.setAttribute('y1', value);         
+    	prevNode = document.getElementById('RG_CIRCLE');
+    	//var myDim = prevNode.getBBox();
+    	var width = prevNode.getAttribute('r');  
+    	width = new Number(width*2) ; 
+    	var height = width;    	
+    	gGradWidth = width;
+        gGradHeight = height;
     }
     
         
@@ -358,7 +335,7 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
             }
         }
         
-        var prevNode = document.getElementById('GRAD_PREVIEW_RECTANGLE');
+       
         var gradurl = 'url(#' + this.GradResourceID + ')';
         prevNode.setAttribute('fill', gradurl);
 
@@ -684,6 +661,7 @@ function sGradientWidget(WdgtID, GradResID) {
    this.GradResourceNode = document.getElementById(GradResID);  
    if(!this.GradResourceNode)
         return 0;
+   Debug_Message('Grad Res ID=' + this.GradResourceNode.id); 
    
     //now get the gradient property
     this.GradParam = this.getGradientProperty();
@@ -6185,8 +6163,13 @@ function OnGradPointClick(evt) {
 	
     if (bGradPointMove == false) {
         if (!gGradSVGNode)
-            gGradSVGNode = document.getElementById('GRAD_PREVIEW_RECTANGLE');
-       // gGradSVGNode.setAttribute("cursor", "move");       
+        {
+        	if(gCurrentGradientType == 'LINEAR_GRAD' )
+        		gGradSVGNode = document.getElementById('LINEAR_GRAD_PREVIEW_RECTANGLE');
+        	else if(gCurrentGradientType == 'RADIAL_GRAD' )
+        		gGradSVGNode = document.getElementById('RG_CIRCLE');
+        }
+                      
         node.setAttribute("cursor", "move");
         gInitMousePoint = new sPoint();
         gInitMousePoint.x = new Number(evt.clientX);
@@ -6197,24 +6180,17 @@ function OnGradPointClick(evt) {
         gInitLinePoint = new sPoint(); 
         gInitFocusPoint = new sPoint(); 
         
-        gLineNode = document.getElementById('RG_RADIUS_LINE');
+       // gLineNode = document.getElementById('RG_RADIUS_LINE');
         gCircleNode = document.getElementById('RG_CIRCLE');
-        gMarkerNode = document.getElementById('RG_RADIUS_END_POINT');
+       // gMarkerNode = document.getElementById('RG_RADIUS_END_POINT');
         gFocusNode = document.getElementById('RG_FOCUS_POINT');
         gInitFocusPoint.x = new Number(gFocusNode.getAttribute('cx')); 
         gInitFocusPoint.y = new Number(gFocusNode.getAttribute('cy')); 
-        if(node.id == 'RG_RADIUS_END_POINT')
-        {                	
-        	gInitLinePoint.x =  new Number(gLineNode.getAttribute('x2'));                 	
-        	gInitialRadius = new Number(gCircleNode.getAttribute('r')); 
-        	gCircleNode.setAttribute('pointer-events', 'none'); 
-        }
-        else if(node.id == 'RG_CIRCLE')
-        {
-        	 gCenterNode = document.getElementById('RG_CENTER'); 
-        	 
-        }
         
+        if(node.id == 'RG_CIRCLE')
+        {
+        	 gCenterNode = document.getElementById('RG_CENTER');         	 
+        }        
         else
         {
         	gLineNode = document.getElementById('LG_INDICATOR_LINE');                   
@@ -6234,6 +6210,7 @@ function OnGradPointClick(evt) {
         bGradPointMove = false;
         node.setAttribute("cursor", "auto");	
         gCircleNode.setAttribute('pointer-events', 'visible'); 
+        gGradSVGNode = 0; 
     }       
 }
 
@@ -6243,20 +6220,20 @@ function OnGradMouseMove(evt) {
     var relPosition = new sPoint();
     relPosition.x = new Number(evt.clientX);
     relPosition.y = new Number(evt.clientY); 
-    if (!gGradSVGNode)
-        gGradSVGNode = document.getElementById('GRAD_PREVIEW_RECTANGLE');
-    
+    if(!gGradSVGNode)
+    	return ; 
+    /*if (!gGradSVGNode)
+        gGradSVGNode = document.getElementById('LINEAR_GRAD_PREVIEW_RECTANGLE');
+    */
+   
     if (bGradPointMove == false) {
     	if(node.id != 'RG_CIRCLE')
     	{
-    		node.setAttribute('r', '10');
+    		node.setAttribute('r', '14');
     		node.setAttribute("cursor", "move");
     	}
-        
-      //  if(gGradSVGNode)
-       // 	gGradSVGNode.setAttribute("cursor", "move");
         return; 
-       // node.setAttribute('fill-opacity', '1.0');
+       
     }
     var newX, newY;      
     
@@ -6268,8 +6245,7 @@ function OnGradMouseMove(evt) {
             newX = gInitLinePoint.x + relPosition.x;
             newY = gInitLinePoint.y + relPosition.y;
             if (node.id == 'START_POINT') {
-                //gLineNode.setAttribute('x1', newX + '');
-                //gLineNode.setAttribute('y1', newY + '');
+                
                 var gradX1 = Math.round((newX * 100) / gGradWidth);
                 if( (gradX1 < 0) || (gradX1 > 100) )
                 	return ; 
@@ -6278,12 +6254,10 @@ function OnGradMouseMove(evt) {
                 	return ; 
                 gLineNode.setAttribute('x1', newX + '');
                 gLineNode.setAttribute('y1', newY + '');
-                
-                        
+                GX_SetObjectAttribute(gGradientObj.GradResourceNode, 'x1', gradX1 + '%', true, false);
+                GX_SetObjectAttribute(gGradientObj.GradResourceNode, 'y1', gradX1 + '%', true, false);
             }
-            else if(node.id == 'END_POINT') {
-               // gLineNode.setAttribute('x2', newX + '');
-                //gLineNode.setAttribute('y2', newY + '');
+            else if(node.id == 'END_POINT') {              
                 var gradX2 = Math.round((newX * 100) / gGradWidth);
                 if( (gradX2 < 0) || (gradX2 > 100) )
                 	return ; 
@@ -6291,30 +6265,11 @@ function OnGradMouseMove(evt) {
                 if( (gradY2 < 0) || (gradY2 > 100) )
                 	return ; 
                 gLineNode.setAttribute('x2', newX + '');
-                gLineNode.setAttribute('y2', newY + '');
-               
+                gLineNode.setAttribute('y2', newY + ''); 
+                GX_SetObjectAttribute(gGradientObj.GradResourceNode, 'x2', gradX2 + '%', true, false);
+                GX_SetObjectAttribute(gGradientObj.GradResourceNode, 'y2', gradY2 + '%', true, false);
             }
-            else if(node.id == 'RG_RADIUS_END_POINT')
-            {
-            	newX = gInitMarkerPoint.x + relPosition.x; 
-            	if ( (newX >= 95) && (newX <= 190) )
-            	{
-            		
-            		node.setAttribute('cx', newX+'');
-            		newX = gInitLinePoint.x + relPosition.x; 
-            		gLineNode.setAttribute('x2', newX+'');
-            		newX = gInitialRadius + relPosition.x; 
-            		if( (newX > 0) && (newX < gGradWidth/2 ) )
-            		{
-            			gCircleNode.setAttribute('r',newX);        
-            			newX = Math.round((newX * 100) / gGradWidth);
-            			
-            		}
-            			
-            	}
-            		
-            	return; 
-            }
+            
             else if(node.id == 'RG_CIRCLE')
             {
             	 newX = gInitMarkerPoint.x + relPosition.x;
@@ -6328,6 +6283,9 @@ function OnGradMouseMove(evt) {
                      var cx1 = Math.round((newX * 100) / gGradWidth); 
              		 var cx2 = Math.round((newY * 100) / gGradHeight); 
                     
+             		 GX_SetObjectAttribute(gGradientObj.GradResourceNode, 'cx', value + '%', true, false);
+             		 
+             		 
                      gLineNode.setAttribute('x1', newX+''); 
                      gLineNode.setAttribute('y1', newY+''); 
                      var radius = new Number(gCircleNode.getAttribute('r')); 
@@ -6351,8 +6309,9 @@ function OnGradMouseMove(evt) {
                 node.setAttribute('cx', newX+'');
                 node.setAttribute('cy', newY+'');
                 var cx1 = Math.round((newX * 100) / gGradWidth); 
-        		var cx2 = Math.round((newY * 100) / gGradHeight); 
-               
+        		var cx2 = Math.round((newY * 100) / gGradHeight);    
+        		GX_SetObjectAttribute(gGradientObj.GradResourceNode, 'fx', cx1 + '%', true, false);
+        		GX_SetObjectAttribute(gGradientObj.GradResourceNode, 'fy', cx2 + '%', true, false);
                 return; 
             }
 
@@ -6366,14 +6325,16 @@ function OnGradMouseOut(evt) {
      var node = evt.target;
      if (bGradPointMove == false) {
     	 if(node.id != 'RG_CIRCLE')
-          	node.setAttribute('r', '5');          
+          	node.setAttribute('r', '14');          
         	node.setAttribute("cursor", "auto");
      }
 }
 
+var gCurrentGradientType = 0; 
 function GX_ShowGradWindow(gradID, gradType)
 {	    
-     var JQSel = '#gradientDlg';   
+     var JQSel = '#gradientDlg';  
+     gCurrentGradientType = gradType; 
      var rgnode = document.getElementById('RGSpecific'); 
  	 var lgnode = document.getElementById('LGSpecific');
      if(gradType == 'LINEAR_GRAD')
