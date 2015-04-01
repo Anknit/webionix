@@ -358,17 +358,17 @@
    
  
  <div id='gradientDlg'style="overflow: hidden; display:none"><div id="LGtitle">Linear Gradient Settings</div>       
-       <div id="linearcontent" style="overflow:hidden">
+       <div id="linearcontent" style="overflow:hidden;">
         
               <div style= 'margin-left:2px; margin-top:10px;'>Title of Gradient<input  id='gradTitleIP' style= 'margin-left:4px;' type=text value="Default" onblur='OnEditBoxFocusOut(event)'/>
               	
               </div>
                  <div id='linSpreaddiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Spread-Method<div id='gradSpreadDDL' class='EDIT_BOX' type='Spread Method to Apply' style='margin-top:8px' ></div></div>
-                 <input type="button" id ='animTotalPreviewBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)'/>           
+                            
                                         
                  
-         <div id='LGSpecific' style='display:block'>       
-                <div id='LinearGradpreview' style='position:relative; left:100px; '>
+         <div id='LGSpecific' style='display:block;margin-left:65px;''>       
+                <div id='LinearGradpreview' style='position:relative; left:5px; '>
                     <?xml version="1.0"?><!DOCTYPE svg SYSTEM "svg11.dtd">
                     <svg xmlns="http://www.w3.org/2000/svg" id="GRAD_PREVIEW_SVG" x="0px" y="0px" width="150px" height="150px" viewBox="0 0 150 150" version="1.1">
 			            <title>New SVG File</title>
@@ -383,11 +383,11 @@
                   </div> 
                  
           </div>
-        <div id='RGSpecific' style='display:block'> 
-         <div id='RadialGradPreview' style='position:relative; left:100px;'>
+        <div id='RGSpecific' style='display:block;margin-left:65px;'> 
+         <div id='RadialGradPreview' style='position:relative; left:5px;'>
           <?xml version="1.0"?><!DOCTYPE svg SYSTEM "svg11.dtd">
           <svg xmlns="http://www.w3.org/2000/svg" id="GRAD_PREVIEW_SVG" x="0px" y="0px" width="150px" height="150px" viewBox="0 0 150 150" version="1.1">
-         	<circle id='RG_CIRCLE' class= 'RG_MARKERS' cx='75' cy='75' r='75' fill='none' stroke="black" stroke-width="0" stroke-dasharray="4,2"  pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)"/>
+         	<circle id='RG_CIRCLE' class= 'RG_MARKERS' cx='75' cy='75' r='75' fill='none' stroke="black" stroke-width="0" stroke-dasharray="4,2"  pointer-events='visible'/>
            <!-- <circle id='RG_CENTER' class= 'RG_MARKERS' cx='75' cy='75' r='3' fill='black' stroke="black" stroke-width="3" />-->
            <!-- <line id="RG_RADIUS_LINE" class="RG_MARKERS" x1='38' y1='38' x2='73' y2='38' stroke="black" stroke-width="3" stroke-dasharray="4,2" stroke-linejoin="miter" stroke-opacity="1" fill="none"/>
             <circle id='RG_RADIUS_END_POINT' class="RG_MARKERS" cx='70' cy='38' r='5' stroke='black' stroke-width='2' fill='none' fill-opacity='0.5' pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
@@ -396,27 +396,25 @@
            </svg>
          </div>
         	       		
-       </div>      
-         
-                  <div style='border:solid 1px grey;border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:10px; margin-bottom:5px; margin-right:5px; width: auto; '>
-                  
-                              	
-                    <div id='color2offset'>
-						<div style='display:inline-block; vertical-align:middle;'><button id='stop1_color' onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
-						<div id='stop1_offset_slider' style='display:inline-block;margin-left:10px;vertical-align:middle;'></div>
-					</div>
-	                <div id='color1offset'>
-						<div style='display:inline-block; vertical-align:middle;'><button id='stop0_color' onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div> 
-						<div id='stop0_offset_slider' style='display:inline-block;margin-left:10px;vertical-align:middle;'></div>
-					</div>  	           
-                    
-                    <div style='display:inline-block; position:relative; top:0px;'>	
-                    	<div id='animateStop_col' style="display:inline-block;margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
-                      	<div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>Dur(s)<div id='durStopColIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	               
-	                	<input type="button" id ='apply_Stop_Col' style='display:inline-block; margin-left:12px; position:relative; top:-7px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
-	                	<input type="button" id ='animPreviewStop' style='display:inline-block; margin-left:1px; position:relative; top:-7px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
+       </div>    
+      	<div style='margin-left:65px;'>  
+	        <div id='color1offset'>
+				<div style='display:inline-block; vertical-align:middle;'><button id='stop0_color' onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div> 
+				<div id='stop0_offset_slider' style='display:inline-block;margin-left:3px;vertical-align:middle;'></div>
+			</div>  
+			<div id='color2offset'>
+				<div style='display:inline-block; vertical-align:middle;'><button id='stop1_color' onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+				<div id='stop1_offset_slider' style='display:inline-block;margin-left:3px;vertical-align:middle;'></div>
+			</div>	  
+		</div>          
+                 <div style='border:ridge 2px #f0f0f0;border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:10px;  margin-right:5px; width: auto; '>   
+                   <div id='animateStop_col' style="position:relative; top:-13px; margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
+                    <div style='display:inline-block; position:relative; top:-10px;'>	                    	
+                      	<div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:0px;'>Dur(s)<div id='durStopColIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	               
+	                	<input type="button" id ='apply_Stop_Col' style='display:inline-block; margin-left:12px; position:relative; top:-10px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                	<input type="button" id ='animPreviewStop' style='display:inline-block; margin-left:1px; position:relative; top:-10px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
 	                </div> 
-                   </div>
+                  </div>
                   
                     <div style='margin-top:3px'> 
                         <input type="button" id ='myOK'     value="OK"  onclick='GX_GradDlgOK()'/>
