@@ -159,6 +159,7 @@ var gTE_ButtonHeight='18';
 var gTE_DDLHeight = '24' ; //'26px'
 var gTE_EditWidth = "35"
 var gGroupList=[]; 
+var gbNewGradObject =  false; 
 /*var ClientX = new Number(0);
 var ClientY = new Number(0);
 var newObjDim = new sDimension();
@@ -246,14 +247,22 @@ sGradientWidget.prototype.OnGradEditBoxHdlr = function(value, wdgtNode) {
         return;
 
      switch (wdgtID) {       
-        case "stop0_Offset":
+        case "stop0_offset_slider":
             var stopnodeid = this.GradResourceNode.id + '_STOP0';
             var stopnode = document.getElementById(stopnodeid);
             GX_SetObjectAttribute(stopnode, 'offset', value + '%', true, false);
             break;
-        case "stop1_Offset":
+        case "stop1_offset_slider":
             var stopnodeid = this.GradResourceNode.id + '_STOP1';
             var stopnode = document.getElementById(stopnodeid);
+            //get the minimum value from other slider 
+            var minValue  = WAL_getSliderValue('stop0_offset_slider'); 
+            if(minValue >  value){
+            	WAL_setSliderValue('stop0_offset_slider', minValue); 
+            	Debug_Message('Color-2 offset should be more than Color-1 offset');
+            	return ; 
+            }
+            
             GX_SetObjectAttribute(stopnode, 'offset', value + '%', true, false);
             break;
         
@@ -282,15 +291,19 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
         value = value.substring(0, value.length-1); 
         value = new Number(value); 
         value = Math.round((value * gGradWidth)/100); 
-        indNode.setAttribute('x1',value+'' ); 
-        markerNode.setAttribute('cx',value+5+'' ); 
+        //indNode.setAttribute('x1',value+'' ); 
+        //markerNode.setAttribute('cx',value+5+'' ); 
+        indNode.setAttribute('x1',value ); 
+        markerNode.setAttribute('cx',value+5 );
         
         value = gradProp.LGGradStart.y; 
         value = value.substring(0, value.length-1); 
         value = new Number(value); 
         value = Math.round((value * gGradHeight)/100); 
-        indNode.setAttribute('y1',value+'' ); 
-        markerNode.setAttribute('cy',value+5+'' ); 
+        //indNode.setAttribute('y1',value+'' ); 
+        //markerNode.setAttribute('cy',value+5+'' ); 
+        indNode.setAttribute('y1',value ); 
+        markerNode.setAttribute('cy',value+5 ); 
         
         //END_POINT
        
@@ -299,15 +312,19 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
         value = value.substring(0, value.length-1); 
         value = new Number(value); 
         value = Math.round((value * gGradWidth)/100); 
-        indNode.setAttribute('x2',value+'' ); 
-        markerNode.setAttribute('cx',(value-5)+'' ); 
+        //indNode.setAttribute('x2',value+'' ); 
+       //markerNode.setAttribute('cx',(value-5)+'' ); 
+        indNode.setAttribute('x2',value ); 
+        markerNode.setAttribute('cx',(value-5) );
         
         value = gradProp.LGGradStop.y; 
         value = value.substring(0, value.length-1); 
         value = new Number(value); 
         value = Math.round((value * gGradHeight)/100); 
-        indNode.setAttribute('y2',value+'' ); 
-        markerNode.setAttribute('cy',(value-5)+'' ); 
+       // indNode.setAttribute('y2',value+'' ); 
+       // markerNode.setAttribute('cy',(value-5)+'' ); 
+        indNode.setAttribute('y2',value ); 
+        markerNode.setAttribute('cy',(value-5) );
         
     }
     else if (gradProp.GradMode == 'RADIAL') {
@@ -318,6 +335,7 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
     	var height = width;    	
     	gGradWidth = width;
         gGradHeight = height;
+        
     }
     
         
@@ -348,22 +366,15 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
                 var btnNode = document.getElementById(btnID);
                 btnNode.style.backgroundColor = gradProp.StopParam[j].color;
                 WAL_disableWidget(btnID, 'button', false, false);
-                btnID = 'stop' + index + '_Offset';
+                
+                btnID = 'stop' + index + '_offset_slider';
                 var offset = gradProp.StopParam[j].offset;
                 offset = offset.substring(0, offset.length - 1);
-                WAL_setNumberInputValue(btnID, offset, false);
-                WAL_disableWidget(btnID, 'data-jqxNumberInput', false, false);
+                WAL_setSliderValue(btnID, offset);
+                //WAL_disableWidget(btnID, 'data-jqxNumberInput', false, false);
                
             }
-            else {
-                var btnID = 'stop' + index + '_color';
-                var btnNode = document.getElementById(btnID);
-                btnNode.style.backgroundColor = 'grey';
-                WAL_disableWidget(btnID, 'button', false, true);
-                btnID = 'stop' + index + '_Offset';
-                WAL_setNumberInputValue(btnID, '100', false);
-                WAL_disableWidget(btnID, 'data-jqxNumberInput', false, true);
-            }
+            
             //now get the stopanimation param here 
             objProp =  gradProp.gradAnimList['stop-color'+index]; 
             if(objProp)
@@ -589,7 +600,7 @@ sGradientWidget.prototype.getGradientProperty = function() {
         var JQSel = '#gradTitleIP';
         var value = Currnode.classList[2]; 
         gradProp.Title = value;
-        for (var k = 0; k < 4; k++) {
+        for (var k = 0; k < 2; k++) {
             var stopnodeid = Currnode.id + '_STOP' + k;
             var stopNode = document.getElementById(stopnodeid);
             if (stopNode) {
@@ -633,7 +644,7 @@ sGradientWidget.prototype.setGradientProperty = function(gradProp) {
     Currnode.setAttribute('title', gradProp.Title);
     Currnode.setAttribute('spreadMethod', gradProp.spreadMethod);
         // gradProp.StopParam = [];
-        for (var k = 0; k < 4; k++) {
+        for (var k = 0; k < 2; k++) {
             var stopnodeid = Currnode.id + '_STOP' + k;
             var stopNode = document.getElementById(stopnodeid);
             if (stopNode) {
@@ -670,9 +681,10 @@ function sGradientWidget(WdgtID, GradResID) {
     this.bInitialize = true;
 };
 
-function GradientEditBoxValueChange(value, wdgtNode) {
+function GX_GradientEditBoxValueChange(value, wdgtNode) {
     gGradientObj.OnGradEditBoxHdlr(value, wdgtNode); 
 }
+
 
 function GX_GradientCheckValueChange(event) {
     gGradientObj.OnGradCheckBoxHdlr(event);
@@ -688,25 +700,24 @@ function GX_GradColorButtonHandler(event) {
 
 function GX_CreateGradientWidget(wdgtID)
 {
-        WAL_createModelessWindow(wdgtID, '590', '530', 'myOK', 'myCancel');
-        WAL_createButton('animTotalPreviewBtn', '', '60', 25, true);
+        WAL_createModelessWindow(wdgtID, '310', '440', 'myOK', 'myCancel');
+        //WAL_createButton('animTotalPreviewBtn', '', '60', 25, true);
         WAL_CreateTextInput('gradTitleIP', '100', gInputHeight,false, '');
    	    var spreadValueDisplay = ['pad', 'reflect', 'repeat'];
         WAL_createDropdownList('gradSpreadDDL', '110', '24', false, spreadValueDisplay, "GX_SpreadDDLHandler", '50');
-        WAL_createCheckBox('stop0_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
-        WAL_createNumberInput("stop0_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);       
-        WAL_createCheckBox('stop1_CB', 'GX_GradientCheckValueChange', '50', '20', '13', false, false);
-        WAL_createNumberInput("stop1_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
+       
+       // WAL_createNumberInput("stop0_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);       
         
+        //WAL_createNumberInput("stop1_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);
+        WAL_createSlider('stop0_offset_slider', '110px', '15px', false, 0, 100,1, 25, false, false, 'GX_GradientEditBoxValueChange', false, '');
+        WAL_createSlider('stop1_offset_slider', '110px', '15px', false, 0, 100,1, 25, false, false, 'GX_GradientEditBoxValueChange', false, '');
         
         WAL_createCheckBox('animateStop_col', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
-        WAL_createDecimalNumberInput("durStopColIP", '50px', '24', "GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
+        WAL_createDecimalNumberInput("durStopColIP", '50px', '24', "GX_GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
         WAL_createButton('apply_Stop_Col', '', '50', 25, true);
         WAL_createButton('animPreviewStop', '', '60', 25, true);  
-        WAL_setCheckBoxValue('stop0_CB', true);
-        WAL_disableWidget('stop0_CB', 'data-jqxCheckBox', false, true);
-        WAL_setCheckBoxValue('stop1_CB', true);
-        WAL_disableWidget('stop1_CB', 'data-jqxCheckBox', false, true);
+       
+        
         WAL_createColorPickerWindow("gradcolorpickwidget", "gradcolorpicker", '350', '250', "gradokbtn", "gradcancelbtn");
       
 }
@@ -748,11 +759,22 @@ function GX_GradColorWidgetOK(event) {
 }
 
 function GX_GradDlgOK() {
-  //  alert("OK"); ///dont know what to do here as all the propert have been already changed
-	
-	
+  //  alert("OK"); ///dont know what to do here as all the propert have been already changed	
 		var JQSel = "#" + 'gradTitleIP';    
         gradTitle = $(JQSel).val();
+        var JQSel = "#" + "animtitleIP";	
+    	var grad  = $(JQSel).val();	
+    	if ( (gradTitle == 'Default:Linear') || (gradTitle == 'Default:Radial')
+    			|| (gradTitle == '') || (gradTitle[0] == " "))
+    	{
+    		var JQSel = "#" + 'gradTitleIP';    
+	        $(JQSel).val('');
+    		Debug_Message("Please Assign a Title to the Gradient");		
+    		setTimeout(function(){			
+    			WAL_showModalWindow('gradientDlg', "OnclickInputOK", "");	
+    			}, 250); 
+    		return ; 
+    	} 	
         var classvalue = gGradientObj.GradResourceNode.classList[0]+' '+gGradientObj.GradResourceNode.classList[1]+' '
         + gradTitle;
         //gGradientObj.GradResourceNode.setAttribute('class', classvalue);   
@@ -772,8 +794,20 @@ function GX_GradDlgOK() {
             }
         }
         else
-        {
-        	var gradInfo = [gradTitle, currGradID, gGradientObj.GradResourceNode.classList[2] ]; 
+        {//_rm this means a new gradient object is being added here 
+        	//now check if it is unique:
+        	var retVal = GX_GetGradInfoByTitle(gradTitle); 
+        	if(retVal){           	
+        			GX_RemoveGradient(currGradID, gradTitle); 
+        			var JQSel = "#" + 'gradTitleIP';    
+        	        $(JQSel).val('');
+            		Debug_Message("Title already Exists");		
+            		setTimeout(function(){			
+            			WAL_showModalWindow('gradientDlg', "OnclickInputOK", "");	
+            			}, 250); 
+            		return ;             		
+        	}        	
+        	var gradInfo = [gradTitle, currGradID, gGradientObj.GradResourceNode.classList[1] ]; 
         	gGradientList.push(gradInfo); 
         }        
         GX_UpdateGradientList(gGradientList); 
@@ -3503,10 +3537,8 @@ function GX_EditBoxValueChange(value, widgetnode)
 	{
 		DimValue.x = gCurrentObjectSelected.getAttribute('x'); 
 		DimValue.y = gCurrentObjectSelected.getAttribute('y'); 
-	}
-		
-	var currnodeSel = gCurrentObjectSelected; 
-	
+	}		
+	var currnodeSel = gCurrentObjectSelected;	
 	if(nodeClass == 'SVG_TEXT_OBJECT')
 	{
 		switch(widgetnode.id)
@@ -3716,6 +3748,8 @@ function GX_ToolbarHandler(Node)
 		var gradInfo = GX_GetGradInfoByTitle(currgradTitle); 
 		if(gradInfo)
 		{
+			
+	        gbNewGradObject = false; 
 			GX_ShowGradWindow(gradInfo[1], gradInfo[2]);			
 		}
 		
@@ -4848,6 +4882,7 @@ function GX_DDLHandler(Node, value)
 			 GX_ShowFillColorWidget();
 		}
 		else if(value == 'Linear Gradient'){
+			gbNewGradObject =  true; 
 			 var gradID = GX_AddNewSVGObject('LINEAR_GRADIENT');		
 			 GX_ShowGradWindow(gradID, 'LINEAR_GRAD');		
 			if(!gradID)
@@ -4867,6 +4902,7 @@ function GX_DDLHandler(Node, value)
 			}		
 		}
 		else if(value == 'Radial Gradient'){
+			gbNewGradObject =  true; 
 			var gradID = GX_AddNewSVGObject('RADIAL_GRADIENT');		
 			 GX_ShowGradWindow(gradID, 'RADIAL_GRAD');		
 			if(!gradID)
@@ -6306,8 +6342,8 @@ function OnGradMouseMove(evt) {
             {
             	newX = gInitMarkerPoint.x + relPosition.x;
                 newY = gInitMarkerPoint.y + relPosition.y;
-                node.setAttribute('cx', newX+'');
-                node.setAttribute('cy', newY+'');
+                node.setAttribute('cx', newX);
+                node.setAttribute('cy', newY);
                 var cx1 = Math.round((newX * 100) / gGradWidth); 
         		var cx2 = Math.round((newY * 100) / gGradHeight);    
         		GX_SetObjectAttribute(gGradientObj.GradResourceNode, 'fx', cx1 + '%', true, false);
@@ -6317,8 +6353,8 @@ function OnGradMouseMove(evt) {
 
             newX = gInitMarkerPoint.x + relPosition.x;
             newY = gInitMarkerPoint.y + relPosition.y;
-            node.setAttribute('cx', newX+'');
-            node.setAttribute('cy', newY+'');              
+            node.setAttribute('cx', newX);
+            node.setAttribute('cy', newY);              
     }
 }
 function OnGradMouseOut(evt) {
@@ -6337,13 +6373,22 @@ function GX_ShowGradWindow(gradID, gradType)
      gCurrentGradientType = gradType; 
      var rgnode = document.getElementById('RGSpecific'); 
  	 var lgnode = document.getElementById('LGSpecific');
+ 	 
+ 	 if(gbNewGradObject == false){
+ 		var JQSel = "#" + 'gradTitleIP';        
+        WAL_disableWidget('gradTitleIP', 'data-jqxInput', false, true);
+ 	 }
+ 	 else{
+ 		var JQSel = "#" + 'gradTitleIP';        
+        WAL_disableWidget('gradTitleIP', 'data-jqxInput', false, false);
+ 	 }
      if(gradType == 'LINEAR_GRAD')
      {
     	 $(JQSel).jqxWindow('setTitle', 'Linear Gradient Settings');    	 
      	 rgnode.style.display = 'none'; 
      	 lgnode.style.display = 'block';            	
      	 JQSel = '.RG_MARKERS';
-     	 $(JQSel).hide();         	
+     	 $(JQSel).hide();         	            
      	 JQSel = '.LG_MARKERS'; 
      	 $(JQSel).show();        	
      }
@@ -6633,12 +6678,7 @@ function GX_GradAnimPreviewBtnHdlr(event){
 		GX_PreviewAnimation(animID);
 	}
 		
-	else if(nodeID == 'animTotalPreviewBtn')
-	{
-		animID = resID + '_TOP_GRAD_ANIM';		
-		GX_PreviewAnimation(animID);
-		//hide thenode and then display again 				
-	}
+	
 	
 	
 	
@@ -6692,7 +6732,9 @@ function GX_ShowFillColorWidget()
 		return ; 
 	var tgtNode = gCurrentObjectSelected;    
 	gPrevAttributeList = EL_getObjectAttributes(tgtNode);		
-	WAL_showColorPickerWidget('gradcolorpickwidget', '', 'fill_color_icon', attrName, gInitFillColor, tgtNode.id);
+	//WAL_showColorPickerWidget('gradcolorpickwidget', '', 'fill_color_icon', attrName, gInitFillColor, tgtNode.id);
+	WAL_showColorPickerWidget('colorpickwidget', '', 'fill_color_icon', attrName, gInitFillColor, tgtNode.id);
+	
 }
 function GX_FillColorAnimCheckValueChange(event)
 {
@@ -7112,5 +7154,9 @@ function GX_GradTabHandler(tabIndex){
 		break; 
 		
 	}
+	
+}
+
+function GX_HandlerForGradSliderChange(value){
 	
 }
