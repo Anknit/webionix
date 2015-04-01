@@ -2273,10 +2273,10 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
          Mode = 'default';
 
      $(JQSel).jqxSlider({ width: Width, height: Height, theme: gTheme, mode: Mode, min: MinValue, 
-     max: MaxValue, step:Step, ticksFrequency:tickFreq ,ticksPosition:'bottom' , showTicks: bShowTicks, tooltip:true, showButtons:true, rangeSlider: bRangeSlider});
+     max: MaxValue, step:Step, ticksFrequency:tickFreq ,ticksPosition:'bottom' , showTicks: bShowTicks, tooltip:true, showButtons:bButtonShow, rangeSlider: bRangeSlider});
      $(JQSel).attr(widgetType, "true");
 
-     $(JQSel).on('change', function() {
+     $(JQSel).on('change', function(event) {
 
          var value = $(this).jqxSlider('getValue');
          if(bRangeSlider != true)
@@ -2286,8 +2286,9 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
         	 value.rangeStart = Math.floor(value.rangeStart);  
         	 value.rangeEnd = Math.floor(value.rangeEnd);  
          }
-         if (HandlerSliderChange) {                        
-             var expr = HandlerSliderChange + "(value)";
+         if (HandlerSliderChange) {   
+        	 var node =  event.target; 
+             var expr = HandlerSliderChange + "(value,node )";
              eval(expr);
          }
      }); 
