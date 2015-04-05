@@ -370,9 +370,7 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
                 btnID = 'stop' + index + '_offset_slider';
                 var offset = gradProp.StopParam[j].offset;
                 offset = offset.substring(0, offset.length - 1);
-                WAL_setSliderValue(btnID, offset);
-                //WAL_disableWidget(btnID, 'data-jqxNumberInput', false, false);
-               
+                WAL_setSliderValue(btnID, offset);               
             }
             
             //now get the stopanimation param here 
@@ -382,7 +380,9 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
             	WAL_setCheckBoxValue('animateStop_col', objProp.bAnimate);             	
             	var durIPID= 'durStopColIP'; 
                 WAL_setNumberInputValue(durIPID, objProp.duration, false);
-            }            
+            }          
+            else
+            	WAL_setCheckBoxValue('animateStop_col', false);
         }
     
 };
@@ -712,10 +712,10 @@ function GX_CreateGradientWidget(wdgtID)
         WAL_createSlider('stop0_offset_slider', '110px', '15px', false, 0, 100,1, 25, false, false, 'GX_GradientEditBoxValueChange', false, '');
         WAL_createSlider('stop1_offset_slider', '110px', '15px', false, 0, 100,1, 25, false, false, 'GX_GradientEditBoxValueChange', false, '');
         
-        WAL_createCheckBox('animateStop_col', 'GX_GradientCheckValueChange', '50', gWidgetHeight, '13', false, false);
+        WAL_createCheckBox('animateStop_col', 'GX_GradientCheckValueChange', '70', gWidgetHeight, '13', false, false);
         WAL_createDecimalNumberInput("durStopColIP", '50px', '24', "GX_GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
-        WAL_createButton('apply_Stop_Col', '', '50', 25, true);
-        WAL_createButton('animPreviewStop', '', '60', 25, true);  
+        WAL_createButton('apply_Stop_Col', '', '55', 25, true);
+        WAL_createButton('animPreviewStop', '', '70', 25, true);  
        
         
         WAL_createColorPickerWindow("gradcolorpickwidget", "gradcolorpicker", '350', '250', "gradokbtn", "gradcancelbtn");
