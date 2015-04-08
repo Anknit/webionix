@@ -181,15 +181,7 @@ function GX_SetAnimParamOnUI(animParam) {
 		case 'stroke-width':
 			WAL_setNumberInputValue('startStrokeWidthValueIP', animParam.startValue, false); 
 				
-			break; 
-		case 'translate':			
-			var valarr  = animParam.startValue.split(" "); 
-			WAL_setNumberInputValue('startPosXIP', valarr[0], false); 
-			WAL_setNumberInputValue('startPosYIP', valarr[1], false);			
-			valarr  = animParam.endValue.split(" "); 
-			WAL_setNumberInputValue('endPosXIP', valarr[0], false); 
-			WAL_setNumberInputValue('endPosYIP', valarr[1], false);			
-			break; 
+			break;		
 		case 'rotate':			
 			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);					
 			break; 
@@ -315,12 +307,7 @@ function GX_GetAnimParamsFromUI()
 			animParam.startValue = WAL_getMaskedInputValue('startStrokeWidthValueIP'); 
 				
 			break; 
-		case 'translate':
-			var value = WAL_getMaskedInputValue('startPosXIP') + ' ' + WAL_getMaskedInputValue('startPosYIP');;
-			animParam.startValue =  value; 			
-			var value = WAL_getMaskedInputValue('endPosXIP') + ' ' + WAL_getMaskedInputValue('endPosYIP');;
-			animParam.endValue =  value;
-			break; 
+		
 		case 'rotate':			
 			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');			
 			break; 
@@ -421,17 +408,7 @@ function GX_GetAnimParamsFromUI()
                 
                  
                 
-                WAL_createNumberInput("startPosXIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 500, -500, 1);
-                WAL_setNumberInputValue('startPosXIP', 1, false); 
-                
-                WAL_createNumberInput("startPosYIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 500, -500, 1);
-                WAL_setNumberInputValue('startPosYIP', 1, false); 
-                
-                WAL_createNumberInput("endPosXIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 500, -500, 1);
-                WAL_setNumberInputValue('endPosXIP', 1, false); 
-                
-                WAL_createNumberInput("endPosYIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 500, -500, 1);
-                WAL_setNumberInputValue('endPosYIP', 1, false); 
+               
                 
                            
                 WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, 0, 1);
@@ -734,15 +711,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			WAL_setNumberInputValue('startStrokeWidthValueIP', 1, false); 
 			
 		 }
-		 if(itemval == 'translate')
-		 {			 
-			 JQSel = '#TRANSLATE_UI_GROUP';
-			 $(JQSel)[0].style.display='inline-block';	
-			 WAL_setNumberInputValue('startPosXIP', 0, false); 
-			 WAL_setNumberInputValue('startPosYIP', 0, false);			
-			 WAL_setNumberInputValue('endPosXIP', 100, false); 
-			 WAL_setNumberInputValue('endPosYIP', 0, false);	
-		 }
+		
 		 if( (itemval == 'rotate') || (itemval == 'skewX')||(itemval == 'skewY') )
 		 {			 
 			 JQSel = '#ANGLE_UI_GROUP';
