@@ -452,7 +452,7 @@
 	    	<div style= 'display:inline-block;margin-left:2px; margin-top:10px;'>Animation ID<input  id='animIDIP' style= 'margin-left:4px;' type='text' /></div>
 	    	<div style= 'display:inline-block; margin-left:2px; margin-top:10px;'>Object ID<input  id='objectIDIP' style= 'margin-left:4px;' type='text' /></div>
 	    	<div class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-top:14px;'>Title<input  id='animtitleIP' style= 'margin-left:4px;' type='text' value=" "/></div>	    	
-	    	<div id='durEdit' style='display:inline-block; margin-left:2px; margin-top:10px'>Duration(sec)<div id='durationIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+	    	
     	</div>
     	
     	
@@ -463,59 +463,9 @@
            </ul>
            <div id="animparamcontent">
            <div id='attrvalbtn' style='position:relative; top:10px; left:20px; z-index:1;background-color:white; margin-bottom:1px;margin-top:1px;'>Animate Attribute</div>
-             <div id='animattrgroup' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:2px; margin-bottom:20px; margin-right:5px; width: 352px; height: 120px'>                
-           	  <div id='animattrDivlist' class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Select Attribute<div id='animAttrDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
-           	  	<div id='COLORATTR_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
-           		   <div class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-top:14px;'>Start Value<input  id='startColValIP' style= 'margin-left:4px;' type='text' value=" "/></div>
-                   <div class='ANIMATTR' style= 'display:inline-block;'><input type="button" id ='startanimcolbtn' value="Color"  onclick='GX_ColBtnHdlr(event)'/></div>	
-                   <div class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-top:8px;'>End Value<input  id='endColValIP' style= 'margin-left:13px;' type='text' value=" "/></div>
-                   <div class='ANIMATTR' style='display:inline-block'><input type="button" id ='endanimcolbtn' value="2-Color"  onclick='GX_ColBtnHdlr(event)'/></div>
-                </div>
-                
-                <div id='OPACITY_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
-                	<div id='startfracEdit' style='margin-left:2px; margin-top:10px'>Start Value<div id='startOpacityValueIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-                	<div id='endfracEdit' style='margin-left:2px; margin-top:10px'>End Value<div id='endOpacityValueIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-left:11px;' ></div></div>                	
-                </div>
-                
-                 <div id='VISIBLE_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
-                	<div id='startcomboEdit' style='margin-left:2px; margin-top:10px'>Start Value<div id='startVisibilityValueDDL' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-                	<div id='endcomboEdit' style='margin-left:2px; margin-top:10px'>End Value<div id='endVisibilityValueDDL' class='EDIT_BOX group6' type='DIMENSION' style='margin-left:11px;' ></div></div>                	
-                </div>
-                
-                 <div id='STROKE_WIDTH_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
-                	<div  style='margin-left:2px; margin-top:10px'>Start Value<div id='startStrokeWidthValueIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-                	<div  style='margin-left:2px; margin-top:10px'>End Value<div id='endStrokeWidthValueIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-left:11px;' ></div></div>                	
-                 </div>
-                
-                <div id='TRANSLATE_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
-                	<div  style='display:inline-block; margin-left:2px; margin-top:10px'>Start-X Pos<div id='startPosXIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-                	<div  style='display:inline-block; margin-left:2px; margin-top:10px'>Start-Y Pos <div id='startPosYIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-                	
-                	<div>
-                		<div  style='display:inline-block;margin-left:2px; margin-top:10px'>End-X Pos<div id='endPosXIP' style='margin-left:12px;' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-                		<div  style='display:inline-block; margin-left:2px; margin-top:10px'>End-Y Pos<div id='endPosYIP' style='margin-left:17px;' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-                	</div>                	                	
-                </div>
-                
-                <div id='ANGLE_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
-                	<div  style='margin-left:2px; margin-top:10px'>Start Value(deg)<div id='startAngleValueIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-                	<div  style='margin-left:2px; margin-top:10px'>End Value(deg)<div id='endAngleValueIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-left:11px;' ></div></div>                	
-                </div>
-                             	
-           	 </div> <!-- anim attribute group box -->	
+             	
            	 <div id='motionvalbtn' style='position:relative; top:1px; left:20px; z-index:1;background-color:white; margin-bottom:5px;margin-top:1px;'>Animate Motion</div>
-           	 <div id='animmotiongroup' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:-13px; margin-bottom:20px; margin-right:5px; width: 352px; height:140px'>
-           	 	<div style='margin-top:8px; margin-left:15px; font-style:italic'>Animates the Object Along the Selected Path</div>
-           	    <div id='pathDivlist' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Select Path<div id='pathlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
-           	    <div id='pathvisibilityCB' style='display:inline-block; margin-left:2px; margin-top:-16px'>Path Visible</div>
-           	    
-           	  <!-- <div id='dada' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:0px; margin-bottom:5px; margin-right:5px; width: 340px; height:48px'>-->
-           	    	<!-- <div style='margin-top:-10px; margin-left:15px; font-style:italic';>Motion Offset from Path </div>-->
-           	    	<div style='display:inline-block; margin-left:2px; margin-top:0px'>X-OffsetFromPath<div id='offsetFromPathX' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-           	   		<div style='display:inline-block; margin-left:2px; margin-top:5px'>Y-OffsetFromPath<div id='offsetFromPathY' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-           	   <!-- </div>-->
-           	    
-           	 </div>
+           	 
           </div> <!-- id="animparamcontent" -->
           <div id="animtimecontent">
              <div id='starttext' style='position:relative; top:10px; left:20px; z-index:1; width:42px; background-color:white; margin-bottom:1px;margin-top:1px;'>Starts</div>
@@ -535,11 +485,7 @@
              		<div id='animlist' style= 'display:inline-block; margin-left:8px;'>Animation<div id='animlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
              	</div>
              	
-             	<div id='calcmodelist' style= 'display:inline-block; margin-left:8px;'>Mode<div id='calcmodelistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
-             	<div id='restartlist' style= 'display:inline-block; margin-left:8px;'>Restart<div id='restartlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
-             	             	
-             	<div id='repeatcountEdit' style='display:inline-block; margin-left:1px; margin-top:5px'>Repeat Count<div id='repeatcountIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-             	<div id='endstatelist' style= 'display:inline-block; margin-left:8px;'>End State<div id='endstatelistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+             	
              
              </div> <!--timingparamrgroup  -->
            
@@ -547,17 +493,67 @@
            </div> <!-- animtimecontent -->
            </div>    	
     	       	    	
-	   <div style= 'margin-top:6px;' >
-	   		 <input type="button" id ='newanimAddBtn'     value="Add"  onclick='GX_AnimDlgOK()'/> 
-	   		 <input type="button" id ='showlistbtn' value="Apply"  onclick='GX_ApplyBtnHdlr(event)'/>
-    		 <input type="button" id ='previewbtn' value="Preview"  onclick='GX_PreviewBtnHdlr(event)'/>
-	   	  	 <input type="button" id ='myOK'     value="OK"  onclick='GX_AnimDlgOK()'/>
-	    	<input type="button" id ='myCancel' value="Cancel" onclick='GX_AnimDlgCANCEL()' />
-	   </div> 	
+	   	
                         	
     </div> 
            
  </div>
+ 
+ <div id='animationListWidget'>
+ <div id='animhdr1' style='font-weight:bold; font-size:medium'>Animation List</div>
+    <div id='animcontent1' style="overflow: hidden">
+    
+    <div id='animationlist' style='display:inline-block'></div>
+    <div style='display:inline-block;position:relative; top:-90px'>
+    	<div><input type="button" id ='UpBtn' value="Up"  onclick='GX_AnimDlgBtnHdlr(event)'/></div>
+    	<div><input type="button" id ='DownBtn' value="Down"  onclick='GX_AnimDlgBtnHdlr(event)'/></div>
+    	
+    </div>
+    <div style='margin-left:2px; margin-top:10px;display:inline-block;'>Start<div id='startParamDDL' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+    <div id='durEdit' style='display:inline-block; margin-left:2px; margin-top:10px'>Duration(sec)<div id='durationIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+    <div id='animattrgroup' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:2px;  margin-right:5px; width: 352px; height: auto'>
+    		<div id='animattrDivlist' class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Animate<div id='animAttrDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>     
+          	   <div id='OPACITY_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
+                	<div id='startfracEdit' style='margin-left:2px; margin-top:10px'>Value<div id='startOpacityValueIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                	                	
+                </div>
+                 <div id='STROKE_WIDTH_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
+                	<div  style='margin-left:2px; margin-top:10px'>Start Value<div id='startStrokeWidthValueIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                	<div  style='margin-left:2px; margin-top:10px'>End Value<div id='endStrokeWidthValueIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-left:11px;' ></div></div>                	
+                 </div>
+                
+                <div id='TRANSLATE_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
+                	<div  style='display:inline-block; margin-left:2px; margin-top:10px'>Start-X Pos<div id='startPosXIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                	<div  style='display:inline-block; margin-left:2px; margin-top:10px'>Start-Y Pos <div id='startPosYIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                	
+                	<div>
+                		<div  style='display:inline-block;margin-left:2px; margin-top:10px'>End-X Pos<div id='endPosXIP' style='margin-left:12px;' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                		<div  style='display:inline-block; margin-left:2px; margin-top:10px'>End-Y Pos<div id='endPosYIP' style='margin-left:17px;' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                	</div>                	                	
+                </div>
+                <div id='MOTION_PATH_GROUP' class='ATTR_UI_GROUP' style='display:none'>	           	 	
+	           	    <div id='pathDivlist' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Select Path<div id='pathlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+	           	    <div id='pathvisibilityCB' style='display:inline-block; margin-left:2px; margin-top:-16px'>Path Visible</div>              	    
+           	 	</div>
+                
+                <div id='ANGLE_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>                	
+                	<div  style='margin-left:2px; margin-top:10px;display:inline-block;'>Value(deg)<div id='endAngleValueIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-left:11px;' ></div></div>                	
+                </div>
+                             	
+           	 </div>            
+             <div id='repeatcountEdit' style='display:inline-block; margin-left:1px; margin-top:5px'>Repeat Count<div id='repeatcountIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+             <div id='endstatelist' style= 'display:inline-block; margin-left:8px;'>End State<div id='endstatelistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+    
+    
+    
+    <div style= 'margin-top:20px;' >
+	   		 <input type="button" id ='previewbtn' value="Preview"  onclick='GX_PreviewBtnHdlr(event)'/>
+	   	  	 <input type="button" id ='animOK'     value="OK"  onclick='GX_AnimDlgOK()'/>
+	    	 <input type="button" id ='animCancel' value="Cancel" onclick='GX_AnimDlgCANCEL()' />
+	   </div> 
+    </div>
+ </div>
+ 
      <div id="fillcolorDlg" style='display:none'><div id="fillcoldlg">Fill Solid Color</div>
 	    <div id="fillcolcontent" style="overflow:hidden">
 			 	<label>Choose Color<button id='fill_colorbtn' type='BACKGROUND_COLOR'   onclick="GX_FillColorHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></label>

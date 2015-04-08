@@ -76,10 +76,12 @@ gAttrList['Stroke-Color'] = 'stroke';
 gAttrList['Opacity'] = 'fill-opacity'; 
 gAttrList['Visibility'] = 'visibility'; 
 gAttrList['Stroke-Width'] = 'stroke-width';
-gAttrList['Move'] = 'translate';
+gAttrList['Motion along Path'] = 'PathMotion';// 'translate';
 gAttrList['Rotate'] = 'rotate';
 gAttrList['Hor. Skew'] = 'skewX';
 gAttrList['Vert. Skew'] = 'skewY';
+
+
 
 var gReverseAttrList =[]; 
 gReverseAttrList['fill']           =  'Fill-Color'     ; 
@@ -87,7 +89,7 @@ gReverseAttrList['stroke']         =  'Stroke-Color'   ;
 gReverseAttrList['fill-opacity']   =  'Opacity'  ; 
 gReverseAttrList['visibility']     =  'Visibility'  ; 
 gReverseAttrList['stroke-width']   =  'Stroke-Width' ;
-gReverseAttrList['translate']      =  'Move'   ;
+gReverseAttrList['PathMotion']     =  'Motion along Path'   ;
 gReverseAttrList['rotate']         =  'Rotate' ;
 gReverseAttrList['skewX']          =  'Hor. Skew';
 gReverseAttrList['skewY']          =  'Vert. Skew';        
@@ -169,23 +171,16 @@ function GX_SetAnimParamOnUI(animParam) {
       //here should be the switch statement
 		switch(animParam.attribute)
 		{		
-		case 'fill':
-		case 'stroke':		
-			WAL_setTextInputValue('startColValIP', animParam.startValue, false);
-			WAL_setTextInputValue('endColValIP', animParam.endValue, false);							
-			break;
+		
 		case 'fill-opacity':			
 			WAL_setNumberInputValue('startOpacityValueIP', animParam.startValue, false);
-			WAL_setNumberInputValue('endOpacityValueIP', animParam.endValue, false);	
+			//WAL_setNumberInputValue('endOpacityValueIP', animParam.endValue, false);	
 			//continue from here next time			
 			break; 
-		case 'visibility':
-			WAL_SetItemByValueInList('startVisibilityValueDDL',animParam.startValue, true ); 
-			WAL_SetItemByValueInList('endVisibilityValueDDL',animParam.endValue, true );					
-			break; 
+		 
 		case 'stroke-width':
 			WAL_setNumberInputValue('startStrokeWidthValueIP', animParam.startValue, false); 
-			WAL_setNumberInputValue('endStrokeWidthValueIP', animParam.endtValue, false);				
+				
 			break; 
 		case 'translate':			
 			var valarr  = animParam.startValue.split(" "); 
@@ -195,16 +190,15 @@ function GX_SetAnimParamOnUI(animParam) {
 			WAL_setNumberInputValue('endPosXIP', valarr[0], false); 
 			WAL_setNumberInputValue('endPosYIP', valarr[1], false);			
 			break; 
-		case 'rotate':
-			WAL_setNumberInputValue('startAngleValueIP', animParam.startValue, false); 
+		case 'rotate':			
 			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);					
 			break; 
 		case 'skewX':
-			WAL_setNumberInputValue('startAngleValueIP', animParam.startValue, false); 
+			
 			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
 			break;
 		case 'skewY':
-			WAL_setNumberInputValue('startAngleValueIP', animParam.startValue, false); 
+			
 			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);		
 			break;
 		default:
@@ -259,10 +253,8 @@ function GX_SetAnimParamOnUI(animParam) {
         	return;        
         WAL_SetItemByValueInList('animlistDDL', animInfo[5], true);   
     }
-    // animParam.calcMode = 'linear';
-    WAL_SetItemByValueInList('calcmodelistDDL', animParam.calcMode, true);
-    //animParam.restart = 'never';
-    WAL_SetItemByValueInList('restartlistDDL', animParam.restart, true);
+   
+    
     // animParam.repeatCount = 0;
     WAL_setNumberInputValue('repeatcountIP', animParam.repeatCount, false);
     // animParam.endState = 'freeze'; //FREEZE, REMOVE
@@ -308,46 +300,34 @@ function GX_GetAnimParamsFromUI()
 			animParam.animType = 'ANIM_TRANSFORM'; 
 		}
 		animParam.attribute = itemval;		
-		//animParam.startValue = WAL_getInputValue('startColValIP');
-		//animParam.endValue = WAL_getInputValue('endColValIP');
+		
 		
 		//here should be the switch statement
 		switch(itemval)
 		{		
-		case 'fill':
-		case 'stroke':
-			animParam.startValue = WAL_getInputValue('startColValIP');
-			animParam.endValue = WAL_getInputValue('endColValIP');					
-			break;
+		
 		case 'fill-opacity':
 			animParam.startValue = WAL_getMaskedInputValue('startOpacityValueIP'); 
-			animParam.endValue = WAL_getMaskedInputValue('endOpacityValueIP');
+			animParam.endValue ='1.0';// WAL_getMaskedInputValue('endOpacityValueIP');
 			break; 
-		case 'visibility':
-			animParam.startValue = WAL_getDropdownListSelection('startVisibilityValueDDL');
-			animParam.endValue = WAL_getDropdownListSelection('endVisibilityValueDDL');			
-			break; 
+		
 		case 'stroke-width':
 			animParam.startValue = WAL_getMaskedInputValue('startStrokeWidthValueIP'); 
-			animParam.endValue = WAL_getMaskedInputValue('endStrokeWidthValueIP');			
+				
 			break; 
 		case 'translate':
 			var value = WAL_getMaskedInputValue('startPosXIP') + ' ' + WAL_getMaskedInputValue('startPosYIP');;
-			animParam.startValue =  value; 
-			
+			animParam.startValue =  value; 			
 			var value = WAL_getMaskedInputValue('endPosXIP') + ' ' + WAL_getMaskedInputValue('endPosYIP');;
 			animParam.endValue =  value;
 			break; 
-		case 'rotate':
-			animParam.startValue = WAL_getMaskedInputValue('startAngleValueIP'); 
+		case 'rotate':			
 			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');			
 			break; 
-		case 'skewX':
-			animParam.startValue = WAL_getMaskedInputValue('startAngleValueIP'); 
+		case 'skewX':			
 			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
 			break;
-		case 'skewY':
-			animParam.startValue = WAL_getMaskedInputValue('startAngleValueIP'); 
+		case 'skewY':			
 			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
 			break;
 		default:
@@ -402,8 +382,8 @@ function GX_GetAnimParamsFromUI()
 			 return ; 
 		 animParam.refAnimID = animInfo[0]; 
 	 }	
-	 animParam.calcMode = WAL_getDropdownListSelection('calcmodelistDDL'); 
-	 animParam.restart = WAL_getDropdownListSelection('restartlistDDL');
+	
+	
 	 animParam.repeatCount = WAL_getMaskedInputValue('repeatcountIP');
 	 animParam.endState = WAL_getDropdownListSelection('endstatelistDDL');	 
 	 return animParam; 
@@ -411,53 +391,35 @@ function GX_GetAnimParamsFromUI()
 
  function GX_CreateAnimationWidget(wdgtID)
  {
-                WAL_createModelessWindow(wdgtID, '380', '565', 'myOK', 'myCancel');
-                WAL_CreateTextInput('animIDIP', '100', gInputHeight,true, ''); 
-               
-                WAL_CreateTextInput('objectIDIP', '100', gInputHeight,true, ''); 
-                
-                WAL_CreateTextInput('animtitleIP', '100', gInputHeight,false, '');
-               
-                WAL_setTextInputValue('animtitleIP', '', true);
-                
-                //WAL_createNumberInput('durationIP', '100', gInputHeight, 'GX_AnimDlgEditHdlr', true, 100, 1, 1);
-                
+	 		//creaeting new animationlist interface 
+	 
+	 			WAL_createModelessWindow('animationListWidget', '380', '470', 'animOK', 'animCancel');
+	 			WAL_createListBox('animationlist', '305', '200', "GX_AnimationListHandler");
+	 			WAL_createButton('UpBtn', 'GX_AnimDlgBtnHdlr', '50', '24', true); 
+	 			WAL_createButton('DownBtn', 'GX_AnimDlgBtnHdlr', '50', '24', true);
+               // WAL_createModelessWindow(wdgtID, '380', '565', 'myOK', 'myCancel');                
+                WAL_createNumberInput("repeatcountIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, 0, 1);
+                var endstatelist = ['freeze', 'remove']; 
+                WAL_createDropdownList('endstatelistDDL', '80', gInputHeight, false, endstatelist, "GX_AnimAttrListHandler", '50');                
+              
                 WAL_createDecimalNumberInput("durationIP", '100px', gInputHeight, "GX_AnimDlgEditHdlr",true, 10.0,0.0,0.1);
                 WAL_setNumberInputValue('durationIP', 2, false); 
+                //var attrList = ['Fill-Color', 'Stroke-Color', 'Opacity', 'Visibility', 'Stroke-Width', 'Move', 'Rotate', 'Hor. Skew', 'Vert. Skew'];                
+                var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Hor. Skew', 'Vert. Skew'];
+                WAL_createDropdownList('animAttrDDL', '140', gInputHeight, false, attrList, "GX_AnimAttrListHandler", '100');
                 
-                WAL_createTab('animTabContent', '380', 'GX_AnimTabHandler');
-                WAL_createRadioButton('attrvalbtn', 'GX_AnimDlgRadioValueChangeHdlr', '140', '20', false, false);
-               
-              /*  var attrList = ['fill', 'stroke', 'fill-opacity', 'visibility', 'stroke-width','translate', 'rotate', 'skewX','skewY'];
-                                */
-                
-                var attrList = ['Fill-Color', 'Stroke-Color', 'Opacity', 'Visibility', 'Stroke-Width', 'Move', 'Rotate', 'Hor. Skew', 'Vert. Skew']; 
-                
-                WAL_createDropdownList('animAttrDDL', '120', gInputHeight, false, attrList, "GX_AnimAttrListHandler", '100');
-                
-                WAL_CreateTextInput('startColValIP', '80', gInputHeight,false, 'GX_AnimDlgEditHdlr');
-                WAL_setTextInputValue('startColValIP', '', true);
-                
-                WAL_CreateTextInput('endColValIP', '80', gInputHeight,false, 'GX_AnimDlgEditHdlr');
-                WAL_setTextInputValue('endColValIP', '', true);
-                
-                WAL_createButton('startanimcolbtn', 'GX_AnimDlgBtnHdlr', '50', 24, true);          
-                WAL_createButton('endanimcolbtn', 'GX_AnimDlgBtnHdlr', '50', 24, true); 
+                attrList = ['After Previous', 'With Previous', 'On Click'];                
+                WAL_createDropdownList('startParamDDL', '120', gInputHeight, false, attrList, "GX_AnimAttrListHandler", '100');
                 
                 WAL_createDecimalNumberInput("startOpacityValueIP", '80px', gInputHeight, "GX_AnimDlgEditHdlr",true, 1.0,0.0,0.1);
                 WAL_setNumberInputValue('startOpacityValueIP', 1.0, false); 
-                WAL_createDecimalNumberInput("endOpacityValueIP", '80px', gInputHeight, "GX_AnimDlgEditHdlr",true, 1.0,0.0,0.1);
-                WAL_setNumberInputValue('endOpacityValueIP', 1.0, false); 
                 
-                var valuelist = ['visible', 'hidden']; 
-                WAL_createDropdownList('startVisibilityValueDDL', '120', gInputHeight, false, valuelist, "GX_AnimAttrListHandler", '50');
-                WAL_createDropdownList('endVisibilityValueDDL', '120', gInputHeight, false, valuelist, "GX_AnimAttrListHandler", '50');
+                
                                
                 WAL_createNumberInput("startStrokeWidthValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 15, 1, 1);
                 WAL_setNumberInputValue('startOpacityValueIP', 1, false); 
                 
-                WAL_createNumberInput("endStrokeWidthValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 15, 1, 1);
-                WAL_setNumberInputValue('endStrokeWidthValueIP', 1, false); 
+                 
                 
                 WAL_createNumberInput("startPosXIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 500, -500, 1);
                 WAL_setNumberInputValue('startPosXIP', 1, false); 
@@ -471,9 +433,7 @@ function GX_GetAnimParamsFromUI()
                 WAL_createNumberInput("endPosYIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 500, -500, 1);
                 WAL_setNumberInputValue('endPosYIP', 1, false); 
                 
-                WAL_createNumberInput("startAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, 0, 1);
-                WAL_setNumberInputValue('startAngleValueIP', 0, false);
-                
+                           
                 WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, 0, 1);
                 WAL_setNumberInputValue('endAngleValueIP', 0, false);                
                       
@@ -490,8 +450,8 @@ function GX_GetAnimParamsFromUI()
                 
                 
                 WAL_createButton('previewbtn', 'GX_AnimDlgBtnHdlr', '58', 24, true);
-                WAL_createButton('showlistbtn', 'GX_AnimDlgBtnHdlr', '70', 24, true);
-                WAL_createButton('newanimAddBtn', 'GX_AnimDlgBtnHdlr', '70', 24, true);               
+                
+                           
                 
                 WAL_createRadioButton('timeRB', 'GX_AnimDlgRadioValueChangeHdlr', '110', '20', false, false);
                 WAL_createDecimalNumberInput("startTimeIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 10.0,0.0,0.1);
@@ -517,16 +477,7 @@ function GX_GetAnimParamsFromUI()
                 
                 WAL_createDropdownList('animlistDDL', '135', gInputHeight, false, animlist, "GX_AnimAttrListHandler", '50');
                 
-                var calclist = ['linear', 'spline', 'discrete']; 
-                WAL_createDropdownList('calcmodelistDDL', '100', gInputHeight, false, calclist, "GX_AnimAttrListHandler", '50');       
-                
-                var restartlist = ['never', 'always', 'whenNotActive']; 
-                WAL_createDropdownList('restartlistDDL', '130', gInputHeight, false, restartlist, "GX_AnimAttrListHandler", '50');
-                
-                WAL_createNumberInput("repeatcountIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, 0, 1);
-                
-                var endstatelist = ['freeze', 'remove']; 
-                WAL_createDropdownList('endstatelistDDL', '80', gInputHeight, false, endstatelist, "GX_AnimAttrListHandler", '50');            
+                            
              
                 WAL_setradioButtonCheck('animeventRB', true); 
                 WAL_setradioButtonCheck('uieventRB', true); 
@@ -767,42 +718,26 @@ function GX_RemoveAnimInfoFromList(animID)
 		 var itemval = gAttrList[value]; 
 		 var JQSel = '.ATTR_UI_GROUP'; 
 		 $(JQSel).hide(); 		
-		 if( (itemval == 'fill') || (itemval == 'stroke') )
-		 {
-			 JQSel = '#COLORATTR_UI_GROUP'; 
-			 $(JQSel).show(); 
-			 WAL_disableWidget('startanimcolbtn', 'data-jqxButton', false, false);
-			 gCurrAttrname = itemval;
-			 WAL_disableWidget('endanimcolbtn', 'data-jqxButton', false, false);			 
-			WAL_setTextInputValue('startColValIP','', false);
-			WAL_setTextInputValue('endColValIP', '', false);		
-			 
-		 }
+		 
 		 if(itemval == 'fill-opacity')
 		 {
-			 JQSel = '#OPACITY_UI_GROUP'; 
-			 $(JQSel).show(); 
+			 JQSel = '#OPACITY_UI_GROUP';			 
+			 $(JQSel)[0].style.display='inline-block'; 
 			WAL_setNumberInputValue('startOpacityValueIP', 0.0, false);
-			WAL_setNumberInputValue('endOpacityValueIP', 1.0, false);	
+			//WAL_setNumberInputValue('endOpacityValueIP', 1.0, false);	
 		 }
-		 if(itemval == 'visibility')
-		 {
-			 JQSel = '#VISIBLE_UI_GROUP';
-			 $(JQSel).show();		
-			WAL_SetItemByValueInList('startVisibilityValueDDL','hidden', true ); 
-			WAL_SetItemByValueInList('endVisibilityValueDDL','visible' , true);	
-		 }
+		 
 		 if(itemval == 'stroke-width')
 		 {			 
 			 JQSel = '#STROKE_WIDTH_UI_GROUP';
-			 $(JQSel).show();		
+			 $(JQSel)[0].style.display='inline-block';	
 			WAL_setNumberInputValue('startStrokeWidthValueIP', 1, false); 
-			WAL_setNumberInputValue('endStrokeWidthValueIP', 8, false);	
+			
 		 }
 		 if(itemval == 'translate')
 		 {			 
 			 JQSel = '#TRANSLATE_UI_GROUP';
-			 $(JQSel).show();	
+			 $(JQSel)[0].style.display='inline-block';	
 			 WAL_setNumberInputValue('startPosXIP', 0, false); 
 			 WAL_setNumberInputValue('startPosYIP', 0, false);			
 			 WAL_setNumberInputValue('endPosXIP', 100, false); 
@@ -811,9 +746,18 @@ function GX_RemoveAnimInfoFromList(animID)
 		 if( (itemval == 'rotate') || (itemval == 'skewX')||(itemval == 'skewY') )
 		 {			 
 			 JQSel = '#ANGLE_UI_GROUP';
-			 $(JQSel).show();		
-			WAL_setNumberInputValue('startAngleValueIP', 0, false); 
+			 $(JQSel)[0].style.display='inline-block';//.show();			
 			WAL_setNumberInputValue('endAngleValueIP', 30, false);	
+		 }
+		 if(itemval == 'stroke-width')
+		 {			 
+			 JQSel = '#STROKE_WIDTH_UI_GROUP';
+			 $(JQSel)[0].style.display='inline-block';	
+			WAL_setNumberInputValue('startStrokeWidthValueIP', 1, false);			
+		 }
+		 if(itemval == 'PathMotion'){
+			JQSel = '#MOTION_PATH_GROUP'; 
+			$(JQSel)[0].style.display='inline-block';				 
 		 }
 	 }
 	 	 
@@ -829,18 +773,10 @@ function GX_RemoveAnimInfoFromList(animID)
 		if(state ==  true)
 		{			
 			WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, false);
-			WAL_disableWidget('startColValIP', 'data-jqxInput', false, false);
-			WAL_disableWidget('endColValIP', 'data-jqxInput', false, false);	
-			WAL_disableWidget('startanimcolbtn', 'data-jqxButton', false, true);
-			WAL_disableWidget('endanimcolbtn', 'data-jqxButton', false, true);
 		}
 		else
 		{
 			WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, true);
-			WAL_disableWidget('startColValIP', 'data-jqxInput', false, true);
-			WAL_disableWidget('endColValIP', 'data-jqxInput', false, true);
-			WAL_disableWidget('startanimcolbtn', 'data-jqxButton', false, true);
-			WAL_disableWidget('endanimcolbtn', 'data-jqxButton', false, true);
 			
 		}
 	}
@@ -1058,34 +994,8 @@ function GX_RemoveAnimInfoFromList(animID)
  function GX_AnimDlgBtnHdlr(node)
  {
 	 var nodeid =  node.id; 
-	 if(nodeid == 'startanimcolbtn')
-	 {
-		    WAL_hideWidget('animcolorpickwidget', true); 
-		    if(!gInitAnimParam)
-		    	return ; 
-			
-			if( (gCurrAttrname == 'fill') || (gCurrAttrname == 'stroke') )
-			{
-				var initColVal = gCurrentObjectSelected.getAttribute(gCurrAttrname); 		
-				WAL_showColorPickerWidget('animcolorpickwidget', '', 'startanimcolbtn','value', initColVal, 'startColValIP');				
-			}			
-	 }
-	 else if(nodeid == 'endanimcolbtn')
-	 {
-		    WAL_hideWidget('animcolorpickwidget', true); 
-		    if(!gInitAnimParam)
-		    	return ; 
-			
-			if( (gCurrAttrname == 'fill') || (gCurrAttrname == 'stroke') )
-			{
-				var initColVal = gCurrentObjectSelected.getAttribute(gCurrAttrname); 		
-				WAL_showColorPickerWidget('animcolorpickwidget', '', 'endanimcolbtn','value', initColVal, 'endColValIP');				
-			}			
-	 }
-	 else if(nodeid == 'newanimAddBtn')
-	 {
-		 GX_AddNewAnimationObject(); 
-	 }
+	 
+	 
  }
  
  
@@ -1440,17 +1350,8 @@ function GX_RemoveAnimInfoFromList(animID)
  
  function GX_AnimColorWidgetOK(event)
  {
-	 var refID = WAL_getColorPickerRefID('animcolorpickwidget');
-	 if(refID == 'startanimcolbtn')
-	 {
-		 var value = WAL_getColorPickerValue('animcolorpickwidget'); 
-		 WAL_setTextInputValue('startColValIP', value, false); 
-	 }	
-	 else if(refID == 'endanimcolbtn')
-	 {
-		 var value = WAL_getColorPickerValue('animcolorpickwidget'); 
-		 WAL_setTextInputValue('endColValIP', value, false); 
-	 }	
+	 
+	 
  }
  
  function GX_GetAnimParamFromNode(animNode)
@@ -2012,9 +1913,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	WAL_setradioButtonCheck('animeventRB', false); 
 	   
 	    // animParam.calcMode = 'linear';
-	WAL_SetItemByValueInList('calcmodelistDDL', animParam.calcMode, true);
-	    //animParam.restart = 'never';
-	WAL_SetItemByValueInList('restartlistDDL', animParam.restart, true);
+	
+	
 	    // animParam.repeatCount = 0;
 	WAL_setNumberInputValue('repeatcountIP', animParam.repeatCount, false);
 	    // animParam.endState = 'freeze'; //FREEZE, REMOVE
@@ -2042,4 +1942,9 @@ function GX_RemoveAnimInfoFromList(animID)
  	motionanimNode.endElement(0); 
  	GX_ChangeAnimateMotionSettings(motionanimNode , 'to');       
   
- }              
+ }         
+ 
+ function GX_AnimationListHandler(index){
+	 
+	 
+ }
