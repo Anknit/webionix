@@ -1042,14 +1042,16 @@ function GX_InitializeDocument(svgFileName)
 	 
 	 if(!gObjectList)
 	 {
-		 gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
+		 GX_UpdateAnimationListbox(); 
+		/* gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
 		 var animlist = new Array(); 
-		 for(var i =0; i <gAnimList.length; i++)
-		 {
-			 //if(gAnimList[i][5] != 'Invisible Animation')
-				 animlist.push(gAnimList[i][5]); 
+		 for(var i =0; i <gAnimList.length; i++){
+			 animlist.push(gAnimList[i][5]); 
 		 }
-		 WAL_UpdateDropDownList('listanimDDL', animlist);
+		// WAL_UpdateDropDownList('listanimDDL', animlist);
+		// var animList1=['Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1',]; 
+		 WAL_ListBoxUpdateData('animationlist', animlist);
+		 */
 	 }
 	 
 	
@@ -1092,6 +1094,10 @@ function GX_MenuItemShow(menuid, itemText)
 		 break; 
 	 case 'animate':
 		 GX_showEditorInterface('ANIM_MODE'); 
+		 setTimeout(function(){			
+			 WAL_showModalWindow('animationListWidget',"", "" );	
+			 
+				}, 250); 
 		 break;
 	 case 'grid':
 		 var menuname =  WAL_getMenuItemText(args); 
@@ -3522,6 +3528,9 @@ function GX_InitializeToolbar()
     
      //create the new filwdiget interface
     //GX_CreateFillWidget(); 
+    //create the animationlist widget here 
+    GX_CreateAnimationWidget(0); 
+    
 }
 
 function GX_EditBoxValueChange(value, widgetnode)
@@ -6410,8 +6419,7 @@ function GX_ShowGradWindow(gradID, gradType)
 
 function GX_AddNewAnimation()
 {
-	if(bAnimWdgtCreated != true)
-    	GX_CreateAnimationWidget('animationwidget'); 
+	
 	if(!gCurrentObjectSelected)
 		return ;
 	gNewAnimObject = true; 
@@ -6420,7 +6428,7 @@ function GX_AddNewAnimation()
     gInitAnimParam.animID = GXRDE_GetUniqueID('ANIM_');  
     gInitAnimParam.objectID = gCurrentObjectSelected.id;  
     gInitAnimParam.duration = 2;
-    gInitAnimParam.animType = ''; //ATTRIBUTE, MOTION,TRANSFORM
+    gInitAnimParam.animType = ''; 
     gInitAnimParam.attribute = 'fill';
     gInitAnimParam.startValue = '#00ff00';
     gInitAnimParam.endValue = '#ffff33';
@@ -6443,10 +6451,9 @@ function GX_AddNewAnimation()
     GX_ResetUI(gInitAnimParam); 
    // GX_SetAnimParamOnUI(gInitAnimParam);         
     
-    WAL_hideWidget('newanimAddBtn', false); 
-    WAL_hideWidget('showlistbtn', true);
+   
     WAL_hideWidget('previewbtn', true);    
-	WAL_showModalWindow('animationwidget',"", "" );
+	WAL_showModalWindow('newAnimationDlg',"", "" );
 }
 
 
@@ -6466,8 +6473,7 @@ function GX_EditAnimation(animID)
     GX_SetAnimParamOnUI(gInitAnimParam);   
 	
     gbApplied = false;
-    WAL_hideWidget('newanimAddBtn', true); 
-    WAL_hideWidget('showlistbtn', false);
+   
     WAL_hideWidget('previewbtn', false);
    
     
