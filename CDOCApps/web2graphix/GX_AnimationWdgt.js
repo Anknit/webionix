@@ -378,7 +378,8 @@ function GX_GetAnimParamsFromUI()
                 WAL_createNumberInput("startStrokeWidthValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 15, 1, 1);
                 WAL_setNumberInputValue('startOpacityValueIP', 1, false); 
                 WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, 0, 1);
-                WAL_setNumberInputValue('endAngleValueIP', 0, false);                
+                WAL_setNumberInputValue('endAngleValueIP', 0, false);    
+                WAL_createButton('previewbtn', 'GX_AnimDlgBtnHdlr', '58','24', true);
                       
                 WAL_createRadioButton('motionvalbtn', 'GX_AnimDlgRadioValueChangeHdlr', '130', '20', false, false);
                 var pathList = ['SVG_001', 'SVG_103', 'SVG_234']; 
@@ -392,7 +393,7 @@ function GX_GetAnimParamsFromUI()
                 WAL_setNumberInputValue('offsetFromPathY', 0, false); 
                 
                 
-                WAL_createButton('previewbtn', 'GX_AnimDlgBtnHdlr', '58', 24, true);
+               
                 
                            
                 
@@ -1814,7 +1815,17 @@ function GX_RemoveAnimInfoFromList(animID)
   
  }         
  
- function GX_AnimationListHandler(index){
+ function GX_AnimationListHandler(value){
+	 
+	// Debug_Message('Selected: ' + value);	
+	 if(gCurrentObjectSelected)
+			GX_SetSelection(gCurrentObjectSelected, false); 	
+		var animInfo = GX_GetAnimInfoByTitle(value); 
+		var animNode =  document.getElementById(animInfo[0]); 
+		if(!animNode)
+			return ;				
+		GX_SetSelection(animNode.targetElement, true);
+		
 	 
 	 
  }
