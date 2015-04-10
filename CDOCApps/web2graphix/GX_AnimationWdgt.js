@@ -59,7 +59,7 @@ var gAnimEndTimer = 400;
 var gbAnimationEnd =  true; 
 var gInitAnimParam = 0; 
 var gObjectList = 0; 
-var gAnimList = 0; 
+var gAnimList = 0; //[animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval]; 
 var gCurrAttrname;
 var gCurrAnimNode = 0; 
 var gCurrAnimParam=0; 
@@ -96,28 +96,7 @@ gReverseAttrList['skewY']          =  'Vert. Skew';
 
 function GX_SetAnimParamOnUI(animParam) {
 
-  /*  gInitAnimParam = new sAnimParams();
-    gInitAnimParam.animID = animParam.animID;
-    gInitAnimParam.objectID = animParam.objectID;
-    gInitAnimParam.duration = animParam.duration;
-    gInitAnimParam.animType = animParam.animType;
-    gInitAnimParam.attribute = animParam.attribute;
-    gInitAnimParam.startValue = animParam.startValue;
-    gInitAnimParam.endValue = animParam.endValue;
-    gInitAnimParam.refPathID = animParam.refPathID;
-    gInitAnimParam.bPathVisible = animParam.bPathVisible;
-    gInitAnimParam.startType = animParam.startType;
-    gInitAnimParam.startTime = animParam.startTime;
-    gInitAnimParam.UIEventType = animParam.UIEventType;
-    gInitAnimParam.UIObjectID = animParam.UIObjectID;
-    gInitAnimParam.AnimEventType = animParam.AnimEventType;
-    gInitAnimParam.refAnimID= animParam.refAnimID;
-    gInitAnimParam.calcMode = animParam.calcMode;
-    gInitAnimParam.restart = animParam.restart;
-    gInitAnimParam.repeatCount = animParam.repeatCount;
-    gInitAnimParam.endState = animParam.endState;  
-    gInitAnimParam.title = animParam.title;
-    */
+  
       
 	//first filter out the entries here 
 	var objectList=[]; 
@@ -214,13 +193,7 @@ function GX_SetAnimParamOnUI(animParam) {
         var splitstring = mystr.split(',');
         WAL_setNumberInputValue('offsetFromPathX', splitstring[0], true);
         WAL_setNumberInputValue('offsetFromPathY', splitstring[1], true);         
-    }
-
-    // animParam.startType = 'ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
-    if (animParam.startType == 'ON_TIME') {
-        WAL_setradioButtonCheck('timeRB', true);         
-        //animParam.startTime = 0;
-        WAL_setNumberInputValue('startTimeIP', animParam.startTime, false);
+      
     }
     else if (animParam.startType == 'ON_UIEVENT') {
         WAL_setradioButtonCheck('uieventRB', true);       
@@ -341,12 +314,7 @@ function GX_GetAnimParamsFromUI()
     }
 
 	//timing params 
-	 bRBState = WAL_getradioButtonCheckState('timeRB');
-	 if(bRBState == true)
-	 {
-		 animParam.startType = 'ON_TIME'; 
-		 animParam.startTime = WAL_getMaskedInputValue('startTimeIP');	
-	 }
+	 
 	 bRBState = WAL_getradioButtonCheckState('uieventRB');
 	 if(bRBState == true)
 	 {
@@ -378,7 +346,13 @@ function GX_GetAnimParamsFromUI()
 
  function GX_CreateAnimationWidget(wdgtID)
  {
-	 		//creaeting new animationlist interface 
+	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Hor. Skew', 'Vert. Skew'];
+	 	//create the new animation widget interface here 	 
+	 			WAL_createModelessWindow('newAnimationDlg', '220', '150', 'newAnimOK', 'newAnimCancel');
+	 			WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '')	 ; 			
+                WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 100); 			
+	 			
+	 	//creating new animationlist interface 
 	 
 	 			WAL_createModelessWindow('animationListWidget', '380', '470', 'animOK', 'animCancel');
 	 			WAL_createListBox('animationlist', '305', '200', "GX_AnimationListHandler");
@@ -392,7 +366,7 @@ function GX_GetAnimParamsFromUI()
                 WAL_createDecimalNumberInput("durationIP", '100px', gInputHeight, "GX_AnimDlgEditHdlr",true, 10.0,0.0,0.1);
                 WAL_setNumberInputValue('durationIP', 2, false); 
                 //var attrList = ['Fill-Color', 'Stroke-Color', 'Opacity', 'Visibility', 'Stroke-Width', 'Move', 'Rotate', 'Hor. Skew', 'Vert. Skew'];                
-                var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Hor. Skew', 'Vert. Skew'];
+               
                 WAL_createDropdownList('animAttrDDL', '140', gInputHeight, false, attrList, "GX_AnimAttrListHandler", '100');
                 
                 attrList = ['After Previous', 'With Previous', 'On Click'];                
@@ -400,17 +374,9 @@ function GX_GetAnimParamsFromUI()
                 
                 WAL_createDecimalNumberInput("startOpacityValueIP", '80px', gInputHeight, "GX_AnimDlgEditHdlr",true, 1.0,0.0,0.1);
                 WAL_setNumberInputValue('startOpacityValueIP', 1.0, false); 
-                
-                
                                
                 WAL_createNumberInput("startStrokeWidthValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 15, 1, 1);
                 WAL_setNumberInputValue('startOpacityValueIP', 1, false); 
-                
-                 
-                
-               
-                
-                           
                 WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, 0, 1);
                 WAL_setNumberInputValue('endAngleValueIP', 0, false);                
                       
@@ -430,7 +396,7 @@ function GX_GetAnimParamsFromUI()
                 
                            
                 
-                WAL_createRadioButton('timeRB', 'GX_AnimDlgRadioValueChangeHdlr', '110', '20', false, false);
+               
                 WAL_createDecimalNumberInput("startTimeIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 10.0,0.0,0.1);
                 
                 WAL_createRadioButton('uieventRB', 'GX_AnimDlgRadioValueChangeHdlr', '130', '20', false, false);
@@ -457,9 +423,7 @@ function GX_GetAnimParamsFromUI()
                             
              
                 WAL_setradioButtonCheck('animeventRB', true); 
-                WAL_setradioButtonCheck('uieventRB', true); 
-                WAL_setradioButtonCheck('timeRB', true); 
-                
+                WAL_setradioButtonCheck('uieventRB', true);               
                 WAL_createColorPickerWindow("animcolorpickwidget", "animcolorpicker", '350', '250', "animokbtn", "animcancelbtn");
                 
                 bAnimWdgtCreated = true; 
@@ -762,17 +726,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			WAL_disableWidget('pathvisibilityCB', 'data-jqxCheckBox', false, true);			
 		}
 	}
-	else if(radioID == 'timeRB')
-	{
-		if(state == true)
-		{			
-			WAL_disableWidget('startTimeIP', 'data-jqxNumberInput', false, false);					
-		}
-		else
-		{
-			WAL_disableWidget('startTimeIP','data-jqxNumberInput', false, true);		
-		}		
-	}
+	
 	else if(radioID == 'uieventRB')
 	{		
 		if(state == true)
@@ -826,40 +780,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			respStr = GX_UpdateAnimObjectAttribute(gCurrAnimParam.animID, attrArray); 
 		}		
 	}
-	/*
-	else
-	 {
-		 //create a new animation object again 
-		GX_AddAnimationElement(gCurrAnimParam); 
-	 }
 	
-	if(gNewAnimObject == true)
-	{
-		if(gCurrAnimParam.animType == 'ANIM_MOTION')
-		{
-			var retval = GXRDE_openSVGFile(gSVGFilename); 
-		    var HTMLstr=""; 		 
-		    var currfilename = gSVGFilename; 
-		    var currObjID = gCurrAnimParam.objectID; 
-		    if(retval)
-		    {
-			     GX_CloseSVGFile();
-			   	 var dataNode = document.getElementById('objectcontainer');   	 
-			   	 dataNode.innerHTML += retval;		   	
-			  	 GX_InitializeDocument(currfilename);		   	
-		    }	
-		    var xmlstr = GXRDE_GetSVGMetaXML(currfilename);    
-		    if(xmlstr)
-		       GX_updateTreeWidget(xmlstr);   
-		    WAL_expandAllTreeItems(gTreeNodeID, true);
-		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);		     
-		    GX_MenuItemShow('animate', 'Animate');		    
-		}
-	}
-	
-	if(gNewAnimObject == true)
-		gNewAnimObject = false; 
-		*/
 	
 	gbApplied = false;	
 	
@@ -870,7 +791,7 @@ function GX_RemoveAnimInfoFromList(animID)
  {	 
 	 var JQSel = "#" + "animtitleIP";	
 		var animName  = $(JQSel).val();	
-		var firstchar
+		var firstchar;
 		
 		if ( (animName == '') || (animName[0] == " ") )
 		{
@@ -1056,13 +977,11 @@ function GX_RemoveAnimInfoFromList(animID)
  {
 	 var animcodestr =""; 
 	 var attrArray = [];
-	 var attrData; 
-	 
+	 var attrData; 	 
 	 //common 
 	 attrData = ['title',animParams.title];  
-	 attrArray.push(attrData); 	  
-	    
-	// attrData = ['dur',animParams.duration+'s'];  
+	 attrArray.push(attrData);
+
 	 attrData = ['dur',animParams.duration+'s']; 
 	 attrArray.push(attrData);
 	 
@@ -1140,18 +1059,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		
 		//NOW CALCULATE THE OFFSET 
 		//get the object type 
-	/*	var objNode =  document.getElementById(animParams.objectID); 
-		var pathNode  = document.getElementById(animParams.refPathID);
-		//get the path dim . 
-		var objDim =  GX_GetRectObjectDim(objNode); 
-		var pathDim = GX_GetPathDimension(pathNode); 
-		//calculate the difference of the dimenion points 
-		var xoffset, yoffset; 
-		xoffset = objDim.x -  pathDim.x; 
-		yoffset = objDim.y - pathDim.y + objDim.height/2;
-		//put if
-		var offset = xoffset + ',' + yoffset;
-		*/
+	
 	//	var offset = GX_CalculateMotionAnimPathOffset(animParams.objectID, animParams.refPathID);
 		attrData = ['from',animParams.PathObjectOffset];  
 		attrArray.push(attrData);	
@@ -1166,15 +1074,10 @@ function GX_RemoveAnimInfoFromList(animID)
 	{
 		 attrData = ['attributeType','XML'];  
 		 attrArray.push(attrData); 	  
-		/* attrData = ['fill',animParams.endState];  
-		 attrArray.push(attrData);
-		 attrData = ['begin',beginval];  
-		  attrArray.push(attrData);
-		  */
+		
 		 if(animParams.animType == 'ANIM_ATTRIBUTE')
 		 {
-			// animcodestr = '<animate id="' + animParams.animID +'" attributeName="'+ animParams.attribute + '" attributeType="XML" calcMode="'+ animParams.calcMode;
-			 //animcodestr += '" dur="' + animParams.duration + 's"  from="' + animParams.startValue + '" to="' + animParams.endValue + '"  fill="' +  animParams.endState+ '" restart="'+ animParams.restart+ '" ';
+			
 		    attrData = ['attributeName',animParams.attribute];  
 		    attrArray.push(attrData);   
 		    
@@ -1206,10 +1109,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			 attrData = ['to',endval];  
 			 attrArray.push(attrData); 	  		 
 		 }
-	}	 	
-//	 var animstr = GXRDE_addNewAnimationObject(animParams.animID, animParams.objectID, 
-//			 animParams.animType, attrArray);	 
-	 
+	}	 		 
 	//delete the existing node first 
 	GX_AddNewAnimElementInDOM(animParams.animID, animParams.objectID,animParams.animType, attrArray, bUpdateUI); 
  }
@@ -1275,6 +1175,7 @@ function GX_RemoveAnimInfoFromList(animID)
  {
 	 
 	 var animstr = GXRDE_addNewAnimationObject(animID, ObjID, animType, attrArray); 
+	
 	 var animNode = document.getElementById(animID); 
 	 if(animNode)
 	 {
@@ -1876,7 +1777,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	WAL_setCheckBoxValue('pathvisibilityCB', false);	        
 	WAL_setNumberInputValue('offsetFromPathX', 0, true);
 	WAL_setNumberInputValue('offsetFromPathY', 0, true); 	   
-	WAL_setradioButtonCheck('timeRB', true);  	        
+	   
 	WAL_setNumberInputValue('startTimeIP',0, false);   
 	WAL_setradioButtonCheck('uieventRB', false);       
 	WAL_setradioButtonCheck('animeventRB', false); 
@@ -1916,4 +1817,80 @@ function GX_RemoveAnimInfoFromList(animID)
  function GX_AnimationListHandler(index){
 	 
 	 
+ }
+ 
+ function GX_NewAnimDlgOK(){
+	 //add the new animation object and do the needful 
+	 	
+		var animName  =  WAL_getInputValue('newAnimtitleIP');
+		var firstchar;		
+		if ( (animName == '') || (animName[0] == " ") )
+		{
+			Debug_Message("Please Assign a Title to the Animation");		
+			setTimeout(function(){			
+				WAL_showModalWindow('newAnimationDlg',"", "" );		
+				}, 250); 
+			return ; 
+		} 	
+		var attrtype =  WAL_getDropdownListSelection('newAnimTypeDDL');
+		attrtype = gAttrList[attrtype]; 
+		var animType = 'ANIM_ATTRIBUTE'; 
+		if(attrtype == 'rotate'){
+			animType = 'ANIM_TRANSFORM';			
+		}
+		else if(attrtype == 'PathMotion'){
+			var animType = 'ANIM_MOTION';			
+		}
+		else{
+			Debug_Message('Other Anim attr not supported'); 
+			return ; 
+		}
+	  
+	 //get the title and the type 
+	 	gNewAnimObject = true; 
+		var objID = gCurrentObjectSelected.id; 
+		gInitAnimParam = new sAnimParams();
+	    gInitAnimParam.animID = GXRDE_GetUniqueID('ANIM_');  
+	    gInitAnimParam.objectID = gCurrentObjectSelected.id;  
+	    gInitAnimParam.duration = 2;
+	    gInitAnimParam.animType = animType; 
+	    gInitAnimParam.attribute = attrtype;
+	    if(gInitAnimParam.attribute == 'rotate'){
+	    	var rectdim = GX_GetRectObjectDim(gCurrentObjectSelected);
+			var centreX = rectdim.x + rectdim.width/2; 
+			var centreY = rectdim.y + rectdim.height/2;
+			gInitAnimParam.center = centreX + ' ' + centreY;	
+	    	gInitAnimParam.startValue = '0' + ' ' + gInitAnimParam.center ;
+	 	    gInitAnimParam.endValue = '90'  + ' ' + gInitAnimParam.center ;
+	    }	   
+	    gInitAnimParam.refPathID = '';
+	    gInitAnimParam.bPathVisible = false;
+	    gInitAnimParam.startType = 'ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
+	    gInitAnimParam.startTime = 0;
+	    gInitAnimParam.UIEventType = 'M_MOVE'; //M_CLICK, M_MOVE
+	    gInitAnimParam.UIObjectID = gInitAnimParam.objectID; 
+	    gInitAnimParam.AnimEventType = 'END'; //BEGIN, END
+	    gInitAnimParam.AnimID = 0;
+	    gInitAnimParam.calcMode = 'linear';
+	    gInitAnimParam.restart = 'never';
+	    gInitAnimParam.repeatCount = 0;
+	    gInitAnimParam.endState = 'freeze'; //FREEZE, REMOVE
+	    gInitAnimParam.PathObjectOffset=0;
+	    gInitAnimParam.PathStartPoint=new sPoint();
+	    gInitAnimParam.center = '';  //centre of rotation       
+	    gInitAnimParam.title = animName;   
+	    GX_AddAnimationElement(gInitAnimParam, false); 
+	    var animNode = document.getElementById(gInitAnimParam.animID); 
+	    GX_UpdateAnimationListbox(); 
+	    
+	 //then add it to the list 
+ }
+ 
+ function GX_UpdateAnimationListbox(){
+	 gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
+	 var animlist = new Array(); 
+	 for(var i =0; i <gAnimList.length; i++){
+		 animlist.push(gAnimList[i][5]); 
+	 }	 
+	 WAL_ListBoxUpdateData('animationlist', animlist);
  }
