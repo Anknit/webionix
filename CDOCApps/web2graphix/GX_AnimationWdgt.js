@@ -1,5 +1,6 @@
 
 var gInputHeight = '24';
+var gcurrentAnimInfo=0; 
 var bAnimWdgtCreated = false; 
 sAnimParams.prototype.animID = 0;
 sAnimParams.prototype.objectID = 0; 
@@ -356,8 +357,8 @@ function GX_GetAnimParamsFromUI()
 	 
 	 			WAL_createModelessWindow('animationListWidget', '380', '470', 'animOK', 'animCancel');
 	 			WAL_createListBox('animationlist', '305', '200', "GX_AnimationListHandler");
-	 			WAL_createButton('UpBtn', 'GX_AnimDlgBtnHdlr', '50', '24', true); 
-	 			WAL_createButton('DownBtn', 'GX_AnimDlgBtnHdlr', '50', '24', true);
+	 			WAL_createButton('UpBtn', 'GX_AnimListWidgetBtnHdlr(event)', '50', '24', true); 
+	 			WAL_createButton('DownBtn', 'GX_AnimListWidgetBtnHdlr(event)', '50', '24', true);
                // WAL_createModelessWindow(wdgtID, '380', '565', 'myOK', 'myCancel');                
                 WAL_createNumberInput("repeatcountIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, 0, 1);
                 var endstatelist = ['freeze', 'remove']; 
@@ -379,7 +380,9 @@ function GX_GetAnimParamsFromUI()
                 WAL_setNumberInputValue('startOpacityValueIP', 1, false); 
                 WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, 0, 1);
                 WAL_setNumberInputValue('endAngleValueIP', 0, false);    
-                WAL_createButton('previewbtn', 'GX_AnimDlgBtnHdlr', '58','24', true);
+                WAL_createButton('playbtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
+                WAL_createButton('animdeletebtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
+                
                       
                 WAL_createRadioButton('motionvalbtn', 'GX_AnimDlgRadioValueChangeHdlr', '130', '20', false, false);
                 var pathList = ['SVG_001', 'SVG_103', 'SVG_234']; 
@@ -884,9 +887,7 @@ function GX_RemoveAnimInfoFromList(animID)
  
  function GX_AnimDlgBtnHdlr(node)
  {
-	 var nodeid =  node.id; 
-	 
-	 
+	 var nodeid =  node.id; 	 
  }
  
  
@@ -1674,21 +1675,10 @@ function GX_RemoveAnimInfoFromList(animID)
  	var parentNode = gCurrAnimNode.parentNode; 
  	parentNode.removeChild(gCurrAnimNode); 	
  	GX_RemoveAnimInfoFromList(animID); 
- 	gCurrAnimNode = 0; 
- 	
- 	//now update the lists 
- 	
+ 	gCurrAnimNode = 0;  	
  }
  
- function GX_PreviewBtnHdlr(event)
- {	 
-	if(gInitAnimParam)
-	{
-		 var animID = gInitAnimParam.animID; 
-		 GX_PreviewAnimation(animID); 		 
-	}
- }
- 
+
  function GX_PathListHandler(Node, value)
  {
 	 var pathID = value; 
@@ -1820,14 +1810,11 @@ function GX_RemoveAnimInfoFromList(animID)
 	// Debug_Message('Selected: ' + value);	
 	 if(gCurrentObjectSelected)
 			GX_SetSelection(gCurrentObjectSelected, false); 	
-		var animInfo = GX_GetAnimInfoByTitle(value); 
-		var animNode =  document.getElementById(animInfo[0]); 
+	 	gcurrentAnimInfo = GX_GetAnimInfoByTitle(value); 
+		var animNode =  document.getElementById(gcurrentAnimInfo[0]); 
 		if(!animNode)
 			return ;				
 		GX_SetSelection(animNode.targetElement, true);
-		
-	 
-	 
  }
  
  function GX_NewAnimDlgOK(){
@@ -1904,4 +1891,23 @@ function GX_RemoveAnimInfoFromList(animID)
 		 animlist.push(gAnimList[i][5]); 
 	 }	 
 	 WAL_ListBoxUpdateData('animationlist', animlist);
+ }
+ 
+ function GX_AnimListWidgetBtnHdlr(event){
+	 var nodeid =  event.target.id; 
+	// Debug_Message('BtnID = ' + nodeid); 	
+	 switch(nodeid){	 
+	 case 'playbtn':
+		 if(gcurrentAnimInfo)
+			 GX_PreviewAnimation(gcurrentAnimInfo[0]); 		
+		 break; 
+	 case 'animdeletebtn':		
+		 if(gcurrentAnimInfo)
+			 GX_RemoveAnimationObject(gcurrentAnimInfo[0]); 
+		 GX_UpdateAnimationListbox(); 
+		 
+		 break; 
+	default:
+		break; 
+	 }
  }
