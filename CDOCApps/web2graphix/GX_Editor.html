@@ -451,7 +451,7 @@
     	<div>
 	    	<div style= 'display:inline-block;margin-left:2px; margin-top:10px;'>Animation ID<input  id='animIDIP' style= 'margin-left:4px;' type='text' /></div>
 	    	<div style= 'display:inline-block; margin-left:2px; margin-top:10px;'>Object ID<input  id='objectIDIP' style= 'margin-left:4px;' type='text' /></div>
-	    	<div class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-top:14px;'>Title<input  id='animtitleIP' style= 'margin-left:4px;' type='text' value=" "/></div>	    	
+	    		    	
 	    	
     	</div>
     	
@@ -597,6 +597,18 @@
             </div>
        </div>          
   	</div>
+  	
+  	<div id="newAnimationDlg" style="display:none"><div id="Div2">Enter Animation Title</div>
+        <div id='Div3' style="overflow: hidden"> 
+        	<div class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-top:14px;'>Title<input  id='newAnimtitleIP' style= 'margin-left:4px;' type='text' value=""/></div>
+        	<div id='newanimattrDivlist' class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Animate<div id='newAnimTypeDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+        	           
+            <div> 
+                <input type="button" id ='newAnimOK'     value="OK" onclick='GX_NewAnimDlgOK()'/>
+                <input type="button" id ='newAnimCancel' value="Cancel"  />
+            </div>
+       </div>          
+   </div>
       
 </body>
 </html>
