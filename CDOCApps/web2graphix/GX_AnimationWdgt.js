@@ -508,9 +508,25 @@ function GX_PopulateObjectList(ObjectType)
 	 		} 	//while
 	 	 } 	 			
  	} 		
- 	return ObjectList;  	
  	
+ 	return ObjectList;  	 	
  }
+
+function GX_SortAnimListInDisplayOrder(animList){
+	
+	var myanimList =[]; 	
+	//get the anim item which is independent. 
+	//animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval];
+	//place it at the top of the stack. 
+	//set the ref animID to be this
+	//get the animitems which are referring to this refAnimId
+	//now push them on the stack one by one  
+	//continue doing this till there are no animitems left referring to this animID 
+}
+
+function GX_GetRefAnimID(){
+	
+}
  
 function GX_RemoveObjectFromList(objectID)
 {
