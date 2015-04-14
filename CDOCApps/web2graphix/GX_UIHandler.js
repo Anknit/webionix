@@ -6452,7 +6452,7 @@ function GX_AddNewAnimation()
    // GX_SetAnimParamOnUI(gInitAnimParam);         
     
    
-    WAL_hideWidget('previewbtn', true);    
+  //  WAL_hideWidget('previewbtn', true);    
 	WAL_showModalWindow('newAnimationDlg',"", "" );
 }
 
@@ -6474,7 +6474,7 @@ function GX_EditAnimation(animID)
 	
     gbApplied = false;
    
-    WAL_hideWidget('previewbtn', false);
+   // WAL_hideWidget('previewbtn', false);
    
     
 	WAL_showModalWindow('animationwidget',"", "" );
