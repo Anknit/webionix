@@ -1588,6 +1588,7 @@ function GX_AddNewSVGObject(Type, name)
 		GX_showEditorInterface('PROPERTIES_MODE');
 	}
 	WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+ObjID);		
+	return ObjID; 
 }
 
 function GX_CloseSVGFile()
