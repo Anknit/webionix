@@ -523,9 +523,35 @@ function GX_SortAnimListInDisplayOrder(animList){
 	//now push them on the stack one by one  
 	//continue doing this till there are no animitems left referring to this animID 
 }
+/*
+ * var mylist=[]; 
+		for(var j=0; j <  srcAnimArr.length; j++)
+		{
+			if ( (srcAnimArr[j][0] ==  refanimID) && (srcAnimArr[j][2]  == ''.begin'') 
+				 mylist.splice(0, 0,srcAnimArr[j][0] ) ; 
+			else
+				 mylist.push(srcAnimArr[j][0] ); 
+		}
+		if( mylist.length > 0 )
+			return mylist;
+		else
+			return 0; 
+ */
 
-function GX_GetRefAnimID(){
-	
+function GX_GetanimItemWithRefAnimID(animList, refAnimID){
+	var myList=[]; 
+	for(var j=0;  j <animList.length; j++){
+		var animItem = animList[j]; 
+		var dotpos =  animItem[3].indexOf('.'); 		
+		var animIDRef = animItem[3].substring(0,dotpos+1); 
+		var animEvent = animItem[3].substring(dotpos,animItem[3].length); 
+		if(animIDRef == refAnimID){
+			if(animEvent == 'begin')
+				mylist.splice(0, 0,animList[j] ) ; 
+			else if(animEvent == 'end')
+				mylist.push(animList[j]); 
+		}
+	}
 }
  
 function GX_RemoveObjectFromList(objectID)
@@ -1902,7 +1928,8 @@ function GX_RemoveAnimInfoFromList(animID)
  
  function GX_UpdateAnimationListbox(){
 	 gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
-	 var animlist = new Array(); 
+	 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
+	 var animlist=[]; 
 	 for(var i =0; i <gAnimList.length; i++){
 		 animlist.push(gAnimList[i][5]); 
 	 }	 
@@ -1927,3 +1954,58 @@ function GX_RemoveAnimInfoFromList(animID)
 		break; 
 	 }
  }
+ function GX_GetanimItemWithRefAnimID(animList, refAnimID){
+		var mylist=[]; 
+		for(var j=0;  j <animList.length; j++){
+			var animItem = animList[j]; 
+			var dotpos =  animItem[3].indexOf('.'); 		
+			if(dotpos == -1)
+				continue; 
+			var animIDRef = animItem[3].substring(0,dotpos); 
+			var animEvent = animItem[3].substring(dotpos+1,animItem[3].length); 
+			if(animIDRef == refAnimID){
+				if(animEvent == 'begin')
+					mylist.splice(0, 0,animList[j] ) ; 
+				else if(animEvent == 'end')
+					mylist.push(animList[j]); 
+			}
+		}
+		if(mylist.length > 0)
+			return mylist;
+		else
+			return 0; 
+}
+ function GX_SortAnimListInDisplayOrder(animList){		
+		var sortedList = [];
+		var animlistlength = animList.length; 
+		var sortArrIndex = -1; 
+		//find all entries which are independent in nature 
+		for(var k=0; k < animlistlength; k++){
+			var animItem = animList[k];
+			var dotpos =  animItem[3].indexOf('.'); 		
+			if(dotpos == -1){
+				sortedList.push(animItem); 
+				continue; 
+			}			
+			var animIDRef = animItem[3].substring(0,dotpos);		
+			var animEvent = animItem[3].substring(dotpos+1,animItem[3].length); 
+			if(animEvent == 'click'){
+				sortedList.push(animItem); 
+				continue; 
+			}			
+		}//for 
+		sortArrIndex = -1; 
+		while(1){
+			sortArrIndex++; 
+			if (sortArrIndex >= animlistlength) 
+				break; 
+			var  refanimID =  sortedList[sortArrIndex][0]; 
+			var referredAnimList = GX_GetanimItemWithRefAnimID(animList, refanimID);   
+			for(var k=0; k < referredAnimList.length; k++)
+			{
+				sortedList.splice(sortArrIndex+1+k, 0,  referredAnimList[k]); 
+			}			
+		}		
+		return sortedList; 
+}
+ 
