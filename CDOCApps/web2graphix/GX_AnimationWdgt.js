@@ -1879,7 +1879,34 @@ function GX_RemoveAnimInfoFromList(animID)
 			animType = 'ANIM_TRANSFORM';			
 		}
 		else if(attrtype == 'PathMotion'){
-			var animType = 'ANIM_MOTION';			
+			var animType = 'ANIM_MOTION';
+			//add a simple path and obtain the SVGID of that which becomes the mpath reference.
+			var currObjNode =  gCurrentObjectSelected; 
+			var startX, startY; 	
+			var endX, endY; 
+			var pathLen = 200; 
+			var objectType = gCurrentObjectSelected.classList[1]; 
+			if(objectType == 'ELLIPSE'){
+				startX = gCurrentObjectSelected.getAttribute('cx'); 
+				startY = gCurrentObjectSelected.getAttribute('cy'); 				
+			}
+			else if(objectType == 'RECTANGLE'){
+				Debug_Message('To be done'); 
+				return ; 
+			}
+			var MyRefPathID = GX_AddNewSVGObject('line_path','');
+			
+			//now selection would have changed to path 
+			endX =  new Number(startX) + pathLen; 
+			endY =  startY; 
+			var dAttrVal = 'M' + startX + ','+ startY + ' L'+endX +',' + endY;			
+			GX_SetObjectAttribute(gCurrentObjectSelected, 'd', dAttrVal, true, false); 
+			var pos = GX_CalculateMotionAnimPathOffset(animParam.objectID, animParam.refPathID);
+	    	var splitArr = pos.split(';'); 
+	    	animParam.PathObjectOffset = splitArr[0]; 
+	    	animParam.originalPosition = splitArr[1]; 
+			GX_SetSelection(currObjNode, true); 				 
+			//now add the motionpath anim object 
 		}
 		else{
 			Debug_Message('Other Anim attr not supported'); 
@@ -1903,7 +1930,10 @@ function GX_RemoveAnimInfoFromList(animID)
 	    	gInitAnimParam.startValue = '0' + ' ' + gInitAnimParam.center ;
 	 	    gInitAnimParam.endValue = '90'  + ' ' + gInitAnimParam.center ;
 	    }	   
+	    
 	    gInitAnimParam.refPathID = '';
+	    if(gInitAnimParam.animType == 'ANIM_MOTION')
+	    	gInitAnimParam.refPathID = MyRefPathID; 
 	    gInitAnimParam.bPathVisible = false;
 	    gInitAnimParam.startType = 'ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
 	    gInitAnimParam.startTime = 0;
