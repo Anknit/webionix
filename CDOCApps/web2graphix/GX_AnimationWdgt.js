@@ -1183,8 +1183,9 @@ function GX_RemoveAnimInfoFromList(animID)
 		origPos.x = objDim.x;
 		origPos.y = objDim.y;
 	} 	
-	var X = WAL_getMaskedInputValue('offsetFromPathX'); 
-	var Y = WAL_getMaskedInputValue('offsetFromPathY'); 
+	//temporary taken to be 0 offset but later on offset input will be takne in new GUI
+	var X = 0 ;//WAL_getMaskedInputValue('offsetFromPathX'); 
+	var Y = 0; //WAL_getMaskedInputValue('offsetFromPathY'); 
 	//var pathDim = GX_GetPathDimension(pathNode); 
 		//calculate the difference of the dimenion points 
 	/*var xoffset, yoffset; 
@@ -1668,8 +1669,6 @@ function GX_RemoveAnimInfoFromList(animID)
  
  function GX_PreviewAnimation(animID)
  {	 
- 	
-	
   	var animnode = document.getElementById(animID);
   	if(!animnode)
   		return ; 	
@@ -1860,8 +1859,7 @@ function GX_RemoveAnimInfoFromList(animID)
  }
  
  function GX_NewAnimDlgOK(){
-	 //add the new animation object and do the needful 
-	 	
+	 //add the new animation object and do the needful 	 	
 		var animName  =  WAL_getInputValue('newAnimtitleIP');
 		var firstchar;		
 		if ( (animName == '') || (animName[0] == " ") )
@@ -1873,10 +1871,41 @@ function GX_RemoveAnimInfoFromList(animID)
 			return ; 
 		} 	
 		var attrtype =  WAL_getDropdownListSelection('newAnimTypeDDL');
-		attrtype = gAttrList[attrtype]; 
+		attrtype = gAttrList[attrtype]; 		
+		gNewAnimObject = true; 
+		var objID = gCurrentObjectSelected.id; 
+		gInitAnimParam = new sAnimParams();
+		gInitAnimParam.title = animName; 
+	    gInitAnimParam.animID = GXRDE_GetUniqueID('ANIM_');  
+	    gInitAnimParam.objectID = gCurrentObjectSelected.id;  
+	    gInitAnimParam.duration = 2;
+	    gInitAnimParam.animType = ''; // animType; 
+	    gInitAnimParam.attribute = attrtype;
+	    gInitAnimParam.refPathID = '';
+	    gInitAnimParam.bPathVisible = false;
+	    gInitAnimParam.startType = 'ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
+	    gInitAnimParam.startTime = 0;
+	    gInitAnimParam.UIEventType = 'M_MOVE'; //M_CLICK, M_MOVE
+	    gInitAnimParam.UIObjectID = gInitAnimParam.objectID; 
+	    gInitAnimParam.AnimEventType = 'END'; //BEGIN, END
+	    gInitAnimParam.AnimID = 0;
+	    gInitAnimParam.calcMode = 'linear';
+	    gInitAnimParam.restart = 'never';
+	    gInitAnimParam.repeatCount = 0;
+	    gInitAnimParam.endState = 'freeze'; //FREEZE, REMOVE
+	    gInitAnimParam.PathObjectOffset=0;
+	    gInitAnimParam.PathStartPoint=new sPoint();
+	    gInitAnimParam.center = '';  //centre of rotation 	
 		var animType = 'ANIM_ATTRIBUTE'; 
 		if(attrtype == 'rotate'){
-			animType = 'ANIM_TRANSFORM';			
+			animType = 'ANIM_TRANSFORM';
+			var rectdim = GX_GetRectObjectDim(gCurrentObjectSelected);
+			var centreX = rectdim.x + rectdim.width/2; 
+			var centreY = rectdim.y + rectdim.height/2;
+			gInitAnimParam.center = centreX + ' ' + centreY;	
+		    gInitAnimParam.startValue = '0' + ' ' + gInitAnimParam.center ;
+		 	gInitAnimParam.endValue = '90'  + ' ' + gInitAnimParam.center ;	
+		 	
 		}
 		else if(attrtype == 'PathMotion'){
 			var animType = 'ANIM_MOTION';
@@ -1895,61 +1924,51 @@ function GX_RemoveAnimInfoFromList(animID)
 				return ; 
 			}
 			var MyRefPathID = GX_AddNewSVGObject('line_path','');
-			
+			gInitAnimParam.refPathID=MyRefPathID; 
 			//now selection would have changed to path 
 			endX =  new Number(startX) + pathLen; 
 			endY =  startY; 
 			var dAttrVal = 'M' + startX + ','+ startY + ' L'+endX +',' + endY;			
 			GX_SetObjectAttribute(gCurrentObjectSelected, 'd', dAttrVal, true, false); 
-			var pos = GX_CalculateMotionAnimPathOffset(animParam.objectID, animParam.refPathID);
+			var pos = GX_CalculateMotionAnimPathOffset(gInitAnimParam.objectID, gInitAnimParam.refPathID);
 	    	var splitArr = pos.split(';'); 
-	    	animParam.PathObjectOffset = splitArr[0]; 
-	    	animParam.originalPosition = splitArr[1]; 
-			GX_SetSelection(currObjNode, true); 				 
+	    	gInitAnimParam.PathObjectOffset = splitArr[0]; 
+	    	gInitAnimParam.originalPosition = splitArr[1]; 
+	    	gInitAnimParam.PathStartPoint = GX_GetPathStartPoint(gCurrentObjectSelected); 
+	    	GX_ResetAllSelections();
+			GX_SetSelection(currObjNode, true); 
+			
 			//now add the motionpath anim object 
 		}
 		else{
 			Debug_Message('Other Anim attr not supported'); 
 			return ; 
 		}
-	  
-	 //get the title and the type 
-	 	gNewAnimObject = true; 
-		var objID = gCurrentObjectSelected.id; 
-		gInitAnimParam = new sAnimParams();
-	    gInitAnimParam.animID = GXRDE_GetUniqueID('ANIM_');  
-	    gInitAnimParam.objectID = gCurrentObjectSelected.id;  
-	    gInitAnimParam.duration = 2;
-	    gInitAnimParam.animType = animType; 
-	    gInitAnimParam.attribute = attrtype;
-	    if(gInitAnimParam.attribute == 'rotate'){
-	    	var rectdim = GX_GetRectObjectDim(gCurrentObjectSelected);
-			var centreX = rectdim.x + rectdim.width/2; 
-			var centreY = rectdim.y + rectdim.height/2;
-			gInitAnimParam.center = centreX + ' ' + centreY;	
-	    	gInitAnimParam.startValue = '0' + ' ' + gInitAnimParam.center ;
-	 	    gInitAnimParam.endValue = '90'  + ' ' + gInitAnimParam.center ;
-	    }	   
-	    
-	    gInitAnimParam.refPathID = '';
-	    if(gInitAnimParam.animType == 'ANIM_MOTION')
-	    	gInitAnimParam.refPathID = MyRefPathID; 
-	    gInitAnimParam.bPathVisible = false;
-	    gInitAnimParam.startType = 'ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
-	    gInitAnimParam.startTime = 0;
-	    gInitAnimParam.UIEventType = 'M_MOVE'; //M_CLICK, M_MOVE
-	    gInitAnimParam.UIObjectID = gInitAnimParam.objectID; 
-	    gInitAnimParam.AnimEventType = 'END'; //BEGIN, END
-	    gInitAnimParam.AnimID = 0;
-	    gInitAnimParam.calcMode = 'linear';
-	    gInitAnimParam.restart = 'never';
-	    gInitAnimParam.repeatCount = 0;
-	    gInitAnimParam.endState = 'freeze'; //FREEZE, REMOVE
-	    gInitAnimParam.PathObjectOffset=0;
-	    gInitAnimParam.PathStartPoint=new sPoint();
-	    gInitAnimParam.center = '';  //centre of rotation       
-	    gInitAnimParam.title = animName;   
+		gInitAnimParam.animType = animType; 	
+	     
 	    GX_AddAnimationElement(gInitAnimParam, false); 
+	    if(gInitAnimParam.animType == 'ANIM_MOTION')
+		{
+			var retval = GXRDE_openSVGFile(gSVGFilename); 
+		    var HTMLstr=""; 		 
+		    var currfilename = gSVGFilename; 
+		    var currObjID = gInitAnimParam.objectID; 
+		    if(retval)
+		    {
+			     GX_CloseSVGFile();
+			   	 var dataNode = document.getElementById('objectcontainer');   	 
+			   	 dataNode.innerHTML += retval;		   	
+			  	 GX_InitializeDocument(currfilename);		   	
+		    }	
+		    var xmlstr = GXRDE_GetSVGMetaXML(currfilename);    
+		    if(xmlstr)
+		       GX_updateTreeWidget(xmlstr);   
+		    WAL_expandAllTreeItems(gTreeNodeID, true);
+		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);		     
+		   // GX_MenuItemShow('animate', 'Animate');	
+		  //  WAL_SetItemByValueInList('listanimDDL', gCurrAnimParam.animID, true); 
+		   // GX_EditAnimation(gCurrAnimParam.animID); 
+		}
 	    var animNode = document.getElementById(gInitAnimParam.animID); 
 	    GX_UpdateAnimationListbox(); 
 	    
