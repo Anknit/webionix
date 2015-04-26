@@ -1042,16 +1042,15 @@ function GX_InitializeDocument(svgFileName)
 	 
 	 if(!gObjectList)
 	 {
-		 GX_UpdateAnimationListbox(); 
-		/* gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
+		 //GX_UpdateAnimationListbox(); 
+		 gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
+		 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
 		 var animlist = new Array(); 
 		 for(var i =0; i <gAnimList.length; i++){
 			 animlist.push(gAnimList[i][5]); 
-		 }
-		// WAL_UpdateDropDownList('listanimDDL', animlist);
-		// var animList1=['Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1','Item-1', 'Item-2','Item-', 'Item-1',]; 
+		 }		 
 		 WAL_ListBoxUpdateData('animationlist', animlist);
-		 */
+		 
 	 }
 	 
 	
@@ -1094,6 +1093,7 @@ function GX_MenuItemShow(menuid, itemText)
 		 break; 
 	 case 'animate':
 		 GX_showEditorInterface('ANIM_MODE'); 
+		 GX_UpdateAnimationListbox(); 
 		 setTimeout(function(){			
 			 WAL_showModalWindow('animationListWidget',"", "" );	
 			 
@@ -1174,6 +1174,7 @@ function GX_MenuItemShow(menuid, itemText)
 		 
 	 case 'removenode':
 		 GX_RemoveObject(gCurrentObjectSelected); 
+		 WAL_expandAllTreeItems(gTreeNodeID, true);
 		 break; 
 	
 	 case 'copy':
@@ -3298,7 +3299,6 @@ function GX_RemoveObject(objNode)
 	
 	//remove from object list
 	
-	
 	//post the request for delete on the server side 
 }
 
@@ -4029,7 +4029,8 @@ function GX_showEditorInterface(Mode)
 		break;
 	case 'ANIM_MODE':
 		WAL_hideWidget('animate_interface', false); 		
-		gObjectEditMode = 'ANIMATION_EDIT_MODE';		
+		gObjectEditMode = 'ANIMATION_EDIT_MODE';	
+		
 		break;
 	/*case 'MODIFY_TEXT_MODE':
 		gObjectEditMode = 'MODIFY_TEXT_MODE';		
@@ -6439,7 +6440,7 @@ function GX_AddNewAnimation()
     gInitAnimParam.startTime = 0;
     gInitAnimParam.UIEventType = 'M_MOVE'; //M_CLICK, M_MOVE
     gInitAnimParam.UIObjectID = gInitAnimParam.objectID; 
-    gInitAnimParam.AnimEventType = 'END'; //BEGIN, END
+    gInitAnimParam.AnimEventType = 'end'; //BEGIN, END
     gInitAnimParam.AnimID = 0;
     gInitAnimParam.calcMode = 'linear';
     gInitAnimParam.restart = 'never';
@@ -6453,7 +6454,8 @@ function GX_AddNewAnimation()
    // GX_SetAnimParamOnUI(gInitAnimParam);         
     
    
-  //  WAL_hideWidget('previewbtn', true);    
+  //  WAL_hideWidget('previewbtn', true); 
+    WAL_setTextInputValue('newAnimtitleIP', '', false);	
 	WAL_showModalWindow('newAnimationDlg',"", "" );
 }
 
@@ -6527,7 +6529,7 @@ function GX_AddGradientAnimation(gradID, animID, attribute, start, end, duration
     gInitAnimParam.startTime = gInitAnimParam.objectID + '_TOP_GRAD_ANIM';
     gInitAnimParam.UIEventType = 'M_MOVE'; //M_CLICK, M_MOVE
     gInitAnimParam.UIObjectID = gInitAnimParam.objectID; 
-    gInitAnimParam.AnimEventType = 'END'; //BEGIN, END
+    gInitAnimParam.AnimEventType = 'end'; //BEGIN, END
     gInitAnimParam.AnimID = 0;
     gInitAnimParam.calcMode = 'linear';
     gInitAnimParam.restart = 'never';
@@ -6785,7 +6787,7 @@ function GX_FillBtnHandler(event)
 	    gInitAnimParam.startTime = 0;
 	    gInitAnimParam.UIEventType = 'M_MOVE'; //M_CLICK, M_MOVE
 	    gInitAnimParam.UIObjectID = gInitAnimParam.objectID; 
-	    gInitAnimParam.AnimEventType = 'END'; //BEGIN, END
+	    gInitAnimParam.AnimEventType = 'end'; //BEGIN, END
 	    gInitAnimParam.AnimID = 0;
 	    gInitAnimParam.calcMode = 'linear';
 	    gInitAnimParam.restart = 'never';
