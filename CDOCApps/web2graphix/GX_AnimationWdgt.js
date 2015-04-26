@@ -680,15 +680,11 @@ function GX_RemoveAnimInfoFromList(animID)
 	}
 	if(index  != -1)
 		gAnimList.splice(index,1); 	
-	var animlist=[];
- 	for(var k=0; k < gAnimList.length; k++)
- 	{
- 		//if(gAnimList[k][5] != 'Invisible Animation')
- 			animlist.push(gAnimList[k][5]); 
- 	}
+	gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);
+	
  	
  	//now sort the list 
- 	gAnimList = GX_SortAnimListInDisplayOrder(animlist);
+ 	
 	//WAL_UpdateDropDownList('listanimDDL', animlist);
 	//WAL_SetItemInDropDownList('listanimDDL', 0, true);
 	
@@ -1720,9 +1716,16 @@ function GX_RemoveAnimInfoFromList(animID)
 	var RefAnimList = GX_GetanimItemWithRefAnimID(gAnimList, animID);
 	var attrArray =[]; 
 	var attrData = 	['begin', '0s'];	
-	attrArray.push(attrData); 	   
+	attrArray.push(attrData);
+	var index= -1; 
 	for(var k=0; k <RefAnimList.length; k++){		
 		var respStr = GXRDE_updateAnimationObject(RefAnimList[k][0], attrArray); 
+		//get the index of refanimID 
+		index = GX_GetIndexofAnimInfoFromList(RefAnimList[k][0]); 
+		if(index != -1){
+			gAnimList[index][3] = attrData[1]; 
+		}			
+		//change the array entry here only 
 		GX_UpdateAnimObjectAttribute(RefAnimList[k][0], attrArray); 
 	}
 	gCurrAnimNode = document.getElementById(animID); 
@@ -1993,20 +1996,19 @@ function GX_RemoveAnimInfoFromList(animID)
 		    if(xmlstr)
 		       GX_updateTreeWidget(xmlstr);   
 		    WAL_expandAllTreeItems(gTreeNodeID, true);
-		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);		     
-		   // GX_MenuItemShow('animate', 'Animate');	
-		  //  WAL_SetItemByValueInList('listanimDDL', gCurrAnimParam.animID, true); 
-		   // GX_EditAnimation(gCurrAnimParam.animID); 
+		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);	   
 		}
 	    var animNode = document.getElementById(gInitAnimParam.animID); 
+	    GX_UpdateAnimInfoInList(animNode);
+	    gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	    
 	    GX_UpdateAnimationListbox(); 
 	    
 	 //then add it to the list 
  }
  
  function GX_UpdateAnimationListbox(){
-	 gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
-	 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
+	// gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
+	// gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
 	 var animlist=[]; 
 	 for(var i =0; i <gAnimList.length; i++){
 		 animlist.push(gAnimList[i][5]); 
@@ -2023,9 +2025,12 @@ function GX_RemoveAnimInfoFromList(animID)
 			 GX_PreviewAnimation(gcurrentAnimInfo[0]); 		
 		 break; 
 	 case 'animdeletebtn':		
-		 if(gcurrentAnimInfo)
+		 if(gcurrentAnimInfo){
 			 GX_RemoveAnimationObject(gcurrentAnimInfo[0]); 
-		 GX_UpdateAnimationListbox(); 
+			 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
+			 GX_UpdateAnimationListbox(); 		    
+		 }
+			 
 		 
 		 break; 
 	default:
