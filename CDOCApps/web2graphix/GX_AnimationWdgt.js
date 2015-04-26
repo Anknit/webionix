@@ -680,7 +680,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	}
 	if(index  != -1)
 		gAnimList.splice(index,1); 	
-	gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);
+	//gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);
 	
  	
  	//now sort the list 
@@ -1729,6 +1729,16 @@ function GX_RemoveAnimInfoFromList(animID)
 		GX_UpdateAnimObjectAttribute(RefAnimList[k][0], attrArray); 
 	}
 	gCurrAnimNode = document.getElementById(animID); 
+	//delete the path as well 
+	if(gCurrAnimNode.nodeName.toUpperCase() == 'ANIMATEMOTION'){ 	
+		var pathRefNodeID = gCurrAnimNode.children[0].getAttribute('xlink:href');
+		pathRefNodeID = pathRefNodeID.substring(1, pathRefNodeID.length); 
+		GX_DeleteObject(pathRefNodeID); 
+		GX_RemoveObjectFromList(pathRefNodeID);
+		WAL_DeleteTreeItem(gTreeNodeID, 'TM_'+pathRefNodeID); 	
+	}
+	
+	
  	GXRDE_DeleteObject(animID); 	
  	var parentNode = gCurrAnimNode.parentNode; 
  	parentNode.removeChild(gCurrAnimNode); 	
@@ -2026,6 +2036,10 @@ function GX_RemoveAnimInfoFromList(animID)
 		 break; 
 	 case 'animdeletebtn':		
 		 if(gcurrentAnimInfo){
+			 if(gcurrentAnimInfo[2] == 'MOTION'){
+				 var animVID = gcurrentAnimInfo[0] + '_V'; 
+				 GX_RemoveAnimationObject(animVID);				 
+			 }
 			 GX_RemoveAnimationObject(gcurrentAnimInfo[0]); 
 			 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
 			 GX_UpdateAnimationListbox(); 		    
