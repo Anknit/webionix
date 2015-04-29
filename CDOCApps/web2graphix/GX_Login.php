@@ -64,7 +64,7 @@ function HandleLogin()
 				<td>
 					<!--
         <input type="text" name="txtPubName" size="15" maxlength="15" tabindex="1" onfocus="this.select()" align="left" 
-        value="
+        value=
        <?php 
         if (!isset($_POST['txtPubName']))
         {
@@ -72,8 +72,9 @@ function HandleLogin()
         }
         echo $_POST["txtPubName"];
         ?>
-        "/>  
-        --> <input type="text" name="txtUsername" size="15"
+        />  
+        --> 
+        <input type="text" name="txtUsername" size="15"
 					maxlength="15" tabindex="1" onfocus="this.select()"
 					value="
             <?php
@@ -91,7 +92,7 @@ function HandleLogin()
 				<td class="style1">Password</td>
 				<td><input id="Password1" type="password" name="txtpassword"
 					size="15" maxlength="15" tabindex="2" onfocus="this.select()"
-					value="
+					value=
             <?php
             if (!isset($_POST['txtpassword']))
             {
@@ -99,7 +100,7 @@ function HandleLogin()
             }
             echo $_POST["txtpassword"];             
             ?>
-            " />
+            />
 				</td>
 
 			</tr>
