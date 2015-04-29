@@ -1,6 +1,6 @@
 
 var gInputHeight = '24';
-var gcurrentAnimInfo=0; 
+var gCurrentAnimInfo=0; 
 var bAnimWdgtCreated = false; 
 sAnimParams.prototype.animID = 0;
 sAnimParams.prototype.objectID = 0; 
@@ -357,9 +357,7 @@ function GX_GetAnimParamsFromUI()
 	 
 	 			WAL_createModelessWindow('animationListWidget', '380', '470', 'animOK', 'animCancel');
 	 			WAL_createListBox('animationlist', '305', '200', "GX_AnimationListHandler");
-	 			WAL_createButton('UpBtn', 'GX_AnimListWidgetBtnHdlr(event)', '50', '24', true); 
-	 			WAL_createButton('DownBtn', 'GX_AnimListWidgetBtnHdlr(event)', '50', '24', true);
-               // WAL_createModelessWindow(wdgtID, '380', '565', 'myOK', 'myCancel');                
+	 			 
                 WAL_createNumberInput("repeatcountIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, 0, 1);
                 var endstatelist = ['freeze', 'remove']; 
                 WAL_createDropdownList('endstatelistDDL', '80', gInputHeight, false, endstatelist, "GX_AnimAttrListHandler", '50');                
@@ -382,6 +380,7 @@ function GX_GetAnimParamsFromUI()
                 WAL_setNumberInputValue('endAngleValueIP', 0, false);    
                 WAL_createButton('playbtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
                 WAL_createButton('animdeletebtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
+                WAL_createButton('applybtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
                 
                       
                 WAL_createRadioButton('motionvalbtn', 'GX_AnimDlgRadioValueChangeHdlr', '130', '20', false, false);
@@ -1878,8 +1877,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	// Debug_Message('Selected: ' + value);	
 	 if(gCurrentObjectSelected)
 			GX_SetSelection(gCurrentObjectSelected, false); 	
-	 	gcurrentAnimInfo = GX_GetAnimInfoByTitle(value); 
-		var animNode =  document.getElementById(gcurrentAnimInfo[0]); 
+	 	gCurrentAnimInfo = GX_GetAnimInfoByTitle(value); 
+		var animNode =  document.getElementById(gCurrentAnimInfo[0]); 
 		if(!animNode)
 			return ;				
 		GX_SetSelection(animNode.targetElement, true);
@@ -2031,21 +2030,21 @@ function GX_RemoveAnimInfoFromList(animID)
 	// Debug_Message('BtnID = ' + nodeid); 	
 	 switch(nodeid){	 
 	 case 'playbtn':
-		 if(gcurrentAnimInfo)
-			 GX_PreviewAnimation(gcurrentAnimInfo[0]); 		
+		 if(gCurrentAnimInfo)
+			 GX_PreviewAnimation(gCurrentAnimInfo[0]); 		
 		 break; 
 	 case 'animdeletebtn':		
-		 if(gcurrentAnimInfo){
-			 if(gcurrentAnimInfo[2] == 'MOTION'){
-				 var animVID = gcurrentAnimInfo[0] + '_V'; 
+		 if(gCurrentAnimInfo){
+			 if(gCurrentAnimInfo[2] == 'MOTION'){
+				 var animVID = gCurrentAnimInfo[0] + '_V'; 
 				 GX_RemoveAnimationObject(animVID);				 
 			 }
-			 GX_RemoveAnimationObject(gcurrentAnimInfo[0]); 
+			 GX_RemoveAnimationObject(gCurrentAnimInfo[0]); 
 			 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
 			 GX_UpdateAnimationListbox(); 		    
 		 }
-			 
-		 
+		 break;
+	 case 'applybtn':
 		 break; 
 	default:
 		break; 
