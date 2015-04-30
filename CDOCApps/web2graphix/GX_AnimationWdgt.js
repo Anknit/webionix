@@ -95,9 +95,8 @@ gReverseAttrList['rotate']         =  'Rotate' ;
 gReverseAttrList['skewX']          =  'Hor. Skew';
 gReverseAttrList['skewY']          =  'Vert. Skew';        
 
-function GX_SetAnimParamOnUI(animParam) {
-
-  
+/*
+function GX_SetAnimParamOnUI(animParam) {  
       
 	//first filter out the entries here 
 	var objectList=[]; 
@@ -345,6 +344,261 @@ function GX_GetAnimParamsFromUI()
 	 return animParam; 
 }
 
+*/
+
+//_rm these are new Get and Set functions with new UI for animations
+function GX_SetAnimParamOnUI(animParam) {  
+    
+	//first set the common properties here 
+	
+	var itemValue = '';
+	if(animParam.startType == 'ON_ANIMEVENT'){
+		if(animParam.AnimEventType == 'end'){
+			itemValue = 'After';  
+		}
+		else if(animParam.AnimEventType == 'begin'){
+			itemValue = 'With';  
+		}
+	}
+	else if(animParam.startType == 'ON_CLICK'){
+		itemValue = 'On Click';
+	}
+	WAL_SetItemByValueInList('startParamDDL', itemValue, false);
+	var animlist=[]; 	
+	for(var i =0; i <gAnimList.length; i++)
+	{
+	    //if( (animParam.title  !=  gAnimList[i][5]) && (gAnimList[i][5] != 'Invisible Animation') )
+	    if(animParam.title  !=  gAnimList[i][5]){
+	    	if(gAnimList[i][5] != 'Invisible Animation')
+	    		animlist.push(gAnimList[i][5]);
+	    }
+	    	 
+	}
+	WAL_UpdateDropDownList('animlistDDL', animlist);
+	/*
+	//modify for rotate attribute 
+    if(animParam.attribute == 'rotate')
+    {
+    	var valarr  = animParam.startValue.split(" "); 
+    	animParam.startValue = valarr[0];     	
+    	valarr  = animParam.endValue.split(" "); 
+    	animParam.endValue = valarr[0];     	
+    }
+    WAL_setTextInputValue('animIDIP', animParam.animID, false);
+    // animParam.objectID = 0;
+    WAL_setTextInputValue('objectIDIP', animParam.objectID, false);
+    //animParam.duration = 0;
+    WAL_setNumberInputValue('durationIP', animParam.duration, false);
+    
+    WAL_setTextInputValue('animtitleIP', animParam.title, false);
+
+    //animParam.animType = ''; //ATTRIBUTE, MOTION,TRANSFORM
+    if ((animParam.animType == 'ANIM_ATTRIBUTE') || (animParam.animType == 'ANIM_TRANSFORM')) {
+        WAL_setradioButtonCheck('attrvalbtn', true); 
+        //animParam.attribute = '';
+        var itemvalue = gReverseAttrList[animParam.attribute]; 
+        WAL_SetItemByValueInList('animAttrDDL', itemvalue, false);
+        //animParam.startValue
+        
+      //here should be the switch statement
+		switch(animParam.attribute)
+		{		
+		
+		case 'fill-opacity':			
+			WAL_setNumberInputValue('startOpacityValueIP', animParam.startValue, false);
+			//WAL_setNumberInputValue('endOpacityValueIP', animParam.endValue, false);	
+			//continue from here next time			
+			break; 
+		 
+		case 'stroke-width':
+			WAL_setNumberInputValue('startStrokeWidthValueIP', animParam.startValue, false); 
+				
+			break;		
+		case 'rotate':			
+			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);					
+			break; 
+		case 'skewX':
+			
+			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
+			break;
+		case 'skewY':
+			
+			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);		
+			break;
+		default:
+			break; 			
+		}
+		 WAL_setNumberInputValue('offsetFromPathX', 0, true);
+	     WAL_setNumberInputValue('offsetFromPathY',0, true); 
+        
+        //WAL_setTextInputValue('startColValIP', animParam.startValue, false);
+        // animParam.endValue = '';
+        //WAL_setTextInputValue('endColValIP', animParam.endValue, false);    
+    }
+    else if (animParam.animType == 'ANIM_MOTION') {
+        WAL_setradioButtonCheck('motionvalbtn', true); 
+        //animParam.refPathID = 0;
+        WAL_SetItemByValueInList('pathlistDDL', animParam.refPathID, true);
+        // animParam.bPathVisible = true;
+        WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible);   
+        
+        var mystr = animParam.PathObjectOffset; 
+        var splitstring = mystr.split(',');
+        WAL_setNumberInputValue('offsetFromPathX', splitstring[0], true);
+        WAL_setNumberInputValue('offsetFromPathY', splitstring[1], true);         
+      
+    }
+    else if (animParam.startType == 'ON_UIEVENT') {
+        WAL_setradioButtonCheck('uieventRB', true);       
+        // animParam.UIEventType = 'M_CLICK';
+        var evtType;
+        if (animParam.UIEventType == 'M_CLICK') {
+            evtType = "Mouse Click";         
+        }
+        else if(animParam.UIEventType == 'M_MOVE') 
+        {
+            evtType = "Mouse Move"; 
+        }       
+        WAL_SetItemByValueInList('objectlistDDL', animParam.UIObjectID, true);             
+    }
+    else if (animParam.startType == 'ON_ANIMEVENT') {
+        WAL_setradioButtonCheck('animeventRB', true);    
+        
+        WAL_SetItemByValueInList('animeventlistDDL', animParam.AnimEventType, true);
+        //animParam.AnimID = 0;
+        var animInfo = GX_GetAnimInfoByID(animParam.refAnimID); 
+        if(!animInfo)
+        	return;        
+        WAL_SetItemByValueInList('animlistDDL', animInfo[5], true);   
+    }
+   
+    
+    // animParam.repeatCount = 0;
+    WAL_setNumberInputValue('repeatcountIP', animParam.repeatCount, false);
+    // animParam.endState = 'freeze'; //FREEZE, REMOVE
+    WAL_SetItemByValueInList('endstatelistDDL', animParam.endState, true);   
+    */
+	
+}
+
+function GX_GetAnimParamsFromUI()
+{
+
+	var animParam = new sAnimParams(); 
+	//animParam.animID = 0;	
+	animParam.animID = WAL_getInputValue('animIDIP');	
+	animParam.title = WAL_getInputValue('animtitleIP');
+	
+    // animParam.objectID = 0;
+	animParam.objectID = WAL_getInputValue('objectIDIP');
+	
+    //animParam.duration = 0;
+	animParam.duration = WAL_getMaskedInputValue('durationIP');	
+	
+
+	var bRBState = WAL_getradioButtonCheckState('attrvalbtn');
+	if(bRBState ==  true)
+	{
+	  animParam.animType = 'ANIM_ATTRIBUTE';		
+	}
+	bRBState = WAL_getradioButtonCheckState('motionvalbtn');
+	if(bRBState ==  true)
+	{
+		animParam.animType = 'ANIM_MOTION';		
+	}
+	if(animParam.animType == 'ANIM_ATTRIBUTE')
+	{
+		var itemval = WAL_getDropdownListSelection('animAttrDDL');		
+		itemval = gAttrList[itemval]; 
+		//Debug_Message('itemval='+ itemval); 
+		
+		
+		if( (itemval == 'translate')|| (itemval == 'scale') || (itemval == 'rotate')
+				|| (itemval == 'skewX') || (itemval == 'skewY') )
+		{
+			animParam.animType = 'ANIM_TRANSFORM'; 
+		}
+		animParam.attribute = itemval;		
+		
+		
+		//here should be the switch statement
+		switch(itemval)
+		{		
+		
+		case 'fill-opacity':
+			animParam.startValue = WAL_getMaskedInputValue('startOpacityValueIP'); 
+			animParam.endValue ='1.0';// WAL_getMaskedInputValue('endOpacityValueIP');
+			break; 
+		
+		case 'stroke-width':
+			animParam.startValue = WAL_getMaskedInputValue('startStrokeWidthValueIP'); 
+				
+			break; 
+		
+		case 'rotate':			
+			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');			
+			break; 
+		case 'skewX':			
+			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
+			break;
+		case 'skewY':			
+			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
+			break;
+		default:
+			break; 			
+		}		
+		if(itemval == 'rotate')
+		{
+			var rectdim = GX_GetRectObjectDim(gCurrentObjectSelected);
+			var centreX = rectdim.x + rectdim.width/2; 
+			var centreY = rectdim.y + rectdim.height/2;
+			animParam.center = centreX + ' ' + centreY;			
+		}
+	}  
+    else if (animParam.animType == 'ANIM_MOTION') {       
+        //animParam.refPathID = 0;
+    	animParam.refPathID = WAL_getDropdownListSelection('pathlistDDL');
+    	// animParam.bPathVisible = true;    	
+    	animParam.bPathVisible = WAL_getCheckBoxValue('pathvisibilityCB');
+    	var pos = GX_CalculateMotionAnimPathOffset(animParam.objectID, animParam.refPathID);
+    	var splitArr = pos.split(';'); 
+    	animParam.PathObjectOffset = splitArr[0]; 
+    	animParam.originalPosition = splitArr[1];    	
+    	//insert here the checks for path offset CB
+    }
+
+	//timing params 
+	 
+	 bRBState = WAL_getradioButtonCheckState('uieventRB');
+	 if(bRBState == true)
+	 {
+		 animParam.startType = 'ON_UIEVENT'; 
+		 var evtType = 'Mouse Click'  ; //WAL_getDropdownListSelection('uieventlistDDL');
+		 if(evtType == 'Mouse Click' )
+			 animParam.UIEventType = 'M_CLICK'; 
+		 else  if(evtType == 'Mouse Move' )
+			 animParam.UIEventType = 'M_MOVE'; 
+		 animParam.UIObjectID = WAL_getDropdownListSelection('objectlistDDL');
+	 }
+	 bRBState = WAL_getradioButtonCheckState('animeventRB');
+	 if(bRBState == true)
+	 {
+		 animParam.startType = 'ON_ANIMEVENT'; 
+		 animParam.AnimEventType = WAL_getDropdownListSelection('animeventlistDDL');
+		 var animtitle = WAL_getDropdownListSelection('animlistDDL'); 
+		 var animInfo = GX_GetAnimInfoByTitle(animtitle);
+		 if(!animInfo)
+			 return ; 
+		 animParam.refAnimID = animInfo[0]; 
+	 }	
+	
+	
+	 animParam.repeatCount = WAL_getMaskedInputValue('repeatcountIP');
+	 animParam.endState = WAL_getDropdownListSelection('endstatelistDDL');	 
+	 return animParam; 
+}
+
+
  function GX_CreateAnimationWidget(wdgtID)
  {
 	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Hor. Skew', 'Vert. Skew'];
@@ -368,9 +622,9 @@ function GX_GetAnimParamsFromUI()
                
                 WAL_createDropdownList('animAttrDDL', '140', gInputHeight, false, attrList, "GX_AnimAttrListHandler", '100');
                 
-                attrList = ['After Previous', 'With Previous', 'On Click'];                
-                WAL_createDropdownList('startParamDDL', '120', gInputHeight, false, attrList, "GX_AnimAttrListHandler", '100');
-                
+                attrList = ['After', 'With', 'On Click', 'At 0th Second'];                
+                WAL_createDropdownList('startParamDDL', '100', gInputHeight, false, attrList, "GX_AnimAttrListHandler", '100');
+                WAL_createDropdownList('animlistDDL', '150', gInputHeight, false, animlist, "GX_AnimAttrListHandler", '100');
                 WAL_createDecimalNumberInput("startOpacityValueIP", '80px', gInputHeight, "GX_AnimDlgEditHdlr",true, 1.0,0.0,0.1);
                 WAL_setNumberInputValue('startOpacityValueIP', 1.0, false); 
                                
@@ -421,7 +675,7 @@ function GX_GetAnimParamsFromUI()
                 		animlist.push(gAnimList[k][0]); 
             	}
                 
-                WAL_createDropdownList('animlistDDL', '135', gInputHeight, false, animlist, "GX_AnimAttrListHandler", '50');
+                
                 
                             
              
@@ -735,6 +989,14 @@ function GX_RemoveAnimInfoFromList(animID)
 			JQSel = '#MOTION_PATH_GROUP'; 
 			$(JQSel)[0].style.display='inline-block';				 
 		 }
+	 }
+	 else if(nodeid == 'startParamDDL'){
+		 var JQSel = '#animlist'; 		
+		 if( (value == 'After') || (value == 'With')){
+			 $(JQSel).show(); 
+		 }
+		 else
+			 $(JQSel).hide(); 			 
 	 }
 	 	 
  }
@@ -1882,6 +2144,9 @@ function GX_RemoveAnimInfoFromList(animID)
 		if(!animNode)
 			return ;				
 		GX_SetSelection(animNode.targetElement, true);
+		gCurrAnimParam = GX_GetAnimParamFromNode(animNode); 
+		GX_SetAnimParamOnUI(gCurrAnimParam); 
+		
  }
  
  function GX_NewAnimDlgOK(){
@@ -2020,7 +2285,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	// gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
 	 var animlist=[]; 
 	 for(var i =0; i <gAnimList.length; i++){
-		 animlist.push(gAnimList[i][5]); 
+		 if(gAnimList[i][5] != 'Invisible Animation')
+			 animlist.push(gAnimList[i][5]); 
 	 }	 
 	 WAL_ListBoxUpdateData('animationlist', animlist);
  }
