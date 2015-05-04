@@ -347,11 +347,29 @@ function GX_GetAnimParamsFromUI()
 */
 
 //_rm these are new Get and Set functions with new UI for animations
-function GX_SetAnimParamOnUI(animParam) {  
-    
-	//first set the common properties here 
+function GX_SetAnimParamOnUI(animParam) {      
+	//first set the common properties here 	
+	var itemValue = '';	 
+	//now check for the animateMotion type 
+	if(animParam.animType == 'ANIM_MOTION'){
+		var invNode = document.getElementById(animParam.animID + '_V'); 
+		var invAnimParam = GX_GetAnimParamFromNode(invNode); 
+		animParam.startType = invAnimParam.startType; 
+		animParam.AnimEventType = invAnimParam.AnimEventType; 
+		animParam.refAnimID = invAnimParam.refAnimID;
+	}
+	var animlist=[];	
+	for(var i =0; i < gAnimList.length; i++)
+	{
+	    //if( (animParam.title  !=  gAnimList[i][5]) && (gAnimList[i][5] != 'Invisible Animation') )
+	    if(animParam.title  !=  gAnimList[i][5]){	    	 
+	    	var refAnimInfo = GX_GetBeginParamWithRefAnim(gAnimList[i]); 
+	    	if( (gAnimList[i][5] != 'Invisible Animation') && (refAnimInfo[0] != gCurrentAnimInfo[0] ) )
+	    		animlist.push(gAnimList[i][5]);
+	    }	    	 
+	}
+	WAL_UpdateDropDownList('animlistDDL', animlist);
 	
-	var itemValue = '';
 	if(animParam.startType == 'ON_ANIMEVENT'){
 		if(animParam.AnimEventType == 'end'){
 			itemValue = 'After';  
@@ -359,22 +377,26 @@ function GX_SetAnimParamOnUI(animParam) {
 		else if(animParam.AnimEventType == 'begin'){
 			itemValue = 'With';  
 		}
+		
+		var refAnimInfo = GX_GetAnimInfoByID(animParam.refAnimID);		
+		WAL_SetItemByValueInList('animlistDDL', refAnimInfo[5], false);
 	}
 	else if(animParam.startType == 'ON_CLICK'){
 		itemValue = 'On Click';
 	}
+	else if(animParam.startType == 'ON_TIME'){
+		itemValue = 'At 0th Second';
+	}	
 	WAL_SetItemByValueInList('startParamDDL', itemValue, false);
-	var animlist=[]; 	
-	for(var i =0; i <gAnimList.length; i++)
-	{
-	    //if( (animParam.title  !=  gAnimList[i][5]) && (gAnimList[i][5] != 'Invisible Animation') )
-	    if(animParam.title  !=  gAnimList[i][5]){
-	    	if(gAnimList[i][5] != 'Invisible Animation')
-	    		animlist.push(gAnimList[i][5]);
-	    }
-	    	 
+	
+	/*var refAnimInfo = GX_GetBeginParamWithRefAnim(gCurrentAnimInfo); 
+	if(refAnimInfo[5] == 'Invisible Animation')
+		refAnimInfo = GX_GetBeginParamWithRefAnim(refAnimInfo); 
+	if(refAnimInfo[5]){		
+		WAL_SetItemByValueInList('animlistDDL', refAnimInfo[5], false); 
 	}
-	WAL_UpdateDropDownList('animlistDDL', animlist);
+		*/ 
+	
 	/*
 	//modify for rotate attribute 
     if(animParam.attribute == 'rotate')
@@ -481,9 +503,88 @@ function GX_SetAnimParamOnUI(animParam) {
 	
 }
 
-function GX_GetAnimParamsFromUI()
-{
+function GX_CopyAnimParam(srcParam, destParam){
+	
+	destParam.animID = srcParam.animID 
+	destParam.objectID = srcParam.objectID   
+	destParam.siblingID = srcParam.siblingID
+	destParam.duration = srcParam.duration 
+	destParam.animType = srcParam.animType
+	destParam.attribute = srcParam.attribute
+	destParam.startValue = srcParam.startValue
+	destParam.endValue = srcParam.endValue
+	destParam.refPathID = srcParam.refPathID 
+	destParam.PathObjectOffset = 	srcParam.PathObjectOffset;
+	destParam.PathStartPoint = srcParam.PathStartPoint
+	destParam.visibleAnimID = srcParam.visibleAnimID
+	destParam.bPathVisible = srcParam.bPathVisible
+	destParam.originalPosition = srcParam.originalPosition
+	destParam.startType =  srcParam.startType
+	destParam.startTime = srcParam.startTime
+	destParam.UIEventType = srcParam.UIEventType
+	destParam.UIObjectID  = srcParam.UIObjectID 
+	destParam.AnimEventType= srcParam.AnimEventType
+	destParam.refAnimID= srcParam.refAnimID
+	destParam.calcMode= srcParam.calcMode
+	destParam.restart = srcParam.restart
+	destParam.repeatCount= srcParam.repeatCount
+	destParam.endState = srcParam.endState
+	destParam.center = srcParam.center
+	destParam.title = srcParam.title;
+}
 
+function GX_GetAnimParamsFromUI(inputParam)
+{	
+	var animParams = new sAnimParams();
+	
+	GX_CopyAnimParam(inputParam, animParams); 
+	
+	//WAL_SetItemByValueInList('startParamDDL', itemValue, false);
+	var itemValue = WAL_getDropdownListSelection('startParamDDL');
+	var refAnimTitle; 
+	if(itemValue == 'After'){
+		refAnimTitle = WAL_getDropdownListSelection('animlistDDL');		
+		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);
+		gCurrentAnimInfo[3]= refAnimInfo[0] + '.end'; 
+		animParams.startType = 'ON_ANIMEVENT'; 
+		animParams.AnimEventType = 'end';
+		animParams.refAnimID = refAnimInfo[0];
+	}
+	else if(itemValue == 'With'){
+		refAnimTitle = WAL_getDropdownListSelection('animlistDDL');		
+		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);
+		gCurrentAnimInfo[3]= refAnimInfo[0] + '.begin'; 
+		animParams.startType = 'ON_ANIMEVENT'; 
+		animParams.AnimEventType = 'begin'; 
+		animParams.refAnimID = refAnimInfo[0];
+	}
+	else if(itemValue == 'At 0th Second'){				
+		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);
+		gCurrentAnimInfo[3]= '0s'; 
+		animParams.startType = 'ON_TIME'; 
+		animParams.AnimEventType = '';
+		animParams.startTime = 0; 
+		animParams.refAnimID = '';
+	}
+	else if(itemValue == 'On Click'){				
+		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);
+		gCurrentAnimInfo[3]= animParams.UIObjectID + '.click'; //SVG_876.click; 
+		animParams.startType = 'ON_UIEVENT'; 
+		animParams.AnimEventType = '';
+		animParams.startTime = 0; 
+		animParams.UIEventType = 'M_CLICK'; 
+		animParams.UIObjectID = animParams.objectID;	
+		animParams.refAnimID = '';
+	}
+	
+	return animParams; 
+	//GETTING START PARAMETERS 
+	
+	
+	 
+	//get the 
+	//[animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval]; 
+	/*
 	var animParam = new sAnimParams(); 
 	//animParam.animID = 0;	
 	animParam.animID = WAL_getInputValue('animIDIP');	
@@ -557,7 +658,7 @@ function GX_GetAnimParamsFromUI()
 	}  
     else if (animParam.animType == 'ANIM_MOTION') {       
         //animParam.refPathID = 0;
-    	animParam.refPathID = WAL_getDropdownListSelection('pathlistDDL');
+    	//animParam.refPathID = WAL_getDropdownListSelection('pathlistDDL');
     	// animParam.bPathVisible = true;    	
     	animParam.bPathVisible = WAL_getCheckBoxValue('pathvisibilityCB');
     	var pos = GX_CalculateMotionAnimPathOffset(animParam.objectID, animParam.refPathID);
@@ -596,6 +697,8 @@ function GX_GetAnimParamsFromUI()
 	 animParam.repeatCount = WAL_getMaskedInputValue('repeatcountIP');
 	 animParam.endState = WAL_getDropdownListSelection('endstatelistDDL');	 
 	 return animParam; 
+	 */
+	
 }
 
 
@@ -639,7 +742,7 @@ function GX_GetAnimParamsFromUI()
                       
                 WAL_createRadioButton('motionvalbtn', 'GX_AnimDlgRadioValueChangeHdlr', '130', '20', false, false);
                 var pathList = ['SVG_001', 'SVG_103', 'SVG_234']; 
-                WAL_createDropdownList('pathlistDDL', '120', gInputHeight, false, pathList, "GX_PathListHandler", '50');          
+                          
                 WAL_createCheckBox('pathvisibilityCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
                 WAL_setradioButtonCheck('motionvalbtn', true);
                 WAL_setradioButtonCheck('attrvalbtn', true); 
@@ -880,12 +983,17 @@ function GX_UpdateAnimInfoInList(animNode)
 			animNode.setAttribute('begin', ''); 
 			animNode.setAttribute('fill', 'remove'); 
 			
+			//_rm first remove the existing entry and then add
+			GX_RemoveAnimInfoFromList(animNode.id); 
+			gAnimList.push(animInfo); 	
 			//now check if its an existing entry or a new entry
-			var index = GX_GetIndexofAnimInfoFromList(animNode.id);
+			/*	
+			 * var index = GX_GetIndexofAnimInfoFromList(animNode.id);
 			if(index == -1)
 			{
 				gAnimList.push(animInfo); 	
-			}					
+			}
+		 	*/				
 		}
 }
 
@@ -1022,7 +1130,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	{
 		if(state == true)
 		{
-			WAL_disableWidget('pathlistDDL', 'data-jqxDropDownList', false, false);
+			
 			WAL_disableWidget('pathvisibilityCB', 'data-jqxCheckBox', false, false);			
 		}
 		else
@@ -1198,7 +1306,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 var state = event.args.checked;	
 	 if (CBID == 'pathvisibilityCB')
 	 {
-		 var refPathID = WAL_getDropdownListSelection('pathlistDDL');
+		 /*var refPathID = WAL_getDropdownListSelection('pathlistDDL');
 		 if(refPathID)
 		 {
 			 var pathNode =  document.getElementById(refPathID); 
@@ -1208,7 +1316,9 @@ function GX_RemoveAnimInfoFromList(animID)
 					 GX_SetObjectAttribute(pathNode, 'visibility', 'hidden', true, false);
 				 else
 					 GX_SetObjectAttribute(pathNode, 'visibility', 'visible', true, false);
-		 }		
+		 }	
+		 */
+		 
 	 }
  }
  
@@ -1621,7 +1731,17 @@ function GX_RemoveAnimInfoFromList(animID)
 					animParam.AnimEventType = 'end'; 
 					value = value.substring(0, index);
 					animParam.refAnimID = value;  
-				} 
+				} else{
+					index = value.indexOf('.begin',0); 
+					if(index != -1)
+					{
+						animParam.startType = 'ON_ANIMEVENT';	
+						animParam.AnimEventType = 'begin'; 
+						value = value.substring(0, index);
+						animParam.refAnimID = value;  
+					} 
+				}
+				
 			}		
 		}
 		if(index == -1)
@@ -1795,32 +1915,43 @@ function GX_RemoveAnimInfoFromList(animID)
 	 }
 	
 	var beginval =""; 
-	if(AnimParam2.startType == 'ON_UIEVENT')
+	if(AnimParam1.startType != AnimParam2.startType)
 	{
-		 if(AnimParam1.UIObjectID != AnimParam2.UIObjectID)
-		 {
-			  beginval += AnimParam2.UIObjectID + '.click';	 
-		 }			
+		if(AnimParam2.startType == 'ON_UIEVENT')
+		{			 
+			beginval += AnimParam2.UIObjectID + '.click';				 			
+		}
+		else if(AnimParam2.startType == 'ON_ANIMEVENT')
+		{			
+			beginval += AnimParam2.refAnimID + '.' + AnimParam2.AnimEventType.toLowerCase();				
+		}
+		else if(AnimParam2.startType == 'ON_TIME')
+		{			
+			beginval += AnimParam2.startTime + 's';				
+		}
+		if(beginval.length > 0)
+		{
+			attrData = ['begin',beginval];  
+			attrArray.push(attrData);		
+		}	
 	}
-	else if(AnimParam2.startType == 'ON_ANIMEVENT')
+	if( (AnimParam1.startType == AnimParam2.startType) && (AnimParam2.startType == 'ON_ANIMEVENT') )
 	{
 		if(AnimParam1.refAnimID != AnimParam2.refAnimID)
 		{
 			beginval += AnimParam2.refAnimID + '.' + AnimParam2.AnimEventType.toLowerCase();	 
 		}	
-	}
-	else if(AnimParam2.startType == 'ON_TIME')
-	{
-		if(AnimParam1.startTime != AnimParam2.startTime)
+		else if(AnimParam1.AnimEventType != AnimParam2.AnimEventType)
 		{
-			beginval += AnimParam2.startTime + 's';	 
+			beginval += AnimParam2.refAnimID + '.' + AnimParam2.AnimEventType.toLowerCase();	 
+		}
+		if(beginval.length > 0)
+		{
+			attrData = ['begin',beginval];  
+			attrArray.push(attrData);		
 		}	
 	}
-	if(beginval.length > 0)
-	{
-		attrData = ['begin',beginval];  
-		attrArray.push(attrData);		
-	}	
+	
 	 //common 	 	 
 	 if(AnimParam2.animType == 'ANIM_ATTRIBUTE')
 	 {
@@ -1875,9 +2006,21 @@ function GX_RemoveAnimInfoFromList(animID)
 	 
 	 for(var i=0; i < attrArray.length; i++)
 	 {
+		 if( (attrArray[i][0]=='begin') && (animNode.nodeName.toUpperCase()== 'ANIMATEMOTION')){
+			 var invNode = document.getElementById(animID + '_V'); 
+			 invNode.setAttribute(attrArray[i][0], attrArray[i][1]); 
+			 GX_UpdateAnimInfoInList(invNode); 
+			 animNode.setAttribute('begin', animID + '_V.end');
+			 var invArray=[]; 
+			 invArray[0]= ['begin',attrArray[i][1]]; 
+			 GXRDE_updateAnimationObject(invNode.id, invArray); 
+			 attrArray[i][1] = animID + '_V.end'; 
+			 continue; 
+		 }
 		 animNode.setAttribute(attrArray[i][0], attrArray[i][1]); 
 	 }
 	 GX_UpdateAnimInfoInList(animNode); 
+	 var respStr = GXRDE_updateAnimationObject(animID, attrArray); 
  }
  
 
@@ -2071,7 +2214,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	    	if(gObjectList[k][1] == 'SVG_PATH_OBJECT')
 	    		pathList.push(gObjectList[k][0]); 
 	}
-	WAL_UpdateDropDownList('pathlistDDL', pathList);
+	//WAL_UpdateDropDownList('pathlistDDL', pathList);
 	    
 	var animlist=[]; 	
 	for(var i =0; i <gAnimList.length; i++)
@@ -2092,7 +2235,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	WAL_SetItemByValueInList('animAttrDDL', itemvalue, false); 	     
 	WAL_setradioButtonCheck('motionvalbtn', false); 
 	        //animParam.refPathID = 0;
-	WAL_SetItemByValueInList('pathlistDDL', animParam.refPathID, true);
+	//WAL_SetItemByValueInList('pathlistDDL', animParam.refPathID, true);
 	        // animParam.bPathVisible = true;
 	WAL_setCheckBoxValue('pathvisibilityCB', false);	        
 	WAL_setNumberInputValue('offsetFromPathX', 0, true);
@@ -2311,6 +2454,18 @@ function GX_RemoveAnimInfoFromList(animID)
 		 }
 		 break;
 	 case 'applybtn':
+		// gInitAnimParam = gCurrAnimParam; 
+		 var tempAnimParam = GX_GetAnimParamsFromUI(gCurrAnimParam); 
+		 var attrArray = GX_CompareAndGetAnimParamArray(gCurrAnimParam, tempAnimParam); 		
+		//now update the array on server side 
+		if( (attrArray) && (attrArray.length >0) )
+		{
+			var respStr = GX_UpdateAnimObjectAttribute(gCurrAnimParam.animID, attrArray);
+			//respStr = GXRDE_updateAnimationObject(gCurrAnimParam.animID, attrArray); 
+			
+		}	
+		gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
+		GX_UpdateAnimationListbox();
 		 break; 
 	default:
 		break; 
@@ -2337,6 +2492,23 @@ function GX_RemoveAnimInfoFromList(animID)
 		else
 			return 0; 
 }
+ 
+ function GX_GetBeginParamWithRefAnim(animInfo){
+	 	var animItem = animInfo; 
+		var dotpos =  animItem[3].indexOf('.'); 		
+		if(dotpos == -1)
+			return 0;  
+		var animIDRef = animItem[3].substring(0,dotpos); 			
+		var animEvent = animItem[3].substring(dotpos+1,animItem[3].length); 
+		if( (animEvent == 'begin')|| (animEvent == 'end') ){
+			var refAnimInfo = GX_GetAnimInfoByID(animIDRef);			
+			if(refAnimInfo)
+				return refAnimInfo; 
+		}
+		//var animEvent = animItem[3].substring(dotpos+1,animItem[3].length); 
+		return 0;		
+ }
+ 
  function GX_SortAnimListInDisplayOrder(animList){		
 		var sortedList = [];
 		var animlistlength = animList.length; 
