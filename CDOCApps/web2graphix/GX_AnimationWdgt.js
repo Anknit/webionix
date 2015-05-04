@@ -393,6 +393,16 @@ function GX_SetAnimParamOnUI(animParam) {
 	WAL_SetItemByValueInList('animAttrDDL', itemvalue, false); 	
 	WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, true);
 	
+	switch(animParam.attribute)
+	{	
+	case 'rotate':		   	
+    	var valarr  = animParam.endValue.split(" "); 
+    	var finalVal = valarr[0]; 
+		WAL_setNumberInputValue('endAngleValueIP', finalVal, false);					
+		break; 		
+	default:
+		break; 			
+	}
 	/*var refAnimInfo = GX_GetBeginParamWithRefAnim(gCurrentAnimInfo); 
 	if(refAnimInfo[5] == 'Invisible Animation')
 		refAnimInfo = GX_GetBeginParamWithRefAnim(refAnimInfo); 
@@ -579,6 +589,19 @@ function GX_GetAnimParamsFromUI(inputParam)
 		animParams.UIEventType = 'M_CLICK'; 
 		animParams.UIObjectID = animParams.objectID;	
 		animParams.refAnimID = '';
+	}
+	
+	switch(animParams.attribute)
+	{	
+	case 'rotate':		
+		var value =  WAL_getMaskedInputValue('endAngleValueIP'); 
+    	var valarr  = animParams.endValue.split(" "); 
+    	animParams.endValue = value;
+    	for(var k =1; k < valarr.length; k++)
+    		animParams.endValue += ' ' +valarr[k];    				
+		break; 		
+	default:
+		break; 			
 	}
 	
 	return animParams; 
@@ -1031,6 +1054,16 @@ function GX_GetAnimInfoByID(animID)
 			return animInfo; 
 	}		
 	return 0; 
+}
+function GX_GetAnimInfoListIndexByID(animID)
+{
+	for(var j=0; j < gAnimList.length; j++)
+	{
+		var animInfo = gAnimList[j]; 
+		if(animInfo[0] == animID)
+			return j; 
+	}		
+	return -1; 
 }
 function GX_RemoveAnimInfoFromList(animID)
 {	
@@ -1607,18 +1640,7 @@ function GX_RemoveAnimInfoFromList(animID)
  	{
  		GX_UpdateAnimParamOnUI(animNode);
  	}
- 	//gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
- 	/*
- 	if(animNode)
- 		GX_UpdateAnimInfoInList(animNode); 
- 	var animlist=[];
- 	for(var k=0; k < gAnimList.length; k++)
- 	{
- 		animlist.push(gAnimList[k][5]); 
- 	}
- 	WAL_UpdateDropDownList('listanimDDL', animlist);
- 	var index = animlist.length-1; 
- 	WAL_SetItemInDropDownList('listanimDDL', index, true); 	*/
+ 	
  	
  }
  
@@ -2014,7 +2036,9 @@ function GX_RemoveAnimInfoFromList(animID)
 		 if( (attrArray[i][0]=='begin') && (animNode.nodeName.toUpperCase()== 'ANIMATEMOTION')){
 			 var invNode = document.getElementById(animID + '_V'); 
 			 invNode.setAttribute(attrArray[i][0], attrArray[i][1]); 
-			 GX_UpdateAnimInfoInList(invNode); 
+			 var index = GX_GetAnimInfoListIndexByID(invNode.id); 
+			 gAnimList[index][3] = attrArray[i][1]; 
+			
 			 animNode.setAttribute('begin', animID + '_V.end');
 			 var invArray=[]; 
 			 invArray[0]= ['begin',attrArray[i][1]]; 
@@ -2024,7 +2048,9 @@ function GX_RemoveAnimInfoFromList(animID)
 		 }
 		 animNode.setAttribute(attrArray[i][0], attrArray[i][1]); 
 	 }
-	 GX_UpdateAnimInfoInList(animNode); 
+	 //var index = GX_GetAnimInfoListIndexByID(animNode.id); 
+	// gAnimList[index][3] = attrArray[i][1]; 
+	 //GX_UpdateAnimInfoInList(animNode); 
 	 var respStr = GXRDE_updateAnimationObject(animID, attrArray); 
  }
  
