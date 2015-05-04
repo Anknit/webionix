@@ -77,7 +77,7 @@ gAttrList['Stroke-Color'] = 'stroke';
 gAttrList['Opacity'] = 'fill-opacity'; 
 gAttrList['Visibility'] = 'visibility'; 
 gAttrList['Stroke-Width'] = 'stroke-width';
-gAttrList['Motion along Path'] = 'PathMotion';// 'translate';
+gAttrList['Motion along Path'] = 'pathmotion';// 'translate';
 gAttrList['Rotate'] = 'rotate';
 gAttrList['Hor. Skew'] = 'skewX';
 gAttrList['Vert. Skew'] = 'skewY';
@@ -90,7 +90,7 @@ gReverseAttrList['stroke']         =  'Stroke-Color'   ;
 gReverseAttrList['fill-opacity']   =  'Opacity'  ; 
 gReverseAttrList['visibility']     =  'Visibility'  ; 
 gReverseAttrList['stroke-width']   =  'Stroke-Width' ;
-gReverseAttrList['PathMotion']     =  'Motion along Path'   ;
+gReverseAttrList['pathmotion']     =  'Motion along Path'   ;
 gReverseAttrList['rotate']         =  'Rotate' ;
 gReverseAttrList['skewX']          =  'Hor. Skew';
 gReverseAttrList['skewY']          =  'Vert. Skew';        
@@ -387,7 +387,11 @@ function GX_SetAnimParamOnUI(animParam) {
 	else if(animParam.startType == 'ON_TIME'){
 		itemValue = 'At 0th Second';
 	}	
-	WAL_SetItemByValueInList('startParamDDL', itemValue, false);
+	WAL_SetItemByValueInList('startParamDDL', itemValue, false);	
+	var itemvalue = gReverseAttrList[animParam.attribute]; 
+	WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, false); 
+	WAL_SetItemByValueInList('animAttrDDL', itemvalue, false); 	
+	WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, true);
 	
 	/*var refAnimInfo = GX_GetBeginParamWithRefAnim(gCurrentAnimInfo); 
 	if(refAnimInfo[5] == 'Invisible Animation')
@@ -724,7 +728,7 @@ function GX_GetAnimParamsFromUI(inputParam)
                 //var attrList = ['Fill-Color', 'Stroke-Color', 'Opacity', 'Visibility', 'Stroke-Width', 'Move', 'Rotate', 'Hor. Skew', 'Vert. Skew'];                
                
                 WAL_createDropdownList('animAttrDDL', '140', gInputHeight, false, attrList, "GX_AnimAttrListHandler", '100');
-                
+                WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, true); 
                 attrList = ['After', 'With', 'On Click', 'At 0th Second'];                
                 WAL_createDropdownList('startParamDDL', '100', gInputHeight, false, attrList, "GX_AnimAttrListHandler", '100');
                 WAL_createDropdownList('animlistDDL', '150', gInputHeight, false, animlist, "GX_AnimAttrListHandler", '100');
@@ -1093,7 +1097,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			 $(JQSel)[0].style.display='inline-block';	
 			WAL_setNumberInputValue('startStrokeWidthValueIP', 1, false);			
 		 }
-		 if(itemval == 'PathMotion'){
+		 if(itemval == 'pathmotion'){
 			JQSel = '#MOTION_PATH_GROUP'; 
 			$(JQSel)[0].style.display='inline-block';				 
 		 }
@@ -1669,6 +1673,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		else if(value == 'ANIMATEMOTION')
 		{
 			animParam.animType = 'ANIM_MOTION';
+			animParam.attribute = 'pathmotion';
 			//TBD here 
 			//gInitAnimParam.refPathID = '';
 			//get the mpath link 
@@ -1702,7 +1707,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		value = animInfo[3]; 
 		if(value.length < 1)
 		{
-			Debug_Message("Begin Value is NULL"); 
+			//Debug_Message("Begin Value is NULL"); 
 			
 		}
 		var index = value.indexOf('s',0); 
@@ -2232,7 +2237,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	WAL_setTextInputValue('animtitleIP', animParam.title, false);	
 	WAL_setradioButtonCheck('attrvalbtn', true); 	        
 	var itemvalue = gReverseAttrList[animParam.attribute]; 
-	WAL_SetItemByValueInList('animAttrDDL', itemvalue, false); 	     
+	WAL_SetItemByValueInList('animAttrDDL', itemvalue, true); 	     
 	WAL_setradioButtonCheck('motionvalbtn', false); 
 	        //animParam.refPathID = 0;
 	//WAL_SetItemByValueInList('pathlistDDL', animParam.refPathID, true);
@@ -2357,7 +2362,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		 	gInitAnimParam.endValue = '90'  + ' ' + gInitAnimParam.center ;	
 		 	
 		}
-		else if(attrtype == 'PathMotion'){
+		else if(attrtype == 'pathmotion'){
 			var animType = 'ANIM_MOTION';
 			//add a simple path and obtain the SVGID of that which becomes the mpath reference.
 			var currObjNode =  gCurrentObjectSelected; 
