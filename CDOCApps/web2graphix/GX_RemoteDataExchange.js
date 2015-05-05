@@ -201,3 +201,16 @@ function GXRDE_getUsername()
     }   
     return respstring; 
 }
+function GXRDE_updateSVGObject(objID, attrArray)
+{	
+	var len = attrArray.length; 
+	var reqbody = "&LENGTH=" + attrArray.length;	 
+	for(var j=0; j < len; j++)
+	{
+		var attrstr = "&OBJECTID[]=" + objID + "&OPTYPE[]=ATTRIBUTE" + 
+			"&ATTRNAME[]=" +  attrArray[j][0] + "&ATTRVALUE[]="+ attrArray[j][1];
+		reqbody += attrstr; 			
+	}	
+	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "305", reqbody);	
+	return respstring; 
+}
