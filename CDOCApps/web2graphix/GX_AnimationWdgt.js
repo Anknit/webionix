@@ -406,6 +406,9 @@ function GX_SetAnimParamOnUI(animParam) {
 	default:
 		break; 			
 	}
+	
+	//DURATION 
+	WAL_setNumberInputValue('durationIP', animParam.duration, false);
 	/*var refAnimInfo = GX_GetBeginParamWithRefAnim(gCurrentAnimInfo); 
 	if(refAnimInfo[5] == 'Invisible Animation')
 		refAnimInfo = GX_GetBeginParamWithRefAnim(refAnimInfo); 
@@ -624,6 +627,9 @@ function GX_GetAnimParamsFromUI(inputParam)
 	default:
 		break; 			
 	}
+	
+	//duration 
+	animParams.duration = WAL_getMaskedInputValue('durationIP');	
 	
 	return animParams; 
 	//GETTING START PARAMETERS 
