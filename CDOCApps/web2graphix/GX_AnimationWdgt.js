@@ -409,6 +409,10 @@ function GX_SetAnimParamOnUI(animParam) {
 	
 	//DURATION 
 	WAL_setNumberInputValue('durationIP', animParam.duration, false);
+	WAL_setNumberInputValue('repeatcountIP', animParam.repeatCount, false);
+    // animParam.endState = 'freeze'; //FREEZE, REMOVE
+	WAL_SetItemByValueInList('endstatelistDDL', animParam.endState, true);
+	
 	/*var refAnimInfo = GX_GetBeginParamWithRefAnim(gCurrentAnimInfo); 
 	if(refAnimInfo[5] == 'Invisible Animation')
 		refAnimInfo = GX_GetBeginParamWithRefAnim(refAnimInfo); 
@@ -630,6 +634,8 @@ function GX_GetAnimParamsFromUI(inputParam)
 	
 	//duration 
 	animParams.duration = WAL_getMaskedInputValue('durationIP');	
+	animParams.repeatCount = WAL_getMaskedInputValue('repeatcountIP');
+	animParams.endState = WAL_getDropdownListSelection('endstatelistDDL');	 
 	
 	return animParams; 
 	//GETTING START PARAMETERS 
