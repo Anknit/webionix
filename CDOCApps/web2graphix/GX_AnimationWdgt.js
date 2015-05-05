@@ -400,6 +400,9 @@ function GX_SetAnimParamOnUI(animParam) {
     	var finalVal = valarr[0]; 
 		WAL_setNumberInputValue('endAngleValueIP', finalVal, false);					
 		break; 		
+	case 'pathmotion':	
+		WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible); 
+		break; 
 	default:
 		break; 			
 	}
@@ -549,10 +552,8 @@ function GX_CopyAnimParam(srcParam, destParam){
 
 function GX_GetAnimParamsFromUI(inputParam)
 {	
-	var animParams = new sAnimParams();
-	
-	GX_CopyAnimParam(inputParam, animParams); 
-	
+	var animParams = new sAnimParams();	
+	GX_CopyAnimParam(inputParam, animParams);	
 	//WAL_SetItemByValueInList('startParamDDL', itemValue, false);
 	var itemValue = WAL_getDropdownListSelection('startParamDDL');
 	var refAnimTitle; 
@@ -600,6 +601,26 @@ function GX_GetAnimParamsFromUI(inputParam)
     	for(var k =1; k < valarr.length; k++)
     		animParams.endValue += ' ' +valarr[k];    				
 		break; 		
+	case 'pathmotion':	
+		animParams.bPathVisible = WAL_getCheckBoxValue('pathvisibilityCB');
+		var refPathID = animParams.refPathID;
+		if(refPathID)
+		{
+			var pathNode =  document.getElementById(refPathID); 
+			 if(animParams.bPathVisible == 'false'){			
+				 GX_SetObjectAttribute(pathNode, 'stroke-opacity', '0.5', true, true);
+				 GX_SetObjectAttribute(pathNode, 'visibility', 'hidden', true, true);
+				 var attrArray = [['visibility', 'hidden'],['stroke-opacity', '0.5']]; 
+				var retval =  GXRDE_updateSVGObject(pathNode.id, attrArray); 
+			 }				
+			 else{	
+				 GX_SetObjectAttribute(pathNode, 'stroke-opacity', '1', true, true);
+				 GX_SetObjectAttribute(pathNode, 'visibility', 'visible', true, true);
+				 var attrArray = [['visibility', 'visible'],['stroke-opacity', '1']]; 
+				 var retval = GXRDE_updateSVGObject(pathNode.id, attrArray); 
+			 }			
+		}	
+		break; 
 	default:
 		break; 			
 	}
@@ -1343,19 +1364,16 @@ function GX_RemoveAnimInfoFromList(animID)
 	 var state = event.args.checked;	
 	 if (CBID == 'pathvisibilityCB')
 	 {
-		 /*var refPathID = WAL_getDropdownListSelection('pathlistDDL');
+		 var refPathID = WAL_getDropdownListSelection('pathlistDDL');
 		 if(refPathID)
 		 {
 			 var pathNode =  document.getElementById(refPathID); 
-			 gPrevAttributeList = []; 
-				 gPrevAttributeList = EL_getObjectAttributes(pathNode);
-				 if(state ==  false)
-					 GX_SetObjectAttribute(pathNode, 'visibility', 'hidden', true, false);
-				 else
-					 GX_SetObjectAttribute(pathNode, 'visibility', 'visible', true, false);
+			 if(state ==  false)
+				 GX_SetObjectAttribute(pathNode, 'stroke-opacity', '0.5', true, false);
+			 else
+				 GX_SetObjectAttribute(pathNode, 'stroke-opacity', '1', true, false);
 		 }	
-		 */
-		 
+		 		 
 	 }
  }
  
@@ -1718,7 +1736,14 @@ function GX_RemoveAnimInfoFromList(animID)
 			animParam.PathObjectOffset = mystr; 
 			var pathNode = document.getElementById(animParam.refPathID); 
 			animParam.PathStartPoint = GX_GetPathStartPoint(pathNode); 
-					
+			var opacity = pathNode.getAttribute('stroke-opacity'); 
+			pathNode.setAttribute('visibility','visible');
+			if(opacity == '0.5'){
+				animParam.bPathVisible = false;				 
+			}				
+			else{
+				animParam.bPathVisible = true;			
+			}							
 		}
 		animParam.startValue = animNode.getAttribute('from'); 
 		animParam.endValue = animNode.getAttribute('to');
@@ -2405,7 +2430,7 @@ function GX_RemoveAnimInfoFromList(animID)
 				return ; 
 			}
 			var MyRefPathID = GX_AddNewSVGObject('line_path','');
-			gInitAnimParam.refPathID=MyRefPathID; 
+			gInitAnimParam.refPathID=MyRefPathID; 			
 			//now selection would have changed to path 
 			endX =  new Number(startX) + pathLen; 
 			endY =  startY; 
@@ -2573,4 +2598,6 @@ function GX_RemoveAnimInfoFromList(animID)
 		}		
 		return sortedList; 
 }
+ 
+
  
