@@ -79,8 +79,9 @@ gAttrList['Visibility'] = 'visibility';
 gAttrList['Stroke-Width'] = 'stroke-width';
 gAttrList['Motion along Path'] = 'pathmotion';// 'translate';
 gAttrList['Rotate'] = 'rotate';
-gAttrList['Hor. Skew'] = 'skewX';
-gAttrList['Vert. Skew'] = 'skewY';
+gAttrList['Horizontal Skew'] = 'skewX';
+gAttrList['Vertical Skew'] = 'skewY';
+gAttrList['Scale'] = 'scale';
 
 
 
@@ -92,8 +93,9 @@ gReverseAttrList['visibility']     =  'Visibility'  ;
 gReverseAttrList['stroke-width']   =  'Stroke-Width' ;
 gReverseAttrList['pathmotion']     =  'Motion along Path'   ;
 gReverseAttrList['rotate']         =  'Rotate' ;
-gReverseAttrList['skewX']          =  'Hor. Skew';
-gReverseAttrList['skewY']          =  'Vert. Skew';        
+gReverseAttrList['skewX']          =  'Horizontal Skew';
+gReverseAttrList['skewY']          =  'Vertical Skew';     
+gReverseAttrList['scale']          =  'Scale'; 
 
 /*
 function GX_SetAnimParamOnUI(animParam) {  
@@ -403,6 +405,12 @@ function GX_SetAnimParamOnUI(animParam) {
 	case 'pathmotion':	
 		WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible); 
 		break; 
+	case 'skewX':
+		WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
+		break; 
+	case 'skewY':
+		WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
+		break; 
 	default:
 		break; 			
 	}
@@ -597,8 +605,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 		animParams.UIEventType = 'M_CLICK'; 
 		animParams.UIObjectID = animParams.objectID;	
 		animParams.refAnimID = '';
-	}
-	
+	}	
 	switch(animParams.attribute)
 	{	
 	case 'rotate':		
@@ -627,6 +634,12 @@ function GX_GetAnimParamsFromUI(inputParam)
 				 var retval = GXRDE_updateSVGObject(pathNode.id, attrArray); 
 			 }			
 		}	
+		break; 
+	case 'skewX':			
+		animParams.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
+		break; 
+	case 'skewY':			
+		animParams.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
 		break; 
 	default:
 		break; 			
@@ -764,7 +777,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 
  function GX_CreateAnimationWidget(wdgtID)
  {
-	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Hor. Skew', 'Vert. Skew'];
+	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Scale'];
 	 	//create the new animation widget interface here 	 
 	 			WAL_createModelessWindow('newAnimationDlg', '220', '150', 'newAnimOK', 'newAnimCancel');
 	 			WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '')	 ; 			
@@ -2422,8 +2435,17 @@ function GX_RemoveAnimInfoFromList(animID)
 			var centreY = rectdim.y + rectdim.height/2;
 			gInitAnimParam.center = centreX + ' ' + centreY;	
 		    gInitAnimParam.startValue = '0' + ' ' + gInitAnimParam.center ;
-		 	gInitAnimParam.endValue = '90'  + ' ' + gInitAnimParam.center ;	
-		 	
+		 	gInitAnimParam.endValue = '90'  + ' ' + gInitAnimParam.center ;			 	
+		}
+		else if(attrtype == 'scale'){
+			animType = 'ANIM_TRANSFORM';
+			gInitAnimParam.startValue = '0';
+		 	gInitAnimParam.endValue = '1' ;			 	
+		}
+		else if( (attrtype == 'skewX') ||(attrtype == 'skewY')) {
+			animType = 'ANIM_TRANSFORM';
+			gInitAnimParam.startValue = '0';
+		 	gInitAnimParam.endValue = '15' ;			 	
 		}
 		else if(attrtype == 'pathmotion'){
 			var animType = 'ANIM_MOTION';
