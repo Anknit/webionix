@@ -411,6 +411,15 @@ function GX_SetAnimParamOnUI(animParam) {
 	case 'skewY':
 		WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
 		break; 
+	case 'fill-opacity':
+		WAL_setNumberInputValue('startOpacityValueIP', animParam.startValue, false);	
+		break;
+	case 'scale':
+		var value = new Number(animParam.startValue); 		
+		value = value*100.0; 
+		value -= 100.0; 
+		WAL_setNumberInputValue('startValueIP', value, false);	
+		break;		
 	default:
 		break; 			
 	}
@@ -640,6 +649,16 @@ function GX_GetAnimParamsFromUI(inputParam)
 		break; 
 	case 'skewY':			
 		animParams.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
+		break; 		
+	case 'fill-opacity':
+		animParams.startValue = WAL_getMaskedInputValue('startOpacityValueIP');	
+		break;
+	case 'scale':
+		var value = WAL_getMaskedInputValue('startValueIP');
+		value =  new Number(value); 
+		value += 100.0; 
+		value /= 100.0; 
+		animParams.startValue = value; 
 		break; 
 	default:
 		break; 			
@@ -782,9 +801,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 	 			WAL_createModelessWindow('newAnimationDlg', '220', '150', 'newAnimOK', 'newAnimCancel');
 	 			WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '')	 ; 			
                 WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 100); 			
-	 			
-	 	//creating new animationlist interface 
-	 
+	 				 	//creating new animationlist interface	 
 	 			WAL_createModelessWindow('animationListWidget', '380', '470', 'animOK', 'animCancel');
 	 			WAL_createListBox('animationlist', '305', '200', "GX_AnimationListHandler");
 	 			 
@@ -807,7 +824,10 @@ function GX_GetAnimParamsFromUI(inputParam)
                 WAL_createNumberInput("startStrokeWidthValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 15, 1, 1);
                 WAL_setNumberInputValue('startOpacityValueIP', 1, false); 
                 WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, 0, 1);
-                WAL_setNumberInputValue('endAngleValueIP', 0, false);    
+                WAL_setNumberInputValue('endAngleValueIP', 0, false);   
+                
+                WAL_createNumberInput("startValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, -100, 1);
+                
                 WAL_createButton('playbtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
                 WAL_createButton('animdeletebtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
                 WAL_createButton('applybtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
@@ -1170,6 +1190,12 @@ function GX_RemoveAnimInfoFromList(animID)
 			 $(JQSel)[0].style.display='inline-block';//.show();			
 			WAL_setNumberInputValue('endAngleValueIP', 30, false);	
 		 }
+		 if(itemval == 'scale'){
+			 JQSel = '#FROM_UI_GROUP';
+			 $(JQSel)[0].style.display='inline-block';		
+			WAL_setNumberInputValue('startValueIP', 30, false);	
+		 }
+		 
 		 if(itemval == 'stroke-width')
 		 {			 
 			 JQSel = '#STROKE_WIDTH_UI_GROUP';
@@ -1180,6 +1206,11 @@ function GX_RemoveAnimInfoFromList(animID)
 			JQSel = '#MOTION_PATH_GROUP'; 
 			$(JQSel)[0].style.display='inline-block';				 
 		 }
+		 if(itemval == 'fill-opacity'){
+				JQSel = '#OPACITY_UI_GROUP'; 
+				$(JQSel)[0].style.display='inline-block';				 
+		 }
+		 
 	 }
 	 else if(nodeid == 'startParamDDL'){
 		 var JQSel = '#animlist'; 		
@@ -2428,7 +2459,11 @@ function GX_RemoveAnimInfoFromList(animID)
 	    gInitAnimParam.PathStartPoint=new sPoint();
 	    gInitAnimParam.center = '';  //centre of rotation 	
 		var animType = 'ANIM_ATTRIBUTE'; 
-		if(attrtype == 'rotate'){
+		if(attrtype == 'fill-opacity'){
+			gInitAnimParam.startValue = '0.5';
+		 	gInitAnimParam.endValue = '1';
+		}
+		else if(attrtype == 'rotate'){
 			animType = 'ANIM_TRANSFORM';
 			var rectdim = GX_GetRectObjectDim(gCurrentObjectSelected);
 			var centreX = rectdim.x + rectdim.width/2; 
@@ -2439,7 +2474,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		}
 		else if(attrtype == 'scale'){
 			animType = 'ANIM_TRANSFORM';
-			gInitAnimParam.startValue = '0';
+			gInitAnimParam.startValue = '0.5';
 		 	gInitAnimParam.endValue = '1' ;			 	
 		}
 		else if( (attrtype == 'skewX') ||(attrtype == 'skewY')) {
