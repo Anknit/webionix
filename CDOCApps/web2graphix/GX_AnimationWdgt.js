@@ -802,7 +802,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 	 			WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '')	 ; 			
                 WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 100); 			
 	 				 	//creating new animationlist interface	 
-	 			WAL_createModelessWindow('animationListWidget', '380', '470', 'animOK', 'animCancel');
+	 			//WAL_createModelessWindow('animationListWidget', '380', '470', 'animOK', 'animCancel');
 	 			WAL_createListBox('animationlist', '305', '200', "GX_AnimationListHandler");
 	 			 
                 WAL_createNumberInput("repeatcountIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, 0, 1);
