@@ -1307,7 +1307,15 @@ function WAL_createListBox(ID, Width, Height, fnSelectHandler)
 	$(JQSel).bind('select', function(event) { 
 		if(fnSelectHandler)
 		{
-			var expr = fnSelectHandler + '(' + event.args.index + ')'; 
+			var args = event.args;
+		    if (args) {
+		        //var index = args.index;
+		        var item = args.item;		       
+		        var label = item.label;
+		       // var value = item.value;
+		    }		        
+			//var expr = fnSelectHandler + '(' + label + ')'; 
+			var expr = fnSelectHandler + "(label)";
 			eval(expr);  
 		}		       
     });
@@ -3175,13 +3183,14 @@ function WAL_SetMenuItem(menuID, itemID)
 	$(JQSel).jqxMenu('openItem', itemID);	
 }
 
-function WAL_createContextMenu(ID, HandlerMenuItemClick)
+function WAL_createContextMenu(ID, containerID,  HandlerMenuItemClick)
 {
 	   var JQSel = '#'+ID; 
 	   var contextMenu = $(JQSel).jqxMenu({ width: '120px', height: '140px', autoOpenPopup: false, mode: 'popup',theme: gTheme});
     // open the context menu when the user presses the mouse right button.
     var menuNode =  document.getElementById(ID); 
-    var parSel = '#' + menuNode.parentNode.parentNode.id; //'#' + menuNode.parentNode.previousElementSibling.id;            
+    //var parSel = '#' + menuNode.parentNode.parentNode.id; //'#' + menuNode.parentNode.previousElementSibling.id;            
+    var parSel = '#' + containerID;
     $(parSel).on('mousedown', function (event) {
         var rightClick = isRightClick(event) || $.jqx.mobile.isTouchDevice();
         if (rightClick) {
@@ -3192,11 +3201,11 @@ function WAL_createContextMenu(ID, HandlerMenuItemClick)
             return false;
         }              
     }); 
-    /*
+    
     $(document).on('contextmenu', function (e) {
         return false;
     });    
-    */
+   
     
     $(JQSel).on('itemclick', function(event) {
         var args = event.args;
