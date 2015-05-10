@@ -919,9 +919,10 @@ function GX_Initialize()
     WAL_createButton('fillcolAnimPreviewBtn', 'GX_FillBtnHandler', '60', 24, true);
     WAL_createCheckBox('animateFillColor', 'GX_FillColorAnimCheckValueChange', '50', gWidgetHeight, '13', false, false);
     WAL_createModelessWindow('fillcolorDlg', '250', '150', 'fillcolOK', 'fillcolCancel');   
-    $(document).on('contextmenu', function (e) {
+   /* $(document).on('contextmenu', function (e) {
         return false;
     });
+    */
     
     GX_MenuDisable(true);
     
@@ -1047,7 +1048,8 @@ function GX_InitializeDocument(svgFileName)
 		 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
 		 var animlist = new Array(); 
 		 for(var i =0; i <gAnimList.length; i++){
-			 animlist.push(gAnimList[i][5]); 
+			 var attr = gReverseAttrList[gAnimList[i][2]]; 
+			 animlist.push(gAnimList[i][5] + '-<b>' + attr + '</<b>'); 
 		 }		 
 		 WAL_ListBoxUpdateData('animationlist', animlist);
 		 
@@ -1094,10 +1096,7 @@ function GX_MenuItemShow(menuid, itemText)
 	 case 'animate':
 		 GX_showEditorInterface('ANIM_MODE'); 
 		 GX_UpdateAnimationListbox(); 
-		 setTimeout(function(){			
-			 WAL_showModalWindow('animationListWidget',"", "" );	
-			 
-				}, 250); 
+		
 		 break;
 	 case 'grid':
 		 var menuname =  WAL_getMenuItemText(args); 
@@ -3521,7 +3520,7 @@ function GX_InitializeToolbar()
     document.getElementById('editortooltip_cb').checked = true;
     document.getElementById('showgrid_cb').checked = true;    
    
-    WAL_createContextMenu('contextmenu', 'GX_ContextMenuClick');
+    WAL_createContextMenu('objectContextmenu','mybody',  'GX_ContextMenuClick');
     
     var groupList = ['group1', 'group2', 'group3']; 
     WAL_createDropdownList('grouptoDDL', '140', '24', false, groupList, "GX_DDLHandler", '80');
@@ -3984,6 +3983,10 @@ function GX_showEditorInterface(Mode)
 	
 	var currObjectNode = gCurrentObjectSelected; 
 	GX_SetSelection(currObjectNode, false); 
+	var JQSel = '#animationListWidget'; 
+	$(JQSel).hide(); 
+	JQSel = '#treepanel'; 
+	$(JQSel).show(); 
 	switch(Mode)
 	{
 	case 'LAYOUT_MODE':
@@ -4030,6 +4033,13 @@ function GX_showEditorInterface(Mode)
 	case 'ANIM_MODE':
 		WAL_hideWidget('animate_interface', false); 		
 		gObjectEditMode = 'ANIMATION_EDIT_MODE';	
+		var JQSel = '#treepanel'; 
+		$(JQSel).hide(); 
+		 setTimeout(function(){			
+			 //WAL_showModalWindow('animationListWidget',"", "" );			 
+			 JQSel = '#animationListWidget'; 
+			 $(JQSel).show(); 			 
+		}, 250); 
 		
 		break;
 	/*case 'MODIFY_TEXT_MODE':

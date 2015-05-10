@@ -842,10 +842,11 @@ function GX_GetAnimParamsFromUI(inputParam)
                 WAL_createCheckBox('pathvisibilityCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
                 WAL_setradioButtonCheck('motionvalbtn', true);
                 WAL_setradioButtonCheck('attrvalbtn', true); 
-                WAL_createNumberInput("offsetFromPathX", '60px', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
+              /*  WAL_createNumberInput("offsetFromPathX", '60px', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
                 WAL_setNumberInputValue('offsetFromPathX', 0, false); 
                 WAL_createNumberInput("offsetFromPathY", '60', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
                 WAL_setNumberInputValue('offsetFromPathY', 0, false); 
+                */
                 
                 
                
@@ -2355,8 +2356,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	//WAL_SetItemByValueInList('pathlistDDL', animParam.refPathID, true);
 	        // animParam.bPathVisible = true;
 	WAL_setCheckBoxValue('pathvisibilityCB', false);	        
-	WAL_setNumberInputValue('offsetFromPathX', 0, true);
-	WAL_setNumberInputValue('offsetFromPathY', 0, true); 	   
+	//WAL_setNumberInputValue('offsetFromPathX', 0, true);
+	//WAL_setNumberInputValue('offsetFromPathY', 0, true); 	   
 	   
 	WAL_setNumberInputValue('startTimeIP',0, false);   
 	WAL_setradioButtonCheck('uieventRB', false);       
