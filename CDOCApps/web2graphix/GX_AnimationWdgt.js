@@ -391,9 +391,11 @@ function GX_SetAnimParamOnUI(animParam) {
 	}	
 	WAL_SetItemByValueInList('startParamDDL', itemValue, false);	
 	var itemvalue = gReverseAttrList[animParam.attribute]; 
-	WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, false); 
-	WAL_SetItemByValueInList('animAttrDDL', itemvalue, false); 	
-	WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, true);
+	var dummyNode =  document.getElementById('animAttrDDL'); 
+	GX_AnimAttrListHandler(dummyNode, animParam.attribute); 
+	//WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, false); 
+	//WAL_SetItemByValueInList('animAttrDDL', itemvalue, false); 	
+	//WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, true);
 	
 	switch(animParam.attribute)
 	{	
@@ -803,7 +805,7 @@ function GX_GetAnimParamsFromUI(inputParam)
                 WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 100); 			
 	 				 	//creating new animationlist interface	 
 	 			//WAL_createModelessWindow('animationListWidget', '380', '470', 'animOK', 'animCancel');
-	 			WAL_createListBox('animationlist', '305', '200', "GX_AnimationListHandler");
+	 			WAL_createListBox('animationlist', '325', '300', "GX_AnimationListHandler");
 	 			 
                 WAL_createNumberInput("repeatcountIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, 0, 1);
                 var endstatelist = ['freeze', 'remove']; 
@@ -812,12 +814,13 @@ function GX_GetAnimParamsFromUI(inputParam)
                 WAL_createDecimalNumberInput("durationIP", '100px', gInputHeight, "GX_AnimDlgEditHdlr",true, 10.0,0.0,0.1);
                 WAL_setNumberInputValue('durationIP', 2, false); 
                 //var attrList = ['Fill-Color', 'Stroke-Color', 'Opacity', 'Visibility', 'Stroke-Width', 'Move', 'Rotate', 'Hor. Skew', 'Vert. Skew'];                
-               
-                WAL_createDropdownList('animAttrDDL', '140', gInputHeight, false, attrList, "GX_AnimAttrListHandler", '100');
-                WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, true); 
+                              
+                var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
+                WAL_createDropdownList("pathModifyDDL", '140', gInputHeight, false, pathList, "GX_PathModifyHandler", '100');
+                
                 attrList = ['After', 'With', 'On Click', 'At 0th Second'];                
                 WAL_createDropdownList('startParamDDL', '100', gInputHeight, false, attrList, "GX_AnimAttrListHandler", '100');
-                WAL_createDropdownList('animlistDDL', '150', gInputHeight, false, animlist, "GX_AnimAttrListHandler", '100');
+                WAL_createDropdownList('animlistDDL', '130', gInputHeight, false, animlist, "GX_AnimAttrListHandler", '100');
                 WAL_createDecimalNumberInput("startOpacityValueIP", '80px', gInputHeight, "GX_AnimDlgEditHdlr",true, 1.0,0.0,0.1);
                 WAL_setNumberInputValue('startOpacityValueIP', 1.0, false); 
                                
@@ -1065,7 +1068,7 @@ function GX_UpdateAnimInfoInList(animNode)
 			}
 			else if(nodename == 'ANIMATEMOTION')
 			{
-				attr = 'MOTION';  	 	 				
+				attr = 'pathmotion';  	 	 				
 			}
 				
 			var beginval = animNode.getAttribute('begin'); 
@@ -1162,11 +1165,13 @@ function GX_RemoveAnimInfoFromList(animID)
  function GX_AnimAttrListHandler(Node, value)
  {
 	 var nodeid = Node.id;
+	 
 	 if(nodeid == 'animAttrDDL')
 	 {
-		 var itemval = gAttrList[value]; 
+		 var itemval = value ; //gAttrList[value]; 
 		 var JQSel = '.ATTR_UI_GROUP'; 
 		 $(JQSel).hide(); 		
+		 //Debug_Message('Anim Attribute=' + value); 
 		 
 		 if(itemval == 'fill-opacity')
 		 {
@@ -2392,9 +2397,11 @@ function GX_RemoveAnimInfoFromList(animID)
  function GX_AnimationListHandler(value){
 	 
 	// Debug_Message('Selected: ' + value);	
+	 var arr =  value.split('-'); 
+	 var animTitle = arr[0]; 
 	 if(gCurrentObjectSelected)
 			GX_SetSelection(gCurrentObjectSelected, false); 	
-	 	gCurrentAnimInfo = GX_GetAnimInfoByTitle(value); 
+	 	gCurrentAnimInfo = GX_GetAnimInfoByTitle(animTitle); 
 		var animNode =  document.getElementById(gCurrentAnimInfo[0]); 
 		if(!animNode)
 			return ;				
@@ -2553,8 +2560,11 @@ function GX_RemoveAnimInfoFromList(animID)
 	// gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
 	 var animlist=[]; 
 	 for(var i =0; i <gAnimList.length; i++){
-		 if(gAnimList[i][5] != 'Invisible Animation')
-			 animlist.push(gAnimList[i][5]); 
+		 if(gAnimList[i][5] != 'Invisible Animation'){
+			 var attr = gReverseAttrList[gAnimList[i][2]]; 
+			 animlist.push(gAnimList[i][5] + '-<b>' + attr + '</<b>'); 
+		 }
+			 
 	 }	 
 	 WAL_ListBoxUpdateData('animationlist', animlist);
  }
@@ -2569,7 +2579,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		 break; 
 	 case 'animdeletebtn':		
 		 if(gCurrentAnimInfo){
-			 if(gCurrentAnimInfo[2] == 'MOTION'){
+			 if(gCurrentAnimInfo[2] == 'pathmotion'){
 				 var animVID = gCurrentAnimInfo[0] + '_V'; 
 				 GX_RemoveAnimationObject(animVID);				 
 			 }
@@ -2668,5 +2678,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		return sortedList; 
 }
  
-
+function GX_PathModifyHandler(Node, Value){
+	
+}
  
