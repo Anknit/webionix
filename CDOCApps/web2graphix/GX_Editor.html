@@ -299,28 +299,29 @@
  			<div id="animhdr1" style="font-weight:bold; font-size:medium;text-align:center">Animation List</div>
  		   <div id="animcontent1" style="overflow: hidden">
     
-    <div id="animationlist" style="display:inline-block;position:relative;left:30px"></div>
+    <div id="animationlist" style="margin-left:5px"></div>
     
-    <div id="animattrgroup" style="border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:2px;  margin-right:5px; width: 352px; height: auto">
-    		<div id="animattrDivlist" class="ANIMATTR" style="display:inline-block; margin-left:2px; margin-right:3px">Animate<div id="animAttrDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>     
+    <div id="animattrgroup" style="position:relative; margin-left:5px; margin-top:2px;  margin-right:5px; width: 352px; height: auto">
+    		<div id="animattrDivlist" class="ANIMATTR" style="display:none; margin-left:2px; margin-right:3px">Animate<div id="animAttrDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>     
           	   <div id="OPACITY_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">
-                	<div id="startfracEdit" style="margin-left:2px; margin-top:10px">From<div id="startOpacityValueIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>
+                	<div id="startfracEdit" style="margin-left:2px; margin-top:10px">Initial Opacity<div id="startOpacityValueIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>
                 	                	
                 </div>
                  <div id="STROKE_WIDTH_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">
-                	<div style="margin-left:2px; margin-top:10px">Start Value<div id="startStrokeWidthValueIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>
+                	<div style="margin-left:2px; margin-top:10px">End Stroke Width<div id="startStrokeWidthValueIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>
                 	                	
                  </div>       
                 
-                <div id="MOTION_PATH_GROUP" class="ATTR_UI_GROUP" style="display:none">	             	    
-	           	    <div id="pathvisibilityCB" style="display:inline-block; margin-left:2px; margin-top:-16px">Path Visible</div>              	    
+                <div id="MOTION_PATH_GROUP" class="ATTR_UI_GROUP" style="display:none">	            	    
+	           	   <div  class="ANIMATTR" style="display:inline-block; margin-left:2px;">Modify Path<div id="pathModifyDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
+	           	    <div id="pathvisibilityCB" style="margin-left:25px; margin-top:2px">Path Visible</div>
            	 	</div>
-                
+                <div  class="ANIMATTR" style="display:none; margin-left:2px; margin-right:3px"><div id="animAttrDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
                 <div id="ANGLE_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">                	
-                	<div style="margin-left:2px; margin-top:10px;display:inline-block;">Value(deg)<div id="endAngleValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:11px;"></div></div>                	
+                	<div style="margin-left:2px; margin-top:10px;display:inline-block;">Final Angle(deg)<div id="endAngleValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:11px;"></div></div>                	
                 </div>  
                 <div id="FROM_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">                	
-                	<div style="margin-left:2px; margin-top:10px;display:inline-block;">From(%)<div id="startValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:11px;"></div></div>                	
+                	<div style="margin-left:2px; margin-top:10px;display:inline-block;">Initial Value(%)<div id="startValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:11px;"></div></div>                	
                 </div>
                                            	
       </div> 
@@ -338,9 +339,7 @@
     <div style="margin-top:20px;">
    		 	 <input type="button" id="applybtn" value="Apply">
 	   		 <input type="button" id="playbtn" value="Play">
-	   		 <input type="button" id="animdeletebtn" value="Delete">
-	   	  	 <input type="button" id="animOK" value="OK" onclick="GX_AnimListWidgetBtnHdlr(event)">
-	    	 <input type="button" id="animCancel" value="Cancel" onclick="GX_AnimListWidgetBtnHdlr(event)">
+	   		 <input type="button" id="animdeletebtn" value="Delete" style='margin-left:15px'>	   	  	
 	   </div> 
     </div>
 		</div>
@@ -583,7 +582,7 @@
       
 	<div id='jqxContextMenuWidget' style='vertical-align: middle; text-align: center; background: #eee;
             height: 400px; width: 400px;'>
-            <div id='contextmenu'>
+            <div id='objectContextmenu'>
                 <ul>
 			       <li id="groupmenu"> <a href="#Group">Group</a></li>			       	
 			       <li id="move_fwd"> <a href="#forwrad">Bring Forward</a></li>
