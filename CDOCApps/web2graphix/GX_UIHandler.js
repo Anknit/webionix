@@ -1285,7 +1285,7 @@ function GX_SVGFileDlgNameOK()
     }
    
     svgfname += ".svg"; 
-    GX_SetSelection(gCurrentObjectSelected, false);
+    GX_SetSelection(gCurrentObjectSelected, false, true);
    	retval = GXRDE_addNewSVGFile(svgfname);	
    	if(retval == "ALREADY_EXISTS")
    	{
@@ -1314,7 +1314,7 @@ function GX_LBOKHandler(){
      var fname = myitem.label; 
      var fnamearr = fname.split('('); 
      fname = fnamearr[0];
-     GX_SetSelection(gCurrentObjectSelected, false);
+     GX_SetSelection(gCurrentObjectSelected, false, true);
      
          
      
@@ -1644,12 +1644,12 @@ function OnShapeObjectSelection(evt) {
     }
     //_rm this is to force repeate selection in case of free drawing mode 
     else if(gCurrentObjectSelected == node)
-    	GX_SetSelection(node,true);    	
+    	GX_SetSelection(node,true, true);    	
          return;                        
  }
 
 
-function GX_SetSelection(objNode, bFlag) {
+function GX_SetSelection(objNode, bFlag, bShowMarkers) {
 	if(!objNode)
 		return ; 
     var node = objNode; 
@@ -1660,8 +1660,6 @@ function GX_SetSelection(objNode, bFlag) {
     var initPoint;   
     var nodeClass = objNode.classList[0];  
     //play around witth the opacity of objects 
-  
-    
     if( (nodeClass == 'SVG_SHAPE_OBJECT')  || (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT') )
     {
     	gCurrLayerNode = objNode.parentNode;    	
@@ -1825,12 +1823,13 @@ function GX_SetSelection(objNode, bFlag) {
     
     gGrabberDim = GX_GetRectObjectDim(gCurrGrabber); 
    
-    if(nodeClass == 'SVG_SHAPE_OBJECT')
+    if( (nodeClass == 'SVG_SHAPE_OBJECT') && (bShowMarkers ==  true) )
        	GX_UpdateMarkers(gGrabberDim, true);     
     if(nodeClass == 'SVG_PATH_OBJECT')
     {    	
     	var pathType = node.classList[1]; 
-    	GX_AddPathMarker(node.id, gPathDataArray, true);  
+    	if((bShowMarkers ==  true)  || (gObjectEditMode == 'PROPERTIES_MODE') )		  
+    		GX_AddPathMarker(node.id, gPathDataArray, true);  
     	var bClose = GX_IsPathClose(node); 
     	WAL_setCheckBoxValue('pathclose', bClose);    	
     	GX_UpdateEllipticParam(gCurrentObjectSelected);     	
@@ -1964,7 +1963,7 @@ function GX_ResetAllSelections()
     	if(nodeclass == 'GROUP')
     		GX_UpdateLayerChildElements(gCurrentObjectSelected); 
     	
-		GX_SetSelection(gCurrentObjectSelected, false);	 
+		GX_SetSelection(gCurrentObjectSelected, false, true);	 
 		gCurrDirection = 'NONE'; 
 		gsvgRootNode.setAttribute("cursor", "auto");  	  
 		
@@ -2073,7 +2072,9 @@ function OnMarkerMouseDown(evt)
 	  var ClientY =  new Number(evt.clientY- gClientYOffset); 
 	  gCurrDirection = markerNode.getAttribute('data-direction'); 
 	  if(!gCurrDirection)
-		  return ; 
+		  return ;
+	  if(gObjectEditMode == 'ANIMATION_EDIT_MODE')
+			return; 
 	gsvgRootNode.setAttribute("cursor", gCurrDirection);
 	if(gObjectEditMode == 'PROPERTIES_MODE')
 		gCurrGrabber.setAttribute('pointer-events', 'visible');
@@ -2165,6 +2166,9 @@ function OnObjectMouseDown(evt) {
 	  
 	if(!gCurrentObjectSelected)
 		return ;
+	//Debug_Message('Object Mouse Down'); 
+	if(gObjectEditMode == 'ANIMATION_EDIT_MODE')
+		return; 
 	var objectType; 
 	if(gbContextMenuShow == true)
 		return; 
@@ -2230,7 +2234,7 @@ function OnObjectMouseDown(evt) {
             bMove = false;     
             if(objectType == 'SVG_PATH_OBJECT')
             	GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
-            GX_SetSelection(gCurrentObjectSelected, true);
+            GX_SetSelection(gCurrentObjectSelected, true, true);
         }            
     }
     else
@@ -2528,13 +2532,13 @@ function GX_MenuChangeEditAction(actionType)
 	{
 		retVal = EL_Undo(gObjectEditList, objID, gCompactEditList);
 		if(retVal)
-			GX_SetSelection(gCurrentObjectSelected, true);
+			GX_SetSelection(gCurrentObjectSelected, true, true);
 	}
 	else if(actionType == 'REDO')
 	{
 		retVal = EL_Redo(gObjectEditList, objID, gCompactEditList);	
 		if(retVal)
-			GX_SetSelection(gCurrentObjectSelected, true);
+			GX_SetSelection(gCurrentObjectSelected, true, true);
 	}
 }
 
@@ -2590,11 +2594,11 @@ function GX_MoveObjectZIndex(objNode, Direction)
 		objParam.prevValue = prevNode.id;
 	else
 		objParam.prevValue = 0; 		
-	GX_SetSelection(objNode, false);
+	GX_SetSelection(objNode, false, true);
 	EL_AddToEditList(gObjectEditList, gCompactEditList, objParam);
 	GX_MoveObjectNode(objNode.id, objParam.currValue, parentNode.id); 	
 	objNode = document.getElementById(objNode.id);
-	GX_SetSelection(objNode, true);
+	GX_SetSelection(objNode, true, true);
 	
 }
 
@@ -2642,7 +2646,7 @@ function GX_MoveObjectToGroup(objectID, destparentID){
 	var destparentNode = document.getElementById(destparentID); 	
 	srcparentNode.removeChild(currNode); 
 	var retNode = destparentNode.appendChild(clonedNode);		
-	GX_SetSelection(retNode, true);
+	GX_SetSelection(retNode, true, true);
 	var objectIDArr = [];
 	objectIDArr.push(objectID); 
 	//GXRDE_MoveObjectToGroup(destparentID, objectIDArr);
@@ -2686,7 +2690,7 @@ function GX_TreeItemClick(selectedItem)
 	gCurrentTreeNode = selNode;
 	gCurrentTreeItemSel = selectedItem; 
 	var nodeDataID = gCurrentTreeNode.getAttribute('dataid'); 
-	GX_SetSelection(gCurrentObjectSelected, false); 
+	GX_SetSelection(gCurrentObjectSelected, false, true); 
 	switch(nodeType)
 	{
 	case 'SVGROOT':
@@ -2787,7 +2791,7 @@ function GX_ShowLayerInterface(layerID)
 	//var layerDim = GX_GetLayerDimension(layerID);
 	var layerNode = document.getElementById(layerID);	
 	gCurrLayerNode = layerNode; 
-	GX_SetSelection(layerNode, true); 
+	GX_SetSelection(layerNode, true, true); 
     	
 }
 
@@ -2806,7 +2810,7 @@ function GX_ShowObjectInterface(objectID)
 	$(JQSel).removeAttr('opacity'); 
 	
 	//set the selection to current object 
-	GX_SetSelection(currObjNode,true); 
+	GX_SetSelection(currObjNode,true, true); 
 	
 }
 function GX_ShowSVGRootInterface(ID)
@@ -3282,7 +3286,7 @@ function GX_RemoveObject(objNode)
 		return; 
 	}
 	GXRDE_DeleteObject(objNode.id);
-	GX_SetSelection(objNode, false); 
+	GX_SetSelection(objNode, false, true); 
 	GX_RemoveObjectFromList(objNode.id);
 	
 	var parentNode = objNode.parentNode; 
@@ -3982,7 +3986,7 @@ function GX_showEditorInterface(Mode)
 	//GX_ResetAllSelections();
 	
 	var currObjectNode = gCurrentObjectSelected; 
-	GX_SetSelection(currObjectNode, false); 
+	GX_SetSelection(currObjectNode, false, true); 
 	var JQSel = '#animationListWidget'; 
 	$(JQSel).hide(); 
 	JQSel = '#treepanel'; 
@@ -4059,7 +4063,7 @@ function GX_showEditorInterface(Mode)
 	default:
 		break; 	
 	}	
-	GX_SetSelection(currObjectNode, true); 
+	GX_SetSelection(currObjectNode, true, true); 
 }
 
 function GX_GetGradientList()
@@ -4556,7 +4560,7 @@ function GX_SelectObjectInMultiMode(Node)
 {
 	//deselect anything prior to this 
 	if(gCurrentObjectSelected)
-		GX_SetSelection(gCurrentObjectSelected, false); 
+		GX_SetSelection(gCurrentObjectSelected, false, true); 
 	var svgcontainer = document.getElementById('objectcontainer');
 	//check if the node is SCG_SHAPE_OBJECT TYPE 
 	var nodeClass= Node.classList[0];
@@ -4809,12 +4813,12 @@ function GX_DDLHandler(Node, value)
 	if(wdgtId == 'listanimDDL')
 	{
 		if(gCurrentObjectSelected)
-			GX_SetSelection(gCurrentObjectSelected, false); 	
+			GX_SetSelection(gCurrentObjectSelected, false, true); 	
 		var animInfo = GX_GetAnimInfoByTitle(value); 
 		var animNode =  document.getElementById(animInfo[0]); 
 		if(!animNode)
 			return ;				
-		GX_SetSelection(animNode.targetElement, true);		
+		GX_SetSelection(animNode.targetElement, true, true);		
 		return ; 	
 	}
 	
@@ -5096,18 +5100,14 @@ function OnPathMarkerMouseMove(evt) {
     }
 }
 
-function OnPathMarkerMouseDown(evt) {
-	
-	
-    var pathNode = document.getElementById("indicatorpath");
-    
+function OnPathMarkerMouseDown(evt) {		
+    var pathNode = document.getElementById("indicatorpath");    
     var currentPos;
     var arrLen = new Number(gPathDataArray.length); 
-    var markerNode = evt.target;  
-   
+    var markerNode = evt.target;     
     if(gCurrentMarkerNode != markerNode)
     {
-    	//reset the current selected marker node 
+    	//reset the current selected marker node       
     	if(gCurrentMarkerNode)
     	{
     		GX_SetMarkerNodeSelection(gCurrentMarkerNode, false);    
@@ -5116,7 +5116,6 @@ function OnPathMarkerMouseDown(evt) {
     	gCurrentMarkerNode = markerNode; 
     	GX_SetMarkerNodeSelection(gCurrentMarkerNode, true);    	 
     	return ; 
-    	
     	//then assign the new marker node here 
     	//change the color 
     }
@@ -5257,7 +5256,7 @@ function OnPathMarkerMouseDown(evt) {
         GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);       
         pathNode.setAttribute("visibility", "hidden");
         gIndicatorPath = []; 
-        GX_SetSelection(gCurrentObjectSelected, true); 
+        GX_SetSelection(gCurrentObjectSelected, true, true); 
         markerNode.setAttribute('r', '5'); 
 	    markerNode.setAttribute('opacity', '0.5');         
     }                     
@@ -5319,8 +5318,9 @@ function GX_AddPathMarker(pathID, pathParam) {
     var pathType = pathNode.classList[1]; 
     //if(pathType == 'FREEDRAW_PATH')
     //	return ; 
-    if(gObjectEditMode != 'PROPERTIES_MODE')
-		  return ; 
+  /*  if(gObjectEditMode != 'PROPERTIES_MODE')
+		  return ;
+		  */ 
     if(pathParam.length < 1)
     	return ;
     var copynode;
@@ -5575,7 +5575,7 @@ function OnFreeDrawClick(evt)
 			
 		}		
 		 gFreeDrawStarted = false; 
-		 GX_SetSelection(gCurrentObjectSelected, true); 
+		 GX_SetSelection(gCurrentObjectSelected, true, true); 
 		//GX_SetSelection(gCurrentObjectSelected, false);
 	}		
 }
@@ -6021,7 +6021,7 @@ function GX_AddPoint()
 	else
 		return ;
 	
-	GX_SetSelection(gCurrentObjectSelected, true); 
+	GX_SetSelection(gCurrentObjectSelected, true, true); 
 }
 
 function GX_SetMarkerNodeSelection(markerNode, bFlag)
@@ -6090,7 +6090,7 @@ function GX_DeletePoint()
 	else
 		return ;
 	
-	GX_SetSelection(gCurrentObjectSelected, true); 
+	GX_SetSelection(gCurrentObjectSelected, true, true); 
 }
 
 
@@ -6159,7 +6159,7 @@ function GX_DrawPolygon(ObjNode, x, y, nSides, length) {
     currPoint.y = cy; 
     currPoint.width = length; 
     GX_SetObjectAttribute(ObjNode, 'POLYGON_CENTER', currPoint, true, false);
-    GX_SetSelection(ObjNode, true); 
+    GX_SetSelection(ObjNode, true, true); 
 }
 
 function GX_GetPolygonParam(ObjNode)
