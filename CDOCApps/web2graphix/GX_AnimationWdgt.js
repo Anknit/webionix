@@ -1490,7 +1490,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		 if(!gCurrentObjectSelected)
 		 {
 			 var currObjNode = document.getElementById(gInitAnimParam.objectID); 
-			 GX_SetSelection(currObjNode, true); 
+			 GX_SetSelection(currObjNode, true, false); 
 		 }		
 		 var objDim = GX_GetRectObjectDim(gCurrentObjectSelected);
 		 if (node.id == 'offsetFromPathX')
@@ -2401,14 +2401,23 @@ function GX_RemoveAnimInfoFromList(animID)
 	 var arr =  value.split('-'); 
 	 var animTitle = arr[0]; 
 	 if(gCurrentObjectSelected)
-			GX_SetSelection(gCurrentObjectSelected, false); 	
+			GX_SetSelection(gCurrentObjectSelected, false, false); 	
 	 	gCurrentAnimInfo = GX_GetAnimInfoByTitle(animTitle); 
 		var animNode =  document.getElementById(gCurrentAnimInfo[0]); 
 		if(!animNode)
 			return ;				
-		GX_SetSelection(animNode.targetElement, true);
+		
 		gCurrAnimParam = GX_GetAnimParamFromNode(animNode); 
-		GX_SetAnimParamOnUI(gCurrAnimParam); 
+		GX_SetAnimParamOnUI(gCurrAnimParam); 		
+		if(gCurrAnimParam.animType == 'ANIM_MOTION'){			
+			var refPathNode = document.getElementById(gCurrAnimParam.refPathID); 
+			GX_SetSelection(refPathNode, true, true);
+			//var gPathDataArray = GX_ConvertPathDataToArray(refPathNode); 
+			//GX_AddPathMarker(refPathNode.id, gPathDataArray, true);			
+		}
+		else
+			GX_SetSelection(animNode.targetElement, true, false);
+		
 		
  }
  
@@ -2519,7 +2528,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	    	gInitAnimParam.originalPosition = splitArr[1]; 
 	    	gInitAnimParam.PathStartPoint = GX_GetPathStartPoint(gCurrentObjectSelected); 
 	    	GX_ResetAllSelections();
-			GX_SetSelection(currObjNode, true); 			
+			GX_SetSelection(currObjNode, true, false); 			
 			//now add the motionpath anim object 
 		}
 		else{
@@ -2680,6 +2689,10 @@ function GX_RemoveAnimInfoFromList(animID)
 }
  
 function GX_PathModifyHandler(Node, Value){
+	
+}
+
+function GX_SelectAnimationObject(objNode){
 	
 }
  
