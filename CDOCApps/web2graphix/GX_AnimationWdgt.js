@@ -854,7 +854,8 @@ function GX_GetAnimParamsFromUI(inputParam)
                                
                 WAL_createNumberInput("startStrokeWidthValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 15, 1, 1);
                 WAL_setNumberInputValue('startOpacityValueIP', 1, false); 
-                WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, 0, 1);
+                //WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, 0, 1);
+                WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 180, -180, 1);
                 WAL_setNumberInputValue('endAngleValueIP', 0, false);   
                 
                 WAL_createNumberInput("startValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, -100, 1);
@@ -1659,8 +1660,10 @@ function GX_RemoveAnimInfoFromList(animID)
 			 var endval = animParams.endValue; 
 			 if(animParams.attribute == 'rotate')
 			 {
-				 startval = startval + ' ' + animParams.center; 
-				 endval = endval + ' ' + animParams.center; 			 
+				 //startval = startval + ' ' + animParams.center; 
+				 //endval = endval + ' ' + animParams.center; 	
+				 startval = startval ; 
+				 endval = endval ; 	
 			 }		    
 			 attrData = ['from',startval];  
 			 attrArray.push(attrData); 
