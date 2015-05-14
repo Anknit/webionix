@@ -4800,13 +4800,12 @@ function GX_DDLHandler(Node, value)
 		if(value =='Cubic Bezier' )
 			var drawType = 'cbezier_path'
 		else if(value =='Quadratic Bezier' )
-			var drawType = 'cbezier_path';
+			var drawType = 'QBEZIER_PATH';
 		else if(value =='Elliptic' )
-			var drawType = 'cbezier_path';	
+			var drawType = 'ELLIPTIC_PATH';	
 		GX_AddNewSVGObject(drawType,''); 
 		GX_StartFreeDraw();
-		return; 
-		
+		return; 		
 	}
 	
 	

@@ -10,6 +10,7 @@ sAnimParams.prototype.attribute = '';
 sAnimParams.prototype.startValue='';
 sAnimParams.prototype.endValue='';
 sAnimParams.prototype.refPathID=0;
+sAnimParams.prototype.refPathType='';
 sAnimParams.prototype.PathObjectOffset=0;
 sAnimParams.prototype.PathStartPoint=0;
 sAnimParams.prototype.visibleAnimID=0;
@@ -37,6 +38,7 @@ function sAnimParams() {
 	sAnimParams.prototype.startValue='';
 	sAnimParams.prototype.endValue='';
 	sAnimParams.prototype.refPathID=0;
+	sAnimParams.prototype.refPathType='';
 	sAnimParams.prototype.PathObjectOffset=0;
 	sAnimParams.prototype.PathStartPoint=new sPoint();
 	sAnimParams.prototype.visibleAnimID=0;
@@ -96,6 +98,24 @@ gReverseAttrList['rotate']         =  'Rotate' ;
 gReverseAttrList['skewX']          =  'Horizontal Skew';
 gReverseAttrList['skewY']          =  'Vertical Skew';     
 gReverseAttrList['scale']          =  'Scale'; 
+
+//var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
+var gPathTypeList = []; 
+gPathTypeList['Line'] = 'LINE_PATH'; 
+gPathTypeList['Cubic Bezier'] = 'CUBIC_BEZIER'; 
+gPathTypeList['Quadratic Bezier'] = 'QUADRATIC_BEZIER'; 
+gPathTypeList['Elliptic'] = 'ELLIPTIC'; 
+gPathTypeList['Polygon'] = 'POLYGON'; 
+gPathTypeList['Free Draw'] = 'FREEDRAW_PATH'; 
+
+
+var gReversePathTypeList = []; 
+gReversePathTypeList['LINE_PATH'] = 'Line'; 
+gReversePathTypeList['CUBIC_BEZIER'] = 'Cubic Bezier'; 
+gReversePathTypeList['QUADRATIC_BEZIER'] = 'Quadratic Bezier'; 
+gReversePathTypeList['ELLIPTIC'] = 'Elliptic'; 
+gReversePathTypeList['POLYGON'] = 'Polygon'; 
+gReversePathTypeList['FREEDRAW_PATH'] = 'Free Draw'; 
 
 /*
 function GX_SetAnimParamOnUI(animParam) {  
@@ -406,6 +426,7 @@ function GX_SetAnimParamOnUI(animParam) {
 		break; 		
 	case 'pathmotion':	
 		WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible); 
+		WAL_SetItemByValueInList('pathModifyDDL', gReversePathTypeList[animParam.refPathType], false);
 		break; 
 	case 'skewX':
 		WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
@@ -645,6 +666,13 @@ function GX_GetAnimParamsFromUI(inputParam)
 				 var retval = GXRDE_updateSVGObject(pathNode.id, attrArray); 
 			 }			
 		}	
+		var newPathType = WAL_getDropdownListSelection('pathModifyDDL');	
+		newPathType = gPathTypeList[newPathType]; 
+		if(newPathType != animParams.refPathType){
+			animParams.refPathType = newPathType; 
+			GX_ModifyPathType(newPathType); 
+		}
+		
 		break; 
 	case 'skewX':			
 		animParams.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
@@ -1797,6 +1825,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			var mystr = animNode.getAttribute('from'); 
 			animParam.PathObjectOffset = mystr; 
 			var pathNode = document.getElementById(animParam.refPathID); 
+			animParam.refPathType = pathNode.classList[1]; 
 			animParam.PathStartPoint = GX_GetPathStartPoint(pathNode); 
 			var opacity = pathNode.getAttribute('stroke-opacity'); 
 			pathNode.setAttribute('visibility','visible');
@@ -2454,6 +2483,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	    gInitAnimParam.animType = ''; // animType; 
 	    gInitAnimParam.attribute = attrtype;
 	    gInitAnimParam.refPathID = '';
+	    gInitAnimParam.refPathType='';
 	    gInitAnimParam.bPathVisible = false;
 	    if(lastAnimID != 0){
 	    	gInitAnimParam.startType = 'ON_ANIMEVENT';//ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
@@ -2688,8 +2718,101 @@ function GX_RemoveAnimInfoFromList(animID)
 		return sortedList; 
 }
  
-function GX_PathModifyHandler(Node, Value){
+function GX_PathModifyHandler(Node, Value){	
+	//get the path array data 	
 	
+	
+}
+
+function GX_ModifyPathType(pathType){
+	
+	var refPathNode =  gCurrentObjectSelected; 
+	var pathArray = GX_ConvertPathDataToArray(gCurrentObjectSelected); 
+	GX_SetSelection(gCurrentObjectSelected, false, false);
+	var startPoint = new sPoint(); 
+	var endPoint =  new sPoint(); 
+	startPoint.x = new Number(pathArray[0][1]);
+	startPoint.y = new Number(pathArray[0][2]); 
+	
+	endPoint.x = new Number(pathArray[pathArray.length-1][1]); 
+	endPoint.y = new Number(pathArray[pathArray.length-1][2]); 
+	/*gReversePathTypeList['LINE_PATH'] = 'Line'; 
+	gReversePathTypeList['CUBIC_BEZIER'] = 'Cubic Bezier'; 
+	gReversePathTypeList['QUADRATIC_BEZIER'] = 'Quadratic Bezier'; 
+	gReversePathTypeList['ELLIPTIC'] = 'Elliptic'; 
+	gReversePathTypeList['POLYGON'] = 'Polygon'; 
+	gReversePathTypeList['FREEDRAW_PATH'] = 'Free Draw';
+	*/
+	
+	
+	//var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
+	//now depending upon the value generate the intermediate points and the corresponding path data
+	switch(pathType){
+	
+	case  'CUBIC_BEZIER':
+		var Point1 =  new sPoint(); 
+		var Point2 =  new sPoint(); 
+		Point1.x = Math.round((startPoint.x + endPoint.x)/3); 
+		Point1.y = Math.round((startPoint.y + endPoint.y)/8); 		
+		Point2.x = 2 * Point1.x ;  
+		Point2.y = Point1.y; 		
+		var pathValues = 'M' + startPoint.x + ',' + startPoint.y + ' C'+ Point1.x + ',' + Point1.y 
+		 + ' ' + Point2.x + ',' + Point2.y + ' ' + endPoint.x + ',' + endPoint.y ; 
+		var classValue = 'SVG_PATH_OBJECT CUBIC_BEZIER ROTATE,0' ; 
+		GX_SetSelection(refPathNode, true, true) ;
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'd', pathValues, true, false) ; 
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'class', classValue, true, false) ; 
+		var gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected) ; 
+		GX_AddPathMarker(gCurrentObjectSelected.id, gPathDataArray, true) ;		
+		break;
+	case  'LINE_PATH':
+		var pathValues = 'M' + startPoint.x + ',' + startPoint.y +  ' L' + endPoint.x + ',' + endPoint.y ; 
+		var classValue = 'SVG_PATH_OBJECT LINE_PATH ROTATE,0'; 
+		GX_SetSelection(refPathNode, true, true);
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'd', pathValues, true, false); 
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'class', classValue, true, false); 
+		var gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected); 
+		GX_AddPathMarker(gCurrentObjectSelected.id, gPathDataArray, true);		
+		break; 
+	case  'QUADRATIC_BEZIER':
+		var Point1 =  new sPoint(); 
+		var Point2 =  new sPoint(); 
+		Point1.x = Math.round((startPoint.x + endPoint.x)/3); 
+		Point1.y = Math.round((startPoint.y + endPoint.y)/8); 		
+		Point2.x = 2 * Point1.x ;  
+		Point2.y = Point1.y; 		
+		var pathValues = 'M' + startPoint.x + ',' + startPoint.y + ' Q'+ Point1.x + ',' + Point1.y 
+		 + ' ' + Point2.x + ',' + Point2.y + ' ' + endPoint.x + ',' + endPoint.y ; 
+		var classValue = 'SVG_PATH_OBJECT QUADRATIC_BEZIER ROTATE,0' ; 
+		GX_SetSelection(refPathNode, true, true) ;
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'd', pathValues, true, false) ; 
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'class', classValue, true, false) ; 
+		var gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected) ; 
+		GX_AddPathMarker(gCurrentObjectSelected.id, gPathDataArray, true) ;		
+		break;
+	case 'ELLIPTIC':
+		var Point1 =  new sPoint(); 
+		var Point2 =  new sPoint(); 
+		Point1.x = Math.round((startPoint.x + endPoint.x)/3); 
+		Point1.y = Math.round((startPoint.y + endPoint.y)/8); 		
+		Point2.x = 2 * Point1.x ;  
+		Point2.y = Point1.y; 		
+		var pathValues = 'M' + startPoint.x + ',' + startPoint.y + ' A25,25 0 0 1 ' + endPoint.x + ','+ endPoint.y; 
+		var classValue = 'SVG_PATH_OBJECT ELLIPTIC ROTATE,0' ; 
+		GX_SetSelection(refPathNode, true, true) ;
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'd', pathValues, true, false) ; 
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'class', classValue, true, false) ; 
+		var gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected) ; 
+		GX_AddPathMarker(gCurrentObjectSelected.id, gPathDataArray, true) ;	
+		
+		//M-10,-10 A100,120 0 0 1 -5,-5
+		break; 
+	case 'POLYGON':
+		break; 
+	default:
+		break; 
+	}
+	//update the same to editor as well as to the remote server 
 }
 
 function GX_SelectAnimationObject(objNode){
