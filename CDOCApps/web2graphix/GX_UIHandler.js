@@ -103,8 +103,9 @@ var gTooltipTheme = 'black';
 var gSVGContainerbordercol = 'blue';
 var gUsername = ''; 
 var gShowTooltip =  true; 
-
+var gOrigPointerPos = new sPoint();
 var gShowGrid =  true; 
+var bPointerMove = false; 
 
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
@@ -1620,7 +1621,7 @@ function GX_CloseSVGFile()
 	gFileNameHolder.innerHTML = "";
 	gSVGFilename = "";
 	gCurrGrabber.setAttribute("visibility", "hidden");
-	GX_UpdateMarkers(0, false); 
+	GX_UpdateMarkers(0, false, false); 
 	WAL_ClearTreeItem(gTreeWidgetID); 
 	
 }
@@ -1712,7 +1713,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	if(objNode != gCurrentObjectSelected)
     		return ;      	 
          	    	
-    	GX_UpdateMarkers(0, false); 
+    	GX_UpdateMarkers(0, false, false); 
     	if(nodeClass == 'SVG_PATH_OBJECT')
     	{
     		GX_UpdatePathMarker(node.id, gPathDataArray, false);
@@ -1824,7 +1825,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     gGrabberDim = GX_GetRectObjectDim(gCurrGrabber); 
    
     if( (nodeClass == 'SVG_SHAPE_OBJECT') && (bShowMarkers ==  true) )
-       	GX_UpdateMarkers(gGrabberDim, true);     
+       	GX_UpdateMarkers(gGrabberDim, true, false);     
     if(nodeClass == 'SVG_PATH_OBJECT')
     {    	
     	var pathType = node.classList[1]; 
@@ -1987,30 +1988,43 @@ function GX_ResetAllSelections()
 	JQSel = '.SVG_TEXT_OBJECT'; 
 	$(JQSel).removeAttr('opacity');		
 }
-
-function GX_UpdateMarkers(GrabberDim, bShow)
+//incase of pointmarker only the x,y corodinate of GrabberDim should be used 
+function GX_UpdateMarkers(GrabberDim, bShow, bPointMarker)
 {
 	  var markX, markY; 
 	  var JQSel = ".CUSTOM_MARKER"; 
+	  var origMarkX = new Number(GrabberDim.x); 
+	  var origMarkY = new Number(GrabberDim.y); 
+	  markX = origMarkX; 
+	  markY = origMarkY; 
 	  if(bShow == false)
 	  {
 		  $(JQSel).attr("visibility", "hidden");
 		  return ; 
 	  }    
+	  if(bPointMarker == true){
+		JQSel = "#markerPoint";
+		$(JQSel).attr("visibility", "visible"); 
+		$(JQSel).attr("cx", markX); 
+		$(JQSel).attr("cy", markY); 
+		return ; 
+	  }
 	  if( (GrabberDim.width == 0) || (GrabberDim.height == 0))
 		  return; 
 	  
 	  $(JQSel).attr("visibility", "visible"); 
+	  JQSel = "#markerPoint";
+	  $(JQSel).attr("visibility", "hidden");
 	  
 	 //get the top left coordinate of grabber
-	  var origMarkX = new Number(GrabberDim.x); 
-	  var origMarkY = new Number(GrabberDim.y); 
-	 markX = origMarkX; 
-	 markY = origMarkY; 
+	
 	 JQSel = "#markerTL";
 	 $(JQSel).attr("cx", markX); 
 	 $(JQSel).attr("cy", markY); 
 	 
+	 if(bPointMarker == true)
+		 return ; 
+		 
 	 markX = origMarkX+(GrabberDim.width/2); 
 	 markY = origMarkY; 
 	 JQSel = "#markerTM";
@@ -2339,7 +2353,7 @@ function OnObjectMove(evt) {
         if(retVal == false)
         	return ; 
         if(objectType == 'SVG_SHAPE_OBJECT')	
-        	GX_UpdateMarkers(newObjDim, true); 
+        	GX_UpdateMarkers(newObjDim, true, false); 
          
         if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
         {
@@ -2496,7 +2510,7 @@ function OnObjectMove(evt) {
 					
 					if(retVal == false)
 	                	return ; 
-                    GX_UpdateMarkers(newGrabberDim, true);           
+                    GX_UpdateMarkers(newGrabberDim, true, false);           
                     retVal =GX_SetRectObjectDim(gCurrentObjectSelected,newObjDim);
                    // retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "DIMENSION", newObjDim, false, true);
                     if(retVal == false)
@@ -5307,8 +5321,6 @@ function GX_UpdatePathMarker(pathID, pathParam, bShow)
                 markerNode.setAttribute("cx", pathParam[k][1]);
                 markerNode.setAttribute("cy", pathParam[k][2]);                
         	}     
-    	
-    	       
      }    
 }
 
@@ -5556,7 +5568,7 @@ function OnFreeDrawClick(evt)
 			if((objectType == 'CUBIC_BEZIER')|| (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC') )
 				gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected); 
 		}		
-		GX_UpdateMarkers(gCurrGrabber, false); 
+		GX_UpdateMarkers(gCurrGrabber, false, false); 
 	}
 	else
 	{
@@ -7177,4 +7189,61 @@ function GX_GradTabHandler(tabIndex){
 
 function GX_HandlerForGradSliderChange(value){
 	
+}
+
+
+function OnPointerMarkerMouseMove(evt)
+{
+	  var markerNode = evt.target;	
+	  gsvgRootNode.setAttribute("cursor", 'pointer');  
+	   
+	  if(bPointerMove != true)
+		  return ; 	  
+	  markerNode.setAttribute('r', '10');
+	  var newObjDim = new sDimension();
+	  var ClientX, ClientY; 
+	  ClientX = new Number(evt.clientX - gClientXOffset); 
+	  ClientY = new Number(evt.clientY- gClientYOffset);
+	  relX = new Number(ClientX);
+      relY = new Number(ClientY);
+      relX = (relX - gOrigMousePosX)*gZoomFactor;
+      relY = (relY - gOrigMousePosY)*gZoomFactor;
+      newObjDim.x = gOrigPointerPos.x + relX;
+      newObjDim.y = gOrigPointerPos.y + relY;   
+      newObjDim.width = 10; 
+      newObjDim.height = 10;  
+      GX_UpdateMarkers(newObjDim, true, true);
+}
+ 
+function OnPointerMarkerMouseDown(evt)
+{
+	  var markerNode = evt.target; 
+	  var ClientX = new Number(evt.clientX - gClientXOffset); 
+	  var ClientY =  new Number(evt.clientY- gClientYOffset); 	 
+	  if(gObjectEditMode != 'ANIMATION_EDIT_MODE')
+			return; 
+	gsvgRootNode.setAttribute("cursor", 'pointer');
+	if(bPointerMove == false){
+		bPointerMove = true; 
+		gOrigMousePosX = ClientX;
+        gOrigMousePosY = ClientY;
+        var x = markerNode.getAttribute('cx');
+        var y = markerNode.getAttribute('cy');
+        gOrigPointerPos.x =  new Number(x);
+        gOrigPointerPos.y =  new Number(y);        
+	} 
+	else{
+		bPointerMove= false; 
+		markerNode.setAttribute('r', '6'); 
+	}
+		
+}
+
+
+function OnPointerMarkerMouseOut(evt)
+{
+	var markerNode = evt.target;
+	 gsvgRootNode.setAttribute("cursor", 'auto');  
+	 markerNode.setAttribute('r', '6');
+	  
 }
