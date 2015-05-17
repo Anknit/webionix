@@ -383,6 +383,8 @@ function GX_SetAnimParamOnUI(animParam) {
 		animParam.startType = invAnimParam.startType; 
 		animParam.AnimEventType = invAnimParam.AnimEventType; 
 		animParam.refAnimID = invAnimParam.refAnimID;
+		
+		
 	}
 	var animlist=[];	
 	for(var i =0; i < gAnimList.length; i++)
@@ -887,12 +889,11 @@ function GX_GetAnimParamsFromUI(inputParam)
                 WAL_createButton('applybtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
                 
                       
-                WAL_createRadioButton('motionvalbtn', 'GX_AnimDlgRadioValueChangeHdlr', '130', '20', false, false);
-                var pathList = ['SVG_001', 'SVG_103', 'SVG_234']; 
-                          
+              //  WAL_createRadioButton('motionvalbtn', 'GX_AnimDlgRadioValueChangeHdlr', '130', '20', false, false);
+                var pathList = ['SVG_001', 'SVG_103', 'SVG_234'];                           
                 WAL_createCheckBox('pathvisibilityCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
-                WAL_setradioButtonCheck('motionvalbtn', true);
-                WAL_setradioButtonCheck('attrvalbtn', true); 
+               // WAL_setradioButtonCheck('motionvalbtn', true);
+              //  WAL_setradioButtonCheck('attrvalbtn', true); 
               /*  WAL_createNumberInput("offsetFromPathX", '60px', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
                 WAL_setNumberInputValue('offsetFromPathX', 0, false); 
                 WAL_createNumberInput("offsetFromPathY", '60', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
@@ -1329,12 +1330,12 @@ function GX_RemoveAnimInfoFromList(animID)
 		if(state == true)
 		{			
 			WAL_disableWidget('animeventlistDDL', 'data-jqxDropDownList', false, false);
-			WAL_disableWidget('animlistDDL', 'data-jqxDropDownList', false, false);
+			//WAL_disableWidget('animlistDDL', 'data-jqxDropDownList', false, false);
 		}
 		else
 		{
 			WAL_disableWidget('animeventlistDDL', 'data-jqxDropDownList', false, true);
-			WAL_disableWidget('animlistDDL', 'data-jqxDropDownList', false, true);
+			//WAL_disableWidget('animlistDDL', 'data-jqxDropDownList', false, true);
 		}		
 	}
  }
@@ -2404,36 +2405,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	    if(animParam.title  !=  gAnimList[i][5])
 	    	animlist.push(gAnimList[i][5]); 
 	}
-	WAL_UpdateDropDownList('animlistDDL', animlist);
-	WAL_setTextInputValue('animIDIP', animParam.animID, false);
-	    // animParam.objectID = 0;
-	WAL_setTextInputValue('objectIDIP', animParam.objectID, false);
-	    //animParam.duration = 0;
-	WAL_setNumberInputValue('durationIP', animParam.duration, false);	    
-	WAL_setTextInputValue('animtitleIP', animParam.title, false);	
-	WAL_setradioButtonCheck('attrvalbtn', true); 	        
-	var itemvalue = gReverseAttrList[animParam.attribute]; 
-	WAL_SetItemByValueInList('animAttrDDL', itemvalue, true); 	     
-	WAL_setradioButtonCheck('motionvalbtn', false); 
-	        //animParam.refPathID = 0;
-	//WAL_SetItemByValueInList('pathlistDDL', animParam.refPathID, true);
-	        // animParam.bPathVisible = true;
-	WAL_setCheckBoxValue('pathvisibilityCB', false);	        
-	//WAL_setNumberInputValue('offsetFromPathX', 0, true);
-	//WAL_setNumberInputValue('offsetFromPathY', 0, true); 	   
-	   
-	WAL_setNumberInputValue('startTimeIP',0, false);   
-	WAL_setradioButtonCheck('uieventRB', false);       
-	WAL_setradioButtonCheck('animeventRB', false); 
-	   
-	    // animParam.calcMode = 'linear';
-	
-	
-	    // animParam.repeatCount = 0;
-	WAL_setNumberInputValue('repeatcountIP', animParam.repeatCount, false);
-	    // animParam.endState = 'freeze'; //FREEZE, REMOVE
-	WAL_SetItemByValueInList('endstatelistDDL', animParam.endState, true);  
-	
+		
 	//hide ahow buttons here
  }
  
@@ -2476,6 +2448,8 @@ function GX_RemoveAnimInfoFromList(animID)
 		if(gCurrAnimParam.animType == 'ANIM_MOTION'){			
 			var refPathNode = document.getElementById(gCurrAnimParam.refPathID); 
 			GX_SetSelection(refPathNode, true, true);
+			var objectType = refPathNode.classList[1]; 
+	    	GX_ShowObjectPropertyInterface(objectType, true); 
 			//var gPathDataArray = GX_ConvertPathDataToArray(refPathNode); 
 			//GX_AddPathMarker(refPathNode.id, gPathDataArray, true);			
 		}
@@ -2821,10 +2795,9 @@ function GX_ModifyPathType(pathType){
 		var Point2 =  new sPoint(); 
 		Point1.x = Math.round((startPoint.x + endPoint.x)/3); 
 		Point1.y = Math.round((startPoint.y + endPoint.y)/8); 		
-		Point2.x = 2 * Point1.x ;  
-		Point2.y = Point1.y; 		
+				
 		var pathValues = 'M' + startPoint.x + ',' + startPoint.y + ' Q'+ Point1.x + ',' + Point1.y 
-		 + ' ' + Point2.x + ',' + Point2.y + ' ' + endPoint.x + ',' + endPoint.y ; 
+		 + ' ' + endPoint.x + ',' + endPoint.y + ' '; 
 		var classValue = 'SVG_PATH_OBJECT QUADRATIC_BEZIER ROTATE,0' ; 
 		GX_SetSelection(refPathNode, true, true) ;
 		GX_SetObjectAttribute(gCurrentObjectSelected, 'd', pathValues, true, false) ; 
