@@ -373,6 +373,10 @@ function GX_SetAnimParamOnUI(animParam) {
 	//first set the common properties here 	
 	var itemValue = '';	 
 	//now check for the animateMotion type 
+	if(animParam == 'undefined'){
+		Debug_Message('undefined Anim Param'); 
+		return ; 
+	}
 	if(animParam.animType == 'ANIM_MOTION'){
 		var invNode = document.getElementById(animParam.animID + '_V'); 
 		var invAnimParam = GX_GetAnimParamFromNode(invNode); 
@@ -420,9 +424,22 @@ function GX_SetAnimParamOnUI(animParam) {
 	switch(animParam.attribute)
 	{	
 	case 'rotate':		   	
-    	var valarr  = animParam.endValue.split(" "); 
-    	var finalVal = valarr[0]; 
-		WAL_setNumberInputValue('endAngleValueIP', finalVal, false);					
+    	//var valarr  = animParam.endValue.split(" "); 
+    	//var finalVal = valarr[0]; 
+		WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);			
+		var objNode = document.getElementById(gCurrentAnimInfo[1]);
+		//extract the center coordinates 
+		var valArr = animParam.center.split(' '); 
+		
+		//then set a grabber to this corodiantes
+		var myDim = new sDimension(); 
+		myDim.x = valArr[0];
+		myDim.y = valArr[1]
+		myDim.width = 5; 
+		myDim.height = 5; 	
+		///call the update markers
+		GX_UpdateMarkers(myDim, true, true); 
+		
 		break; 		
 	case 'pathmotion':	
 		WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible); 
@@ -640,12 +657,17 @@ function GX_GetAnimParamsFromUI(inputParam)
 	}	
 	switch(animParams.attribute)
 	{	
-	case 'rotate':		
+	case 'rotate':		endAngleValueIP
 		var value =  WAL_getMaskedInputValue('endAngleValueIP'); 
     	var valarr  = animParams.endValue.split(" "); 
-    	animParams.endValue = value;
-    	for(var k =1; k < valarr.length; k++)
-    		animParams.endValue += ' ' +valarr[k];    				
+    	animParams.endValue = value;    	
+    	//get the center value 
+    	var markerNode = document.getElementById('markerPoint'); 
+    	var x = markerNode.getAttribute('cx'); 
+    	var y = markerNode.getAttribute('cy'); 
+    	animParams.center = x + ' ' + y; 
+    	animParams.endValue += ' ' +animParams.center;
+    	animParams.startValue += ' ' +animParams.center;
 		break; 		
 	case 'pathmotion':	
 		animParams.bPathVisible = WAL_getCheckBoxValue('pathvisibilityCB');
@@ -855,7 +877,7 @@ function GX_GetAnimParamsFromUI(inputParam)
                 WAL_createNumberInput("startStrokeWidthValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 15, 1, 1);
                 WAL_setNumberInputValue('startOpacityValueIP', 1, false); 
                 //WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, 0, 1);
-                WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 180, -180, 1);
+                WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, -360, 1);
                 WAL_setNumberInputValue('endAngleValueIP', 0, false);   
                 
                 WAL_createNumberInput("startValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, -100, 1);
@@ -1789,9 +1811,10 @@ function GX_RemoveAnimInfoFromList(animID)
 		
 		value = animNode.getAttribute('dur'); 
 		value = value.substring(0, value.length-1); 
-		animParam.duration = value;
-		
+		animParam.duration = value;		
 		value = animNode.nodeName.toUpperCase(); 
+		animParam.startValue = animNode.getAttribute('from'); 
+		animParam.endValue = animNode.getAttribute('to');
 		if(value == 'ANIMATE')
 		{
 			animParam.animType = 'ANIM_ATTRIBUTE';
@@ -1801,6 +1824,15 @@ function GX_RemoveAnimInfoFromList(animID)
 		{
 			animParam.animType = 'ANIM_TRANSFORM';
 			animParam.attribute = animNode.getAttribute('type');
+			if(animParam.attribute == 'rotate'){
+				//var value =  animParam.startValue; 
+		    	var valarr  = animParam.startValue.split(" "); 
+		    	animParam.center = valarr[1] + ' ' + valarr[2];	
+		    	animParam.startValue = valarr[0];		    	
+		    	//value =  animParam.endValue; 
+		    	valarr  = animParam.endValue.split(" ");		    		
+		    	animParam.endValue = valarr[0]; 		    	
+			}
 		}
 			
 		else if(value == 'ANIMATEMOTION')
@@ -1839,8 +1871,7 @@ function GX_RemoveAnimInfoFromList(animID)
 				animParam.bPathVisible = true;			
 			}							
 		}
-		animParam.startValue = animNode.getAttribute('from'); 
-		animParam.endValue = animNode.getAttribute('to');
+		
 		
 		
 		var animInfo  = GX_GetAnimInfoByID(animID);
@@ -2431,6 +2462,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 
 	// Debug_Message('Selected: ' + value);	
 	 var arr =  value.split('-'); 
+	 gbAnimationEnd = true; 
 	 var animTitle = arr[0]; 
 	 if(gCurrentObjectSelected)
 			GX_SetSelection(gCurrentObjectSelected, false, false); 	
@@ -2446,6 +2478,13 @@ function GX_RemoveAnimInfoFromList(animID)
 			GX_SetSelection(refPathNode, true, true);
 			//var gPathDataArray = GX_ConvertPathDataToArray(refPathNode); 
 			//GX_AddPathMarker(refPathNode.id, gPathDataArray, true);			
+		}
+		//animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval]; 
+		else if(gCurrentAnimInfo[2] == 'rotate'){
+			//var objNode = document.getElementById(gCurrentAnimInfo[3]);
+			GX_SetSelection(animNode.targetElement, true, false);
+			//objNode
+			//GX_UpdateMarkers(gCurrGrabber, true, true); 
 		}
 		else
 			GX_SetSelection(animNode.targetElement, true, false);
