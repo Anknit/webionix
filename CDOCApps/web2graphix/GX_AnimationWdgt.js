@@ -2584,6 +2584,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		gInitAnimParam.animType = animType; 	
 	     
 	    GX_AddAnimationElement(gInitAnimParam, false); 
+	    var animNode = document.getElementById(gInitAnimParam.animID);
 	    if(gInitAnimParam.animType == 'ANIM_MOTION')
 		{
 			var retval = GXRDE_openSVGFile(gSVGFilename); 
@@ -2603,8 +2604,11 @@ function GX_RemoveAnimInfoFromList(animID)
 		    WAL_expandAllTreeItems(gTreeNodeID, true);
 		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);	   
 		}
-	    var animNode = document.getElementById(gInitAnimParam.animID); 
-	    GX_UpdateAnimInfoInList(animNode);
+	    else{
+	    	GX_UpdateAnimInfoInList(animNode);	   
+	    }
+	    	  
+	   
 	    gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	    
 	    GX_UpdateAnimationListbox(); 
 	    
