@@ -2188,8 +2188,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			 var invNode = document.getElementById(animID + '_V'); 
 			 invNode.setAttribute(attrArray[i][0], attrArray[i][1]); 
 			 var index = GX_GetAnimInfoListIndexByID(invNode.id); 
-			 gAnimList[index][3] = attrArray[i][1]; 
-			
+			 gAnimList[index][3] = attrArray[i][1]; 			
 			 animNode.setAttribute('begin', animID + '_V.end');
 			 var invArray=[]; 
 			 invArray[0]= ['begin',attrArray[i][1]]; 
@@ -2314,22 +2313,26 @@ function GX_RemoveAnimInfoFromList(animID)
 		//change the array entry here only 
 		GX_UpdateAnimObjectAttribute(RefAnimList[k][0], attrArray); 
 	}
-	gCurrAnimNode = document.getElementById(animID); 
+	var tempAnimNode = gCurrAnimNode = document.getElementById(animID); 
 	//delete the path as well 
 	if(gCurrAnimNode.nodeName.toUpperCase() == 'ANIMATEMOTION'){ 	
 		var pathRefNodeID = gCurrAnimNode.children[0].getAttribute('xlink:href');
 		pathRefNodeID = pathRefNodeID.substring(1, pathRefNodeID.length); 
+		if(pathRefNodeID == gCurrentObjectSelected.id){
+			GX_SetSelection(gCurrentObjectSelected, false, false); 
+		}
 		GX_DeleteObject(pathRefNodeID); 
 		GX_RemoveObjectFromList(pathRefNodeID);
 		WAL_DeleteTreeItem(gTreeNodeID, 'TM_'+pathRefNodeID); 	
 	}
-	
-	
+	if(gCurrentObjectSelected){
+		GX_SetSelection(gCurrentObjectSelected, false, false); 
+	}	
  	GXRDE_DeleteObject(animID); 	
- 	var parentNode = gCurrAnimNode.parentNode; 
- 	parentNode.removeChild(gCurrAnimNode); 	
+ 	var parentNode = tempAnimNode.parentNode; 
+ 	parentNode.removeChild(tempAnimNode); 	
  	GX_RemoveAnimInfoFromList(animID); 
- 	gCurrAnimNode = 0;  	
+ 	 	
  }
  
 
@@ -2602,7 +2605,8 @@ function GX_RemoveAnimInfoFromList(animID)
 		    if(xmlstr)
 		       GX_updateTreeWidget(xmlstr);   
 		    WAL_expandAllTreeItems(gTreeNodeID, true);
-		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);	   
+		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);	  
+		    GX_MenuItemShow('animate', 'Animate'); 
 		}
 	    else{
 	    	GX_UpdateAnimInfoInList(animNode);	   
@@ -2831,6 +2835,9 @@ function GX_ModifyPathType(pathType){
 	default:
 		break; 
 	}
+	GX_SetSelection(gCurrentObjectSelected, false, false);
+	refPathNode = document.getElementById(refPathNode.id); 
+	GX_SetSelection(refPathNode, true, true) ;
 	//update the same to editor as well as to the remote server 
 }
 
