@@ -383,21 +383,17 @@ function GX_SetAnimParamOnUI(animParam) {
 		animParam.startType = invAnimParam.startType; 
 		animParam.AnimEventType = invAnimParam.AnimEventType; 
 		animParam.refAnimID = invAnimParam.refAnimID;
-		
-		
 	}
 	var animlist=[];	
 	for(var i =0; i < gAnimList.length; i++)
-	{
-	    //if( (animParam.title  !=  gAnimList[i][5]) && (gAnimList[i][5] != 'Invisible Animation') )
+	{	    
 	    if(animParam.title  !=  gAnimList[i][5]){	    	 
 	    	var refAnimInfo = GX_GetBeginParamWithRefAnim(gAnimList[i]); 
 	    	if( (gAnimList[i][5] != 'Invisible Animation') && (refAnimInfo[0] != gCurrentAnimInfo[0] ) )
 	    		animlist.push(gAnimList[i][5]);
 	    }	    	 
 	}
-	WAL_UpdateDropDownList('animlistDDL', animlist);
-	
+	WAL_UpdateDropDownList('animlistDDL', animlist);	
 	if(animParam.startType == 'ON_ANIMEVENT'){
 		if(animParam.AnimEventType == 'end'){
 			itemValue = 'After';  
@@ -446,6 +442,10 @@ function GX_SetAnimParamOnUI(animParam) {
 	case 'pathmotion':	
 		WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible); 
 		WAL_SetItemByValueInList('pathModifyDDL', gReversePathTypeList[animParam.refPathType], false);
+		var offset = animParam.PathObjectOffset; 
+		var temparr = offset.split(','); 
+		offset = new Number(temparr[1]); 
+		WAL_setNumberInputValue('offsetFromPathY', offset, false);		
 		break; 
 	case 'skewX':
 		WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
@@ -588,31 +588,32 @@ function GX_SetAnimParamOnUI(animParam) {
 
 function GX_CopyAnimParam(srcParam, destParam){
 	
-	destParam.animID = srcParam.animID 
-	destParam.objectID = srcParam.objectID   
-	destParam.siblingID = srcParam.siblingID
-	destParam.duration = srcParam.duration 
-	destParam.animType = srcParam.animType
-	destParam.attribute = srcParam.attribute
-	destParam.startValue = srcParam.startValue
-	destParam.endValue = srcParam.endValue
-	destParam.refPathID = srcParam.refPathID 
+	destParam.animID = srcParam.animID; 
+	destParam.objectID = srcParam.objectID;   
+	destParam.siblingID = srcParam.siblingID;
+	destParam.duration = srcParam.duration ;
+	destParam.animType = srcParam.animType;
+	destParam.attribute = srcParam.attribute;
+	destParam.startValue = srcParam.startValue;
+	destParam.endValue = srcParam.endValue;
+	destParam.refPathID = srcParam.refPathID; 
+	destParam.refPathType = srcParam.refPathType; 
 	destParam.PathObjectOffset = 	srcParam.PathObjectOffset;
-	destParam.PathStartPoint = srcParam.PathStartPoint
-	destParam.visibleAnimID = srcParam.visibleAnimID
-	destParam.bPathVisible = srcParam.bPathVisible
-	destParam.originalPosition = srcParam.originalPosition
-	destParam.startType =  srcParam.startType
-	destParam.startTime = srcParam.startTime
-	destParam.UIEventType = srcParam.UIEventType
-	destParam.UIObjectID  = srcParam.UIObjectID 
-	destParam.AnimEventType= srcParam.AnimEventType
-	destParam.refAnimID= srcParam.refAnimID
-	destParam.calcMode= srcParam.calcMode
-	destParam.restart = srcParam.restart
-	destParam.repeatCount= srcParam.repeatCount
-	destParam.endState = srcParam.endState
-	destParam.center = srcParam.center
+	destParam.PathStartPoint = srcParam.PathStartPoint;
+	destParam.visibleAnimID = srcParam.visibleAnimID;
+	destParam.bPathVisible = srcParam.bPathVisible;
+	destParam.originalPosition = srcParam.originalPosition;
+	destParam.startType =  srcParam.startType;
+	destParam.startTime = srcParam.startTime;
+	destParam.UIEventType = srcParam.UIEventType;
+	destParam.UIObjectID  = srcParam.UIObjectID ;
+	destParam.AnimEventType= srcParam.AnimEventType;
+	destParam.refAnimID= srcParam.refAnimID;
+	destParam.calcMode= srcParam.calcMode;
+	destParam.restart = srcParam.restart;
+	destParam.repeatCount= srcParam.repeatCount;
+	destParam.endState = srcParam.endState;
+	destParam.center = srcParam.center;
 	destParam.title = srcParam.title;
 }
 
@@ -696,7 +697,10 @@ function GX_GetAnimParamsFromUI(inputParam)
 			animParams.refPathType = newPathType; 
 			GX_ModifyPathType(newPathType); 
 		}
-		
+		var pos = GX_CalculateMotionAnimPathOffset(animParams.objectID, animParams.refPathID);
+    	var splitArr = pos.split(';'); 
+    	animParams.PathObjectOffset = splitArr[0]; 
+    	animParams.originalPosition = splitArr[1]; 
 		break; 
 	case 'skewX':			
 		animParams.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
@@ -857,7 +861,7 @@ function GX_GetAnimParamsFromUI(inputParam)
                 WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 100); 			
 	 				 	//creating new animationlist interface	 
 	 			//WAL_createModelessWindow('animationListWidget', '380', '470', 'animOK', 'animCancel');
-	 			WAL_createListBox('animationlist', '325', '300', "GX_AnimationListHandler");
+	 			WAL_createListBox('animationlist', '325', '280', "GX_AnimationListHandler");
 	 			 
                 WAL_createNumberInput("repeatcountIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, 0, 1);
                 var endstatelist = ['freeze', 'remove']; 
@@ -894,19 +898,12 @@ function GX_GetAnimParamsFromUI(inputParam)
                 WAL_createCheckBox('pathvisibilityCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
                // WAL_setradioButtonCheck('motionvalbtn', true);
               //  WAL_setradioButtonCheck('attrvalbtn', true); 
-              /*  WAL_createNumberInput("offsetFromPathX", '60px', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
-                WAL_setNumberInputValue('offsetFromPathX', 0, false); 
+               // WAL_createNumberInput("offsetFromPathX", '60px', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
+              //  WAL_setNumberInputValue('offsetFromPathX', 0, false); 
                 WAL_createNumberInput("offsetFromPathY", '60', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
                 WAL_setNumberInputValue('offsetFromPathY', 0, false); 
-                */
-                
-                
                
-                
-                           
-                
-               
-                WAL_createDecimalNumberInput("startTimeIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 10.0,0.0,0.1);
+               /* WAL_createDecimalNumberInput("startTimeIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 10.0,0.0,0.1);
                 
                 WAL_createRadioButton('uieventRB', 'GX_AnimDlgRadioValueChangeHdlr', '130', '20', false, false);
                // var uieventlist = ['Mouse Click', 'Mouse Move']; 
@@ -936,6 +933,8 @@ function GX_GetAnimParamsFromUI(inputParam)
                 WAL_createColorPickerWindow("animcolorpickwidget", "animcolorpicker", '350', '250', "animokbtn", "animcancelbtn");
                 
                 bAnimWdgtCreated = true; 
+                */
+                
                                
  }
  
@@ -1531,26 +1530,28 @@ function GX_RemoveAnimInfoFromList(animID)
 	 if ( (node.id == 'offsetFromPathX') || (node.id == 'offsetFromPathY') )
 	 {
 		 var diff; 		
-		 diff = new Number(value); 
-		
-		 if(!gInitAnimParam)
+		 diff = new Number(value); 		
+		 if(!gCurrAnimParam)
 		 {
-			 Debug_Message("gInitAnimParam NULL"); 
+			 Debug_Message("gCurrAnimParam NULL"); 
 			 return; 
 		 }
 		
 		 if(!gCurrentObjectSelected)
 		 {
-			 var currObjNode = document.getElementById(gInitAnimParam.objectID); 
-			 GX_SetSelection(currObjNode, true, false); 
+			 return ; 
+			 //var currObjNode = document.getElementById(gInitAnimParam.objectID); 
+			 //GX_SetSelection(currObjNode, true, false); 
 		 }		
-		 var objDim = GX_GetRectObjectDim(gCurrentObjectSelected);
+		 var pathNode = document.getElementById(gCurrAnimParam.refPathID); 
+		 var objNode = document.getElementById(gCurrAnimParam.objectID);
+		 var objDim = GX_GetRectObjectDim(objNode);
 		 if (node.id == 'offsetFromPathX')
-			 objDim.x = new Number(gInitAnimParam.PathStartPoint.x -  objDim.width/2) + diff; 
+			 objDim.x = new Number(gCurrAnimParam.PathStartPoint.x -  objDim.width/2) + diff; 
 		 else if (node.id == 'offsetFromPathY')
-			 objDim.y = new Number(gInitAnimParam.PathStartPoint.y - objDim.height/2) + diff; 
+			 objDim.y = new Number(gCurrAnimParam.PathStartPoint.y - objDim.height/2) + diff; 
 		// Debug_Message("objDim.y =" + objDim.y );
-		 GX_SetRectObjectDim(gCurrentObjectSelected,objDim );
+		 GX_SetRectObjectDim(objNode,objDim );
 		 gLastPositionValue = value; 
 	 }
  }
@@ -1725,8 +1726,8 @@ function GX_RemoveAnimInfoFromList(animID)
 		origPos.y = objDim.y;
 	} 	
 	//temporary taken to be 0 offset but later on offset input will be takne in new GUI
-	var X = 0 ;//WAL_getMaskedInputValue('offsetFromPathX'); 
-	var Y = 0; //WAL_getMaskedInputValue('offsetFromPathY'); 
+	var X = 0;//WAL_getMaskedInputValue('offsetFromPathX'); 
+	var Y = WAL_getMaskedInputValue('offsetFromPathY'); 
 	//var pathDim = GX_GetPathDimension(pathNode); 
 		//calculate the difference of the dimenion points 
 	/*var xoffset, yoffset; 
@@ -1735,6 +1736,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	//put if
 	var offset = xoffset + ',' + yoffset;
 	*/	
+	//temp code
+	
 	var offset = X + ',' + Y;
 	var origPosString = origPos.x + ',' + origPos.y; 
 	offset = offset + ';' + origPosString; 
@@ -1839,10 +1842,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		else if(value == 'ANIMATEMOTION')
 		{
 			animParam.animType = 'ANIM_MOTION';
-			animParam.attribute = 'pathmotion';
-			//TBD here 
-			//gInitAnimParam.refPathID = '';
-			//get the mpath link 
+			animParam.attribute = 'pathmotion';			
 			var childList = animNode.childNodes; 
 			for(var j=0; j < childList.length; j++)
 			{
@@ -1851,7 +1851,7 @@ function GX_RemoveAnimInfoFromList(animID)
 				{
 					var refPath = mpathNode.getAttribute('xlink:href');
 					refPath = refPath.substring(1,refPath.length); 
-					animParam.refPathID = refPath; 
+					animParam.refPathID = refPath;
 				}				
 			}
 			//get the previous sibling which should visibility animate objct 
