@@ -2181,8 +2181,8 @@ function OnObjectMouseDown(evt) {
 	if(!gCurrentObjectSelected)
 		return ;
 	//Debug_Message('Object Mouse Down'); 
-	if(gObjectEditMode == 'ANIMATION_EDIT_MODE')
-		return; 
+	//if(gObjectEditMode == 'ANIMATION_EDIT_MODE')
+	//	return; 
 	var objectType; 
 	if(gbContextMenuShow == true)
 		return; 

@@ -117,6 +117,18 @@ gReversePathTypeList['ELLIPTIC'] = 'Elliptic';
 gReversePathTypeList['POLYGON'] = 'Polygon'; 
 gReversePathTypeList['FREEDRAW_PATH'] = 'Free Draw'; 
 
+
+var gOffsetList=[];
+
+gOffsetList[0] = 'Top';
+gOffsetList[1] = 'Center';
+gOffsetList[2] = 'Bottom';
+
+var gReverseOffsetList=[];
+gReverseOffsetList['Top'] = 0;
+gReverseOffsetList['Center'] = 1;
+gReverseOffsetList['Bottom'] = 2;
+
 /*
 function GX_SetAnimParamOnUI(animParam) {  
       
@@ -445,7 +457,13 @@ function GX_SetAnimParamOnUI(animParam) {
 		var offset = animParam.PathObjectOffset; 
 		var temparr = offset.split(','); 
 		offset = new Number(temparr[1]); 
-		WAL_setNumberInputValue('offsetFromPathY', offset, false);		
+		if(offset)
+			offset = Math.round(offset / Math.abs(offset));
+		offset += 1; 
+		//var myoffset = 'dhdh';//+offset;
+		//myoffset = offset; 
+		WAL_SetItemByValueInList('offsetParamDDL', gOffsetList[offset], false);
+		
 		break; 
 	case 'skewX':
 		WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
@@ -861,7 +879,7 @@ function GX_GetAnimParamsFromUI(inputParam)
                 WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 100); 			
 	 				 	//creating new animationlist interface	 
 	 			//WAL_createModelessWindow('animationListWidget', '380', '470', 'animOK', 'animCancel');
-	 			WAL_createListBox('animationlist', '325', '280', "GX_AnimationListHandler");
+	 			WAL_createListBox('animationlist', '325', '275', "GX_AnimationListHandler");
 	 			 
                 WAL_createNumberInput("repeatcountIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, 0, 1);
                 var endstatelist = ['freeze', 'remove']; 
@@ -901,8 +919,11 @@ function GX_GetAnimParamsFromUI(inputParam)
                // WAL_createNumberInput("offsetFromPathX", '60px', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
               //  WAL_setNumberInputValue('offsetFromPathX', 0, false); 
                 WAL_createNumberInput("offsetFromPathY", '60', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
-                WAL_setNumberInputValue('offsetFromPathY', 0, false); 
-               
+                WAL_setNumberInputValue('offsetFromPathY', 0, false);            
+                 
+                WAL_createDropdownList('offsetParamDDL', '100', gInputHeight, false, gOffsetList, "", '100');
+                
+                
                /* WAL_createDecimalNumberInput("startTimeIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 10.0,0.0,0.1);
                 
                 WAL_createRadioButton('uieventRB', 'GX_AnimDlgRadioValueChangeHdlr', '130', '20', false, false);
@@ -1727,17 +1748,11 @@ function GX_RemoveAnimInfoFromList(animID)
 	} 	
 	//temporary taken to be 0 offset but later on offset input will be takne in new GUI
 	var X = 0;//WAL_getMaskedInputValue('offsetFromPathX'); 
-	var Y = WAL_getMaskedInputValue('offsetFromPathY'); 
-	//var pathDim = GX_GetPathDimension(pathNode); 
-		//calculate the difference of the dimenion points 
-	/*var xoffset, yoffset; 
-	xoffset = origPos.x -  pathDim.x; 
-	yoffset = origPos.y - pathDim.y ; // + objDim.height/2;
-	//put if
-	var offset = xoffset + ',' + yoffset;
-	*/	
-	//temp code
-	
+	var Y = 0;//WAL_getMaskedInputValue('offsetFromPathY'); 
+	var offsetStr = WAL_getDropdownListSelection('offsetParamDDL');
+	var normalizedVal = new Number(gReverseOffsetList[offsetStr]); 
+	normalizedVal -= 1; 
+	var Y = (objDim.height * normalizedVal)/2;	
 	var offset = X + ',' + Y;
 	var origPosString = origPos.x + ',' + origPos.y; 
 	offset = offset + ';' + origPosString; 
