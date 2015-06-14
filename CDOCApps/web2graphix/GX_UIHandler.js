@@ -1045,6 +1045,7 @@ function GX_InitializeDocument(svgFileName)
 	 if(!gObjectList)
 	 {
 		 //GX_UpdateAnimationListbox(); 
+		 GX_PopulateAnimationList(); 
 		 gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
 		 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
 		 var animlist = new Array(); 
