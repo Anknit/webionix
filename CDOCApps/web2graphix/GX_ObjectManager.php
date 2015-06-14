@@ -515,7 +515,7 @@ function GX_OBJ_AddNewSVGAnimation(&$respData)
 	//DEPENDING ON OBJECT TYPE CALL THE APPROPRIATE FUNCTION
 	$animTypeVal = strtoupper($ANIMTYPE);
 	$animIDVal   = strtoupper($ANIMID);
-	$parentIDVal = strtoupper($OBJECTID);
+	$parentIDVal = strtoupper($PARENTID);
 	$attrlen     = strtoupper($ATTRLEN);	
 	
 	$SVGDom = $_SESSION['svg_xml_dom'];
@@ -537,8 +537,6 @@ function GX_OBJ_AddNewSVGAnimation(&$respData)
 				{
 					$attrdefinition[$attrname]= $attrval;
 				}
-				
-				//$attrdefinition[$attrname]= $attrval;
 			}			
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'animate',$animIDVal, $siblingID, $parentIDVal, $attrdefinition,'');
 		break;
