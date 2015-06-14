@@ -138,10 +138,10 @@ function GXRDE_CopyShapeObject(objectID, groupID, newID)
 		return 'ERROR';	
 }
 
-function GXRDE_addNewAnimationObject(animID, objectID, animType, attrArray)
+function GXRDE_addNewAnimationObject(animID, parentID, animType, attrArray)
 {	
 	var len = attrArray.length; 
-	var reqbody  = "&ANIMTYPE=" + animType + "&ANIMID=" + animID + "&OBJECTID=" + objectID +
+	var reqbody  = "&ANIMTYPE=" + animType + "&ANIMID=" + animID + "&PARENTID=" + parentID +
 	"&ATTRLEN=" + len ; 
 	for(var j=0; j < len; j++)
 	{
