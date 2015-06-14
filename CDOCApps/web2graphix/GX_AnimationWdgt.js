@@ -972,7 +972,7 @@ function GX_PopulateObjectList(ObjectType)
 	 else if(ObjectType == 'ALL_OBJECTS')
 	 {
 		 JQSel = '.SVG_SHAPE_OBJECT';	 
-		 gAnimList = new Array(); 
+		// gAnimList = new Array(); 
 	 }		 
      var size = $(JQSel).size(); 
      var num = $(JQSel).size();
@@ -1148,8 +1148,17 @@ function GX_UpdateAnimInfoInList(animNode)
 			var endval = animNode.getAttribute('fill');
 			
 			var titleval = GX_GetAnimTitle(animNode); 
-			var animInfo = [animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval]; 
+			var animInfo = [animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval];
 			animNode.setAttribute('begin', ''); 
+			/*
+			animNode.endElement(); 
+			var dotpos =  beginval.indexOf('.');
+			//set begin value to empty only if no reference value 
+			if(dotpos == -1){
+				animNode.setAttribute('begin', ''); 
+			}
+			*/
+			
 			animNode.setAttribute('fill', 'remove'); 
 			
 			//_rm first remove the existing entry and then add
@@ -1583,6 +1592,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	 var attrArray = [];
 	 var attrData; 	 
 	 //common 
+	 
+	 
 	 attrData = ['title',animParams.title];  
 	 attrArray.push(attrData);
 
@@ -1596,6 +1607,11 @@ function GX_RemoveAnimInfoFromList(animID)
 	 attrArray.push(attrData);
 	    
 	 attrData = ['repeatCount',animParams.repeatCount];  
+	 attrArray.push(attrData);
+	 
+	 attrData = ['xmlns:xlink',"http://www.w3.org/1999/xlink"]; 
+	 attrArray.push(attrData); 
+	 attrData = ['xlink:href',"#"+animParams.objectID]; 
 	 attrArray.push(attrData);
 	 
 //	 attrData = ['siblingID',animParams.siblingID];  
@@ -1635,7 +1651,13 @@ function GX_RemoveAnimInfoFromList(animID)
 	    attrData = ['restart','never'];  
 		newAttr.push(attrData);		    
 		attrData = ['repeatCount',0];  
+		
 		newAttr.push(attrData);
+		attrData = ['xmlns:xlink',"http://www.w3.org/1999/xlink"]; 
+		newAttr.push(attrData); 
+		attrData = ['xlink:href',"#"+animParams.objectID]; 
+		newAttr.push(attrData);
+		
 		attrData = ['fill','freeze'];  
 		newAttr.push(attrData);
 		attrData = ['begin',beginval];  
@@ -1653,8 +1675,8 @@ function GX_RemoveAnimInfoFromList(animID)
 		attrData = ['to',"visible"]; 
 		newAttr.push(attrData); 		
 		attrData = ['onend',"GX_ChangeAnimateMotionSettings(evt.target);"]; 
-		newAttr.push(attrData); 
-		GX_AddNewAnimElementInDOM(newAnimID, animParams.objectID,'ANIM_ATTRIBUTE', newAttr, bUpdateUI); 		
+		newAttr.push(attrData); 		
+		GX_AddNewAnimElementInDOM(newAnimID, 'ANIMATION_GROUP','ANIM_ATTRIBUTE', newAttr, bUpdateUI); 		
 		
 		
 		attrData = ['refpathid',animParams.refPathID];  
@@ -1718,7 +1740,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		 }
 	}	 		 
 	//delete the existing node first 
-	GX_AddNewAnimElementInDOM(animParams.animID, animParams.objectID,animParams.animType, attrArray, bUpdateUI); 
+	GX_AddNewAnimElementInDOM(animParams.animID, 'ANIMATION_GROUP',animParams.animType, attrArray, bUpdateUI); 
  }
  
  
@@ -1775,10 +1797,10 @@ function GX_RemoveAnimInfoFromList(animID)
 	//Debug_Message('Aligning Object'); 
 	 
  }
- function GX_AddNewAnimElementInDOM(animID, ObjID, animType, attrArray, bUIUpdate)
+ function GX_AddNewAnimElementInDOM(animID, parentID, animType, attrArray, bUIUpdate)
  {
 	 
-	 var animstr = GXRDE_addNewAnimationObject(animID, ObjID, animType, attrArray); 
+	 var animstr = GXRDE_addNewAnimationObject(animID, parentID, animType, attrArray); 
 	
 	 var animNode = document.getElementById(animID); 
 	 if(animNode)
@@ -1786,7 +1808,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		 var parentNode = animNode.parentNode; 
 		 parentNode.removeChild(animNode); 
 	 }	
- 	GX_AddNewNodeFromXMLString(ObjID, animstr);	 
+ 	GX_AddNewNodeFromXMLString(parentID, animstr);	 
  	animNode = document.getElementById(animID); 	
  	if(bUIUpdate == true)
  	{
@@ -2223,8 +2245,10 @@ function GX_RemoveAnimInfoFromList(animID)
  function GX_ChangeAnimateMotionSettingsFromcode(animNode)
  {    	 	         
  	    var fromval = animNode.getAttribute("from");
- 	    fromval = fromval.split(",");       
- 	    var objNode = animNode.parentNode; 
+ 	    fromval = fromval.split(",");
+ 	    var objRef =  animNode.getAttribute("xlink:href"); 
+  	    objRef = objRef.substring(1,objRef.length); 				               	       
+  	    var objNode = document.getElementById(objRef);  	    
  	    var objType = objNode.classList[1]; 
  	    if(objType == "ELLIPSE")
  	    {
@@ -2370,7 +2394,9 @@ function GX_RemoveAnimInfoFromList(animID)
  
  function GX_RestoreMotionObject(animNode)
  {
-	 var objNode =  animNode.parentNode; 
+	 var objRef = animNode.getAttribute('xlink:href'); 
+	 objRef =  objRef.substring(1, objRef.length); 
+	 var objNode =  document.getElementById(objRef); //animNode.parentNode; 
 	 var objType = objNode.classList[1]; 
 	 var origValueArr = animNode.getAttribute('to'); 
 	 origValueArr = origValueArr.split(',')
@@ -2860,3 +2886,21 @@ function GX_SelectAnimationObject(objNode){
 	
 }
  
+
+function GX_PopulateAnimationList(){
+	
+	var animListNode =  document.getElementById('ANIMATION_GROUP'); 
+	 gAnimList = new Array(); 
+	//get all the child nodes 
+	var nodeList = animListNode.childNodes; 
+	for(var j= 0 ; j <nodeList.length; j++){
+		var childNode = nodeList[j]; 
+		//take care of group element later on 
+		GX_UpdateAnimInfoInList(childNode);	
+	}
+	//check if the node type is group in which case look into the class to determine animation type
+	//for each animation type look for appropriate animation element 
+	
+	
+	
+}
