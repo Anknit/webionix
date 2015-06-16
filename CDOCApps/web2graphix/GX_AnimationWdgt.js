@@ -62,7 +62,7 @@ var gAnimEndTimer = 400;
 var gbAnimationEnd =  true; 
 var gInitAnimParam = 0; 
 var gObjectList = 0; 
-var gAnimList = 0; //[animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval]; 
+var gAnimList = 0; //[animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, refAnimID]; 
 var gCurrAttrname;
 var gCurrAnimNode = 0; 
 var gCurrAnimParam=0; 
@@ -129,6 +129,14 @@ gReverseOffsetList['Top'] = 0;
 gReverseOffsetList['Center'] = 1;
 gReverseOffsetList['Bottom'] = 2;
 
+
+sBeginParams.prototype.refAnimID = 0;
+sBeginParams.prototype.AnimEvent = 0;
+
+function sBeginParams(){
+	sBeginParams.prototype.refAnimID = 0;
+	sBeginParams.prototype.AnimEvent = 0;
+}
 /*
 function GX_SetAnimParamOnUI(animParam) {  
       
@@ -389,6 +397,7 @@ function GX_SetAnimParamOnUI(animParam) {
 		Debug_Message('undefined Anim Param'); 
 		return ; 
 	}
+	/*
 	if(animParam.animType == 'ANIM_MOTION'){
 		var invNode = document.getElementById(animParam.animID + '_V'); 
 		var invAnimParam = GX_GetAnimParamFromNode(invNode); 
@@ -396,6 +405,8 @@ function GX_SetAnimParamOnUI(animParam) {
 		animParam.AnimEventType = invAnimParam.AnimEventType; 
 		animParam.refAnimID = invAnimParam.refAnimID;
 	}
+	*/
+	
 	var animlist=[];	
 	for(var i =0; i < gAnimList.length; i++)
 	{	    
@@ -1129,7 +1140,7 @@ function GX_GetAnimTitle(animNode)
 function GX_UpdateAnimInfoInList(animNode)
 {
 		var nodename = animNode.nodeName.toUpperCase(); 
-		if((nodename == 'ANIMATE')||(nodename == 'ANIMATETRANSFORM') || (nodename == 'ANIMATEMOTION') )
+		if((nodename == 'ANIMATE')||(nodename == 'ANIMATETRANSFORM') )
 		{
 			if(nodename == 'ANIMATE')
 			{
@@ -1139,14 +1150,15 @@ function GX_UpdateAnimInfoInList(animNode)
 			{
 				attr = animNode.getAttribute('type');  	 	 				
 			}
+			/*
 			else if(nodename == 'ANIMATEMOTION')
 			{
 				attr = 'pathmotion';  	 	 				
 			}
+			*/
 				
 			var beginval = animNode.getAttribute('begin'); 
-			var endval = animNode.getAttribute('fill');
-			
+			var endval = animNode.getAttribute('fill');			
 			var titleval = GX_GetAnimTitle(animNode); 
 			var animInfo = [animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval];
 			animNode.setAttribute('begin', ''); 
@@ -1159,8 +1171,7 @@ function GX_UpdateAnimInfoInList(animNode)
 			}
 			*/
 			
-			animNode.setAttribute('fill', 'remove'); 
-			
+			animNode.setAttribute('fill', 'remove'); 			
 			//_rm first remove the existing entry and then add
 			GX_RemoveAnimInfoFromList(animNode.id); 
 			gAnimList.push(animInfo); 	
@@ -1172,6 +1183,25 @@ function GX_UpdateAnimInfoInList(animNode)
 				gAnimList.push(animInfo); 	
 			}
 		 	*/				
+		}
+		else if (nodename == 'G'){
+			var animType = animNode.classList[1]; 
+			if(animType == 'PATH_MOTION'){
+				var visibleAnimNode = animNode.childNodes[0]; 
+				var motionAnimNode = animNode.childNodes[1]; 
+				attr = 'pathmotion';  
+				var beginval = visibleAnimNode.getAttribute('begin'); 
+				var endval = motionAnimNode.getAttribute('fill');			
+				var titleval = animNode.classList[2]; 
+				var animInfo = [animNode.id, motionAnimNode.targetElement.id, attr, beginval, endval, titleval];
+				visibleAnimNode.setAttribute('begin', ''); 
+				//motionAnimNode.setAttribute('begin', ''); 
+				motionAnimNode.setAttribute('fill', 'remove'); 	
+				GX_RemoveAnimInfoFromList(animNode.id); 
+				gAnimList.push(animInfo);		
+				//motionAnimNode.setAttribute('begin', beginval);
+			}
+			
 		}
 }
 
@@ -1593,7 +1623,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 var attrData; 	 
 	 //common 
 	 
-	 
+	 var containerGroupID = 'ANIMATION_GROUP';  
 	 attrData = ['title',animParams.title];  
 	 attrArray.push(attrData);
 
@@ -1640,6 +1670,10 @@ function GX_RemoveAnimInfoFromList(animID)
 	if(animParams.animType == 'ANIM_MOTION')
 	{
 		//INDUCE A VISIBLE ANIMATION BEFORE 
+		//GX_AddNewAnimElementInDOM(newAnimID, 'ANIMATION_GROUP','ANIM_ATTRIBUTE', newAttr, bUpdateUI);
+		var classvalue = 'PATH_MOTION ' + animParams.title ; 
+		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue); 
+		containerGroupID = animParams.animID ; 
 		var newAttr = []; 
 		var newAnimID = animParams.animID + '_V'; 
 		attrData = ['title','Invisible Animation'];  
@@ -1675,10 +1709,12 @@ function GX_RemoveAnimInfoFromList(animID)
 		attrData = ['to',"visible"]; 
 		newAttr.push(attrData); 		
 		attrData = ['onend',"GX_ChangeAnimateMotionSettings(evt.target);"]; 
-		newAttr.push(attrData); 		
-		GX_AddNewAnimElementInDOM(newAnimID, 'ANIMATION_GROUP','ANIM_ATTRIBUTE', newAttr, bUpdateUI); 		
+		newAttr.push(attrData); 
 		
+		var animstr = GXRDE_addNewAnimationObject(newAnimID, containerGroupID, 'ANIM_ATTRIBUTE', newAttr);
+		//GX_AddNewAnimElementInDOM(newAnimID, containerGroupID,'ANIM_ATTRIBUTE', newAttr, bUpdateUI); 
 		
+		animParams.animID = animParams.animID + '_ANIM_MOTION'; 
 		attrData = ['refpathid',animParams.refPathID];  
 		attrArray.push(attrData);	 
 		attrData = ['rotate','auto'];  
@@ -1694,8 +1730,9 @@ function GX_RemoveAnimInfoFromList(animID)
 		attrArray.push(attrData);		
 		attrData = ['begin', newAnimID + '.end'];  
 		attrArray.push(attrData);		
-		animParams.visibleAnimID = newAnimID; 
-		
+		animParams.visibleAnimID = newAnimID;		
+		var animstr = GXRDE_addNewAnimationObject(animParams.animID, containerGroupID, 'ANIM_MOTION', attrArray);
+		return ; 
 	}
 	else
 	{
@@ -1740,7 +1777,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		 }
 	}	 		 
 	//delete the existing node first 
-	GX_AddNewAnimElementInDOM(animParams.animID, 'ANIMATION_GROUP',animParams.animType, attrArray, bUpdateUI); 
+	GX_AddNewAnimElementInDOM(animParams.animID, containerGroupID,animParams.animType, attrArray, bUpdateUI); 
  }
  
  
@@ -1839,17 +1876,26 @@ function GX_RemoveAnimInfoFromList(animID)
 	 
  }
  
- function GX_GetAnimParamFromNode(animNode)
- {	
+ function GX_GetAnimParamFromNode(curranimNode)
+ {			
+		var animNode =  curranimNode; 
 		var animID = animNode.id; 
 		var animParam = new sAnimParams() ;	
+		animParam.animID = animNode.id;  	
 		//get all the animation parameters
 		//populate the data structure 
-		animParam.title = GX_GetAnimTitle(animNode); 
+		if(animNode.nodeName == 'g'){
+			animParam.title = animNode.classList[2];
+			var animType = animNode.classList[1]; 
+			if(animType == 'PATH_MOTION'){
+				animNode = animNode.childNodes[1]; 
+			}
+		}
+		else
+			animParam.title = GX_GetAnimTitle(animNode); 
 		var value; 
-		animParam.animID = animNode.id;  
-		animParam.objectID = animNode.targetElement.id;
-		
+			
+		animParam.objectID = animNode.targetElement.id;		
 		value = animNode.getAttribute('dur'); 
 		value = value.substring(0, value.length-1); 
 		animParam.duration = value;		
@@ -1907,13 +1953,9 @@ function GX_RemoveAnimInfoFromList(animID)
 			}				
 			else{
 				animParam.bPathVisible = true;			
-			}							
+			}					
 		}
-		
-		
-		
 		var animInfo  = GX_GetAnimInfoByID(animID);
-		//animNode.setAttribute('begin', animInfo[3]); 
 		value = animInfo[3]; 
 		if(value.length < 1)
 		{
@@ -2302,15 +2344,23 @@ function GX_RemoveAnimInfoFromList(animID)
   	//if animNode is animMotion type 
   	//get the previous Sibling 
   	//set that into animation mode 
-  	if('ANIMATEMOTION' == animnode.nodeName.toUpperCase())  		
-  	{
-  		//ADD AN ATTRIBUTE onend='OnAnimationEndHandler(evt)'
-  		 if(gbAnimationEnd == false)
-  			 return ; 
-  		gbAnimationEnd = false; 
-  		animnode.setAttribute('onend', 'GX_OnAnimationEndHandler(evt)'); 
-  		GX_ChangeAnimateMotionSettingsFromcode(animnode);  		 
+  	if(animnode.nodeName == 'g'){
+  		var animType = animnode.classList[1]; 
+  		if(animType == 'PATH_MOTION'){
+  			if(gbAnimationEnd == false)
+  	  			 return ; 
+  	  		gbAnimationEnd = false;   	  		
+  			var visibleAnimNode = animnode.childNodes[0]; 
+			var motionAnimNode = animnode.childNodes[1]; 
+			motionAnimNode.setAttribute('onend', 'GX_OnAnimationEndHandler(evt)'); 
+	  		GX_ChangeAnimateMotionSettingsFromcode(motionAnimNode);  
+	  		visibleAnimNode.setAttribute('restart', 'whenNotActive');
+	  		motionAnimNode.setAttribute('fill', 'remove'); 
+	  		visibleAnimNode.beginElement();
+	  		return; 
+  		}
   	}
+  	
   //	var animInfo = GX_GetAnimInfoByID(animID); 
   	var restartval =  animnode.getAttribute('restart');
   	animnode.setAttribute('restart', 'whenNotActive');
@@ -2546,8 +2596,16 @@ function GX_RemoveAnimInfoFromList(animID)
 	    gInitAnimParam.refPathType='';
 	    gInitAnimParam.bPathVisible = false;
 	    if(lastAnimID != 0){
-	    	gInitAnimParam.startType = 'ON_ANIMEVENT';//ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
-	 	    gInitAnimParam.refAnimID = lastAnimID;
+	    	gInitAnimParam.startType = 'ON_ANIMEVENT';//ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT	    	
+	    	var node = document.getElementById(lastAnimID); 
+	    	if(node.nodeName == 'g'){
+	    		var animtype = node.classList[1]; 
+	    		if(animtype ==  'PATH_MOTION'){
+	    			gInitAnimParam.refAnimID = node.childNodes[1].id; 
+	    		}
+	    	}
+	    	else
+	    		gInitAnimParam.refAnimID = lastAnimID;
 	    }
 	    else{
 	    	gInitAnimParam.startType = 'ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
@@ -2894,13 +2952,35 @@ function GX_PopulateAnimationList(){
 	//get all the child nodes 
 	var nodeList = animListNode.childNodes; 
 	for(var j= 0 ; j <nodeList.length; j++){
-		var childNode = nodeList[j]; 
-		//take care of group element later on 
+		var childNode = nodeList[j];
+		//take care of group element later on		
 		GX_UpdateAnimInfoInList(childNode);	
 	}
 	//check if the node type is group in which case look into the class to determine animation type
 	//for each animation type look for appropriate animation element 
 	
+}
+
+
+function GX_GetAnimBeginParameters(beginValue){	
+	var beginParam =  new sBeginParams(); 
+	var dotpos =  beginValue.indexOf('.'); 		
+	if(dotpos == -1){
+		beginParam.AnimEvent = 'time'; 
+		beginParam.refAnimID = ''; 
+		return beginParam; 
+	}				
+	var animIDRef = beginValue.substring(0,dotpos);		
+	var animEvent = beginValue.substring(dotpos+1,beginValue.length); 
+	if(animEvent == 'click'){
+		beginParam.AnimEvent = animEvent; 
+		beginParam.refAnimID = '';
+		return beginParam; 
+	}	
+	beginParam.AnimEvent = animEvent; 
+	beginParam.refAnimID = animIDRef;
+	return beginParam; 
 	
-	
+		
+		
 }
