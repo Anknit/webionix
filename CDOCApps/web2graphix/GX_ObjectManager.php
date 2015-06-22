@@ -78,6 +78,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 	$objectTypeVal = strtoupper($OBJECTTYPE);
 	$objectIDVal   = strtoupper($OBJECTID);
 	$parentIDVal   = strtoupper($REFID);
+	
 	if($OBJECTTYPE == 'POLYGON_PATH')
 	{
 		$nSides = $NUMSIDES;
@@ -87,7 +88,15 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 	{
 		$groupName = $NAME; 
 	}
-		
+	
+	if($OBJECTTYPE == 'ANIM_GROUP'){
+		$groupName = $NAME;
+		/*$animTypeVal = strtoupper($ANIMTYPE);
+		$animTitle   = $ANIMTITLE; 
+		$classValue = 'ANIM_GROUP ' . $animTypeVal. ' '. $animTitle;
+		*/
+		 
+	}
 	
 	//create the new Node here 
 	//then add it to the SVG file at the appropriate parent 
@@ -108,7 +117,11 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 		case 'GROUP':
 			$attrdefinition = array("id"=>$objectIDVal, "class"=>'GROUP '. $groupName, 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'g',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
-			break;		
+			break;	
+		case 'ANIM_GROUP':
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'ANIM_GROUP '. $groupName);
+			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'g',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
+			break;				
 		case 'LINE_PATH':
 			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT LINE_PATH ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'd'=>'M0,0 L5,5', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'fill'=>'none','visibility'=>'visible');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'path',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
@@ -555,8 +568,7 @@ function GX_OBJ_AddNewSVGAnimation(&$respData)
 		for($i=1; $i < $attrlen; $i++){
 			if($ATTRNAME[$i] == 'refpathid')
 			{
-				$mpathID = '#' . $ATTRVAL[$i];
-				
+				$mpathID = '#' . $ATTRVAL[$i];				
 			}
 			else
 			{
