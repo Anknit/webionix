@@ -298,8 +298,10 @@ function GX_WKS_CreateSVGFile(&$respData)
 			                   {    	
 				               	    var motionanimNode = node.nextElementSibling;       
 				               	    var fromval = motionanimNode.getAttribute("from");
-				               	    fromval = fromval.split(",");       
-				               	    var objNode = node.parentNode; 
+				               	    fromval = fromval.split(",");    
+				               	    var objRef =  node.getAttribute("xlink:href"); 
+				               	    objRef = objRef.substring(1,objRef.length); 				               	       
+				               	    var objNode = document.getElementById(objRef); 
 				               	    var objType = objNode.classList[1]; 
 				               	    if(objType == "ELLIPSE")
 				               	    {
@@ -322,6 +324,7 @@ function GX_WKS_CreateSVGFile(&$respData)
 							
 					  ]]>
 	          </script>
+	    <g id="ANIMATION_GROUP" class="ANIMATION_LIST_GROUP"></g>
 		<g id="BASEGROUP" class="GROUP BaseGroup" transform="translate(0,0) scale(1,1) rotate(0 0,0)"></g></svg>' ; 
 		$retval = fwrite($fh, $prologstr);
 
@@ -495,8 +498,11 @@ function GX_WKS_GetSVGXMLMetaData(&$respData)
 			$id = 'TM_' . $dataid;
 			$datatype="GROUP" ;
 			$name = $childNode->getAttribute('class');
+			 
 			
 			$strarr = explode(" ", $name);
+			if($strarr[0] == 'ANIMATION_LIST_GROUP')
+				continue; 
 			if($strarr[1])
 				$name=$strarr[1];
 			
