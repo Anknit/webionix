@@ -2769,7 +2769,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	     
 	    GX_AddAnimationElement(gInitAnimParam, false); 
 	    var animNode = document.getElementById(gInitAnimParam.animID);
-	    if(gInitAnimParam.animType == 'ANIM_MOTION')
+	   // if(gInitAnimParam.animType == 'ANIM_MOTION')
 		{
 			var retval = GXRDE_openSVGFile(gSVGFilename); 
 		    var HTMLstr=""; 		 
@@ -2789,9 +2789,12 @@ function GX_RemoveAnimInfoFromList(animID)
 		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);	  
 		    GX_MenuItemShow('animate', 'Animate'); 
 		}
+	    /*
 	    else{
 	    	GX_UpdateAnimInfoInList(animNode);	   
 	    }
+	    */
+	    
 	    	  
 	   
 	    gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	    
