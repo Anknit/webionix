@@ -27,6 +27,9 @@ sAnimParams.prototype.restart = 'never';
 sAnimParams.prototype.repeatCount = 0; 
 sAnimParams.prototype.endState = 'freeze'; //FREEZE, REMOVE
 sAnimParams.prototype.center = ''; 
+//sAnimParams.prototype.containerRefID = '';
+sAnimParams.prototype.containerID = 0; //ID of the container if any '' if no g involved
+sAnimParams.prototype.refContainerID = 0;
 
 function sAnimParams() {	
 	sAnimParams.prototype.animID = 0;
@@ -56,13 +59,17 @@ function sAnimParams() {
 	sAnimParams.prototype.endState = 'freeze'; //FREEZE, REMOVE	
 	sAnimParams.prototype.center = '';  //centre of rotation 
 	sAnimParams.prototype.title = ''; 
+	//sAnimParams.prototype.containerRefID = ''; //incase of group this ID will be different from the actual ID
+	sAnimParams.prototype.containerID = 0; //ID of the container if any '' if no g involved
+	sAnimParams.prototype.refContainerID = 0;  //ID of the refanimation if any ''
+	
 }
 
 var gAnimEndTimer = 400; 
 var gbAnimationEnd =  true; 
 var gInitAnimParam = 0; 
 var gObjectList = 0; 
-var gAnimList = 0; //[animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, refAnimID]; 
+var gAnimList = 0; //[animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, refAnimID, refContainerID]; 
 var gCurrAttrname;
 var gCurrAnimNode = 0; 
 var gCurrAnimParam=0; 
@@ -132,10 +139,14 @@ gReverseOffsetList['Bottom'] = 2;
 
 sBeginParams.prototype.refAnimID = 0;
 sBeginParams.prototype.AnimEvent = 0;
+//sBeginParams.prototype.containerID = 0;
+sBeginParams.prototype.refContainerID = 0; 
 
 function sBeginParams(){
 	sBeginParams.prototype.refAnimID = 0;
 	sBeginParams.prototype.AnimEvent = 0;
+	//sBeginParams.prototype.containerID = 0;
+	sBeginParams.prototype.refContainerID = 0; 
 }
 /*
 function GX_SetAnimParamOnUI(animParam) {  
@@ -393,7 +404,7 @@ function GX_SetAnimParamOnUI(animParam) {
 	//first set the common properties here 	
 	var itemValue = '';	 
 	//now check for the animateMotion type 
-	if(animParam == 'undefined'){
+	if(animParam == undefined){
 		Debug_Message('undefined Anim Param'); 
 		return ; 
 	}
@@ -423,9 +434,8 @@ function GX_SetAnimParamOnUI(animParam) {
 		}
 		else if(animParam.AnimEventType == 'begin'){
 			itemValue = 'With';  
-		}
-		
-		var refAnimInfo = GX_GetAnimInfoByID(animParam.refAnimID);		
+		}		
+		var refAnimInfo = GX_GetAnimInfoByID(animParam.refContainerID);		
 		WAL_SetItemByValueInList('animlistDDL', refAnimInfo[5], false);
 	}
 	else if(animParam.startType == 'ON_CLICK'){
@@ -656,18 +666,22 @@ function GX_GetAnimParamsFromUI(inputParam)
 	if(itemValue == 'After'){
 		refAnimTitle = WAL_getDropdownListSelection('animlistDDL');		
 		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);
-		gCurrentAnimInfo[3]= refAnimInfo[0] + '.end'; 
+		if(refAnimInfo){
+			var refID = GX_GetProperReferenceAnim(refAnimInfo[0]); 
+			gCurrentAnimInfo[3]= refID + '.end'; 
+		}		
 		animParams.startType = 'ON_ANIMEVENT'; 
-		animParams.AnimEventType = 'end';
-		animParams.refAnimID = refAnimInfo[0];
+		animParams.AnimEventType = 'end';	
 	}
 	else if(itemValue == 'With'){
 		refAnimTitle = WAL_getDropdownListSelection('animlistDDL');		
 		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);
-		gCurrentAnimInfo[3]= refAnimInfo[0] + '.begin'; 
+		if(refAnimInfo){
+			var refID = GX_GetProperReferenceAnim(refAnimInfo[0]); 
+			gCurrentAnimInfo[3]= refID + '.begin'; 
+		}		
 		animParams.startType = 'ON_ANIMEVENT'; 
-		animParams.AnimEventType = 'begin'; 
-		animParams.refAnimID = refAnimInfo[0];
+		animParams.AnimEventType = 'begin';		
 	}
 	else if(itemValue == 'At 0th Second'){				
 		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);
@@ -680,13 +694,17 @@ function GX_GetAnimParamsFromUI(inputParam)
 	else if(itemValue == 'On Click'){				
 		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);
 		gCurrentAnimInfo[3]= animParams.UIObjectID + '.click'; //SVG_876.click; 
-		animParams.startType = 'ON_UIEVENT'; 
+		animParams.startType = 'ON_CLICK'; 
 		animParams.AnimEventType = '';
 		animParams.startTime = 0; 
 		animParams.UIEventType = 'M_CLICK'; 
 		animParams.UIObjectID = animParams.objectID;	
 		animParams.refAnimID = '';
 	}	
+	var beginParam = GX_GetAnimBeginParameters(gCurrentAnimInfo[3]); 
+	animParams.refAnimID = beginParam.refAnimID; 
+	animParams.refContainerID = beginParam.refContainerID; 
+	
 	switch(animParams.attribute)
 	{	
 	case 'rotate':		endAngleValueIP
@@ -1074,7 +1092,7 @@ function GX_SortAnimListInDisplayOrder(animList){
 			return 0; 
 
 
-function GX_GetanimItemWithRefAnimID(animList, refAnimID){
+function GX_GetAnimItemWithRefAnimID(animList, refAnimID){
 	var myList=[]; 
 	for(var j=0;  j <animList.length; j++){
 		var animItem = animList[j]; 
@@ -1157,10 +1175,14 @@ function GX_UpdateAnimInfoInList(animNode)
 			}
 			*/
 				
-			var beginval = animNode.getAttribute('begin'); 
+			var beginval = animNode.getAttribute('begin');
+			var beginParam = GX_GetAnimBeginParameters(beginval);			
+						
+			//if there is a reference node then check if the reference node is a group animation type of node 
+			//in which case add the group id as the reference ID. 
 			var endval = animNode.getAttribute('fill');			
 			var titleval = GX_GetAnimTitle(animNode); 
-			var animInfo = [animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval];
+			var animInfo = [animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, beginParam.refAnimID, beginParam.refContainerID];
 			animNode.setAttribute('begin', ''); 
 			/*
 			animNode.endElement(); 
@@ -1175,14 +1197,7 @@ function GX_UpdateAnimInfoInList(animNode)
 			//_rm first remove the existing entry and then add
 			GX_RemoveAnimInfoFromList(animNode.id); 
 			gAnimList.push(animInfo); 	
-			//now check if its an existing entry or a new entry
-			/*	
-			 * var index = GX_GetIndexofAnimInfoFromList(animNode.id);
-			if(index == -1)
-			{
-				gAnimList.push(animInfo); 	
-			}
-		 	*/				
+						
 		}
 		else if (nodename == 'G'){
 			var animType = animNode.classList[1]; 
@@ -1190,21 +1205,39 @@ function GX_UpdateAnimInfoInList(animNode)
 				var visibleAnimNode = animNode.childNodes[0]; 
 				var motionAnimNode = animNode.childNodes[1]; 
 				attr = 'pathmotion';  
-				var beginval = visibleAnimNode.getAttribute('begin'); 
+				var beginval = visibleAnimNode.getAttribute('begin');
+				var beginParams  = GX_GetAnimBeginParameters(beginval);				
 				var endval = motionAnimNode.getAttribute('fill');			
 				var titleval = animNode.classList[2]; 
-				var animInfo = [animNode.id, motionAnimNode.targetElement.id, attr, beginval, endval, titleval];
-				visibleAnimNode.setAttribute('begin', ''); 
-				//motionAnimNode.setAttribute('begin', ''); 
+				var animInfo = [animNode.id, motionAnimNode.targetElement.id, attr, beginval, endval, titleval, beginParams.refAnimID, beginParams.refContainerID];
+				visibleAnimNode.setAttribute('begin', '');
 				motionAnimNode.setAttribute('fill', 'remove'); 	
 				GX_RemoveAnimInfoFromList(animNode.id); 
-				gAnimList.push(animInfo);		
-				//motionAnimNode.setAttribute('begin', beginval);
+				gAnimList.push(animInfo);
 			}
 			
 		}
 }
 
+
+
+function GX_GetProperReferenceAnim(nodeID){
+	
+	var refAnimID = 0; 
+	var animNode = document.getElementById(nodeID); 
+	if(animNode.nodeName == 'g'){
+		var animType = animNode.classList[1]; 
+		if(animType == 'PATH_MOTION'){
+			var refNode = animNode.childNodes[1]; 
+			refAnimID = refNode.id; 
+		}
+	}
+	else
+		refAnimID = nodeID;	
+	return refAnimID; 
+	
+	
+}
 
 function GX_GetIndexofAnimInfoFromList(animID)
 {
@@ -1652,7 +1685,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 {
 	    beginval +=  animParams.startTime + 's'; 
 	 }
-	 else if(animParams.startType == 'ON_UIEVENT')
+	 else if(animParams.startType == 'ON_CLICK')
 	 {
 		beginval += animParams.objectID + '.click';			
 	 }	
@@ -1889,12 +1922,13 @@ function GX_RemoveAnimInfoFromList(animID)
 			var animType = animNode.classList[1]; 
 			if(animType == 'PATH_MOTION'){
 				animNode = animNode.childNodes[1]; 
+				//animParam.title = GX_GetAnimTitle(animNode);
 			}
 		}
 		else
-			animParam.title = GX_GetAnimTitle(animNode); 
-		var value; 
-			
+			animParam.title = GX_GetAnimTitle(animNode); 		
+		
+		var value;			
 		animParam.objectID = animNode.targetElement.id;		
 		value = animNode.getAttribute('dur'); 
 		value = value.substring(0, value.length-1); 
@@ -1957,6 +1991,11 @@ function GX_RemoveAnimInfoFromList(animID)
 		}
 		var animInfo  = GX_GetAnimInfoByID(animID);
 		value = animInfo[3]; 
+		var beginParams = GX_GetAnimBeginParameters(value); 		
+		animParam.refAnimID = beginParams.refAnimID; 
+		animParam.AnimEventType  = beginParams.AnimEvent; 
+		animParam.refContainerID = beginParams.refContainerID; 
+		
 		if(value.length < 1)
 		{
 			//Debug_Message("Begin Value is NULL"); 
@@ -1974,7 +2013,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			index = value.indexOf('.click',0); 
 			if(index != -1)
 			{
-				animParam.startType = 'ON_UIEVENT';				
+				animParam.startType = 'ON_CLICK';				
 				value = value.substring(0, index);
 				animParam.UIEventType = 'M_CLICK'; 
 				animParam.UIObjectID = value; 
@@ -2092,7 +2131,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		{
 			animNode.setAttribute('begin', animParam.startTime+'s');
 		}
-		else if(animParam.startType == 'ON_UIEVENT')
+		else if(animParam.startType == 'ON_CLICK')
 		{
 			value = animParam.UIObjectID + '.click'; 
 			animNode.setAttribute('begin', value);
@@ -2174,7 +2213,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	var beginval =""; 
 	if(AnimParam1.startType != AnimParam2.startType)
 	{
-		if(AnimParam2.startType == 'ON_UIEVENT')
+		if(AnimParam2.startType == 'ON_CLICK')
 		{			 
 			beginval += AnimParam2.UIObjectID + '.click';				 			
 		}
@@ -2255,32 +2294,69 @@ function GX_RemoveAnimInfoFromList(animID)
 	
  }
  
- function GX_UpdateAnimObjectAttribute(animID, attrArray)
+ function GX_UpdateAnimObjectAttribute(curranimID, attrArray)
  {
+	 var animID = curranimID; 
 	 var animNode = document.getElementById(animID); 
-	 if(!animNode)
-		 return ; 
 	 
+	 if(!animNode)
+		 return ;
+	 var visibleNodeAttr = []; 
+	 var motionNodeAttr  = [];
 	 for(var i=0; i < attrArray.length; i++)
 	 {
-		 if( (attrArray[i][0]=='begin') && (animNode.nodeName.toUpperCase()== 'ANIMATEMOTION')){
-			 var invNode = document.getElementById(animID + '_V'); 
-			 invNode.setAttribute(attrArray[i][0], attrArray[i][1]); 
-			 var index = GX_GetAnimInfoListIndexByID(invNode.id); 
-			 gAnimList[index][3] = attrArray[i][1]; 			
-			 animNode.setAttribute('begin', animID + '_V.end');
-			 var invArray=[]; 
-			 invArray[0]= ['begin',attrArray[i][1]]; 
-			 GXRDE_updateAnimationObject(invNode.id, invArray); 
-			 attrArray[i][1] = animID + '_V.end'; 
-			 continue; 
+		 if(animNode.nodeName =='g'){
+			 var animtype = animNode.classList[1];			 
+			 var removeIndex = []; 			 
+			 if(animtype =='PATH_MOTION'){
+				 var visibleNode = animNode.childNodes[0]; 
+				 var motionNode = animNode.childNodes[1];				
+				 if(attrArray[i][0] == 'begin'){					
+					 var prevValue = visibleNode.getAttribute('begin'); 
+					 visibleNode.setAttribute(attrArray[i][0], attrArray[i][1]);
+					 GX_UpdateAnimInfoInList(animNode); 
+					 
+					 //now verify if there are unreferred indep anim node 
+					 var bretVal = GX_IsIndependentAnimationsUnreferred(gAnimList);
+					 if(bretVal == true){
+						 visibleNode.setAttribute('begin', '0s');
+						 GX_UpdateAnimInfoInList(animNode); 						  
+						 return ; 
+					 }
+					 visibleNodeAttr.push(attrArray[i]);
+					 removeIndex.push(i);
+					 GXRDE_updateAnimationObject(visibleNode.id, visibleNodeAttr);						 
+				 }
+				 else{
+					 motionNodeAttr.push(attrArray[i]);
+					 motionNode.setAttribute(attrArray[i][0], attrArray[i][1]);
+					 removeIndex.push(i);					 
+				 }
+				 if(i == attrArray.length-1){
+					 var respStr = GXRDE_updateAnimationObject(motionNode.id, motionNodeAttr);
+					 return ; 					 
+				 }					 
+			 }//(animtype =='PATH_MOTION')
 		 }
-		 animNode.setAttribute(attrArray[i][0], attrArray[i][1]); 
+		 else{
+			
+			 if(attrArray[i][0] == 'begin'){
+				 var prevValue = animNode.getAttribute('begin');
+				 animNode.setAttribute(attrArray[i][0], attrArray[i][1]); 
+				 GX_UpdateAnimInfoInList(animNode); 
+				 //now verify if there are unreferred indep anim node 
+				 var bretVal = GX_IsIndependentAnimationsUnreferred(gAnimList);
+				 if(bretVal == true){
+					 animNode.setAttribute('begin', '0s');
+					 GX_UpdateAnimInfoInList(animNode); 						  
+					 return ; 
+				 }
+			 }
+			 else
+				 animNode.setAttribute(attrArray[i][0], attrArray[i][1]);
+		 }			 
 	 }
-	 //var index = GX_GetAnimInfoListIndexByID(animNode.id); 
-	// gAnimList[index][3] = attrArray[i][1]; 
-	 //GX_UpdateAnimInfoInList(animNode); 
-	 var respStr = GXRDE_updateAnimationObject(animID, attrArray); 
+	var respStr = GXRDE_updateAnimationObject(animID, attrArray); 
  }
  
 
@@ -2387,13 +2463,13 @@ function GX_RemoveAnimInfoFromList(animID)
 
  function GX_RemoveAnimationObject(animID)
  {
-	var RefAnimList = GX_GetanimItemWithRefAnimID(gAnimList, animID);
+	var RefAnimList = GX_GetAnimItemWithRefAnimID(gAnimList, animID);
 	var attrArray =[]; 
 	var attrData = 	['begin', '0s'];	
 	attrArray.push(attrData);
 	var index= -1; 
-	for(var k=0; k <RefAnimList.length; k++){		
-		var respStr = GXRDE_updateAnimationObject(RefAnimList[k][0], attrArray); 
+	for(var k=0; k < RefAnimList.length; k++){		
+		//var respStr = GXRDE_updateAnimationObject(RefAnimList[k][0], attrArray); 
 		//get the index of refanimID 
 		index = GX_GetIndexofAnimInfoFromList(RefAnimList[k][0]); 
 		if(index != -1){
@@ -2401,18 +2477,24 @@ function GX_RemoveAnimInfoFromList(animID)
 		}			
 		//change the array entry here only 
 		GX_UpdateAnimObjectAttribute(RefAnimList[k][0], attrArray); 
-	}
+	} //for 
 	var tempAnimNode = gCurrAnimNode = document.getElementById(animID); 
-	//delete the path as well 
-	if(gCurrAnimNode.nodeName.toUpperCase() == 'ANIMATEMOTION'){ 	
-		var pathRefNodeID = gCurrAnimNode.children[0].getAttribute('xlink:href');
-		pathRefNodeID = pathRefNodeID.substring(1, pathRefNodeID.length); 
-		if(pathRefNodeID == gCurrentObjectSelected.id){
-			GX_SetSelection(gCurrentObjectSelected, false, false); 
+	
+	//delete the path as well	
+	if(gCurrAnimNode.nodeName == 'g'){
+		var animType = gCurrAnimNode.classList[1]; 
+		if(animType == 'PATH_MOTION'){
+			var motionNode = gCurrAnimNode.childNodes[1]; 
+			var pathRefNodeID = motionNode.childNodes[0].getAttribute('xlink:href');
+			pathRefNodeID = pathRefNodeID.substring(1, pathRefNodeID.length); 
+			if(pathRefNodeID == gCurrentObjectSelected.id){
+				GX_SetSelection(gCurrentObjectSelected, false, false); 
+				
+			GX_DeleteObject(pathRefNodeID); 
+			GX_RemoveObjectFromList(pathRefNodeID);
+			WAL_DeleteTreeItem(gTreeNodeID, 'TM_'+pathRefNodeID); 
+		  }
 		}
-		GX_DeleteObject(pathRefNodeID); 
-		GX_RemoveObjectFromList(pathRefNodeID);
-		WAL_DeleteTreeItem(gTreeNodeID, 'TM_'+pathRefNodeID); 	
 	}
 	if(gCurrentObjectSelected){
 		GX_SetSelection(gCurrentObjectSelected, false, false); 
@@ -2742,10 +2824,12 @@ function GX_RemoveAnimInfoFromList(animID)
 		 break; 
 	 case 'animdeletebtn':		
 		 if(gCurrentAnimInfo){
-			 if(gCurrentAnimInfo[2] == 'pathmotion'){
+			 /*if(gCurrentAnimInfo[2] == 'pathmotion'){
 				 var animVID = gCurrentAnimInfo[0] + '_V'; 
 				 GX_RemoveAnimationObject(animVID);				 
 			 }
+			 */
+			 
 			 GX_RemoveAnimationObject(gCurrentAnimInfo[0]); 
 			 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
 			 GX_UpdateAnimationListbox(); 		    
@@ -2762,6 +2846,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			//respStr = GXRDE_updateAnimationObject(gCurrAnimParam.animID, attrArray); 
 			
 		}	
+		//GX_PopulateAnimationList(); 
 		gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
 		GX_UpdateAnimationListbox();
 		 break; 
@@ -2769,8 +2854,9 @@ function GX_RemoveAnimInfoFromList(animID)
 		break; 
 	 }
  }
- function GX_GetanimItemWithRefAnimID(animList, refAnimID){
+ function GX_GetAnimItemWithRefAnimID(animList, refAnimID){
 		var mylist=[]; 
+		/*
 		for(var j=0;  j <animList.length; j++){
 			var animItem = animList[j]; 
 			var dotpos =  animItem[3].indexOf('.'); 		
@@ -2785,15 +2871,55 @@ function GX_RemoveAnimInfoFromList(animID)
 					mylist.push(animList[j]); 
 			}
 		}
+		*/
+		for(var j=0;  j <animList.length; j++){
+			var animItem = animList[j];
+			var refAnimContainerID = animItem[7]; 
+			if(refAnimContainerID == refAnimID){
+				var beginParam = GX_GetAnimBeginParameters(animItem[3]);
+				if(beginParam.AnimEvent == 'begin')
+					mylist.splice(0, 0,animList[j] ); 
+				else if(beginParam.AnimEvent == 'end')
+					mylist.push(animList[j]);
+			}
+		}
 		if(mylist.length > 0)
 			return mylist;
 		else
 			return 0; 
 }
  
+ 
+ function GX_IsIndependentAnimationsUnreferred(animList){
+	 
+	 var bUnreferred = true; 
+	 var animItem = 0; 	
+	 var indepIndex=0; 
+	 // find out list of all animtion i tems which are independent
+	 for(var k=0 ;  k < animList.length; k++){
+		 animItem = animList[k]; 
+		 var refList=0;
+		 if(animItem[6] == ''){
+			 ++indepIndex; 
+			 refList = GX_GetAnimItemWithRefAnimID(animList, animItem[0]); 
+			 if(refList){
+				 return false; 
+			 }
+		}			 
+	 }	 
+	 //means all are independent 
+	 if(indepIndex == animList.length )
+		 return false; 
+	 
+	 Debug_Message('At Least One Independent Animations needs to be Referred');
+	 return true; 
+ }
+ 
  function GX_GetBeginParamWithRefAnim(animInfo){
-	 	var animItem = animInfo; 
-		var dotpos =  animItem[3].indexOf('.'); 		
+	 	var animItem = animInfo;	 		
+	 	var beginParams = GX_GetAnimBeginParameters(animItem[3]); 
+	 	
+		/*var dotpos =  animItem[3].indexOf('.'); 		
 		if(dotpos == -1)
 			return 0;  
 		var animIDRef = animItem[3].substring(0,dotpos); 			
@@ -2803,6 +2929,12 @@ function GX_RemoveAnimInfoFromList(animID)
 			if(refAnimInfo)
 				return refAnimInfo; 
 		}
+		*/
+	 	if(beginParams.refAnimID){
+	 		var refAnimInfo = GX_GetAnimInfoByID(beginParams.refAnimID);			
+			if(refAnimInfo)
+				return refAnimInfo; 
+	 	}
 		//var animEvent = animItem[3].substring(dotpos+1,animItem[3].length); 
 		return 0;		
  }
@@ -2813,6 +2945,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		var sortArrIndex = -1; 
 		//find all entries which are independent in nature 
 		for(var k=0; k < animlistlength; k++){
+			/*
 			var animItem = animList[k];
 			var dotpos =  animItem[3].indexOf('.'); 		
 			if(dotpos == -1){
@@ -2824,15 +2957,25 @@ function GX_RemoveAnimInfoFromList(animID)
 			if(animEvent == 'click'){
 				sortedList.push(animItem); 
 				continue; 
-			}			
+			}
+			*/
+			var animItem = animList[k];
+			if(animItem[6] == ''){
+				sortedList.push(animItem);
+			}
 		}//for 
 		sortArrIndex = -1; 
+		//check here is any of the independent animations are referred or not 
 		while(1){
 			sortArrIndex++; 
 			if (sortArrIndex >= animlistlength) 
 				break; 
+			if(sortArrIndex == sortedList.length){
+				Debug_Message('There seems to be one or more Animation which is unreferred');
+				return animList;				
+			}
 			var  refanimID =  sortedList[sortArrIndex][0]; 
-			var referredAnimList = GX_GetanimItemWithRefAnimID(animList, refanimID);   
+			var referredAnimList = GX_GetAnimItemWithRefAnimID(animList, refanimID);   
 			for(var k=0; k < referredAnimList.length; k++)
 			{
 				sortedList.splice(sortArrIndex+1+k, 0,  referredAnimList[k]); 
@@ -2968,6 +3111,7 @@ function GX_GetAnimBeginParameters(beginValue){
 	if(dotpos == -1){
 		beginParam.AnimEvent = 'time'; 
 		beginParam.refAnimID = ''; 
+		beginParam.refContainerID = ''; 
 		return beginParam; 
 	}				
 	var animIDRef = beginValue.substring(0,dotpos);		
@@ -2975,12 +3119,16 @@ function GX_GetAnimBeginParameters(beginValue){
 	if(animEvent == 'click'){
 		beginParam.AnimEvent = animEvent; 
 		beginParam.refAnimID = '';
+		beginParam.refContainerID = ''; 
 		return beginParam; 
 	}	
 	beginParam.AnimEvent = animEvent; 
 	beginParam.refAnimID = animIDRef;
+	var refNode = document.getElementById(beginParam.refAnimID);
+	if( (refNode.parentNode.nodeName == 'g') && (refNode.parentNode.id == 'ANIMATION_GROUP') )
+		beginParam.refContainerID = beginParam.refAnimID; 
+	else
+		beginParam.refContainerID = refNode.parentNode.id; 
+		
 	return beginParam; 
-	
-		
-		
 }
