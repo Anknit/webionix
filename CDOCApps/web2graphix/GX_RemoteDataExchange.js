@@ -77,7 +77,6 @@ function GXRDE_addNewSVGGroupObject(objectID, parentID, objectType, name)
 	else
 		return 'ERROR';	
 }
-
 function GXRDE_updateGroupName(groupID, groupName)
 {		
 	var reqbody  = "&GROUPID=" + groupID + "&NAME=" + groupName ;	
