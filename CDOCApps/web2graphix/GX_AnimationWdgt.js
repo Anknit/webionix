@@ -76,6 +76,7 @@ var gCurrAnimParam=0;
 var gbApplied = false; 
 var gNewAnimObject =  false; 
 var gLastPositionValue = 0; 
+var gDefaultRollingDuration = new Number(1); 
 //var attrList = ['fill', 'stroke', 'fill-opacity', 'visibility', 'stroke-width','translate', 'rotate', 'skewX','skewY'];
 
 
@@ -1717,9 +1718,9 @@ function GX_RemoveAnimInfoFromList(animID)
 		newAttr.push(attrData);		    
 	    attrData = ['restart','never'];  
 		newAttr.push(attrData);		    
-		attrData = ['repeatCount',0];  
-		
+		attrData = ['repeatCount',0];  		
 		newAttr.push(attrData);
+		
 		attrData = ['xmlns:xlink',"http://www.w3.org/1999/xlink"]; 
 		newAttr.push(attrData); 
 		attrData = ['xlink:href',"#"+animParams.objectID]; 
@@ -1752,11 +1753,6 @@ function GX_RemoveAnimInfoFromList(animID)
 		attrArray.push(attrData);	 
 		attrData = ['rotate','auto'];  
 		attrArray.push(attrData);			
-		
-		//NOW CALCULATE THE OFFSET 
-		//get the object type 
-	
-	//	var offset = GX_CalculateMotionAnimPathOffset(animParams.objectID, animParams.refPathID);
 		attrData = ['from',animParams.PathObjectOffset];  
 		attrArray.push(attrData);	
 		attrData = ['to',animParams.originalPosition];  
@@ -1765,6 +1761,43 @@ function GX_RemoveAnimInfoFromList(animID)
 		attrArray.push(attrData);		
 		animParams.visibleAnimID = newAnimID;		
 		var animstr = GXRDE_addNewAnimationObject(animParams.animID, containerGroupID, 'ANIM_MOTION', attrArray);
+		
+		//now adding rolling motion 
+		attrArray = []; 
+		animParams.animID = containerGroupID + '_ROLLING_MOTION'; 
+		attrData = ['xmlns:xlink', 'http://www.w3.org/1999/xlink'];  
+		attrArray.push(attrData);
+		attrData = ['attributeType','XML'];  		
+		attrArray.push(attrData);
+		attrData = ['attributeName','transform'];  
+	    attrArray.push(attrData); 
+	    attrData = ['type','rotate'];  
+	    attrArray.push(attrData);	    
+	    attrData = ['xlink:href','#'+animParams.objectID];  
+	    attrArray.push(attrData);
+	    attrData = ['dur','1s'];  
+	    attrArray.push(attrData);		 
+		attrData = ['calcMode','linear'];  
+		attrArray.push(attrData);		    
+	    attrData = ['restart','never'];  
+	    attrArray.push(attrData);		    
+		attrData = ['repeatCount',2];  		
+		attrArray.push(attrData);
+		attrData = ['fill','remove'];  		
+		attrArray.push(attrData);
+		attrData = ['begin',containerGroupID + '_ANIM_MOTION.begin'];  		
+		attrArray.push(attrData);				
+		attrData = ['from','0 0 0'];  
+		attrArray.push(attrData);	
+		attrData = ['to','360 0 0'];  
+		attrArray.push(attrData);		
+		attrData = ['additive', 'sum'];  
+		attrArray.push(attrData);	
+				
+		var animstr = GXRDE_addNewAnimationObject(animParams.animID, containerGroupID, 'ANIM_TRANSFORM', attrArray);
+		
+		//<animateTransform id="ANIM_312" xlink:href='#SVG_933' dur="1s" calcMode="linear" restart="never" repeatCount="5" fill="remove" begin="ANIM_1852.begin" attributeType="XML" 
+		//attributeName="transform" type="rotate" from='0 0 -40' to='360 0 -40'  additive='sum'  />
 		return ; 
 	}
 	else
@@ -2310,7 +2343,8 @@ function GX_RemoveAnimInfoFromList(animID)
 			 var removeIndex = []; 			 
 			 if(animtype =='PATH_MOTION'){
 				 var visibleNode = animNode.childNodes[0]; 
-				 var motionNode = animNode.childNodes[1];				
+				 var motionNode = animNode.childNodes[1];
+				 var rollingnode = animNode.childNodes[2];
 				 if(attrArray[i][0] == 'begin'){					
 					 var prevValue = visibleNode.getAttribute('begin'); 
 					 visibleNode.setAttribute(attrArray[i][0], attrArray[i][1]);
@@ -2330,7 +2364,28 @@ function GX_RemoveAnimInfoFromList(animID)
 				 else{
 					 motionNodeAttr.push(attrArray[i]);
 					 motionNode.setAttribute(attrArray[i][0], attrArray[i][1]);
-					 removeIndex.push(i);					 
+					 removeIndex.push(i);	
+					 if(attrArray[i][0] == 'from'){
+						 var fromVal = '0 ' + attrArray[i][1]; 
+						 var toVal = '360 ' + attrArray[i][1]; 
+						 rollingnode.setAttribute('from', fromVal); 
+						 rollingnode.setAttribute('to', toVal);
+						 var rollAttrArr = []; 
+						 rollAttrArr.push(['from',fromVal ]); 
+						 rollAttrArr.push(['to',toVal ]); 
+						 var respStr = GXRDE_updateAnimationObject(rollingnode.id, rollAttrArr);
+					 }
+					 if(attrArray[i][0] == 'dur'){
+						 var durValue = attrArray[i][1].substring(0,attrArray[i][1].length-1); 
+						 durValue = new Number(durValue); 
+						 var repeatCountVal = durValue / gDefaultRollingDuration; 
+						 if(repeatCountVal < 1)
+							 repeatCountVal = 1; 
+						 var rollAttrArr = []; 
+						 rollAttrArr.push(['repeatCount',repeatCountVal ]); 
+						 var respStr = GXRDE_updateAnimationObject(rollingnode.id, rollAttrArr);
+						 rollingnode.setAttribute('repeatCount', repeatCountVal); 
+					 }
 				 }
 				 if(i == attrArray.length-1){
 					 var respStr = GXRDE_updateAnimationObject(motionNode.id, motionNodeAttr);
