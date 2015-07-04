@@ -14,7 +14,8 @@ sAnimParams.prototype.refPathType='';
 sAnimParams.prototype.PathObjectOffset=0;
 sAnimParams.prototype.PathStartPoint=0;
 sAnimParams.prototype.visibleAnimID=0;
-sAnimParams.prototype.bPathVisible=true; 
+sAnimParams.prototype.bPathVisible= true; 
+sAnimParams.prototype.bRolling = false; 
 sAnimParams.prototype.originalPosition=0;
 sAnimParams.prototype.startType = 'ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
 sAnimParams.prototype.startTime=0; 
@@ -46,6 +47,7 @@ function sAnimParams() {
 	sAnimParams.prototype.PathStartPoint=new sPoint();
 	sAnimParams.prototype.visibleAnimID=0;
 	sAnimParams.prototype.bPathVisible=true; 
+	sAnimParams.prototype.bRolling = false; 
 	sAnimParams.prototype.originalPosition=0;
 	sAnimParams.prototype.startType = 'ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
 	sAnimParams.prototype.startTime=0; 
@@ -475,17 +477,15 @@ function GX_SetAnimParamOnUI(animParam) {
 		break; 		
 	case 'pathmotion':	
 		WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible); 
+		WAL_setCheckBoxValue('rollingmotionCB', animParam.bRolling); 		
 		WAL_SetItemByValueInList('pathModifyDDL', gReversePathTypeList[animParam.refPathType], false);
 		var offset = animParam.PathObjectOffset; 
 		var temparr = offset.split(','); 
 		offset = new Number(temparr[1]); 
 		if(offset)
 			offset = Math.round(offset / Math.abs(offset));
-		offset += 1; 
-		//var myoffset = 'dhdh';//+offset;
-		//myoffset = offset; 
-		WAL_SetItemByValueInList('offsetParamDDL', gOffsetList[offset], false);
-		
+		offset += 1;		
+		WAL_SetItemByValueInList('offsetParamDDL', gOffsetList[offset], false);		
 		break; 
 	case 'skewX':
 		WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
@@ -642,6 +642,7 @@ function GX_CopyAnimParam(srcParam, destParam){
 	destParam.PathStartPoint = srcParam.PathStartPoint;
 	destParam.visibleAnimID = srcParam.visibleAnimID;
 	destParam.bPathVisible = srcParam.bPathVisible;
+	destParam.bRolling =  srcParam.bRolling; 
 	destParam.originalPosition = srcParam.originalPosition;
 	destParam.startType =  srcParam.startType;
 	destParam.startTime = srcParam.startTime;
@@ -722,6 +723,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 		break; 		
 	case 'pathmotion':	
 		animParams.bPathVisible = WAL_getCheckBoxValue('pathvisibilityCB');
+		animParams.bRolling = WAL_getCheckBoxValue('rollingmotionCB');
 		var refPathID = animParams.refPathID;
 		if(refPathID)
 		{
@@ -749,6 +751,8 @@ function GX_GetAnimParamsFromUI(inputParam)
     	var splitArr = pos.split(';'); 
     	animParams.PathObjectOffset = splitArr[0]; 
     	animParams.originalPosition = splitArr[1]; 
+    	
+    	
 		break; 
 	case 'skewX':			
 		animParams.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
@@ -890,13 +894,10 @@ function GX_GetAnimParamsFromUI(inputParam)
 			 return ; 
 		 animParam.refAnimID = animInfo[0]; 
 	 }	
-	
-	
 	 animParam.repeatCount = WAL_getMaskedInputValue('repeatcountIP');
 	 animParam.endState = WAL_getDropdownListSelection('endstatelistDDL');	 
 	 return animParam; 
 	 */
-	
 }
 
 
@@ -905,7 +906,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Scale'];
 	 	//create the new animation widget interface here 	 
 	 			WAL_createModelessWindow('newAnimationDlg', '220', '150', 'newAnimOK', 'newAnimCancel');
-	 			WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '')	 ; 			
+	 			WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '') ; 			
                 WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 100); 			
 	 				 	//creating new animationlist interface	 
 	 			//WAL_createModelessWindow('animationListWidget', '380', '470', 'animOK', 'animCancel');
@@ -944,6 +945,8 @@ function GX_GetAnimParamsFromUI(inputParam)
               //  WAL_createRadioButton('motionvalbtn', 'GX_AnimDlgRadioValueChangeHdlr', '130', '20', false, false);
                 var pathList = ['SVG_001', 'SVG_103', 'SVG_234'];                           
                 WAL_createCheckBox('pathvisibilityCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
+                WAL_createCheckBox('rollingmotionCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
+                
                // WAL_setradioButtonCheck('motionvalbtn', true);
               //  WAL_setradioButtonCheck('attrvalbtn', true); 
                // WAL_createNumberInput("offsetFromPathX", '60px', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
@@ -1785,7 +1788,8 @@ function GX_RemoveAnimInfoFromList(animID)
 		attrArray.push(attrData);
 		attrData = ['fill','remove'];  		
 		attrArray.push(attrData);
-		attrData = ['begin',containerGroupID + '_ANIM_MOTION.begin'];  		
+		//attrData = ['begin',containerGroupID + '_ANIM_MOTION.begin'];  	
+		attrData = ['begin',''];  	
 		attrArray.push(attrData);				
 		attrData = ['from','0 0 0'];  
 		attrArray.push(attrData);	
@@ -1854,29 +1858,34 @@ function GX_RemoveAnimInfoFromList(animID)
 	var pathNode  = document.getElementById(pathID);
 		//get the path dim . 
 	var objDim =  GX_GetRectObjectDim(objNode); 
-	var origPos =  new sPoint(); 
+	var origPos =  new sPoint();	
 	var objType = objNode.classList[1]; 
 	if(objType == "ELLIPSE")
 	{
-		origPos.x = objDim.rotCentreX;
-		origPos.y = objDim.rotCentreY;
+		origPos.x = objDim.centerX;
+		origPos.y = objDim.centerY;
 	}
 	else if(objType == "RECTANGLE")
 	{
+		////origPos.x = objDim.centerX;
+		////origPos.y = objDim.centerY;
 		origPos.x = objDim.x;
 		origPos.y = objDim.y;
 	} 
 	else if(objType == "TEXT")
 	{
-		origPos.x = objDim.x;
-		origPos.y = objDim.y;
+		origPos.x = objDim.centerX;
+		origPos.y = objDim.centerY;
 	} 	
 	//temporary taken to be 0 offset but later on offset input will be takne in new GUI
 	var X = 0;//WAL_getMaskedInputValue('offsetFromPathX'); 
 	var Y = 0;//WAL_getMaskedInputValue('offsetFromPathY'); 
 	var offsetStr = WAL_getDropdownListSelection('offsetParamDDL');
 	var normalizedVal = new Number(gReverseOffsetList[offsetStr]); 
-	normalizedVal -= 1; 
+	if(objType == 'ELLIPSE')
+		normalizedVal -= 1;
+	else if(objType == 'RECTANGLE')
+		normalizedVal -= 2;
 	var Y = (objDim.height * normalizedVal)/2;	
 	var offset = X + ',' + Y;
 	var origPosString = origPos.x + ',' + origPos.y; 
@@ -1952,8 +1961,15 @@ function GX_RemoveAnimInfoFromList(animID)
 		//populate the data structure 
 		if(animNode.nodeName == 'g'){
 			animParam.title = animNode.classList[2];
-			var animType = animNode.classList[1]; 
-			if(animType == 'PATH_MOTION'){
+			var animType = animNode.classList[1]; 			
+			if(animType == 'PATH_MOTION'){				
+				var rollingNode = animNode.childNodes[2]; 
+				var beginval = rollingNode.getAttribute('begin'); 
+				if(beginval === '')
+					animParam.bRolling  = false; 
+				else
+					animParam.bRolling  = true;
+				
 				animNode = animNode.childNodes[1]; 
 				//animParam.title = GX_GetAnimTitle(animNode);
 			}
@@ -2308,7 +2324,16 @@ function GX_RemoveAnimInfoFromList(animID)
 			 attrData = ['from',AnimParam2.PathObjectOffset];  
 			 attrArray.push(attrData);  
 			 attrData = ['to',AnimParam2.originalPosition];  
-			 attrArray.push(attrData); 			 
+			 attrArray.push(attrData); 		
+		}
+		if(AnimParam1.originalPosition != AnimParam2.originalPosition)
+		{			   
+			 attrData = ['to',AnimParam2.originalPosition];  
+			 attrArray.push(attrData); 		
+		}		
+		if(AnimParam1.bRolling != AnimParam2.bRolling){
+			 attrData = ['rolling',AnimParam2.bRolling];  
+			 attrArray.push(attrData);
 		}
 		return attrArray; 
 	}
@@ -2330,12 +2355,12 @@ function GX_RemoveAnimInfoFromList(animID)
  function GX_UpdateAnimObjectAttribute(curranimID, attrArray)
  {
 	 var animID = curranimID; 
-	 var animNode = document.getElementById(animID); 
-	 
+	 var animNode = document.getElementById(animID); 	 
 	 if(!animNode)
 		 return ;
 	 var visibleNodeAttr = []; 
 	 var motionNodeAttr  = [];
+	 var rollAttrArr = []; 
 	 for(var i=0; i < attrArray.length; i++)
 	 {
 		 if(animNode.nodeName =='g'){
@@ -2344,12 +2369,11 @@ function GX_RemoveAnimInfoFromList(animID)
 			 if(animtype =='PATH_MOTION'){
 				 var visibleNode = animNode.childNodes[0]; 
 				 var motionNode = animNode.childNodes[1];
-				 var rollingnode = animNode.childNodes[2];
+				 var rollingnode = animNode.childNodes[2];				 
 				 if(attrArray[i][0] == 'begin'){					
 					 var prevValue = visibleNode.getAttribute('begin'); 
 					 visibleNode.setAttribute(attrArray[i][0], attrArray[i][1]);
-					 GX_UpdateAnimInfoInList(animNode); 
-					 
+					 GX_UpdateAnimInfoInList(animNode); 					 
 					 //now verify if there are unreferred indep anim node 
 					 var bretVal = GX_IsIndependentAnimationsUnreferred(gAnimList);
 					 if(bretVal == true){
@@ -2359,21 +2383,33 @@ function GX_RemoveAnimInfoFromList(animID)
 					 }
 					 visibleNodeAttr.push(attrArray[i]);
 					 removeIndex.push(i);
-					 GXRDE_updateAnimationObject(visibleNode.id, visibleNodeAttr);						 
+					// GXRDE_updateAnimationObject(visibleNode.id, visibleNodeAttr);						 
 				 }
-				 else{
+				 else if(attrArray[i][0] == 'rolling'){
+					 var bRolling = attrArray[i][1];					
+					 var begVal = ''; 
+					 if(bRolling ==  'true'){		
+						 begVal = motionNode.id + '.begin'; 							 
+					 }
+					 else{
+						 begVal = ''; 
+					 }
+					 rollAttrArr.push(['begin', begVal]); 
+					 //var respStr = GXRDE_updateAnimationObject(rollingnode.id, attr);
+					 rollingnode.setAttribute('begin', begVal); 
+					 //attrArray.splice(i,1); 
+				 }else{
 					 motionNodeAttr.push(attrArray[i]);
-					 motionNode.setAttribute(attrArray[i][0], attrArray[i][1]);
+					 motionNode.setAttribute(attrArray[i][0], attrArray[i][1]);					 
 					 removeIndex.push(i);	
 					 if(attrArray[i][0] == 'from'){
 						 var fromVal = '0 ' + attrArray[i][1]; 
 						 var toVal = '360 ' + attrArray[i][1]; 
 						 rollingnode.setAttribute('from', fromVal); 
-						 rollingnode.setAttribute('to', toVal);
-						 var rollAttrArr = []; 
+						 rollingnode.setAttribute('to', toVal);						 
 						 rollAttrArr.push(['from',fromVal ]); 
 						 rollAttrArr.push(['to',toVal ]); 
-						 var respStr = GXRDE_updateAnimationObject(rollingnode.id, rollAttrArr);
+						// var respStr = GXRDE_updateAnimationObject(rollingnode.id, rollAttrArr);
 					 }
 					 if(attrArray[i][0] == 'dur'){
 						 var durValue = attrArray[i][1].substring(0,attrArray[i][1].length-1); 
@@ -2383,16 +2419,25 @@ function GX_RemoveAnimInfoFromList(animID)
 							 repeatCountVal = 1; 
 						 var rollAttrArr = []; 
 						 rollAttrArr.push(['repeatCount',repeatCountVal ]); 
-						 var respStr = GXRDE_updateAnimationObject(rollingnode.id, rollAttrArr);
+						// var respStr = GXRDE_updateAnimationObject(rollingnode.id, rollAttrArr);
 						 rollingnode.setAttribute('repeatCount', repeatCountVal); 
-					 }
-				 }
+					 }					 
+						 
+			 }	
 				 if(i == attrArray.length-1){
-					 var respStr = GXRDE_updateAnimationObject(motionNode.id, motionNodeAttr);
-					 return ; 					 
-				 }					 
-			 }//(animtype =='PATH_MOTION')
-		 }
+					 if(motionNodeAttr.length > 0)
+						 var respStr = GXRDE_updateAnimationObject(motionNode.id, motionNodeAttr);
+					 
+					 if(rollAttrArr.length > 0)
+						 var respStr = GXRDE_updateAnimationObject(rollingnode.id, rollAttrArr);
+					 
+					 if(visibleNodeAttr.length > 0 )
+						 var respStr = GXRDE_updateAnimationObject(visibleNode.id, visibleNodeAttr);
+					
+					 return; 																 
+				 }				
+			 }//(animtype =='PATH_MOTION')	
+		 }//if(animNode.nodeName =='g'
 		 else{
 			
 			 if(attrArray[i][0] == 'begin'){
@@ -2409,9 +2454,11 @@ function GX_RemoveAnimInfoFromList(animID)
 			 }
 			 else
 				 animNode.setAttribute(attrArray[i][0], attrArray[i][1]);
-		 }			 
-	 }
-	var respStr = GXRDE_updateAnimationObject(animID, attrArray); 
+		 	}			 
+		 
+	 }//for loop 
+		 if(attrArray.length > 0)
+			 	var respStr = GXRDE_updateAnimationObject(animID, attrArray); 
  }
  
 
@@ -2732,6 +2779,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	    gInitAnimParam.refPathID = '';
 	    gInitAnimParam.refPathType='';
 	    gInitAnimParam.bPathVisible = false;
+	    gInitAnimParam.bRolling = false; 
 	    if(lastAnimID != 0){
 	    	gInitAnimParam.startType = 'ON_ANIMEVENT';//ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT	    	
 	    	var node = document.getElementById(lastAnimID); 
@@ -2793,12 +2841,14 @@ function GX_RemoveAnimInfoFromList(animID)
 			var pathLen = 200; 
 			var objectType = gCurrentObjectSelected.classList[1]; 
 			if(objectType == 'ELLIPSE'){
-				startX = gCurrentObjectSelected.getAttribute('cx'); 
-				startY = gCurrentObjectSelected.getAttribute('cy'); 				
+				var objDim =  GX_GetRectObjectDim(gCurrentObjectSelected);
+				startX = objDim.centerX; 
+				startY = objDim.centerY; 				
 			}
 			else if(objectType == 'RECTANGLE'){
-				Debug_Message('To be done'); 
-				return ; 
+				var objDim =  GX_GetRectObjectDim(gCurrentObjectSelected); 
+				startX = objDim.centerX; 
+				startY = objDim.centerY; 		
 			}
 			var MyRefPathID = GX_AddNewSVGObject('line_path','');
 			gInitAnimParam.refPathID=MyRefPathID; 			
