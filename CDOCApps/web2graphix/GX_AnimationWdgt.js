@@ -34,7 +34,8 @@ sAnimParams.prototype.refContainerID = 0;
 
 function sAnimParams() {	
 	sAnimParams.prototype.animID = 0;
-	sAnimParams.prototype.objectID = 0;  
+	sAnimParams.prototype.objectID = 0;
+	sAnimParams.prototype.objectType = 0;
 	sAnimParams.prototype.siblingID = 0; 
 	sAnimParams.prototype.duration = 0;
 	sAnimParams.prototype.animType =''; //ANIM_ATTRIBUTE, ANIM_MOTION,ANIM_TRANSFORM
@@ -477,6 +478,10 @@ function GX_SetAnimParamOnUI(animParam) {
 		break; 		
 	case 'pathmotion':	
 		WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible); 
+		if(animParam.objectType == 'ELLIPSE') 
+			WAL_disableWidget('rollingmotionCB', 'data-jqxCheckBox', false, false);
+		else
+			WAL_disableWidget('rollingmotionCB', 'data-jqxCheckBox', false, true);		
 		WAL_setCheckBoxValue('rollingmotionCB', animParam.bRolling); 		
 		WAL_SetItemByValueInList('pathModifyDDL', gReversePathTypeList[animParam.refPathType], false);
 		var offset = animParam.PathObjectOffset; 
@@ -629,7 +634,8 @@ function GX_SetAnimParamOnUI(animParam) {
 function GX_CopyAnimParam(srcParam, destParam){
 	
 	destParam.animID = srcParam.animID; 
-	destParam.objectID = srcParam.objectID;   
+	destParam.objectID = srcParam.objectID; 
+	destParam.objectType = srcParam.objectType; 
 	destParam.siblingID = srcParam.siblingID;
 	destParam.duration = srcParam.duration ;
 	destParam.animType = srcParam.animType;
@@ -1979,6 +1985,8 @@ function GX_RemoveAnimInfoFromList(animID)
 		
 		var value;			
 		animParam.objectID = animNode.targetElement.id;		
+		var object = document.getElementById(animParam.objectID ); 
+		animParam.objectType = object.classList[1]; 		
 		value = animNode.getAttribute('dur'); 
 		value = value.substring(0, value.length-1); 
 		animParam.duration = value;		
