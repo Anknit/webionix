@@ -4,6 +4,8 @@ sDimension.prototype.x = new Number(0);
 sDimension.prototype.y = new Number(0);
 sDimension.prototype.width = new Number(0);
 sDimension.prototype.height = new Number(0);
+sDimension.prototype.centerX =  new Number(0); 
+sDimension.prototype.centerY =  new Number(0); 
 
 sDimension.prototype.minXIndex = -1; 
 sDimension.prototype.minYIndex = -1;
@@ -28,6 +30,9 @@ function sDimension() {
     sDimension.prototype.rotate = 0; 
     sDimension.prototype.rotCentreX = 0; 
     sDimension.prototype.rotCentreY = 0; 
+    
+    sDimension.prototype.centerX =  new Number(0); 
+    sDimension.prototype.centerY =  new Number(0);
     
 }
 var gTreeWidgetID = 'node_panel'; 
@@ -2369,7 +2374,12 @@ function OnObjectMove(evt) {
             {
             	newObjDim.x = newObjDim.rotCentreX;
                 newObjDim.y = newObjDim.rotCentreY; 
-            }          
+            } 
+            else if(gCurrentObjectSelected.classList[1]== 'CIRCLE')
+            {
+            	newObjDim.x = newObjDim.rotCentreX;
+                newObjDim.y = newObjDim.rotCentreY; 
+            }  
             retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
                       
         }        	
@@ -2938,7 +2948,7 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 				gNode.setAttribute('x',transfDim.x); 
 				gNode.setAttribute('y',transfDim.y); 
 			}
-			else if(shapeType == 'ELLIPSE')
+			else if( (shapeType == 'ELLIPSE') || (shapeType == 'CIRCLE') )
 			{
 				gNode.setAttribute('cx',transfDim.x); 
 				gNode.setAttribute('cy',transfDim.y); 
@@ -3113,17 +3123,31 @@ function GX_GetRectObjectDim(ObjNode)
 	    	 mypoint.x = new Number(ObjNode.getAttribute('x')); 
 		     mypoint.y = new Number(ObjNode.getAttribute('y'));
 		     mypoint.width = new Number(ObjNode.getAttribute('width')); 
-		     mypoint.height = new Number(ObjNode.getAttribute('height'));		            
+		     mypoint.height = new Number(ObjNode.getAttribute('height'));	
+		     mypoint.centerX = mypoint.x + mypoint.width /2; 
+		     mypoint.centerY = mypoint.y + mypoint.height /2; 
+		     
 	    }
 	    else if(ObjNode.nodeName == 'ellipse') {	        
-	        mypoint.x = new Number(ObjNode.getAttribute('cx')); 
-	        mypoint.y = new Number(ObjNode.getAttribute('cy'));
+	    	mypoint.centerX = mypoint.x = new Number(ObjNode.getAttribute('cx')); 
+	    	mypoint.centerY = mypoint.y = new Number(ObjNode.getAttribute('cy'));
 	        mypoint.width = new Number(ObjNode.getAttribute('rx')); 
 	        mypoint.height = new Number(ObjNode.getAttribute('ry'));
 	        mypoint.x -=  mypoint.width; 
 	        mypoint.y -=  mypoint.height;   
 	        mypoint.width = 2*mypoint.width; 
 	        mypoint.height = 2* mypoint.height; 
+	        
+	    }  
+	    else if(ObjNode.nodeName == 'circle') {	        
+	    	mypoint.centerX = mypoint.x = new Number(ObjNode.getAttribute('cx')); 
+	    	mypoint.centerY = mypoint.y = new Number(ObjNode.getAttribute('cy'));
+	        mypoint.width = new Number(ObjNode.getAttribute('r'));	       
+	        mypoint.x -=  mypoint.width; 
+	        mypoint.y -=  mypoint.width;   
+	        mypoint.width = 2*mypoint.width; 
+	        mypoint.height = mypoint.width; 
+	        
 	    }  
 	    else if(ObjNode.nodeName == 'text')
 	    {
@@ -3140,6 +3164,8 @@ function GX_GetRectObjectDim(ObjNode)
 	    else if(objClass = 'SVG_PATH_OBJECT')
 	    {
 	    	mypoint = GX_GetPathDimension(ObjNode);
+	    	mypoint.centerX = mypoint.x +  mypoint.width/2; 
+	    	mypoint.centerY = mypoint.y +  mypoint.height/2; 	    	
 	    }
 	    var rotParam = ObjNode.classList[2]; 
 	    if(rotParam)
@@ -3239,7 +3265,18 @@ function GX_SetRectObjectDim(ObjNode, newDim)
         ObjNode.setAttribute('cy',cy);
         ObjNode.setAttribute('rx', rx);
         ObjNode.setAttribute('ry', ry);
-    }    
+    }  
+    else if(ObjNode.nodeName == 'circle') {
+     	 var cx = modDim.x; 
+     	 var cy = modDim.y; 
+     	 var r = modDim.width/2;
+     	// var ry = modDim.height/2; 
+     	 cx += r; 
+     	 cy += r
+       ObjNode.setAttribute('cx', cx);
+       ObjNode.setAttribute('cy',cy);
+       ObjNode.setAttribute('r', r);       
+   }    
     else if(nodeclass == 'SVG_PATH_OBJECT')
     {
     	if(objectType == 'CUBIC_BEZIER')
@@ -3523,6 +3560,7 @@ function GX_InitializeToolbar()
     
     WAL_createCustomButton('group_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('circle_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('ellipse_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('square_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('freehand_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -3796,6 +3834,10 @@ function GX_ToolbarHandler(Node)
 		 WAL_showModalWindow(gSVGGroupNameDlgID,"GX_SVGGroupDlgNameOK", "" );	
 		break;
 	case 'circle_icon':
+		 GX_AddNewSVGObject('circle',''); 
+		 GX_StartFreeDraw();
+		break; 
+	case 'ellipse_icon':
 		 GX_AddNewSVGObject('ellipse',''); 
 		 GX_StartFreeDraw();
 		break; 
@@ -5556,7 +5598,7 @@ function OnFreeDrawClick(evt)
 		    gPrevX = 10000; 
 		    gPrevY = 10000;
 		}
-		else if( (objectType == 'RECTANGLE') || (objectType == 'ELLIPSE')|| (objectType == 'LINE_PATH')||
+		else if( (objectType == 'RECTANGLE') || (objectType == 'ELLIPSE') || (objectType == 'CIRCLE') || (objectType == 'LINE_PATH')||
 				(objectType == 'CUBIC_BEZIER') || (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC') )
 		{
 			gCurrSelectedObjectDim = new sDimension(); 
@@ -5580,7 +5622,7 @@ function OnFreeDrawClick(evt)
 			gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
 			GX_SetObjectAttribute(gCurrentObjectSelected, 'PATH_DATA', gPathDataArray, true, false);
 		}
-		else if( (objectType == 'RECTANGLE')|| (objectType == 'ELLIPSE')|| (objectType == 'LINE_PATH')||(objectType == 'CUBIC_BEZIER')
+		else if( (objectType == 'RECTANGLE')|| (objectType == 'ELLIPSE')|| (objectType == 'CIRCLE') || (objectType == 'LINE_PATH')||(objectType == 'CUBIC_BEZIER')
 				|| (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC'))
 		{
 			GX_SetObjectAttribute(gCurrentObjectSelected, 'DIMENSION', gCurrSelectedObjectDim, true, false);
@@ -5635,7 +5677,7 @@ function OnFreeDraw(evt)
 	     gPrevY = Y; 
 	     return ; 
 	}
-	else if((objType ==  'RECTANGLE') || (objType ==  'ELLIPSE')|| (objType == 'LINE_PATH')||(objType == 'CUBIC_BEZIER')
+	else if((objType ==  'RECTANGLE') || (objType ==  'ELLIPSE')|| (objType == 'CIRCLE') || (objType == 'LINE_PATH')||(objType == 'CUBIC_BEZIER')
 			|| (objType == 'QUADRATIC_BEZIER')|| (objType == 'ELLIPTIC'))
 	{
 		gCurrSelectedObjectDim.width = X - gCurrSelectedObjectDim.x; 
@@ -6458,6 +6500,7 @@ function GX_AddNewAnimation()
     gInitAnimParam.endValue = '#ffff33';
     gInitAnimParam.refPathID = '';
     gInitAnimParam.bPathVisible = false;
+    gInitAnimParam.bRolling = true; 
     gInitAnimParam.startType = 'ON_TIME'; //ON_TIME, ON_UIEVENT, ON_ANIMEVENT
     gInitAnimParam.startTime = 0;
     gInitAnimParam.UIEventType = 'M_MOVE'; //M_CLICK, M_MOVE
