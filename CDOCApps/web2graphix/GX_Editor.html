@@ -226,7 +226,8 @@
        <div id='object_interface' style="display: none; position:absolute; left:280px; top: 40px;" class='PROPERTY_INTERFACE'>
          <div style="display:inline-block";>
          	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='group_icon' value=''  src='../CommonCSS/icons/Version1/group.png'  data-tooltiptext='Group' data-helptext='Add a new Group'/></div>
-	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='circle_icon' value=''  src='../CommonCSS/icons/Version1/circle.png'  data-tooltiptext='Circle' data-helptext='Using this draw a circle or an ellipse'/></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='circle_icon' value=''  src='../CommonCSS/icons/Version1/circle.png'  data-tooltiptext='Circle' data-helptext='Using this draw a Circle'/></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='ellipse_icon' value=''  src='../CommonCSS/icons/Version1/ellipse.png'  data-tooltiptext='Ellipse' data-helptext='Using this draw an Ellipse'/></div>
 	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='square_icon' value=''  src='../CommonCSS/icons/Version1/square.png' data-tooltiptext='Rectangle' data-helptext='Use this to draw a rectangle or a circle' /></div>
 	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='polygon_icon' value=''  src='../CommonCSS/icons/Version1/polygon.png' data-tooltiptext='Polygon' data-helptext='Draws a polygon'/></div>
 	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='line_icon' value=''  src='../CommonCSS/icons/Version1/line.png' data-tooltiptext='Line' data-helptext='Use this to draw Lines'/></div>
@@ -319,6 +320,7 @@
 	           	    <div style='display:none; margin-left:2px; margin-top:0px'>PathOffset-X<div id='offsetFromPathX' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
            	   		<div style='display:none; margin-left:2px; margin-top:5px'>Motion Offset From Path-Y<div id='offsetFromPathY' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
            	   		<div  class="ANIMATTR" style="display:inline-block; margin-left:2px;">Touching<div id="offsetParamDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
+           	   		<div id="rollingmotionCB" style="display:inline-block;margin-left:5px; margin-top:2px">Roll</div>
            	 	</div>
                 <div  class="ANIMATTR" style="display:none; margin-left:2px; margin-right:3px"><div id="animAttrDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
                 <div id="ANGLE_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">                	
@@ -504,11 +506,8 @@
     	<div>
 	    	<div style= 'display:inline-block;margin-left:2px; margin-top:10px;'>Animation ID<input  id='animIDIP' style= 'margin-left:4px;' type='text' /></div>
 	    	<div style= 'display:inline-block; margin-left:2px; margin-top:10px;'>Object ID<input  id='objectIDIP' style= 'margin-left:4px;' type='text' /></div>
-	    		    	
-	    	
+	  	
     	</div>
-    	
-    	
     	<div id='animTabContent' style='margin-top:8px'>
            <ul>
               <li id='animparamTab' style="margin-left: 15px;">Animation Parameters</li>
@@ -550,7 +549,6 @@
                         	
     </div> 
            
- </div>
  
  
  
