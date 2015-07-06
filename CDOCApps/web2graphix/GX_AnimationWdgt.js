@@ -478,7 +478,7 @@ function GX_SetAnimParamOnUI(animParam) {
 		break; 		
 	case 'pathmotion':	
 		WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible); 
-		if(animParam.objectType == 'ELLIPSE') 
+		if( (animParam.objectType == 'ELLIPSE') || (animParam.objectType == 'CIRCLE') )  
 			WAL_disableWidget('rollingmotionCB', 'data-jqxCheckBox', false, false);
 		else
 			WAL_disableWidget('rollingmotionCB', 'data-jqxCheckBox', false, true);		
@@ -1866,7 +1866,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	var objDim =  GX_GetRectObjectDim(objNode); 
 	var origPos =  new sPoint();	
 	var objType = objNode.classList[1]; 
-	if(objType == "ELLIPSE")
+	if( (objType == "ELLIPSE") || (objType == "CIRCLE") )
 	{
 		origPos.x = objDim.centerX;
 		origPos.y = objDim.centerY;
@@ -1888,7 +1888,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	var Y = 0;//WAL_getMaskedInputValue('offsetFromPathY'); 
 	var offsetStr = WAL_getDropdownListSelection('offsetParamDDL');
 	var normalizedVal = new Number(gReverseOffsetList[offsetStr]); 
-	if(objType == 'ELLIPSE')
+	if( (objType == 'ELLIPSE') || (objType == "CIRCLE"))
 		normalizedVal -= 1;
 	else if(objType == 'RECTANGLE')
 		normalizedVal -= 2;
@@ -2478,7 +2478,7 @@ function GX_RemoveAnimInfoFromList(animID)
   	    objRef = objRef.substring(1,objRef.length); 				               	       
   	    var objNode = document.getElementById(objRef);  	    
  	    var objType = objNode.classList[1]; 
- 	    if(objType == "ELLIPSE")
+ 	    if( (objType == "ELLIPSE")|| (objType == "CIRCLE") ) 
  	    {
  	  	  objNode.setAttribute("cx", fromval[0]); 
  	      objNode.setAttribute("cy", fromval[1]);   	  
@@ -2642,7 +2642,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 var objType = objNode.classList[1]; 
 	 var origValueArr = animNode.getAttribute('to'); 
 	 origValueArr = origValueArr.split(',')
-	 if(objType == 'ELLIPSE')
+	 if( (objType == 'ELLIPSE') || (objType == "CIRCLE") )
 	 {
 		  objNode.setAttribute("cx", origValueArr[0]); 
 	      objNode.setAttribute("cy", origValueArr[1]);  
@@ -2848,7 +2848,12 @@ function GX_RemoveAnimInfoFromList(animID)
 			var endX, endY; 
 			var pathLen = 200; 
 			var objectType = gCurrentObjectSelected.classList[1]; 
-			if(objectType == 'ELLIPSE'){
+			if( (objectType == 'ELLIPSE') || (objectType == "CIRCLE") ){ 
+				var objDim =  GX_GetRectObjectDim(gCurrentObjectSelected);
+				startX = objDim.centerX; 
+				startY = objDim.centerY; 				
+			}
+			else if(objectType == 'CIRCLE'){
 				var objDim =  GX_GetRectObjectDim(gCurrentObjectSelected);
 				startX = objDim.centerX; 
 				startY = objDim.centerY; 				
