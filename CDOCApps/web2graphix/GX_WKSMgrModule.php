@@ -303,7 +303,7 @@ function GX_WKS_CreateSVGFile(&$respData)
 				               	    objRef = objRef.substring(1,objRef.length); 				               	       
 				               	    var objNode = document.getElementById(objRef); 
 				               	    var objType = objNode.classList[1]; 
-				               	    if(objType == "ELLIPSE")
+				               	    if( (objType == "ELLIPSE") || (objType == "CIRCLE") )
 				               	    {
 				               	  	  objNode.setAttribute("cx", fromval[0]); 
 				               	      objNode.setAttribute("cy", fromval[1]);   	  
