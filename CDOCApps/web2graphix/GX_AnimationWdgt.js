@@ -31,6 +31,10 @@ sAnimParams.prototype.center = '';
 //sAnimParams.prototype.containerRefID = '';
 sAnimParams.prototype.containerID = 0; //ID of the container if any '' if no g involved
 sAnimParams.prototype.refContainerID = 0;
+sAnimParams.prototype.autoReverse = false;
+sAnimParams.prototype.pace = 0; //0=uniform, 1=fastToslow 2=slowTofats
+sAnimParams.prototype.startPos = 0; 
+sAnimParams.prototype.endPos = 0; 
 
 function sAnimParams() {	
 	sAnimParams.prototype.animID = 0;
@@ -65,7 +69,10 @@ function sAnimParams() {
 	//sAnimParams.prototype.containerRefID = ''; //incase of group this ID will be different from the actual ID
 	sAnimParams.prototype.containerID = 0; //ID of the container if any '' if no g involved
 	sAnimParams.prototype.refContainerID = 0;  //ID of the refanimation if any ''
-	
+	sAnimParams.prototype.autoReverse = false;
+	sAnimParams.prototype.pace = 0; //0=uniform, 1=fastToslow 2=slowTofats
+	sAnimParams.prototype.startPos=0; 
+	sAnimParams.prototype.endPos=0; 	
 }
 
 var gAnimEndTimer = 400; 
@@ -95,6 +102,7 @@ gAttrList['Rotate'] = 'rotate';
 gAttrList['Horizontal Skew'] = 'skewX';
 gAttrList['Vertical Skew'] = 'skewY';
 gAttrList['Scale'] = 'scale';
+gAttrList['Move'] = 'move';
 
 
 
@@ -109,6 +117,7 @@ gReverseAttrList['rotate']         =  'Rotate' ;
 gReverseAttrList['skewX']          =  'Horizontal Skew';
 gReverseAttrList['skewY']          =  'Vertical Skew';     
 gReverseAttrList['scale']          =  'Scale'; 
+gReverseAttrList['move']           =  'Move'; 
 
 //var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
 var gPathTypeList = []; 
@@ -662,6 +671,11 @@ function GX_CopyAnimParam(srcParam, destParam){
 	destParam.endState = srcParam.endState;
 	destParam.center = srcParam.center;
 	destParam.title = srcParam.title;
+	
+	destParam.autoReverse = srcParam.autoReverse;
+	destParam.pace = srcParam.pace; //0=uniform, 1=fastToslow 2=slowTofats
+	destParam.startPos=srcParam.startPos; 
+	destParam.endPos=srcParam.endPos; 	
 }
 
 function GX_GetAnimParamsFromUI(inputParam)
@@ -909,7 +923,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 
  function GX_CreateAnimationWidget(wdgtID)
  {
-	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Scale'];
+	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Scale', 'Move'];
 	 	//create the new animation widget interface here 	 
 	 			WAL_createModelessWindow('newAnimationDlg', '220', '150', 'newAnimOK', 'newAnimCancel');
 	 			WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '') ; 			
@@ -1193,16 +1207,7 @@ function GX_UpdateAnimInfoInList(animNode)
 			var endval = animNode.getAttribute('fill');			
 			var titleval = GX_GetAnimTitle(animNode); 
 			var animInfo = [animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, beginParam.refAnimID, beginParam.refContainerID];
-			animNode.setAttribute('begin', ''); 
-			/*
-			animNode.endElement(); 
-			var dotpos =  beginval.indexOf('.');
-			//set begin value to empty only if no reference value 
-			if(dotpos == -1){
-				animNode.setAttribute('begin', ''); 
-			}
-			*/
-			
+			animNode.setAttribute('begin', ''); 			
 			animNode.setAttribute('fill', 'remove'); 			
 			//_rm first remove the existing entry and then add
 			GX_RemoveAnimInfoFromList(animNode.id); 
@@ -1222,6 +1227,19 @@ function GX_UpdateAnimInfoInList(animNode)
 				var animInfo = [animNode.id, motionAnimNode.targetElement.id, attr, beginval, endval, titleval, beginParams.refAnimID, beginParams.refContainerID];
 				visibleAnimNode.setAttribute('begin', '');
 				motionAnimNode.setAttribute('fill', 'remove'); 	
+				GX_RemoveAnimInfoFromList(animNode.id); 
+				gAnimList.push(animInfo);
+			}
+			else if(animType == 'ANIM_MOVE'){
+				attr = 'move';  
+				var moveXNode = animNode.childNodes[0]; 
+				var beginval = moveXNode.getAttribute('begin');	
+				var beginParams  = GX_GetAnimBeginParameters(beginval);	
+				var endval = moveXNode.getAttribute('fill');			
+				var titleval = animNode.classList[2]; 
+				var animInfo = [animNode.id, moveXNode.targetElement.id, attr, beginval, endval, titleval, beginParams.refAnimID, beginParams.refContainerID];
+				moveXNode.setAttribute('begin', '');
+				moveXNode.setAttribute('fill', 'remove'); 	
 				GX_RemoveAnimInfoFromList(animNode.id); 
 				gAnimList.push(animInfo);
 			}
@@ -1369,6 +1387,10 @@ function GX_RemoveAnimInfoFromList(animID)
 		 if(itemval == 'fill-opacity'){
 				JQSel = '#OPACITY_UI_GROUP'; 
 				$(JQSel)[0].style.display='inline-block';				 
+		 }
+		 if(itemval = 'move'){			 
+			JQSel = '#MOVE_GROUP'; 
+			$(JQSel)[0].style.display='inline-block';
 		 }
 		 
 	 }
@@ -1665,10 +1687,13 @@ function GX_RemoveAnimInfoFromList(animID)
 	 var attrArray = [];
 	 var attrData; 	 
 	 //common 
+	 var titleIndex; 
 	 
 	 var containerGroupID = 'ANIMATION_GROUP';  
 	 attrData = ['title',animParams.title];  
 	 attrArray.push(attrData);
+	 
+	 titleIndex = attrArray.length-1; 
 
 	 attrData = ['dur',animParams.duration+'s']; 
 	 attrArray.push(attrData);
@@ -1709,6 +1734,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 attrArray.push(attrData);
 	 attrData = ['begin',beginval];  
 	 attrArray.push(attrData);
+	 var beginIndex = attrArray.length-1; 
 	 
 	if(animParams.animType == 'ANIM_MOTION')
 	{
@@ -1809,6 +1835,45 @@ function GX_RemoveAnimInfoFromList(animID)
 		//<animateTransform id="ANIM_312" xlink:href='#SVG_933' dur="1s" calcMode="linear" restart="never" repeatCount="5" fill="remove" begin="ANIM_1852.begin" attributeType="XML" 
 		//attributeName="transform" type="rotate" from='0 0 -40' to='360 0 -40'  additive='sum'  />
 		return ; 
+	}
+	else if(animParams.animType == 'ANIM_MOVE'){
+		var classvalue = 'ANIM_MOVE ' + animParams.title + '  0;0' ; 
+		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue); 
+		containerGroupID = animParams.animID ; 
+		var myarrS = animParams.startPos.split(','); 
+	    var myarrE = animParams.endPos.split(',');
+	    var attributenameIndex, fromIndex, toIndex; 
+		if(animParams.objectType == 'RECTANGLE'){			
+			attrData = ['attributeName','x'];  
+		    attrArray.push(attrData);	
+		    attributenameIndex = attrArray.length -1; 
+		   }
+			attrData = ['from', myarrS[0]];  			
+			attrArray.push(attrData);		
+			fromIndex = attrArray.length -1; 
+			
+			attrData = ['to', myarrE[0]];  			
+			attrArray.push(attrData);
+			toIndex = attrArray.length-1; 
+			
+			attrData = ['title', 'MoveX']; 
+			attrArray[titleIndex] = attrData; 
+			var animstr = GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_X', containerGroupID, 'ANIM_ATTRIBUTE', attrArray);
+			
+			if(animParams.objectType == 'RECTANGLE'){			
+				attrData = ['attributeName','y'];  
+			    attrArray[attributenameIndex] = attrData;		    
+			   }
+			attrData = ['from', myarrS[1]];  			
+			attrArray[fromIndex] = attrData;			
+			attrData = ['to', myarrE[1]];  			
+			attrArray[toIndex] = attrData;		
+			attrData = ['title', 'MoveY']; 
+			attrArray[titleIndex] = attrData; 
+			attrData = ['begin', animParams.animID + '_MOVE_X.begin']; 
+			attrArray[beginIndex] = attrData; 
+			var animstr = GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_Y', containerGroupID, 'ANIM_ATTRIBUTE', attrArray);
+			return; 
 	}
 	else
 	{
@@ -2780,7 +2845,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		gInitAnimParam.title = animName; 
 	    gInitAnimParam.animID = GXRDE_GetUniqueID('ANIM_');  
 	    gInitAnimParam.objectID = gCurrentObjectSelected.id; 
-	     
+	    gInitAnimParam.objectType = gCurrentObjectSelected.classList[1];	   
 	    gInitAnimParam.duration = 2;
 	    gInitAnimParam.animType = ''; // animType; 
 	    gInitAnimParam.attribute = attrtype;
@@ -2878,13 +2943,29 @@ function GX_RemoveAnimInfoFromList(animID)
 	    	GX_ResetAllSelections();
 			GX_SetSelection(currObjNode, true, false); 			
 			//now add the motionpath anim object 
+		}//if(attrtype == 'pathmotion')
+		else if(attrtype == 'move'){
+			//object type is stored 
+			animType = 'ANIM_MOVE'; 
+			gInitAnimParam.autoReverse = false; 
+			gInitAnimParam.pace = 0; 
+			var startPoint =  new sPoint();
+			var endPoint = new sPoint(); 
+			if(gInitAnimParam.objectType == 'RECTANGLE'){
+				startPoint.x = new Number(gCurrentObjectSelected.getAttribute('x')); 
+				startPoint.y = new Number(gCurrentObjectSelected.getAttribute('y')); 				
+			}
+			gInitAnimParam.startPos = startPoint.x + ',' + startPoint.y; 
+			endPoint.x = startPoint.x + 200; 
+			endPoint.y = startPoint.y + 200; 
+			gInitAnimParam.endPos = endPoint.x + ',' + endPoint.y;
+			//animtype is move 
 		}
 		else{
 			Debug_Message('Other Anim attr not supported'); 
 			return ; 
 		}
-		gInitAnimParam.animType = animType; 	
-	     
+		gInitAnimParam.animType = animType; 		     
 	    GX_AddAnimationElement(gInitAnimParam, false); 
 	    var animNode = document.getElementById(gInitAnimParam.animID);
 	   // if(gInitAnimParam.animType == 'ANIM_MOTION')
