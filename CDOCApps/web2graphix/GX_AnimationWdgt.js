@@ -88,7 +88,7 @@ var gNewAnimObject =  false;
 var gLastPositionValue = 0; 
 var gDefaultRollingDuration = new Number(1); 
 //var attrList = ['fill', 'stroke', 'fill-opacity', 'visibility', 'stroke-width','translate', 'rotate', 'skewX','skewY'];
-
+var gMoveIndicatorPath = false; 
 
 //var attrList = ['Fill', 'Stroke', 'Opacity', 'Visibility', 'Stroke-Width', 'Move', 'Rotate', 'Horizontal Skew', 'Vertical Skew'];
 var gAttrList=[]; 
@@ -102,7 +102,9 @@ gAttrList['Rotate'] = 'rotate';
 gAttrList['Horizontal Skew'] = 'skewX';
 gAttrList['Vertical Skew'] = 'skewY';
 gAttrList['Scale'] = 'scale';
-gAttrList['Move'] = 'move';
+
+gAttrList['Move'] = 'translate';
+
 
 
 
@@ -117,7 +119,8 @@ gReverseAttrList['rotate']         =  'Rotate' ;
 gReverseAttrList['skewX']          =  'Horizontal Skew';
 gReverseAttrList['skewY']          =  'Vertical Skew';     
 gReverseAttrList['scale']          =  'Scale'; 
-gReverseAttrList['move']           =  'Move'; 
+gReverseAttrList['translate']      =  'Move'; 
+
 
 //var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
 var gPathTypeList = []; 
@@ -516,6 +519,43 @@ function GX_SetAnimParamOnUI(animParam) {
 		value -= 100.0; 
 		WAL_setNumberInputValue('startValueIP', value, false);	
 		break;		
+    case 'translate':
+		//get the currentobject selected 		
+		//get he center 
+		var objPos = GX_GetRectObjectDim(gCurrentObjectSelected); 
+		
+		//get the animParam end value 
+		var endValue = animParam.endValue; 
+		var indicatorPath = document.getElementById('indicatorpath'); 
+		gIndicatorPath = []; 
+		 
+        
+		var pathvalue = 'M' + objPos.centerX + ' ' + objPos.centerY + ' l' + endValue; 
+		indicatorPath.setAttribute('d', pathvalue); 
+		indicatorPath.setAttribute('visibility', 'visible');
+		
+		var endArr = animParam.endValue.split(' ');
+		var startArr = animParam.startValue.split(' ');
+		
+		var endX, endY;
+		endX = new Number(objPos.centerX); 
+		endY = new Number(objPos.centerY); 
+		endX += new Number(endArr[0]); 
+		endY += new Number(endArr[1]); 
+		var markerNode = document.getElementById('markerPoint'); 
+    	markerNode.setAttribute('cx', endX); 
+    	markerNode.setAttribute('cy', endY); 
+    	markerNode.setAttribute('visibility', 'visible');
+    	gMoveIndicatorPath =  true; 
+    	var currentPos = ["M", objPos.centerX, objPos.centerY, 'POINT'];
+        gIndicatorPath.push(currentPos);        
+        var currentPos = ["L", endX, endY, 'END_POINT'];
+        gIndicatorPath.push(currentPos);
+			//M50 130 L200 100 L300 150
+		//set the path value of the line properly
+		//make the line visible 
+		
+		break; 
 	default:
 		break; 			
 	}
@@ -741,6 +781,15 @@ function GX_GetAnimParamsFromUI(inputParam)
     	animParams.endValue += ' ' +animParams.center;
     	animParams.startValue += ' ' +animParams.center;
 		break; 		
+	case 'translate':
+		var markerNode = document.getElementById('markerPoint'); 
+    	var endX = new Number(markerNode.getAttribute('cx')); 
+    	var endY = new Number(markerNode.getAttribute('cy'));
+    	var startArr = animParams.center.split(' '); 
+    	var startX =new Number(startArr[0]);
+    	var startY =new Number(startArr[1]); 
+    	animParams.endValue = (endX - startX) + ' ' + (endY - startY);     	
+		break; 
 	case 'pathmotion':	
 		animParams.bPathVisible = WAL_getCheckBoxValue('pathvisibilityCB');
 		animParams.bRolling = WAL_getCheckBoxValue('rollingmotionCB');
@@ -975,6 +1024,10 @@ function GX_GetAnimParamsFromUI(inputParam)
                 WAL_setNumberInputValue('offsetFromPathY', 0, false);            
                  
                 WAL_createDropdownList('offsetParamDDL', '100', gInputHeight, false, gOffsetList, "", '100');
+				WAL_createCheckBox('autoReverseCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
+                var paceList = ['Uniform', 'SlowToFast','FastToSlow']; 
+                WAL_createDropdownList("paceValueDDL", '140', gInputHeight, false, paceList, "GX_PathModifyHandler", '100');
+                
                 
                 
                /* WAL_createDecimalNumberInput("startTimeIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 10.0,0.0,0.1);
@@ -1372,6 +1425,11 @@ function GX_RemoveAnimInfoFromList(animID)
 			 JQSel = '#FROM_UI_GROUP';
 			 $(JQSel)[0].style.display='inline-block';		
 			WAL_setNumberInputValue('startValueIP', 30, false);	
+		 }
+		 if(itemval == 'translate'){
+			 JQSel = '#MOVE_GROUP';
+			 $(JQSel)[0].style.display='inline-block';		
+			//WAL_setNumberInputValue('startValueIP', 30, false);	
 		 }
 		 
 		 if(itemval == 'stroke-width')
@@ -1903,13 +1961,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			 
 			 var startval = animParams.startValue;
 			 var endval = animParams.endValue; 
-			 if(animParams.attribute == 'rotate')
-			 {
-				 //startval = startval + ' ' + animParams.center; 
-				 //endval = endval + ' ' + animParams.center; 	
-				 startval = startval ; 
-				 endval = endval ; 	
-			 }		    
+			    
 			 attrData = ['from',startval];  
 			 attrArray.push(attrData); 
 			    
@@ -2075,6 +2127,13 @@ function GX_RemoveAnimInfoFromList(animID)
 		    	//value =  animParam.endValue; 
 		    	valarr  = animParam.endValue.split(" ");		    		
 		    	animParam.endValue = valarr[0]; 		    	
+			}
+			else if(animParam.attribute == 'translate'){				
+				animParam.startValue = animNode.getAttribute('from'); 
+				animParam.endValue = animNode.getAttribute('to');	
+				var objNode =  document.getElementById(animParam.objectID);
+				var objPos = GX_GetRectObjectDim(objNode); 
+				animParam.center = objPos.centerX + ' ' + objPos.centerY; 
 			}
 		}
 			
@@ -2795,7 +2854,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			return ;				
 		
 		gCurrAnimParam = GX_GetAnimParamFromNode(animNode); 
-		GX_SetAnimParamOnUI(gCurrAnimParam); 		
+		//GX_SetAnimParamOnUI(gCurrAnimParam); 		
 		if(gCurrAnimParam.animType == 'ANIM_MOTION'){			
 			var refPathNode = document.getElementById(gCurrAnimParam.refPathID); 
 			GX_SetSelection(refPathNode, true, true);
@@ -2807,14 +2866,11 @@ function GX_RemoveAnimInfoFromList(animID)
 		//animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval]; 
 		else if(gCurrentAnimInfo[2] == 'rotate'){
 			//var objNode = document.getElementById(gCurrentAnimInfo[3]);
-			GX_SetSelection(animNode.targetElement, true, false);
-			//objNode
-			//GX_UpdateMarkers(gCurrGrabber, true, true); 
+			GX_SetSelection(animNode.targetElement, true, false);		
 		}
 		else
-			GX_SetSelection(animNode.targetElement, true, false);
-		
-		
+			GX_SetSelection(animNode.targetElement, true, false);		
+		GX_SetAnimParamOnUI(gCurrAnimParam); 	
  }
  
  function GX_NewAnimDlgOK(){
@@ -2894,6 +2950,17 @@ function GX_RemoveAnimInfoFromList(animID)
 			gInitAnimParam.center = centreX + ' ' + centreY;	
 		    gInitAnimParam.startValue = '0' + ' ' + gInitAnimParam.center ;
 		 	gInitAnimParam.endValue = '90'  + ' ' + gInitAnimParam.center ;			 	
+		}
+		else if(attrtype == 'translate'){
+			animType = 'ANIM_TRANSFORM';
+			var rectdim = GX_GetRectObjectDim(gCurrentObjectSelected);
+			var startX = 0;//new Number(rectdim.x + rectdim.width/2); 
+			var startY = 0;//new Number(rectdim.y + rectdim.height/2);
+			var endX = startX +  200; 
+			var endY = startY +  200; 
+			//gInitAnimParam.center = centreX + ' ' + centreY;	
+		    gInitAnimParam.startValue = startX + ' ' + startY ;
+		 	gInitAnimParam.endValue = endX + ' ' + endY ;			 	
 		}
 		else if(attrtype == 'scale'){
 			animType = 'ANIM_TRANSFORM';
