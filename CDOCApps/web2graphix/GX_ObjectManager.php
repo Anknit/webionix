@@ -62,6 +62,11 @@ function GX_OBJ_ProcessRequest($reqid, &$respdata )
 		$retval = GX_UpdateGroupName($respdata);
 		return $retval;
 	}
+	else if($reqid == '314')
+	{
+		$retval = GX_OBJ_RemoveSVGAttribute($respdata);
+		return $retval;
+	}	
 }
 	
 /*
@@ -636,6 +641,25 @@ function GX_OBJ_UpdateSVGAnimation(&$respData)
 	else
 		$respData = 'FAILS'; 
 	
+	return true; 
+}
+//
+function GX_OBJ_RemoveSVGAttribute(&$respData)
+{
+	//$elemID, $type, $class, $parentID
+	parse_str($respData);
+	//DEPENDING ON OBJECT TYPE CALL THE APPROPRIATE FUNCTION
+	$elemIDVal   = strtoupper($ELEMENTID);	
+	$attrName     = $ATTRNAME;
+
+	$SVGDom = $_SESSION['svg_xml_dom'];
+	$SVGFileName = $_SESSION['svg_xml_FileName'];		
+	//then get the XML string and pass it back to the client
+	$retval = GX_COMMON_RemoveSVGAttributes($SVGDom, $SVGFileName, $elemIDVal, $attrName);
+	if($retval == true)
+		$respData = 'OK';
+	else
+		$respData = 'FAILS'; 	
 	return true; 
 }
 
