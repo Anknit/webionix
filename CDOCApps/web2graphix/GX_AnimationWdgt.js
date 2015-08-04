@@ -531,13 +531,13 @@ function GX_SetAnimParamOnUI(animParam) {
 		
 		//get the animParam end value 
 		var endValue = animParam.endValue; 
-		var indicatorPath = document.getElementById('indicatorpath'); 
+		//var indicatorPath = document.getElementById('indicatorpath'); 
 		gIndicatorPath = []; 
 		 
         
 		var pathvalue = 'M' + objPos.centerX + ' ' + objPos.centerY + ' l' + endValue; 
-		indicatorPath.setAttribute('d', pathvalue); 
-		indicatorPath.setAttribute('visibility', 'visible');
+		gIndicatorPathNode.setAttribute('d', pathvalue); 
+		gIndicatorPathNode.setAttribute('visibility', 'visible');
 		
 		var endArr = animParam.endValue.split(' ');
 		var startArr = animParam.startValue.split(' ');
@@ -2510,10 +2510,29 @@ function GX_RemoveAnimInfoFromList(animID)
 			 }
 		 }
 	 }
-	 attrData = ['from',startval];  
-	 attrArray.push(attrData); 			    
-	 attrData = ['to',endval];  
-	 attrArray.push(attrData);
+	 if(AnimParam2.startValue != AnimParam1.startValue){
+		 attrData = ['from',startval];  
+		 attrArray.push(attrData); 
+	 }
+	 if(AnimParam2.endValue != AnimParam1.endValue){
+		 attrData = ['to',endval];  
+		 attrArray.push(attrData);
+		 if(AnimParam2.attribute == 'translate'){
+			 
+			 if(AnimParam2.autoReverse == false){
+					 //remove the attribute
+				 GXRDE_removeAttribute(AnimParam2.animID, 'values'); 
+				 var animNode =  document.getElementById(AnimParam2.animID); 
+				 animNode.removeAttribute('values'); 				 
+			 }
+			 else{
+				 attrData = ['values',startval+ ';'+endval+';'+startval];  
+				 attrArray.push(attrData); 	
+			 }
+			 
+		 }
+	 }	    
+	 
 	 return attrArray; 
 	
  }
