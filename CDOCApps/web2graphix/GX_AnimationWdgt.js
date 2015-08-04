@@ -35,6 +35,8 @@ sAnimParams.prototype.autoReverse = false;
 sAnimParams.prototype.pace = 0; //0=uniform, 1=fastToslow 2=slowTofats
 sAnimParams.prototype.startPos = 0; 
 sAnimParams.prototype.endPos = 0; 
+sAnimParams.prototype.values=0; 
+sAnimParams.prototype.keytimes=0; 
 
 function sAnimParams() {	
 	sAnimParams.prototype.animID = 0;
@@ -58,7 +60,7 @@ function sAnimParams() {
 	sAnimParams.prototype.startTime=0; 
 	sAnimParams.prototype.UIEventType = 'M_CLICK'; //M_CLICK, M_MOVE 
 	sAnimParams.prototype.UIObjectID = ''; 
-	sAnimParams.prototype.AnimEventType='end' ;//BEGIN, END
+	sAnimParams.prototype.AnimEventType='end';//BEGIN, END
 	sAnimParams.prototype.refAnimID='' ;
 	sAnimParams.prototype.calcMode='linear'; 
 	sAnimParams.prototype.restart = 'never';
@@ -72,7 +74,9 @@ function sAnimParams() {
 	sAnimParams.prototype.autoReverse = false;
 	sAnimParams.prototype.pace = 0; //0=uniform, 1=fastToslow 2=slowTofats
 	sAnimParams.prototype.startPos=0; 
-	sAnimParams.prototype.endPos=0; 	
+	sAnimParams.prototype.endPos=0; 
+	sAnimParams.prototype.values=0; 
+	sAnimParams.prototype.keytimes=0; 
 }
 
 var gAnimEndTimer = 400; 
@@ -521,7 +525,8 @@ function GX_SetAnimParamOnUI(animParam) {
 		break;		
     case 'translate':
 		//get the currentobject selected 		
-		//get he center 
+		//get he center    
+    	WAL_setCheckBoxValue('autoReverseCB', animParam.autoReverse );
 		var objPos = GX_GetRectObjectDim(gCurrentObjectSelected); 
 		
 		//get the animParam end value 
@@ -788,9 +793,12 @@ function GX_GetAnimParamsFromUI(inputParam)
     	var startArr = animParams.center.split(' '); 
     	var startX =new Number(startArr[0]);
     	var startY =new Number(startArr[1]); 
-    	animParams.endValue = (endX - startX) + ' ' + (endY - startY);     	
+    	animParams.endValue = (endX - startX) + ' ' + (endY - startY);  
+    	var prevautoRev = animParams.autoReverse; 
+    	animParams.autoReverse = WAL_getCheckBoxValue('autoReverseCB');
+    	
 		break; 
-	case 'pathmotion':	
+	case 'pathmotion':	     
 		animParams.bPathVisible = WAL_getCheckBoxValue('pathvisibilityCB');
 		animParams.bRolling = WAL_getCheckBoxValue('rollingmotionCB');
 		var refPathID = animParams.refPathID;
@@ -2134,6 +2142,18 @@ function GX_RemoveAnimInfoFromList(animID)
 				var objNode =  document.getElementById(animParam.objectID);
 				var objPos = GX_GetRectObjectDim(objNode); 
 				animParam.center = objPos.centerX + ' ' + objPos.centerY; 
+				
+				var valueArr = animNode.getAttribute('values');
+				if(valueArr){
+					valueArr = valueArr.split(';'); 
+					if(valueArr[0] == valueArr[valueArr.length-1])
+						animParam.autoReverse = true; 
+					else
+						animParam.autoReverse = false; 
+				}//if( (valueArr)
+				else{
+					animParam.autoReverse = false; 
+				}	
 			}
 		}
 			
@@ -2476,6 +2496,20 @@ function GX_RemoveAnimInfoFromList(animID)
 		 startval = startval + ' ' + AnimParam2.center; 	
 		 endval = endval + ' ' + AnimParam2.center; 
 	 }		    
+	 if(AnimParam2.attribute == 'translate'){
+		 if(AnimParam2.autoReverse != AnimParam1.autoReverse){
+			 if(AnimParam2.autoReverse == false){
+				 //remove the attribute
+				 GXRDE_removeAttribute(AnimParam2.animID, 'values'); 
+				 var animNode =  document.getElementById(AnimParam2.animID); 
+				 animNode.removeAttribute('values'); 				 
+			 }
+			 else{
+				 attrData = ['values',startval+ ';'+endval+';'+startval];  
+				 attrArray.push(attrData); 	
+			 }
+		 }
+	 }
 	 attrData = ['from',startval];  
 	 attrArray.push(attrData); 			    
 	 attrData = ['to',endval];  
