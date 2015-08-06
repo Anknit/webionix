@@ -1066,7 +1066,7 @@ function GX_InitializeDocument(svgFileName)
 	 GX_MenuDisable(false);
 //	WAL_setCheckBoxValue('snaptogrid', false); 
 	GX_showEditorInterface('OBJECT_MODE'); 
-	
+	gIndicatorPathNode = document.getElementById('indicatorpath'); 
 	// reset all variables to default state 
 }
 
@@ -1741,7 +1741,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     		GX_RestoreAnimationObject(gCurrAnimNode.id);  
     		gCurrAnimNode=0;
     	}
-      
+    	gIndicatorPathNode.setAttribute('visibility', 'hidden'); 
     	 var TTSel ='#' +  gSelectorTooltipID; 
     	 //$(TTSel).jqxTooltip({content: ttText, theme: gTheme, position:'absolute', showArrow:true,  absolutePositionX:graberOffset.left, absolutePositionY:graberOffset.top, showDelay:gShowDelay});
     	 //$(TTSel).jqxTooltip('close');//open(); 
@@ -1977,7 +1977,7 @@ function GX_ResetAllSelections()
 		gIndicatorPath = []; 
 		var pathNode = document.getElementById('indicatorpath'); 
 		pathNode.setAttribute('d', ''); 		
-		  bMarkerMove = false;  
+		bMarkerMove = false;  
 		GX_SetMarkerNodeSelection(gCurrentMarkerNode, false);   
 	}
 	
@@ -5136,8 +5136,7 @@ function OnPathMarkerMouseMove(evt) {
         var num = new Number(newcY);
         num += relY;
         markerNode.setAttribute("cy", num);
-        newcY = num;            
-        
+        newcY = num;              
         
         //_rm is this the cause of unpredicatble mousedown event  ?? 
         if(gMouseMoveCounter >= 10)
@@ -7239,8 +7238,7 @@ function GX_HandlerForGradSliderChange(value){
 function OnPointerMarkerMouseMove(evt)
 {
 	  var markerNode = evt.target;	
-	  gsvgRootNode.setAttribute("cursor", 'pointer');  
-	   
+	  gsvgRootNode.setAttribute("cursor", 'pointer');  	   
 	  if(bPointerMove != true)
 		  return ; 	  
 	  markerNode.setAttribute('r', '10');
@@ -7257,6 +7255,13 @@ function OnPointerMarkerMouseMove(evt)
       newObjDim.width = 10; 
       newObjDim.height = 10;  
       GX_UpdateMarkers(newObjDim, true, true);
+      if(gMoveIndicatorPath == true){
+    	  gIndicatorPath[1][1] = newObjDim.x;
+          gIndicatorPath[1][2] = newObjDim.y;
+          gIndicatorPath[1][3] = 'POINT'; 
+      	GX_ConvertArrayToPathData('indicatorpath', gIndicatorPath);
+    	  
+      }
 }
  
 function OnPointerMarkerMouseDown(evt)
@@ -7269,6 +7274,7 @@ function OnPointerMarkerMouseDown(evt)
 	gsvgRootNode.setAttribute("cursor", 'pointer');
 	if(bPointerMove == false){
 		bPointerMove = true; 
+		gMoveIndicatorPath =  true; 
 		gOrigMousePosX = ClientX;
         gOrigMousePosY = ClientY;
         var x = markerNode.getAttribute('cx');
@@ -7279,6 +7285,7 @@ function OnPointerMarkerMouseDown(evt)
 	else{
 		bPointerMove= false; 
 		markerNode.setAttribute('r', '6'); 
+		gMoveIndicatorPath = false; 
 	}
 		
 }
