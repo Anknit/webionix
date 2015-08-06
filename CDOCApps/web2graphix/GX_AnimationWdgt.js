@@ -72,7 +72,7 @@ function sAnimParams() {
 	sAnimParams.prototype.containerID = 0; //ID of the container if any '' if no g involved
 	sAnimParams.prototype.refContainerID = 0;  //ID of the refanimation if any ''
 	sAnimParams.prototype.autoReverse = false;
-	sAnimParams.prototype.pace = 0; //0=uniform, 1=fastToslow 2=slowTofats
+	sAnimParams.prototype.pace = 0; //0=uniform, 1=accelerate 
 	sAnimParams.prototype.startPos=0; 
 	sAnimParams.prototype.endPos=0; 
 	sAnimParams.prototype.values=0; 
@@ -156,6 +156,8 @@ gReverseOffsetList['Top'] = 0;
 gReverseOffsetList['Center'] = 1;
 gReverseOffsetList['Bottom'] = 2;
 
+var gMaxKeytimesInterval = new Number(10); 
+var gKeytimesValues ='0;.1;.2;.3;.4;.5;.6;.7;.8;.9;1'; 
 
 sBeginParams.prototype.refAnimID = 0;
 sBeginParams.prototype.AnimEvent = 0;
@@ -528,13 +530,14 @@ function GX_SetAnimParamOnUI(animParam) {
 		//get he center    
     	WAL_setCheckBoxValue('autoReverseCB', animParam.autoReverse );
 		var objPos = GX_GetRectObjectDim(gCurrentObjectSelected); 
-		
+		if(animParam.pace == 0)
+			WAL_SetItemByValueInList('paceValueDDL', 'Uniform', false);
+		else
+			WAL_SetItemByValueInList('paceValueDDL', 'Accelerate', false);		
 		//get the animParam end value 
 		var endValue = animParam.endValue; 
 		//var indicatorPath = document.getElementById('indicatorpath'); 
-		gIndicatorPath = []; 
-		 
-        
+		gIndicatorPath = [];         
 		var pathvalue = 'M' + objPos.centerX + ' ' + objPos.centerY + ' l' + endValue; 
 		gIndicatorPathNode.setAttribute('d', pathvalue); 
 		gIndicatorPathNode.setAttribute('visibility', 'visible');
@@ -796,7 +799,11 @@ function GX_GetAnimParamsFromUI(inputParam)
     	animParams.endValue = (endX - startX) + ' ' + (endY - startY);  
     	var prevautoRev = animParams.autoReverse; 
     	animParams.autoReverse = WAL_getCheckBoxValue('autoReverseCB');
-    	
+    	var value = WAL_getDropdownListSelection('paceValueDDL'); 
+    	if(value == 'Uniform')
+    		animParams.pace = 0; 
+    	else
+    		animParams.pace = 1;     	
 		break; 
 	case 'pathmotion':	     
 		animParams.bPathVisible = WAL_getCheckBoxValue('pathvisibilityCB');
@@ -1033,7 +1040,7 @@ function GX_GetAnimParamsFromUI(inputParam)
                  
                 WAL_createDropdownList('offsetParamDDL', '100', gInputHeight, false, gOffsetList, "", '100');
 				WAL_createCheckBox('autoReverseCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
-                var paceList = ['Uniform', 'SlowToFast','FastToSlow']; 
+                var paceList = ['Uniform', 'Accelerate']; 
                 WAL_createDropdownList("paceValueDDL", '140', gInputHeight, false, paceList, "GX_PathModifyHandler", '100');
                 
                 
@@ -1974,7 +1981,15 @@ function GX_RemoveAnimInfoFromList(animID)
 			 attrArray.push(attrData); 
 			    
 			 attrData = ['to',endval];  
-			 attrArray.push(attrData); 	  		 
+			 attrArray.push(attrData); 	  	
+			 
+			 if(animParams.attribute == 'translate'){
+				 attrData = ['values',startval + ';' + endval];  
+				 attrArray.push(attrData);
+				 
+				 attrData = ['keyTimes','0;1'];  
+				 attrArray.push(attrData);
+			 }
 		 }
 	}	 		 
 	//delete the existing node first 
@@ -2143,17 +2158,9 @@ function GX_RemoveAnimInfoFromList(animID)
 				var objPos = GX_GetRectObjectDim(objNode); 
 				animParam.center = objPos.centerX + ' ' + objPos.centerY; 
 				
-				var valueArr = animNode.getAttribute('values');
-				if(valueArr){
-					valueArr = valueArr.split(';'); 
-					if(valueArr[0] == valueArr[valueArr.length-1])
-						animParam.autoReverse = true; 
-					else
-						animParam.autoReverse = false; 
-				}//if( (valueArr)
-				else{
-					animParam.autoReverse = false; 
-				}	
+				animParam.pace = 0; 
+				var valuestr = animNode.getAttribute('values');
+				GX_GetTranslateAnimParamValues(valuestr, animParam); 			
 			}
 		}
 			
@@ -2497,18 +2504,14 @@ function GX_RemoveAnimInfoFromList(animID)
 		 endval = endval + ' ' + AnimParam2.center; 
 	 }		    
 	 if(AnimParam2.attribute == 'translate'){
-		 if(AnimParam2.autoReverse != AnimParam1.autoReverse){
-			 if(AnimParam2.autoReverse == false){
-				 //remove the attribute
-				 GXRDE_removeAttribute(AnimParam2.animID, 'values'); 
-				 var animNode =  document.getElementById(AnimParam2.animID); 
-				 animNode.removeAttribute('values'); 				 
-			 }
-			 else{
-				 attrData = ['values',startval+ ';'+endval+';'+startval];  
-				 attrArray.push(attrData); 	
-			 }
-		 }
+		 if( (AnimParam2.autoReverse != AnimParam1.autoReverse) || (AnimParam2.pace != AnimParam1.pace) || (AnimParam2.endValue != AnimParam1.endValue)
+				|| (AnimParam2.duration != AnimParam1.duration) ){
+			 var keyValArr = GX_GetAcceleratedValues(AnimParam2.endValue, AnimParam2.duration, AnimParam2.pace, AnimParam2.autoReverse);			 
+			 attrData = ['values',keyValArr[0]];  
+			 attrArray.push(attrData); 					 
+			 attrData = ['keyTimes', keyValArr[1]]; 
+			 attrArray.push(attrData);
+		 }		 
 	 }
 	 if(AnimParam2.startValue != AnimParam1.startValue){
 		 attrData = ['from',startval];  
@@ -2516,21 +2519,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 }
 	 if(AnimParam2.endValue != AnimParam1.endValue){
 		 attrData = ['to',endval];  
-		 attrArray.push(attrData);
-		 if(AnimParam2.attribute == 'translate'){
-			 
-			 if(AnimParam2.autoReverse == false){
-					 //remove the attribute
-				 GXRDE_removeAttribute(AnimParam2.animID, 'values'); 
-				 var animNode =  document.getElementById(AnimParam2.animID); 
-				 animNode.removeAttribute('values'); 				 
-			 }
-			 else{
-				 attrData = ['values',startval+ ';'+endval+';'+startval];  
-				 attrArray.push(attrData); 	
-			 }
-			 
-		 }
+		 attrArray.push(attrData);		
 	 }	    
 	 
 	 return attrArray; 
@@ -3454,3 +3443,141 @@ function GX_GetAnimBeginParameters(beginValue){
 		
 	return beginParam; 
 }
+
+
+function GX_GetAcceleratedValues(distance, duration,bPace, bAutoRev){
+	var distArr='';	
+	var keyValues ='';
+	var keyValueArr =[]; 
+	var distX, distY; 
+	var arr = distance.split(' '); 
+	distX = arr[0];
+	distY = arr[1]; 
+	var maxInterval = gMaxKeytimesInterval; 
+	var firstHalfKeyIntervals, secondHalfKeyIntervals; 	
+	if(bPace == false) {
+		if(bAutoRev == false){
+			distArr += '0 0;' + distX + ' ' + distY; 
+			keyValues += '0;1'; 
+			keyValueArr.push(distArr); 
+			keyValueArr.push(keyValues); 
+			return keyValueArr; 
+		}
+		else{
+			distArr += '0 0;' + distX + ' ' + distY + ';0 0'; 
+			keyValues += '0;.5;1'; 
+			keyValueArr.push(distArr); 
+			keyValueArr.push(keyValues); 
+			return keyValueArr;
+			
+		}
+			
+	}
+	with(Math){	
+		if(bAutoRev == true){
+			firstHalfKeyIntervals  = gMaxKeytimesInterval/2; 
+			secondHalfKeyIntervals = firstHalfKeyIntervals; 
+		}
+		else
+			firstHalfKeyIntervals = gMaxKeytimesInterval ; 
+		
+		var Sx = new Number(distX);
+		var Sy =  new Number(distY); 
+		var T = new Number(duration); 
+		var interval =  duration / firstHalfKeyIntervals;
+		var time=0; 
+		var accX = (2*Sx)/(T*T); 
+		var accY = (2*Sy)/(T*T); 
+		var X, Y; 
+		for(var j=0; j < firstHalfKeyIntervals+1; j++){
+			X = round(0.5*accX*time*time); 
+			Y = round(0.5*accY*time*time); 
+			distArr += X + ' ' + Y ; 
+			time += interval ; 
+			if(j < firstHalfKeyIntervals)
+				distArr += ';'; 
+		}
+		if(bAutoRev == true){
+			var valArr = distArr.split(';'); 
+			distArr += ';'; 
+			for(var j=valArr.length-2; j >= 0; j--){
+				distArr += valArr[j]  ; 
+				if(j > 0)
+					distArr += ';'; 	
+			}
+		}
+		keyValues += '0;.1;.2;.3;.4;.5;.6;.7;.8;.9;1'; 
+	}	
+	keyValueArr.push(distArr); 
+	keyValueArr.push(keyValues); 
+	return keyValueArr;	
+}
+
+function GX_GetTranslateAnimParamValues(valueStr, animParams){
+	
+	var valueArray = valueStr.split(';'); 
+	if(valueArray.length < 1)
+		return 0; 
+	if(valueArray.length == 2){
+		//uniform + noAutoReverse
+		animParams.pace = 0; 
+		animParams.autoReverse =  false;
+		animParams.startValue = valueArray[0]; 
+		animParams.endValue = valueArray[valueArray.length-1];
+		return ; 
+	}
+	if(valueArray.length == 3){
+		//uniform + autoReverse
+		animParams.pace = 0; 
+		animParams.autoReverse =  true;
+		animParams.startValue = valueArray[0]; 
+		animParams.endValue = valueArray[valueArray.length-2];
+		return ;
+	}
+	if(valueArray.length > 3){
+		//uniform + autoReverse
+		animParams.pace = 1; 
+		animParams.startValue = valueArray[0]; 
+		if(valueArray[0] == valueArray[valueArray.length-1]){
+			animParams.autoReverse =  true;
+			var midIndex = (valueArray.length-1)/2; 
+			animParams.endValue = valueArray[midIndex];
+			return ; 
+		}
+		else{
+			animParams.autoReverse =  false;			
+			animParams.endValue = valueArray[valueArray.length-1];
+			return ; 
+		}	
+	}	
+}
+
+ /*
+function GX_GetAcceleratedValues(distance, duration){
+	var distArr='';	
+	var distX, distY; 
+	var arr = distance.split(' '); 
+	distX = arr[0];
+	distY = arr[1]; 
+	with(Math){		
+		var Sx = new Number(distX);
+		var Sy =  new Number(distY); 
+		var T = new Number(duration); 
+		var interval =  duration / gMaxKeytimesInterval;
+		var time=0; 
+		var accX = (2*Sx)/(T*T); 
+		var accY = (2*Sy)/(T*T); 
+		var X, Y; 
+		for(var j=0; j < gMaxKeytimesInterval+1; j++){
+			X = round(0.5*accX*time*time); 
+			Y = round(0.5*accY*time*time); 
+			distArr += X + ' ' + Y ; 
+			time += interval ; 
+			if(j < gMaxKeytimesInterval)
+				distArr += ';'; 
+		}
+	}	
+	return distArr; 
+}
+*/
+
