@@ -213,3 +213,11 @@ function GXRDE_updateSVGObject(objID, attrArray)
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "305", reqbody);	
 	return respstring; 
 }
+
+function GXRDE_removeAttribute(elemtID, attrname){
+	
+	
+	var reqbody = '&ELEMENTID=' + elemtID + '&ATTRNAME='+attrname; 
+	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "314", reqbody);	
+	return respstring; 	
+}
