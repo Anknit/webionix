@@ -162,6 +162,29 @@ function GX_COMMON_UpdateSVGAttributes($SVGDom, $SVGFilename, $elemID, $attrArr)
 	return $retval;
 
 }
+function GX_COMMON_RemoveSVGAttributes($SVGDom, $SVGFilename, $elemID, $attrName)
+{
+	//libxml_use_internal_errors(true);
+	//libxml_clear_errors();
+
+	$retVal = $SVGDom->load($SVGFilename);
+	if($retVal != true)
+		return 0;
+	if (!$SVGDom->validate()) {
+		return false;
+	}
+
+	libxml_clear_errors();
+	$element = 0;
+	$element = $SVGDom->getElementById($elemID);
+	if(!$element)
+		return 0;
+
+	$element->removeAttribute($attrName);
+	$retval = $SVGDom->save($SVGFilename);
+	return true;
+
+}
 
 
 function GX_COMMON_MoveXMLElementUp($XMLDOM, $XMLFile, $elemID)
