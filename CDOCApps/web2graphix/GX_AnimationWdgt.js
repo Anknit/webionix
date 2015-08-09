@@ -477,12 +477,13 @@ function GX_SetAnimParamOnUI(animParam) {
 	switch(animParam.attribute)
 	{	
 	case 'rotate':		   	
-    	//var valarr  = animParam.endValue.split(" "); 
-    	//var finalVal = valarr[0]; 
-		WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);			
+    	
+		WAL_setCheckBoxValue('autoRotateReverseCB', animParam.autoReverse );
+		WAL_setNumberInputValue('endRotationValueIP', animParam.endValue, false);
+		WAL_setNumberInputValue('initRotationValueIP', animParam.startValue, false);
 		var objNode = document.getElementById(gCurrentAnimInfo[1]);
 		//extract the center coordinates 
-		var valArr = animParam.center.split(' '); 
+		var valArr = animParam.center.split(','); 
 		
 		//then set a grabber to this corodiantes
 		var myDim = new sDimension(); 
@@ -777,17 +778,19 @@ function GX_GetAnimParamsFromUI(inputParam)
 	
 	switch(animParams.attribute)
 	{	
-	case 'rotate':		endAngleValueIP
-		var value =  WAL_getMaskedInputValue('endAngleValueIP'); 
-    	var valarr  = animParams.endValue.split(" "); 
-    	animParams.endValue = value;    	
+	case 'rotate':		
+		var value =  WAL_getMaskedInputValue('endRotationValueIP'); 
+    	animParams.endValue = value;      	
+    	value =  WAL_getMaskedInputValue('initRotationValueIP'); 
+    	animParams.startValue = value;     	
+    	animParams.autoReverse = WAL_getCheckBoxValue('autoRotateReverseCB');
     	//get the center value 
     	var markerNode = document.getElementById('markerPoint'); 
     	var x = markerNode.getAttribute('cx'); 
     	var y = markerNode.getAttribute('cy'); 
-    	animParams.center = x + ' ' + y; 
-    	animParams.endValue += ' ' +animParams.center;
-    	animParams.startValue += ' ' +animParams.center;
+    	animParams.center = x + ',' + y; 
+    	//animParams.endValue += ' ' +animParams.center;
+    	//animParams.startValue += ' ' +animParams.center;
 		break; 		
 	case 'translate':
 		var markerNode = document.getElementById('markerPoint'); 
@@ -1043,6 +1046,12 @@ function GX_GetAnimParamsFromUI(inputParam)
                 var paceList = ['Uniform', 'Accelerate']; 
                 WAL_createDropdownList("paceValueDDL", '140', gInputHeight, false, paceList, "GX_PathModifyHandler", '100');
                 
+                //rotation UI 
+                WAL_createCheckBox('autoRotateReverseCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
+                WAL_createNumberInput("initRotationValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, -360, 1);
+                WAL_setNumberInputValue('initRotationValueIP', 0, false);
+                WAL_createNumberInput("endRotationValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, -360, 1);
+                WAL_setNumberInputValue('endRotationValueIP', 90, false);          
                 
                 
                /* WAL_createDecimalNumberInput("startTimeIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 10.0,0.0,0.1);
@@ -1430,11 +1439,15 @@ function GX_RemoveAnimInfoFromList(animID)
 			
 		 }
 		
-		 if( (itemval == 'rotate') || (itemval == 'skewX')||(itemval == 'skewY') )
+		 if( (itemval == 'skewX')||(itemval == 'skewY') )
 		 {			 
 			 JQSel = '#ANGLE_UI_GROUP';
 			 $(JQSel)[0].style.display='inline-block';//.show();			
 			WAL_setNumberInputValue('endAngleValueIP', 30, false);	
+		 }
+		 if(itemval == 'rotate'){
+			 JQSel = '#ROTATE_UI_GROUP';
+			 $(JQSel)[0].style.display='inline-block';//.show();
 		 }
 		 if(itemval == 'scale'){
 			 JQSel = '#FROM_UI_GROUP';
@@ -1461,10 +1474,7 @@ function GX_RemoveAnimInfoFromList(animID)
 				JQSel = '#OPACITY_UI_GROUP'; 
 				$(JQSel)[0].style.display='inline-block';				 
 		 }
-		 if(itemval = 'move'){			 
-			JQSel = '#MOVE_GROUP'; 
-			$(JQSel)[0].style.display='inline-block';
-		 }
+		 
 		 
 	 }
 	 else if(nodeid == 'startParamDDL'){
@@ -1975,15 +1985,8 @@ function GX_RemoveAnimInfoFromList(animID)
 			 attrArray.push(attrData);
 			 
 			 var startval = animParams.startValue;
-			 var endval = animParams.endValue; 
-			    
-			 attrData = ['from',startval];  
-			 attrArray.push(attrData); 
-			    
-			 attrData = ['to',endval];  
-			 attrArray.push(attrData); 	  	
-			 
-			 if(animParams.attribute == 'translate'){
+			 var endval = animParams.endValue;			 
+			 if((animParams.attribute == 'rotate') || (animParams.attribute == 'translate')){
 				 attrData = ['values',startval + ';' + endval];  
 				 attrArray.push(attrData);
 				 
@@ -2144,12 +2147,8 @@ function GX_RemoveAnimInfoFromList(animID)
 			animParam.attribute = animNode.getAttribute('type');
 			if(animParam.attribute == 'rotate'){
 				//var value =  animParam.startValue; 
-		    	var valarr  = animParam.startValue.split(" "); 
-		    	animParam.center = valarr[1] + ' ' + valarr[2];	
-		    	animParam.startValue = valarr[0];		    	
-		    	//value =  animParam.endValue; 
-		    	valarr  = animParam.endValue.split(" ");		    		
-		    	animParam.endValue = valarr[0]; 		    	
+				var valuestr = animNode.getAttribute('values');
+				GX_GetRotationAnimParamValues(valuestr, animParam);     	
 			}
 			else if(animParam.attribute == 'translate'){				
 				animParam.startValue = animNode.getAttribute('from'); 
@@ -2502,6 +2501,19 @@ function GX_RemoveAnimInfoFromList(animID)
 	 {
 		 startval = startval + ' ' + AnimParam2.center; 	
 		 endval = endval + ' ' + AnimParam2.center; 
+		 if((AnimParam2.startValue != AnimParam1.startValue) || (AnimParam2.endValue != AnimParam1.endValue) || (AnimParam2.autoReverse != AnimParam1.autoReverse)
+				|| (AnimParam2.center != AnimParam1.center) ){
+			 var newval  = AnimParam2.startValue + ' ' + AnimParam2.center + ';' + AnimParam2.endValue + ' ' + AnimParam2.center;
+			 var keytimeval = '0;1'; 
+			 if(AnimParam2.autoReverse == true){
+				 newval += ';' + AnimParam2.startValue + ' ' + AnimParam2.center; 
+				 keytimeval = '0;.5;1'; 
+			 }
+			 attrData = ['values',newval];  
+			 attrArray.push(attrData); 			 
+			 attrData = ['keyTimes',keytimeval];  
+			 attrArray.push(attrData); 
+		 }
 	 }		    
 	 if(AnimParam2.attribute == 'translate'){
 		 if( (AnimParam2.autoReverse != AnimParam1.autoReverse) || (AnimParam2.pace != AnimParam1.pace) || (AnimParam2.endValue != AnimParam1.endValue)
@@ -2989,7 +3001,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			var rectdim = GX_GetRectObjectDim(gCurrentObjectSelected);
 			var centreX = rectdim.x + rectdim.width/2; 
 			var centreY = rectdim.y + rectdim.height/2;
-			gInitAnimParam.center = centreX + ' ' + centreY;	
+			gInitAnimParam.center = centreX + ',' + centreY;	
 		    gInitAnimParam.startValue = '0' + ' ' + gInitAnimParam.center ;
 		 	gInitAnimParam.endValue = '90'  + ' ' + gInitAnimParam.center ;			 	
 		}
@@ -3552,32 +3564,27 @@ function GX_GetTranslateAnimParamValues(valueStr, animParams){
 	}	
 }
 
- /*
-function GX_GetAcceleratedValues(distance, duration){
-	var distArr='';	
-	var distX, distY; 
-	var arr = distance.split(' '); 
-	distX = arr[0];
-	distY = arr[1]; 
-	with(Math){		
-		var Sx = new Number(distX);
-		var Sy =  new Number(distY); 
-		var T = new Number(duration); 
-		var interval =  duration / gMaxKeytimesInterval;
-		var time=0; 
-		var accX = (2*Sx)/(T*T); 
-		var accY = (2*Sy)/(T*T); 
-		var X, Y; 
-		for(var j=0; j < gMaxKeytimesInterval+1; j++){
-			X = round(0.5*accX*time*time); 
-			Y = round(0.5*accY*time*time); 
-			distArr += X + ' ' + Y ; 
-			time += interval ; 
-			if(j < gMaxKeytimesInterval)
-				distArr += ';'; 
-		}
-	}	
-	return distArr; 
+function GX_GetRotationAnimParamValues(valuestr, animParam){
+	//values="0 175,132;90 175,132; 0 175,132
+	//get valuearray
+	var valueArr = valuestr.split(';'); 
+	if(valueArr.length < 1)
+		return false; 
+	//get the autoreverse flag 
+	if( (valueArr.length == 3) && (valueArr[0] == valueArr[2]) ){
+		animParam.autoReverse = true; 
+	}
+	else
+		animParam.autoReverse = false; 
+	//now get startArr and endArr 
+	var startValArr, endValArr; 
+	startValArr = valueArr[0].split(' '); 
+	endValArr = valueArr[1].split(' '); 
+	//now from startArr get initAngle, center
+	animParam.startValue = startValArr[0]; 
+	animParam.endValue = endValArr[0]; 
+	animParam.center = startValArr[1]; 
+	//from endArr get finalAngle 
+	//if length of valuearr ==3 and startArr[0] == startArr[1] then autoreverse = true 
 }
-*/
 
