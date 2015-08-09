@@ -1048,9 +1048,9 @@ function GX_GetAnimParamsFromUI(inputParam)
                 
                 //rotation UI 
                 WAL_createCheckBox('autoRotateReverseCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
-                WAL_createNumberInput("initRotationValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, -360, 1);
+                WAL_createNumberInput("initRotationValueIP", '54px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, -360, 1);
                 WAL_setNumberInputValue('initRotationValueIP', 0, false);
-                WAL_createNumberInput("endRotationValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, -360, 1);
+                WAL_createNumberInput("endRotationValueIP", '54px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, -360, 1);
                 WAL_setNumberInputValue('endRotationValueIP', 90, false);          
                 
                 
