@@ -497,9 +497,7 @@ function GX_WKS_GetSVGXMLMetaData(&$respData)
 			$dataid=$childNode->getAttribute('id');
 			$id = 'TM_' . $dataid;
 			$datatype="GROUP" ;
-			$name = $childNode->getAttribute('class');
-			 
-			
+			$name = $childNode->getAttribute('class');		
 			$strarr = explode(" ", $name);
 			if($strarr[0] == 'ANIMATION_LIST_GROUP')
 				continue; 
@@ -520,7 +518,9 @@ function GX_WKS_GetSVGXMLMetaData(&$respData)
 			{				
 				$childNode = $childnodeList->item($j);
 				$nodeName = $childNode->nodeName;
-				$nodeName = strtoupper($nodeName); 
+				$name = $childNode->getAttribute('class');		
+				$strarr = explode(" ", $name);
+				$nodeName = $strarr[1];//strtoupper($nodeName); 
 				if($nodeName != '#TEXT')
 				{
 					$type = 'OBJECT';
