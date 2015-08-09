@@ -1569,6 +1569,9 @@ function GX_AddNewSVGObject(Type, name)
 		  {
 			  myobjType = 'OBJECT';
 			  nodeTitle = nodename; 
+			  var classval = newNode.getAttribute('class'); 
+			  nodeTitle = classval.split(' '); 
+			  nodeTitle = nodeTitle[1]; 
 		  }	 
 		 var newXMLStr = '<li id="TM_'+ ObjID + '"  type="' + myobjType+ '" class="TREEMENU" level="3" dataid="' +ObjID + '"  data-type="' + nodename +'"  name="'+ nodeTitle+'"></li>';
 		 WAL_AddTreeItem(gTreeWidgetID, newXMLStr, gCurrentTreeNode, "", true);
