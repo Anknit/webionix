@@ -555,6 +555,10 @@ function WAL_getradioValueFromGroup(groupID) {
 function WAL_getCheckBoxValue(buttonID) {
     var JQSel = "#" + buttonID;
     var state = $(JQSel).attr("data-cbvalue");
+    if(state == 'true')
+    	state = true; 
+    else
+    	state = false; 
     return state;
 }
 
