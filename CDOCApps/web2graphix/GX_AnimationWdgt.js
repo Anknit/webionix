@@ -37,6 +37,7 @@ sAnimParams.prototype.startPos = 0;
 sAnimParams.prototype.endPos = 0; 
 sAnimParams.prototype.values=0; 
 sAnimParams.prototype.keytimes=0; 
+sAnimParams.numSides = 0; 
 
 function sAnimParams() {	
 	sAnimParams.prototype.animID = 0;
@@ -77,6 +78,7 @@ function sAnimParams() {
 	sAnimParams.prototype.endPos=0; 
 	sAnimParams.prototype.values=0; 
 	sAnimParams.prototype.keytimes=0; 
+	sAnimParams.numSides = 0; 
 }
 
 var gAnimEndTimer = 400; 
@@ -106,8 +108,8 @@ gAttrList['Rotate'] = 'rotate';
 gAttrList['Horizontal Skew'] = 'skewX';
 gAttrList['Vertical Skew'] = 'skewY';
 gAttrList['Scale'] = 'scale';
-
 gAttrList['Move'] = 'translate';
+gAttrList['Animate Path'] = 'pathanimate'; 
 
 
 
@@ -124,6 +126,7 @@ gReverseAttrList['skewX']          =  'Horizontal Skew';
 gReverseAttrList['skewY']          =  'Vertical Skew';     
 gReverseAttrList['scale']          =  'Scale'; 
 gReverseAttrList['translate']      =  'Move'; 
+gReverseAttrList['pathanimate']    =  'Animate Path'; 
 
 
 //var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
@@ -990,7 +993,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 
  function GX_CreateAnimationWidget(wdgtID)
  {
-	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Scale', 'Move'];
+	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Scale', 'Move', 'Animate Path'];
 	 	//create the new animation widget interface here 	 
 	 			WAL_createModelessWindow('newAnimationDlg', '220', '150', 'newAnimOK', 'newAnimCancel');
 	 			WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '') ; 			
@@ -1307,6 +1310,7 @@ function GX_UpdateAnimInfoInList(animNode)
 				GX_RemoveAnimInfoFromList(animNode.id); 
 				gAnimList.push(animInfo);
 			}
+			/*
 			else if(animType == 'ANIM_MOVE'){
 				attr = 'move';  
 				var moveXNode = animNode.childNodes[0]; 
@@ -1319,7 +1323,8 @@ function GX_UpdateAnimInfoInList(animNode)
 				moveXNode.setAttribute('fill', 'remove'); 	
 				GX_RemoveAnimInfoFromList(animNode.id); 
 				gAnimList.push(animInfo);
-			}
+			}*/
+			
 			
 		}
 }
@@ -1773,11 +1778,16 @@ function GX_RemoveAnimInfoFromList(animID)
 	 var titleIndex; 
 	 
 	 var containerGroupID = 'ANIMATION_GROUP';  
-	 attrData = ['title',animParams.title];  
-	 attrArray.push(attrData);
-	 
+	 if(animParams.animType != 'pathanimate'){
+		 attrData = ['title',animParams.title];  
+		 attrArray.push(attrData);
+	 }
+	 else{
+		 attrData = ['title','none'];  
+		 attrArray.push(attrData);
+	 }
 	 titleIndex = attrArray.length-1; 
-
+	 
 	 attrData = ['dur',animParams.duration+'s']; 
 	 attrArray.push(attrData);
 	 
@@ -1911,13 +1921,48 @@ function GX_RemoveAnimInfoFromList(animID)
 		attrData = ['to','360 0 0'];  
 		attrArray.push(attrData);		
 		attrData = ['additive', 'sum'];  
-		attrArray.push(attrData);	
-				
+		attrArray.push(attrData);					
 		var animstr = GXRDE_addNewAnimationObject(animParams.animID, containerGroupID, 'ANIM_TRANSFORM', attrArray);
 		
-		//<animateTransform id="ANIM_312" xlink:href='#SVG_933' dur="1s" calcMode="linear" restart="never" repeatCount="5" fill="remove" begin="ANIM_1852.begin" attributeType="XML" 
-		//attributeName="transform" type="rotate" from='0 0 -40' to='360 0 -40'  additive='sum'  />
 		return ; 
+	}
+	else if (animParams.animType == 'pathanimate'){
+		var classvalue = 'ANIMATE_PATH ' + animParams.title ; 
+		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue); 
+		containerGroupID = animParams.animID ;
+		var newAttr = []; 	
+		    
+	    attrData = ['restart','never'];  
+		newAttr.push(attrData);		    
+		attrData = ['repeatCount',0];  		
+		newAttr.push(attrData);				
+		attrData = ['fill','freeze'];  
+		newAttr.push(attrData);
+		attrData = ['begin',beginval];  
+		newAttr.push(attrData); 
+		attrData = ['attributeType',"XML"];  
+		newAttr.push(attrData); 
+		attrData = ['xmlns:xlink', 'http://www.w3.org/1999/xlink'];  
+		attrArray.push(attrData);
+		attrData = ['xlink:href','#'+animParams.objectID];  
+	    attrArray.push(attrData);
+		attrData = ['attributeName',"d"];  
+		newAttr.push(attrData);
+		var dvalArr = GX_GetPathValuesForAnimation(animParams.values); 
+		animParams.numSides = dvalArr.length; 
+		var subduration  = 	new Number(animParams.duration/animParams.numSides);  
+		attrData = ['dur',subduration+'s'];  
+		newAttr.push(attrData);
+		var animID = ''; 
+		attrData = ['values',''];  
+		newAttr.push(attrData);
+		var arrLen = newAttr.length; 
+		for(var j=0; j < animParams.numSides; j++ ){
+			animID = animParams.animID + '_' + j; 
+			attrData = ['values',dvalArr[j]];  
+			newAttr[arrLen-1] = ['values',dvalArr[j]]; 
+			var animstr = GXRDE_addNewAnimationObject(animID, containerGroupID, 'ANIM_ATTRIBUTE', newAttr);			
+		}		
 	}
 	else if(animParams.animType == 'ANIM_MOVE'){
 		var classvalue = 'ANIM_MOVE ' + animParams.title + '  0;0' ; 
@@ -2241,7 +2286,7 @@ function GX_RemoveAnimInfoFromList(animID)
 						animParam.startType = 'ON_ANIMEVENT';	
 						animParam.AnimEventType = 'begin'; 
 						value = value.substring(0, index);
-						animParam.refAnimID = value;  
+						animParam.refAnimID = value;     
 					} 
 				}
 				
@@ -3082,6 +3127,19 @@ function GX_RemoveAnimInfoFromList(animID)
 			gInitAnimParam.endPos = endPoint.x + ',' + endPoint.y;
 			//animtype is move 
 		}
+		else if(attrtype == 'pathanimate'){
+			animType = 'pathanimate'; 
+			var objNode = document.getElementById(gInitAnimParam.UIObjectID); 			
+			if(objNode.classList[0] != 'SVG_PATH_OBJECT'){
+				Debug_Message('Animation Not applicable to Shape type Objects'); 
+				return; 
+			}
+			gInitAnimParam.duration = new Number(8); 
+			gInitAnimParam.values = objNode.getAttribute('d'); 
+			var valueArr = gInitAnimParam.values.split(' '); 
+			if(valueArr.length > 1)
+				gInitAnimParam.numSides = valueArr.length-1; 
+		}
 		else{
 			Debug_Message('Other Anim attr not supported'); 
 			return ; 
@@ -3587,4 +3645,30 @@ function GX_GetRotationAnimParamValues(valuestr, animParam){
 	//from endArr get finalAngle 
 	//if length of valuearr ==3 and startArr[0] == startArr[1] then autoreverse = true 
 }
-
+function GX_GetPathValuesForAnimation(dvalue){
+	var newdValArr =[]; 
+	var dvalArr; 
+	
+	//split the dvalue into array
+	dvalArr = dvalue.split(' '); 
+	var part1, part2; 
+	//get rid of alphabets from each entry
+	for(var k=0; k < dvalArr.length; k++){
+		if(dvalArr[k] == 'z')
+			dvalArr[k] = dvalArr[0]; 
+		else
+			dvalArr[k] = dvalArr[k].substring(1,dvalArr[k].length); 		
+	}
+	//create an array of davlues storing the string of new d values
+	//now loop around no. of array elements to generate new d values 
+	var startVal, endVal; 
+	startVal = 'M' + dvalArr[0]; 
+	for(var m=0; m < dvalArr.length-1; m++){
+		part1 = startVal + ' L' + dvalArr[m]; 
+		part2 = startVal + ' L' + dvalArr[m+1]; 
+		newdValArr.push(part1 + ';' + part2); 
+		startVal = part2; 
+	}
+	return newdValArr; 
+	
+}
