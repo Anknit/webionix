@@ -1305,7 +1305,8 @@ function GX_UpdateAnimInfoInList(animNode)
 				var endval = motionAnimNode.getAttribute('fill');			
 				var titleval = animNode.classList[2]; 
 				var animInfo = [animNode.id, motionAnimNode.targetElement.id, attr, beginval, endval, titleval, beginParams.refAnimID, beginParams.refContainerID];
-				visibleAnimNode.setAttribute('begin', '');
+				//visibleAnimNode.setAttribute('begin', '');
+				motionAnimNode.setAttribute('begin', '');
 				motionAnimNode.setAttribute('fill', 'remove'); 	
 				GX_RemoveAnimInfoFromList(animNode.id); 
 				gAnimList.push(animInfo);
@@ -1938,31 +1939,47 @@ function GX_RemoveAnimInfoFromList(animID)
 		newAttr.push(attrData);				
 		attrData = ['fill','freeze'];  
 		newAttr.push(attrData);
-		attrData = ['begin',beginval];  
-		newAttr.push(attrData); 
+		
 		attrData = ['attributeType',"XML"];  
 		newAttr.push(attrData); 
 		attrData = ['xmlns:xlink', 'http://www.w3.org/1999/xlink'];  
-		attrArray.push(attrData);
+		newAttr.push(attrData);
 		attrData = ['xlink:href','#'+animParams.objectID];  
-	    attrArray.push(attrData);
+		newAttr.push(attrData);
 		attrData = ['attributeName',"d"];  
 		newAttr.push(attrData);
 		var dvalArr = GX_GetPathValuesForAnimation(animParams.values); 
 		animParams.numSides = dvalArr.length; 
-		var subduration  = 	new Number(animParams.duration/animParams.numSides);  
+		var subduration  = 	animParams.duration/animParams.numSides;
+		subduration = '' + subduration + ''; 
+		var decimalIndex = subduration.indexOf('.'); 
+		subduration =  subduration.substring(0,decimalIndex+2); 
+		Debug_Message('subsruation=' + subduration ); 
 		attrData = ['dur',subduration+'s'];  
 		newAttr.push(attrData);
 		var animID = ''; 
-		attrData = ['values',''];  
-		newAttr.push(attrData);
+		
 		var arrLen = newAttr.length; 
-		for(var j=0; j < animParams.numSides; j++ ){
+		var IDList = []; 
+		var objspecAttrList =[]; 
+		var rowentry = ''; 
+		for(var j=0; j < animParams.numSides; j++ ){			
 			animID = animParams.animID + '_' + j; 
-			attrData = ['values',dvalArr[j]];  
-			newAttr[arrLen-1] = ['values',dvalArr[j]]; 
-			var animstr = GXRDE_addNewAnimationObject(animID, containerGroupID, 'ANIM_ATTRIBUTE', newAttr);			
-		}		
+			IDList.push(animID); 
+			rowentry = 'values=' + dvalArr[j]; 
+			//objspecAttrList.push('values=' + dvalArr[j]);
+			if( j==0)
+				rowentry += '#'+ 'begin=0s'; 
+				//				objspecAttrList.push('begin=0s');	
+			else {
+				var prevAnimID = IDList[j-1];
+				rowentry += '#' + 'begin=' + prevAnimID + '.end' ; 
+				//objspecAttrList.push('begin=' + prevAnimID + '.end' );	
+			}
+			objspecAttrList.push(rowentry); 
+		}				
+		GXRDE_addMultipleAnimObjects(containerGroupID, 'ANIMATE_PATH', newAttr, IDList, objspecAttrList); 
+		return ; 
 	}
 	else if(animParams.animType == 'ANIM_MOVE'){
 		var classvalue = 'ANIM_MOVE ' + animParams.title + '  0;0' ; 
@@ -2728,8 +2745,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		 gCurrAnimNode.setAttribute('fill', 'remove');
 		 GX_RestoreAnimationObject(gCurrAnimNode.id); 
 		 GX_RestoreMotionObject(gCurrAnimNode);
-		 gbAnimationEnd = true; 
-		
+		 gbAnimationEnd = true; 		
 		}, 
 		gAnimEndTimer); 	
 	 
@@ -2763,9 +2779,15 @@ function GX_RemoveAnimInfoFromList(animID)
 			var motionAnimNode = animnode.childNodes[1]; 
 			motionAnimNode.setAttribute('onend', 'GX_OnAnimationEndHandler(evt)'); 
 	  		GX_ChangeAnimateMotionSettingsFromcode(motionAnimNode);  
-	  		visibleAnimNode.setAttribute('restart', 'whenNotActive');
+	  		motionAnimNode.setAttribute('restart', 'whenNotActive');
 	  		motionAnimNode.setAttribute('fill', 'remove'); 
-	  		visibleAnimNode.beginElement();
+	  		//visibleAnimNode.beginElement();
+	  		motionAnimNode.beginElement();
+	  		
+	  		//animnode.setAttribute('restart', 'whenNotActive');
+	  	    //animnode.setAttribute('fill', 'remove'); 
+	  	    //animnode.beginElement();
+	  	    
 	  		return; 
   		}
   	}
