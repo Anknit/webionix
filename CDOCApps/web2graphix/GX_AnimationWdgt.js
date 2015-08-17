@@ -840,9 +840,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 		var pos = GX_CalculateMotionAnimPathOffset(animParams.objectID, animParams.refPathID);
     	var splitArr = pos.split(';'); 
     	animParams.PathObjectOffset = splitArr[0]; 
-    	animParams.originalPosition = splitArr[1]; 
-    	
-    	
+    	animParams.originalPosition = splitArr[1];    	
 		break; 
 	case 'skewX':			
 		animParams.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
@@ -1928,7 +1926,13 @@ function GX_RemoveAnimInfoFromList(animID)
 		return ; 
 	}
 	else if (animParams.animType == 'pathanimate'){
-		var classvalue = 'ANIMATE_PATH ' + animParams.title ; 
+		//var dvalue = animParams.values; 
+		var valueArr = animParams.values.split(' ');
+		var valstr =''; 
+		for(var j= 0; j < valueArr.length; j++){
+			valstr += valueArr[j] + '#'; 
+		}
+		var classvalue = 'ANIMATE_PATH ' + animParams.title + ' ' + valstr + ' ' + animParams.objectID ; 
 		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue); 
 		containerGroupID = animParams.animID ;
 		var newAttr = []; 	
@@ -1953,8 +1957,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		var subduration  = 	animParams.duration/animParams.numSides;
 		subduration = '' + subduration + ''; 
 		var decimalIndex = subduration.indexOf('.'); 
-		subduration =  subduration.substring(0,decimalIndex+2); 
-		Debug_Message('subsruation=' + subduration ); 
+		subduration =  subduration.substring(0,decimalIndex+2);		
 		attrData = ['dur',subduration+'s'];  
 		newAttr.push(attrData);
 		var animID = ''; 
@@ -1974,6 +1977,9 @@ function GX_RemoveAnimInfoFromList(animID)
 			else {
 				var prevAnimID = IDList[j-1];
 				rowentry += '#' + 'begin=' + prevAnimID + '.end' ; 
+				if(j == animParams.numSides-1){
+					rowentry += '#' + 'onend=' + 'GX_OnAnimationEndHandler(evt)'; 
+				}
 				//objspecAttrList.push('begin=' + prevAnimID + '.end' );	
 			}
 			objspecAttrList.push(rowentry); 
@@ -2739,7 +2745,7 @@ function GX_RemoveAnimInfoFromList(animID)
  
  function GX_OnAnimationEndHandler(evt)
  {	
-	 
+	 //Debug_Message('Énd of Animation Path'); 
 	 gCurrAnimNode = evt.target; 	 
 	 setTimeout(function(){		
 		 gCurrAnimNode.setAttribute('fill', 'remove');
@@ -2884,27 +2890,47 @@ function GX_RemoveAnimInfoFromList(animID)
 	 var objRef = animNode.getAttribute('xlink:href'); 
 	 objRef =  objRef.substring(1, objRef.length); 
 	 var objNode =  document.getElementById(objRef); //animNode.parentNode; 
-	 var objType = objNode.classList[1]; 
-	 var origValueArr = animNode.getAttribute('to'); 
-	 origValueArr = origValueArr.split(',')
-	 if( (objType == 'ELLIPSE') || (objType == "CIRCLE") )
-	 {
-		  objNode.setAttribute("cx", origValueArr[0]); 
-	      objNode.setAttribute("cy", origValueArr[1]);  
-		 //suspecting chrome is not applying fill=remove properly 
-		// objNode.setAttribute("cx", '0'); 
-	    // objNode.setAttribute("cy", '0');   
+	 var objType = objNode.classList[1];
+	 var nodename = animNode.nodeName.toUpperCase(); 	 
+	 if(nodename == 'ANIMATEMOTION'){
+		 var origValueArr = animNode.getAttribute('to'); 
+		 origValueArr = origValueArr.split(','); 		 
+		 if( (objType == 'ELLIPSE') || (objType == "CIRCLE") )
+		 {
+			  objNode.setAttribute("cx", origValueArr[0]); 
+		      objNode.setAttribute("cy", origValueArr[1]);  			
+		 }
+		 else if(objType == "RECTANGLE")
+		 {
+		  	  objNode.setAttribute("x", origValueArr[0]); 
+		      objNode.setAttribute("y", origValueArr[1]);   	  
+		 } 
+		 else if(objType == "TEXT")
+		 {
+		  	  objNode.setAttribute("x", origValueArr[0]); 
+		      objNode.setAttribute("y", origValueArr[1]);   	  
+		 } 
 	 }
-	 else if(objType == "RECTANGLE")
-	 {
-	  	  objNode.setAttribute("x", origValueArr[0]); 
-	      objNode.setAttribute("y", origValueArr[1]);   	  
-	 } 
-	 else if(objType == "TEXT")
-	 {
-	  	  objNode.setAttribute("x", origValueArr[0]); 
-	      objNode.setAttribute("y", origValueArr[1]);   	  
-	 } 
+	 else if(nodename == 'ANIMATE'){
+		 var parentNode = animNode.parentNode; 
+		 if(parentNode.nodeName == 'g'){
+			 
+			 var tempArr = parentNode.classList[3].split('#'); 
+			 var origval =''; 
+			 for(var i=0; i < tempArr.length; i++){
+				 if(i < tempArr.length-1 )
+					 origval += tempArr[i] +' ';
+				 else
+					 origval += tempArr[i]; 
+			 }
+			// objNode.setAttribute('d',origval ); 
+			 GX_SetObjectAttribute(objNode, 'd', origval, true, false); 
+			 Debug_Message('Setting Orig Value=' +origval ); 
+			 
+		 }
+	 }
+	 
+	
 	
  }
  
