@@ -154,6 +154,45 @@ function GXRDE_addNewAnimationObject(animID, parentID, animType, attrArray)
 		return 'ERROR';
 }
 
+function GXRDE_addMultipleAnimObjects(parentID, animType, commonAttrList, animIDList, objAttrList){
+	var len = commonAttrList.length; 
+	var attrstr = ''; 
+	var reqBody = '&ANIMTYPE=' + animType + '&PARENTID=' + parentID  + '&COMMONATTRLEN=' + commonAttrList.length; 
+	for(var j=0; j < commonAttrList.length; j++){
+		attrstr = "&ATTRNAME[]=" +  commonAttrList[j][0] + "&ATTRVAL[]="+ commonAttrList[j][1];
+		reqBody += attrstr; 
+	}
+	//now add the Object specific Atributes
+	reqBody += '&OBJATTRLEN=' +  animIDList.length; 
+	for(var i=0; i < animIDList.length; i++ ){
+		attrstr = '&ANIMID[]=' + animIDList[i] + '&NAMEVALUEPAIR[]=' + objAttrList[i]; 
+		reqBody += attrstr; 
+	}
+	var respstring = AJX_RequestWithReponseData("text", "OBJM", "315", reqBody);
+	if(respstring)
+		return respstring;
+	else
+		return 'ERROR';
+}
+function GXRDE_updateMultipleAnimObjects(animIDList, objAttrList){
+	
+	var attrstr = ''; 
+	var reqBody = ''; 
+	
+	//now add the Object specific Atributes
+	reqBody += '&OBJATTRLEN=' +  animIDList.length; 
+	for(var i=0; i < animIDList.length; i++ ){
+		attrstr = '&ANIMID[]=' + animIDList[i] + '&NAMEVALUEPAIR[]=' + objAttrList[i]; 
+		reqBody += attrstr; 
+	}
+	var respstring = AJX_RequestWithReponseData("text", "OBJM", "316", reqBody);
+	//Debug_Message(respstring); 
+	if(respstring)
+		return respstring;
+	else
+		return 'ERROR';
+}
+
 function GXRDE_updateAnimationObject(animID, attrArray)
 {	
 	var len = attrArray.length; 
