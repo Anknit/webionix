@@ -67,6 +67,17 @@ function GX_OBJ_ProcessRequest($reqid, &$respdata )
 		$retval = GX_OBJ_RemoveSVGAttribute($respdata);
 		return $retval;
 	}	
+	else if($reqid == '315')
+	{
+		$retval = GX_OBJ_AddMultipleSVGAnimation($respdata);
+		return $retval;		
+	}
+	else if($reqid == '316')
+	{
+		$retval = GX_OBJ_UpdateMultipleSVGAnimation($respdata);
+		return $retval;
+	}
+	
 }
 	
 /*
@@ -639,8 +650,7 @@ function GX_OBJ_UpdateSVGAnimation(&$respData)
 	if($retval == true)
 		$respData = 'OK';
 	else
-		$respData = 'FAILS'; 
-	
+		$respData = 'FAILS'; 	
 	return true; 
 }
 //
@@ -719,5 +729,104 @@ function GX_UpdateGroupName(&$respData){
 	else
 		$respData = 'FAILS';
 	
+}
+
+
+/*
+ * var reqBody = '&ANIMTYPE=' + animType + '&PARENTID=' + parentID  + '&COMMONATTRLEN=' + commonAttrList.length; 
+	for(var j=0; j < commonAttrList.length; j++){
+		attrstr = "&ATTRNAME[]=" +  commonAttrList[j][0] + "&ATTRVAL[]="+ commonAttrList[j][1];
+		reqBody += attrstr; 
+	}
+	//now add the Object specific Atributes
+	reqBody += '&OBJATTRLEN=' +  animIDList.length; 
+	for(var i=0; i < animIDList.length; i++ ){
+		attrstr = '&ANIMID[]=' + animIDList[i] + '&NAMEVALUEPAIR[]=' + objAttrList[i]; 
+		reqBody += attrstr; 
+	}
+	sample namevalue pair
+	attr1=9892;attr2=776;attr4=1123;attr5=113456
+ */
+function GX_OBJ_AddMultipleSVGAnimation(&$respData)
+{
+	//$elemID, $type, $class, $parentID
+	parse_str($respData);
+	//DEPENDING ON OBJECT TYPE CALL THE APPROPRIATE FUNCTION
+	$animTypeVal = strtoupper($ANIMTYPE);
+	$parentIDVal   = strtoupper($PARENTID);
+	$commonattrlen     = $COMMONATTRLEN;
+	$objectLength = $OBJATTRLEN; 
+	$commonAttrDefn = array(); 
+	for($j=0; $j < $commonattrlen; $j++){
+		$attrname	   = $ATTRNAME[$j];
+		$attrval       = $ATTRVAL[$j];
+		$commonAttrDefn[$attrname] = $attrval; 
+	}
+	$objInfoArray = array(); 
+	for($i=0;  $i < $objectLength; $i++){
+		$animID = $ANIMID[$i];
+		$objInfoArray[$animID] = $NAMEVALUEPAIR[$i]; 
+	}
+	$SVGDom = $_SESSION['svg_xml_dom'];
+	$SVGFileName = $_SESSION['svg_xml_FileName'];	
+	$numOfObj =  count($objInfoArray); 
+	
+	if($animTypeVal = 'ANIMATE_PATH'){
+		foreach ($objInfoArray as $animID => $namevalue){
+			$myanimID = $animID;
+			$namevalue = $objInfoArray[$animID];
+			$objspecAttrArray = explode('#', $namevalue);
+			$attrdefinition = array('id'=>$myanimID);
+			$len = count($objspecAttrArray); 
+			for($k=0; $k <$len; $k++){
+				$temapArr = explode('=' , $objspecAttrArray[$k]);
+				$attrdefinition[$temapArr[0]] = $temapArr[1];
+			}
+			foreach ($commonAttrDefn as $attrname => $attrval){
+				$attrdefinition[$attrname] = $attrval;
+			}
+			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'animate',$myanimID, 0, $parentIDVal, $attrdefinition,'');
+		
+		}//foreach ($objInfoArray as $animID => $namevalue)
+	}
+	
+	$respData = 'OK'; 
+	return true; 
+}
+
+
+function GX_OBJ_UpdateMultipleSVGAnimation(&$respData)
+{
+	//$elemID, $type, $class, $parentID
+	parse_str($respData);
+	//DEPENDING ON OBJECT TYPE CALL THE APPROPRIATE FUNCTION
+	
+	$objectLength = $OBJATTRLEN;
+	$objInfoArray = array();
+	for($i=0;  $i < $objectLength; $i++){
+		$animID = $ANIMID[$i];
+		$objInfoArray[$animID] = $NAMEVALUEPAIR[$i];
+	}
+	$SVGDom = $_SESSION['svg_xml_dom'];
+	$SVGFileName = $_SESSION['svg_xml_FileName'];
+	$numOfObj =  count($objInfoArray);// ->length;
+	foreach ($objInfoArray as $animID => $namevalue){
+		$attrdefinition = 0; 
+		$myanimID = $animID;
+		$namevalue = $objInfoArray[$animID];
+		$objspecAttrArray = explode('#', $namevalue);
+		$attrdefinition = array('id'=>$myanimID);
+		$len = count($objspecAttrArray);
+		for($k=0; $k <$len; $k++){
+			$temapArr = explode('=' , $objspecAttrArray[$k]);
+			$attrdefinition[$temapArr[0]] = $temapArr[1];
+		}		
+		$retval = GX_COMMON_UpdateSVGAttributes($SVGDom, $SVGFileName, $myanimID, $attrdefinition);
+	
+	}//foreach ($
+
+	
+	$respData = 'OK';
+	return true;
 }
 ?>
