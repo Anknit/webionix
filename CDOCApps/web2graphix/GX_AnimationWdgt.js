@@ -2522,7 +2522,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		 if(AnimParam2.values !=  AnimParam1.values){
 			 attrData = ['values',AnimParam2.values];  
 			 attrArray.push(attrData);
-			 Debug_Message('Values Different'); 
+			 //Debug_Message('Values Different'); 
 		 }
 	 }
 	 
@@ -2654,11 +2654,15 @@ function GX_RemoveAnimInfoFromList(animID)
 			 }//(animtype =='PATH_MOTION')	
 			 else if(animtype == 'ANIMATE_PATH'){
 				 //update the d values if changed
-				 myattrArray = []; 
-				 
+				 durattrArray = []; 	
+				 valattrArray = []; 
+				 var IDList =[]; 
 				 var parentAnimNode = document.getElementById(curranimID); 
 				 var numChild = parentAnimNode.childNodes.length; 
 				 var durvalue = 0; 
+				 //get all the ID list 
+				 for(var k= 0 ; k < numChild; k++)
+					 IDList.push(parentAnimNode.childNodes[k].id); 
 				//update the duration value if changed 
 				 if(attrArray[i][0] == 'dur'){
 					 var durationvalue = attrArray[i][1].substring(0, attrArray[i][1].length-1); 
@@ -2666,20 +2670,28 @@ function GX_RemoveAnimInfoFromList(animID)
 					subduration = '' + subduration + ''; 
 					var decimalIndex = subduration.indexOf('.'); 
 					subduration =  subduration.substring(0,decimalIndex+2);	
-					durvalue = subduration+'s';					
-				 }				
-				 if(attrArray[i][0] == 'values'){
+					durvalue = subduration+'s';	
+					
+					for(var j=0; j < numChild; j++){
+						 valuestr =''; 
+						 valuestr = 'dur=' + durvalue;						 
+						 durattrArray.push(valuestr); 						 
+						 parentAnimNode.childNodes[j].setAttribute('dur',durvalue ); 
+					 }//for 				 
+					 GXRDE_updateMultipleAnimObjects(IDList, durattrArray); 
+				 }// if(attrArray[i][0] == 'dur'		
+				 
+				 else if(attrArray[i][0] == 'values'){
 					 //get the array of d values generated for the child nodes 		
 					 var dvalArr = GX_GetPathValuesForAnimation(attrArray[i][1]);	
 					 var valuestr =''; 
 					 for(var j=0; j < numChild; j++){
-						 valuestr =''; 
-						 valuestr = 'values=' + dvalArr[j]; 
-						 if(durvalue)
-							 valuestr += '#' + 'dur=' + durvalue; 
-						 myattrArray.push(valuestr); 
+						 valuestr ='';						 
+						 valuestr = 'values=' + dvalArr[j];					 
+						 valattrArray.push(valuestr); 
 						 parentAnimNode.childNodes[j].setAttribute('values',dvalArr[j]); 					 
 					 }//for 
+					    GXRDE_updateMultipleAnimObjects(IDList, valattrArray); 
 					 	var valueArr = attrArray[i][1].split(' ');
 						var valstr =''; 
 						for(var j= 0; j < valueArr.length; j++){
@@ -2694,28 +2706,10 @@ function GX_RemoveAnimInfoFromList(animID)
 						var myarr = []; 
 						myarr.push(['class', classvalue]); 				
 						GXRDE_updateSVGObject(parentAnimNode.id, myarr); 
-						parentAnimNode.setAttribute('class', classvalue);
-					 
+						parentAnimNode.setAttribute('class', classvalue);					 
 				 }
-				 if(durvalue){
-					 for(var j=0; j < numChild; j++){
-						 valuestr =''; 
-						 valuestr = 'dur=' + durvalue;						 
-						 myattrArray.push(valuestr); 
-					 }//for 
-				 }
-				 //if the begin value changed then update it 
-				 var IDList =[]; 
-				 for(var k=0; k < numChild; k++){
-					 IDList.push(parentAnimNode.childNodes[k].id); 
-					 if(attrArray[i][0] == 'dur')
-						 parentAnimNode.childNodes[k].setAttribute('dur',durvalue ); 
-					 
-				}
-				 GXRDE_updateMultipleAnimObjects(IDList, myattrArray); 
-				 
-				 
-				return ; 
+				 if(i == attrArray.length-1)
+					 return ; 
 			 }
 		 }//if(animNode.nodeName =='g'
 		 else{
@@ -2959,7 +2953,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			 }
 			// objNode.setAttribute('d',origval ); 
 			 GX_SetObjectAttribute(objNode, 'd', origval, true, false); 
-			 Debug_Message('Setting Orig Value=' +origval ); 			 
+			 //Debug_Message('Setting Orig Value=' +origval ); 			 
 		 }		 
 	 }
  }
