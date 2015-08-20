@@ -155,7 +155,7 @@ function EL_SaveEditList(finalEditList, bAsyncMode) {
             }          	
         }
     }  
-   // Debug_Message("End of Saving Object"); 
+   
     finalEditList = EL_DeleteFromEditList(finalEditList, 0); 
 }
 
@@ -312,6 +312,7 @@ function EL_CompareAndAddtoList(prevAttrList, currAttrList, editList, compactLis
 	var myEditList = editList; 
 	var myObjParam =  0; 
 	
+	
 	if(prevAttrList.length !=currAttrList.length)
 	{
 		//Debug_Message("List Length mismatch in Previous and Current List"); 
@@ -344,7 +345,7 @@ function EL_CompareAndAddtoList(prevAttrList, currAttrList, editList, compactLis
 			 
 		}
 	}
-	 
+	 //Debug_Message('EL_CompareAndAddtoList called EditingList');
 	return; 
 }
 /*
