@@ -2603,7 +2603,7 @@ function GX_RemoveAnimInfoFromList(animID)
 				 else if(attrArray[i][0] == 'rolling'){
 					 var bRolling = attrArray[i][1];					
 					 var begVal = ''; 
-					 if(bRolling ==  'true'){		
+					 if(bRolling ==  true){		
 						 begVal = motionNode.id + '.begin'; 							 
 					 }
 					 else{
@@ -2708,6 +2708,19 @@ function GX_RemoveAnimInfoFromList(animID)
 						GXRDE_updateSVGObject(parentAnimNode.id, myarr); 
 						parentAnimNode.setAttribute('class', classvalue);					 
 				 }
+				 else if(attrArray[i][0] == 'begin'){					 
+					 //set attribute of local animNode
+					 var animNode1 = parentAnimNode.childNodes[0]; 
+					 animNode1.setAttribute(attrArray[i][0], attrArray[i][1]); 
+					 GX_UpdateAnimInfoInList(parentAnimNode);
+					 var attrList1=[]; 
+					 attrList1.push([attrArray[i][0], attrArray[i][1]]); 
+					 GXRDE_updateAnimationObject(animNode1.id, attrList1); 
+					 //then set the remote attribute 
+					 //update the GX_UpdateAnimInfoList
+					 //add it to the list f attr to update 
+					 
+				 }//if(animtype == 'ANIMATE_PATH')
 				 if(i == attrArray.length-1)
 					 return ; 
 			 }
@@ -2882,6 +2895,9 @@ function GX_RemoveAnimInfoFromList(animID)
 			GX_RemoveObjectFromList(pathRefNodeID);
 			WAL_DeleteTreeItem(gTreeNodeID, 'TM_'+pathRefNodeID); 
 		  }
+		}
+		else if(animType == 'ANIMATE_PATH'){
+			
 		}
 	}
 	if(gCurrentObjectSelected){
@@ -3087,6 +3103,9 @@ function GX_RemoveAnimInfoFromList(animID)
 	    		var animtype = node.classList[1]; 
 	    		if(animtype ==  'PATH_MOTION'){
 	    			gInitAnimParam.refAnimID = node.childNodes[1].id; 
+	    		}
+	    		else if(animtype ==  'ANIMATE_PATH'){
+	    			gInitAnimParam.refAnimID = node.childNodes[node.childNodes.length-1].id; 
 	    		}
 	    	}
 	    	else
