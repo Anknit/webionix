@@ -107,7 +107,7 @@ gAttrList['Motion along Path'] = 'pathmotion';// 'translate';
 gAttrList['Rotate'] = 'rotate';
 gAttrList['Horizontal Skew'] = 'skewX';
 gAttrList['Vertical Skew'] = 'skewY';
-gAttrList['Scale'] = 'scale';
+gAttrList['Zoom'] = 'scale';
 gAttrList['Move'] = 'translate';
 gAttrList['Animate Path'] = 'ANIMATE_PATH'; 
 
@@ -124,7 +124,7 @@ gReverseAttrList['pathmotion']     =  'Motion along Path'   ;
 gReverseAttrList['rotate']         =  'Rotate' ;
 gReverseAttrList['skewX']          =  'Horizontal Skew';
 gReverseAttrList['skewY']          =  'Vertical Skew';     
-gReverseAttrList['scale']          =  'Scale'; 
+gReverseAttrList['scale']          =  'Zoom'; 
 gReverseAttrList['translate']      =  'Move'; 
 gReverseAttrList['ANIMATE_PATH']    =  'Animate Path'; 
 
@@ -996,7 +996,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 
  function GX_CreateAnimationWidget(wdgtID)
  {
-	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Scale', 'Move', 'Animate Path'];
+	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Zoom', 'Move', 'Animate Path'];
 	 	//create the new animation widget interface here 	 
 	 			WAL_createModelessWindow('newAnimationDlg', '220', '150', 'newAnimOK', 'newAnimCancel');
 	 			WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '') ; 			
@@ -1985,6 +1985,13 @@ function GX_RemoveAnimInfoFromList(animID)
 				 attrData = ['keyTimes','0;1'];  
 				 attrArray.push(attrData);
 			 }
+			 else if(animParams.attribute == 'scale'){
+				 attrData = ['from',animParams.startValue];  
+				 attrArray.push(attrData); 
+				    
+				 attrData = ['to',animParams.endValue];  
+				 attrArray.push(attrData);
+			 }
 		 }
 	}	 		 
 	//delete the existing node first 
@@ -2182,6 +2189,10 @@ function GX_RemoveAnimInfoFromList(animID)
 				animParam.pace = 0; 
 				var valuestr = animNode.getAttribute('values');
 				GX_GetTranslateAnimParamValues(valuestr, animParam); 			
+			}
+			if(animParam.attribute == 'scale'){
+				animParam.startValue = animNode.getAttribute('from'); 
+				animParam.endValue = animNode.getAttribute('to');
 			}
 		}			
 		else if(value == 'ANIMATEMOTION')
