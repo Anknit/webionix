@@ -37,7 +37,7 @@ sAnimParams.prototype.startPos = 0;
 sAnimParams.prototype.endPos = 0; 
 sAnimParams.prototype.values=0; 
 sAnimParams.prototype.keytimes=0; 
-sAnimParams.numSides = 0; 
+sAnimParams.prototype.numChildAnims = 0; 
 
 function sAnimParams() {	
 	sAnimParams.prototype.animID = 0;
@@ -78,7 +78,7 @@ function sAnimParams() {
 	sAnimParams.prototype.endPos=0; 
 	sAnimParams.prototype.values=0; 
 	sAnimParams.prototype.keytimes=0; 
-	sAnimParams.numSides = 0; 
+	sAnimParams.prototype.numChildAnims = 0; 
 }
 
 var gAnimEndTimer = 400; 
@@ -107,9 +107,10 @@ gAttrList['Motion along Path'] = 'pathmotion';// 'translate';
 gAttrList['Rotate'] = 'rotate';
 gAttrList['Horizontal Skew'] = 'skewX';
 gAttrList['Vertical Skew'] = 'skewY';
-gAttrList['Zoom'] = 'scale';
+gAttrList['Fly-In'] = 'scale';
 gAttrList['Move'] = 'translate';
-gAttrList['Animate Path'] = 'ANIMATE_PATH'; 
+gAttrList['Animate Path'] = 'ANIMATE_PATH';
+gAttrList['Zoom'] = 'ANIMATE_ZOOM'; 
 
 
 
@@ -124,9 +125,10 @@ gReverseAttrList['pathmotion']     =  'Motion along Path'   ;
 gReverseAttrList['rotate']         =  'Rotate' ;
 gReverseAttrList['skewX']          =  'Horizontal Skew';
 gReverseAttrList['skewY']          =  'Vertical Skew';     
-gReverseAttrList['scale']          =  'Zoom'; 
+gReverseAttrList['scale']          =  'Fly-In'; 
 gReverseAttrList['translate']      =  'Move'; 
-gReverseAttrList['ANIMATE_PATH']    =  'Animate Path'; 
+gReverseAttrList['ANIMATE_PATH']   =  'Animate Path'; 
+gReverseAttrList['ANIMATE_ZOOM']   = 'Zoom'; 
 
 
 //var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
@@ -528,7 +530,11 @@ function GX_SetAnimParamOnUI(animParam) {
 		value = value*100.0; 
 		value -= 100.0; 
 		WAL_setNumberInputValue('startValueIP', value, false);	
-		break;		
+		break;	
+	case 'ANIMATE_ZOOM':
+		var value = animParam.startValue; 			
+		WAL_setNumberInputValue('startValueIP', value, false);	
+		break;
     case 'translate':
 		//get the currentobject selected 		
 		//get he center    
@@ -859,6 +865,36 @@ function GX_GetAnimParamsFromUI(inputParam)
 		value /= 100.0; 
 		animParams.startValue = value; 
 		break; 
+	case 'ANIMATE_ZOOM':
+		var value = WAL_getMaskedInputValue('startValueIP');
+		animParams.startValue = new Number(value);		
+		var objNode = document.getElementById(animParams.objectID); 
+		var objDim =  GX_GetRectObjectDim(objNode);
+		if(animParams.objectType == 'RECTANGLE'){
+			var origVal =  objDim.width; 
+			var startVal = Math.round((origVal * animParams.startValue)/100); 
+			animParams.values = '' ; 
+			animParams.values += startVal + ';' + origVal; 
+			
+			//now height
+			 origVal =  objDim.height; 
+			 startVal = Math.round((origVal * animParams.startValue)/100); 
+			 animParams.values += '#' + startVal + ';' + origVal ;
+			 
+			// x attribute
+			 var centerArr = animParams.center.split(','); 
+			 origVal =  objNode.getAttribute('x');		 
+			 startVal = objDim.centerX; 
+			 animParams.values += '#' + startVal + ';' + origVal ;			 
+			 
+			// y attribute
+			 var centerArr = animParams.center.split(','); 
+			 origVal =  objNode.getAttribute('y');		 
+			 startVal =  objDim.centerY; 
+			 animParams.values += '#' + startVal + ';' + origVal ;			 
+		}
+		
+		break; 
 	case 'ANIMATE_PATH':
 		var objNode = document.getElementById(animParams.objectID); 
 		animParams.values = objNode.getAttribute('d'); 
@@ -996,7 +1032,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 
  function GX_CreateAnimationWidget(wdgtID)
  {
-	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Zoom', 'Move', 'Animate Path'];
+	 			var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Fly-In', 'Move', 'Animate Path', 'Zoom'];
 	 	//create the new animation widget interface here 	 
 	 			WAL_createModelessWindow('newAnimationDlg', '220', '150', 'newAnimOK', 'newAnimCancel');
 	 			WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '') ; 			
@@ -1328,6 +1364,20 @@ function GX_UpdateAnimInfoInList(animNode)
 				GX_RemoveAnimInfoFromList(animNode.id); 
 				gAnimList.push(animInfo);
 			}
+			else if(animType == 'ANIMATE_ZOOM'){				
+				var nodelist = animNode.childNodes; 
+				var numAnim = nodelist.length; 
+				var animNode1 = animNode.childNodes[0];
+				var beginval = animNode1.getAttribute('begin'); 
+				animNode1.setAttribute('begin', ''); 
+				var beginParams  = GX_GetAnimBeginParameters(beginval);
+				var endval = 'freeze';
+				
+				var titleval = animNode.classList[2]; 
+				var animInfo = [animNode.id, animNode1.targetElement.id, 'ANIMATE_ZOOM', beginval, endval, titleval, beginParams.refAnimID, beginParams.refContainerID];
+				GX_RemoveAnimInfoFromList(animNode.id); 
+				gAnimList.push(animInfo);
+			}
 			/*
 			else if(animType == 'ANIM_MOVE'){
 				attr = 'move';  
@@ -1472,11 +1522,12 @@ function GX_RemoveAnimInfoFromList(animID)
 			 JQSel = '#ROTATE_UI_GROUP';
 			 $(JQSel)[0].style.display='inline-block';//.show();
 		 }
-		 if(itemval == 'scale'){
+		 if( (itemval == 'scale')|| (itemval == 'ANIMATE_ZOOM') ){
 			 JQSel = '#FROM_UI_GROUP';
 			 $(JQSel)[0].style.display='inline-block';		
 			WAL_setNumberInputValue('startValueIP', 30, false);	
 		 }
+		 
 		 if(itemval == 'translate'){
 			 JQSel = '#MOVE_GROUP';
 			 $(JQSel)[0].style.display='inline-block';		
@@ -1877,8 +1928,8 @@ function GX_RemoveAnimInfoFromList(animID)
 		attrData = ['attributeName',"d"];  
 		newAttr.push(attrData);
 		var dvalArr = GX_GetPathValuesForAnimation(animParams.values); 
-		animParams.numSides = dvalArr.length; 
-		var subduration  = 	animParams.duration/animParams.numSides;
+		animParams.numChildAnims = dvalArr.length; 
+		var subduration  = 	animParams.duration/animParams.numChildAnims;
 		subduration = '' + subduration + ''; 
 		var decimalIndex = subduration.indexOf('.'); 
 		subduration =  subduration.substring(0,decimalIndex+2);		
@@ -1890,7 +1941,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		var IDList = []; 
 		var objspecAttrList =[]; 
 		var rowentry = ''; 
-		for(var j=0; j < animParams.numSides; j++ ){			
+		for(var j=0; j < animParams.numChildAnims; j++ ){			
 			animID = animParams.animID + '_' + j; 
 			IDList.push(animID); 
 			rowentry = 'values=' + dvalArr[j]; 
@@ -1901,7 +1952,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			else {
 				var prevAnimID = IDList[j-1];
 				rowentry += '#' + 'begin=' + prevAnimID + '.end' ; 
-				if(j == animParams.numSides-1){
+				if(j == animParams.numChildAnims-1){
 					rowentry += '#' + 'onend=' + 'GX_OnAnimationEndHandler(evt)'; 
 				}
 				//objspecAttrList.push('begin=' + prevAnimID + '.end' );	
@@ -1949,6 +2000,82 @@ function GX_RemoveAnimInfoFromList(animID)
 			attrArray[beginIndex] = attrData; 
 			var animstr = GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_Y', containerGroupID, 'ANIM_ATTRIBUTE', attrArray);
 			return; 
+	}
+	else if (animParams.animType == 'ANIMATE_ZOOM'){
+		//var dvalue = animParams.values; 
+		
+		var classvalue = 'ANIMATE_ZOOM ' + animParams.title + ' ' + animParams.values;		
+		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue); 
+		containerGroupID = animParams.animID ;
+		var newAttr = []; 	
+		    
+	    attrData = ['restart',animParams.restart];  
+		newAttr.push(attrData);		    
+		attrData = ['repeatCount',0];  		
+		newAttr.push(attrData);				
+		attrData = ['fill',animParams.endState];  
+		newAttr.push(attrData);
+		
+		attrData = ['attributeType',"XML"];  
+		newAttr.push(attrData); 
+		attrData = ['xmlns:xlink', 'http://www.w3.org/1999/xlink'];  
+		newAttr.push(attrData);
+		attrData = ['xlink:href','#'+animParams.objectID];  
+		newAttr.push(attrData);		
+		
+		var subduration  = 	animParams.duration/animParams.numChildAnims;
+		subduration = '' + subduration + ''; 
+		var decimalIndex = subduration.indexOf('.'); 
+		subduration =  subduration.substring(0,decimalIndex+2);		
+		attrData = ['dur',subduration+'s'];  
+		newAttr.push(attrData);
+		
+		var animID = ''; 
+		
+		var arrLen = newAttr.length; 
+		var IDList = []; 
+		var objspecAttrList =[]; 
+		var rowentry = ''; 
+		var objspecAttrList = []; 
+		
+		for(var j=0; j < animParams.numChildAnims; j++ ){			
+			animID = animParams.animID + '_' + j; 
+			IDList.push(animID);			
+		}	
+		var objNode = document.getElementById(animParams.objectID); 
+		if(animParams.objectType == 'RECTANGLE'){
+			var origVal =  objNode.getAttribute('width'); 
+			var startVal = Math.round((origVal * animParams.startValue)/100 ); 
+			var valuestr = 'attributeName=width' ; 
+			valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=0s'; 
+			objspecAttrList.push(valuestr);
+			
+			//now height
+			 origVal =  objNode.getAttribute('height'); 
+			 startVal = Math.round((origVal * animParams.startValue)/100 ); 
+			 valuestr = 'attributeName=height' ; 
+			 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin' ;
+			 objspecAttrList.push(valuestr);
+			
+			// x attribute
+			 var centerArr = animParams.center.split(','); 
+			 origVal =  objNode.getAttribute('x');		 
+			 startVal = centerArr[0]; 
+			 valuestr = 'attributeName=x' ; 
+			 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin';
+			 objspecAttrList.push(valuestr);
+			 
+			// y attribute
+			 var centerArr = animParams.center.split(','); 
+			 origVal =  objNode.getAttribute('y');		 
+			 startVal = centerArr[1]; 
+			 valuestr = 'attributeName=y' ; 
+			 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin';
+			 objspecAttrList.push(valuestr);
+		}//if(animParams.objectType == 'RECTANGLE')		
+							
+		GXRDE_addMultipleAnimObjects(containerGroupID, 'ANIMATE_ZOOM', newAttr, IDList, objspecAttrList); 
+		return ; 
 	}
 	else
 	{
@@ -2143,6 +2270,35 @@ function GX_RemoveAnimInfoFromList(animID)
 				animNode = animNode1;
 				//get anim begin values 
 			}
+			else if(animType == 'ANIMATE_ZOOM'){
+				//get the 'd' values 
+				animParam.animType = 'ANIMATE_ZOOM'; 
+				animParam.attribute = 'ANIMATE_ZOOM'; 
+				animParam.values =  animNode.classList[3]; 				
+				var animNode1 = animNode.childNodes[0]; 
+				animParam.numChildAnims = animNode.childNodes.length; 
+				//get the duration values 
+				
+				
+				var tempStr = animNode.childNodes[0].getAttribute('values').split(';'); 
+				var startVal = new Number(tempStr[0]) ;
+				var endVal = new Number(tempStr[1]) ; 
+				startVal = Math.round(startVal *100/endVal); //in terms of % 
+				animParam.startValue = startVal;
+				
+				
+				//now get the values from each child node 
+				var valStr = ''; 
+				
+				for(var j=0; j < animParam.numChildAnims; j++){					
+					valStr += animNode.childNodes[j].getAttribute('values'); 
+					if(j < animParam.numChildAnims - 1)
+							valStr += '#';					
+				}						
+				//get anim begin values 
+				animParam.values = valStr; 
+				animNode = animNode1;
+			}
 		}
 		else
 			animParam.title = GX_GetAnimTitle(animNode); 		
@@ -2154,18 +2310,17 @@ function GX_RemoveAnimInfoFromList(animID)
 		value = animNode.getAttribute('dur'); 
 		value = value.substring(0, value.length-1); 
 		animParam.duration = value;
-		if(animType == 'ANIMATE_PATH'){
+		if((animType == 'ANIMATE_PATH') ||(animType == 'ANIMATE_ZOOM')) {
 			var subDur = new Number(value); 
 			if(numAnim > 0)
-				animParam.duration = Math.round(subDur * numAnim); 			
-			
+				animParam.duration = Math.round(subDur * numAnim); 	
 		}
 		value = animNode.nodeName.toUpperCase(); 
-		if(animType != 'ANIMATE_PATH'){
+		if( (animType != 'ANIMATE_PATH') && (animType != 'ANIMATE_ZOOM') ){
 			animParam.startValue = animNode.getAttribute('from'); 
 			animParam.endValue = animNode.getAttribute('to');
 		}		
-		if((value == 'ANIMATE') && (animType != 'ANIMATE_PATH') )
+		if((value == 'ANIMATE') && (animType != 'ANIMATE_PATH') && (animType != 'ANIMATE_ZOOM'))
 		{
 			animParam.animType = 'ANIM_ATTRIBUTE';
 			animParam.attribute = animNode.getAttribute('attributeName');
@@ -2529,7 +2684,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	}
 	 var startval = AnimParam2.startValue;	
 	 var endval = AnimParam2.endValue;	
-	 if(AnimParam2.attribute == 'ANIMATE_PATH'){
+	 if( (AnimParam2.attribute == 'ANIMATE_PATH')|| (AnimParam2.attribute == 'ANIMATE_ZOOM') ){
 		 if(AnimParam2.values !=  AnimParam1.values){
 			 attrData = ['values',AnimParam2.values];  
 			 attrArray.push(attrData);
@@ -2686,7 +2841,7 @@ function GX_RemoveAnimInfoFromList(animID)
 					for(var j=0; j < numChild; j++){
 						 valuestr =''; 
 						 valuestr = 'dur=' + durvalue;						 
-						 durattrArray.push(valuestr); 						 
+						 durattrArray.push(valuestr);  						 
 						 parentAnimNode.childNodes[j].setAttribute('dur',durvalue ); 
 					 }//for 				 
 					 GXRDE_updateMultipleAnimObjects(IDList, durattrArray); 
@@ -2735,6 +2890,69 @@ function GX_RemoveAnimInfoFromList(animID)
 				 if(i == attrArray.length-1)
 					 return ; 
 			 }
+			 else if(animtype == 'ANIMATE_ZOOM'){
+				 //update the d values if changed
+				 durattrArray = []; 	
+				 valattrArray = []; 
+				 var IDList =[]; 
+				 var parentAnimNode = document.getElementById(curranimID); 
+				 var numChild = parentAnimNode.childNodes.length; 
+				 var durvalue = 0; 
+				 //get all the ID list 
+				 for(var k= 0 ; k < numChild; k++)
+					 IDList.push(parentAnimNode.childNodes[k].id); 
+				//update the duration value if changed 
+				 if(attrArray[i][0] == 'dur'){
+					 var durationvalue = attrArray[i][1].substring(0, attrArray[i][1].length-1); 
+					var subduration  = 	new Number(durationvalue / numChild);
+					subduration = '' + subduration + ''; 
+					var decimalIndex = subduration.indexOf('.'); 
+					subduration =  subduration.substring(0,decimalIndex+2);	
+					durvalue = subduration+'s';	
+					
+					for(var j=0; j < numChild; j++){
+						 valuestr =''; 
+						 valuestr = 'dur=' + durvalue;						 
+						 durattrArray.push(valuestr);  						 
+						 parentAnimNode.childNodes[j].setAttribute('dur',durvalue ); 
+					 }//for 				 
+					 GXRDE_updateMultipleAnimObjects(IDList, durattrArray); 
+				 }// if(attrArray[i][0] == 'dur'					 
+				 else if(attrArray[i][0] == 'values'){
+					 //get the array of d values generated for the child nodes 		
+					 var dvalArr = attrArray[i][1].split('#');	
+					 var valuestr =''; 
+					 for(var j=0; j < numChild; j++){
+						 valuestr ='';						 
+						 valuestr = 'values=' + dvalArr[j];					 
+						 valattrArray.push(valuestr); 
+						 if(j == 0)
+							 parentAnimNode.childNodes[j].setAttribute('values',dvalArr[j]); 
+						 if(j == 1)
+							 parentAnimNode.childNodes[j].setAttribute('values',dvalArr[j]);
+						 if(j == 2)
+							 parentAnimNode.childNodes[j].setAttribute('values',dvalArr[j]);
+						 if(j == 3)
+							 parentAnimNode.childNodes[j].setAttribute('values',dvalArr[j]);
+					 }//for 
+					    GXRDE_updateMultipleAnimObjects(IDList, valattrArray); 									 
+				 }//if(attrArray[i][0] == 'values')
+				 else if(attrArray[i][0] == 'begin'){					 
+					 //set attribute of local animNode
+					 var animNode1 = parentAnimNode.childNodes[0]; 
+					 animNode1.setAttribute(attrArray[i][0], attrArray[i][1]); 
+					 GX_UpdateAnimInfoInList(parentAnimNode);
+					 var attrList1=[]; 
+					 attrList1.push([attrArray[i][0], attrArray[i][1]]); 
+					 GXRDE_updateAnimationObject(animNode1.id, attrList1); 
+					 //then set the remote attribute 
+					 //update the GX_UpdateAnimInfoList
+					 //add it to the list f attr to update 
+					 
+				 }
+				 if(i == attrArray.length-1)
+					 return ; 
+			}//if(animtype == 'ANIMATE_ZOOM')
 		 }//if(animNode.nodeName =='g'
 		 else{
 			
@@ -2841,6 +3059,13 @@ function GX_RemoveAnimInfoFromList(animID)
 	  		return; 
   		}
   		else if(animType == 'ANIMATE_PATH'){
+  			var animNode1 = animnode.childNodes[0];
+  			animNode1.setAttribute('restart', 'whenNotActive');
+  			animNode1.setAttribute('fill', 'remove'); 
+  			animNode1.beginElement();  			
+  			return;   			
+  		}
+  		else if(animType == 'ANIMATE_ZOOM'){
   			var animNode1 = animnode.childNodes[0];
   			animNode1.setAttribute('restart', 'whenNotActive');
   			animNode1.setAttribute('fill', 'remove'); 
@@ -3118,6 +3343,9 @@ function GX_RemoveAnimInfoFromList(animID)
 	    		else if(animtype ==  'ANIMATE_PATH'){
 	    			gInitAnimParam.refAnimID = node.childNodes[node.childNodes.length-1].id; 
 	    		}
+	    		else if(animtype ==  'ANIMATE_ZOOM'){
+	    			gInitAnimParam.refAnimID = node.childNodes[node.childNodes.length-1].id; 
+	    		}
 	    	}
 	    	else
 	    		gInitAnimParam.refAnimID = lastAnimID;
@@ -3134,7 +3362,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	    gInitAnimParam.calcMode = 'linear';
 	    gInitAnimParam.restart = 'never';
 	    gInitAnimParam.repeatCount = 0;
-	    gInitAnimParam.endState = 'freeze'; //FREEZE, REMOVE
+	    gInitAnimParam.endState = 'remove'; //FREEZE, REMOVE
 	    gInitAnimParam.PathObjectOffset=0;
 	    gInitAnimParam.PathStartPoint=new sPoint();
 	    gInitAnimParam.center = '';  //centre of rotation 	
@@ -3241,7 +3469,33 @@ function GX_RemoveAnimInfoFromList(animID)
 			gInitAnimParam.restart = 'whenNotActive'; 
 			var valueArr = gInitAnimParam.values.split(' '); 
 			if(valueArr.length > 1)
-				gInitAnimParam.numSides = valueArr.length-1; 
+				gInitAnimParam.numChildAnims = valueArr.length-1; 
+		}
+		else if(attrtype == 'ANIMATE_ZOOM'){
+			animType = 'ANIMATE_ZOOM'; 
+			var objNode = document.getElementById(gInitAnimParam.UIObjectID); 			
+			if(objNode.classList[0] != 'SVG_SHAPE_OBJECT'){
+				Debug_Message('Animation Not applicable to Shape type Objects'); 
+				return; 
+			}
+			gInitAnimParam.duration = new Number(4); 
+			//gInitAnimParam.values = objNode.getAttribute('d'); 
+			var objType = objNode.classList[1];
+			if(objType == 'RECTANGLE'){
+				var x = objNode.getAttribute('x'); 
+				var y = objNode.getAttribute('y'); 
+				var w = objNode.getAttribute('width'); 
+				var h = objNode.getAttribute('height');
+				var dimVal = 'x='+x+ '#'+ 'y='+y+ '#'+ 'width='+w+ '#' +'height='+h;
+				gInitAnimParam.numChildAnims = new Number(4); 
+			}
+			gInitAnimParam.values = dimVal; 			
+			var objDim =  GX_GetRectObjectDim(objNode);
+			var startX = objDim.centerX; 
+			var startY = objDim.centerY;
+			gInitAnimParam.center = startX + ',' + startY; 
+			gInitAnimParam.restart = 'whenNotActive';	
+			gInitAnimParam.startValue = 40; // in terms of % of the dimension
 		}
 		else{
 			Debug_Message('Other Anim attr not supported'); 
@@ -3772,6 +4026,5 @@ function GX_GetPathValuesForAnimation(dvalue){
 		newdValArr.push(part1 + ';' + part2); 
 		startVal = part2; 
 	}
-	return newdValArr; 
-	
+	return newdValArr; 	
 }
