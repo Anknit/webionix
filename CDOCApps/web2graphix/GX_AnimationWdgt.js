@@ -825,7 +825,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 		if(refPathID)
 		{
 			var pathNode =  document.getElementById(refPathID); 
-			 if(animParams.bPathVisible == 'false'){			
+			 if(animParams.bPathVisible == false){			
 				 GX_SetObjectAttribute(pathNode, 'stroke-opacity', '0.5', true, true);
 				 GX_SetObjectAttribute(pathNode, 'visibility', 'hidden', true, true);
 				 var attrArray = [['visibility', 'hidden'],['stroke-opacity', '0.5']]; 
@@ -892,6 +892,23 @@ function GX_GetAnimParamsFromUI(inputParam)
 			 origVal =  objNode.getAttribute('y');		 
 			 startVal =  objDim.centerY; 
 			 animParams.values += '#' + startVal + ';' + origVal ;			 
+		}
+		else if (animParams.objectType == 'ELLIPSE'){
+			var origVal =  objDim.width/2; 
+			var startVal = Math.round((origVal * animParams.startValue)/100); 
+			animParams.values = '' ; 
+			animParams.values += startVal + ';' + origVal; 
+			
+			//now height
+			 origVal =  objDim.height/2; 
+			 startVal = Math.round((origVal * animParams.startValue)/100); 
+			 animParams.values += '#' + startVal + ';' + origVal ;
+		}
+		else if (animParams.objectType == 'CIRCLE'){
+			var origVal =  objDim.width/2; 
+			var startVal = Math.round((origVal * animParams.startValue)/100); 
+			animParams.values = '' ; 
+			animParams.values += startVal + ';' + origVal;		
 		}
 		
 		break; 
@@ -1407,6 +1424,10 @@ function GX_GetProperReferenceAnim(nodeID){
 		var animType = animNode.classList[1]; 
 		if(animType == 'PATH_MOTION'){
 			var refNode = animNode.childNodes[1]; 
+			refAnimID = refNode.id; 
+		}
+		else if( (animType == 'ANIMATE_ZOOM') || (animType == 'ANIMATE_PATH') ){
+			var refNode = animNode.childNodes[animNode.childNodes.length-1]; 
 			refAnimID = refNode.id; 
 		}
 	}
@@ -1947,7 +1968,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			rowentry = 'values=' + dvalArr[j]; 
 			//objspecAttrList.push('values=' + dvalArr[j]);
 			if( j==0)
-				rowentry += '#'+ 'begin=0s'; 
+				rowentry += '#'+ 'begin=' + beginval; 
 				//				objspecAttrList.push('begin=0s');	
 			else {
 				var prevAnimID = IDList[j-1];
@@ -2004,7 +2025,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	else if (animParams.animType == 'ANIMATE_ZOOM'){
 		//var dvalue = animParams.values; 
 		
-		var classvalue = 'ANIMATE_ZOOM ' + animParams.title + ' ' + animParams.values;		
+		var classvalue = 'ANIMATE_ZOOM ' + animParams.title;		
 		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue); 
 		containerGroupID = animParams.animID ;
 		var newAttr = []; 	
@@ -2047,7 +2068,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			var origVal =  objNode.getAttribute('width'); 
 			var startVal = Math.round((origVal * animParams.startValue)/100 ); 
 			var valuestr = 'attributeName=width' ; 
-			valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=0s'; 
+			valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + beginval; 
 			objspecAttrList.push(valuestr);
 			
 			//now height
@@ -2072,6 +2093,27 @@ function GX_RemoveAnimInfoFromList(animID)
 			 valuestr = 'attributeName=y' ; 
 			 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin';
 			 objspecAttrList.push(valuestr);
+		}//if(animParams.objectType == 'RECTANGLE')		
+		else if(animParams.objectType == 'ELLIPSE'){
+			var origVal =  objNode.getAttribute('rx'); 
+			var startVal = Math.round((origVal * animParams.startValue)/100 ); 
+			var valuestr = 'attributeName=rx' ; 
+			valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + beginval; 
+			objspecAttrList.push(valuestr);
+			
+			//now height
+			 origVal =  objNode.getAttribute('ry'); 
+			 startVal = Math.round((origVal * animParams.startValue)/100 ); 
+			 valuestr = 'attributeName=ry' ; 
+			 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin' ;
+			 objspecAttrList.push(valuestr);		
+		}//if(animParams.objectType == 'RECTANGLE')	
+		else if(animParams.objectType == 'CIRCLE'){
+			var origVal =  objNode.getAttribute('r'); 
+			var startVal = Math.round((origVal * animParams.startValue)/100 ); 
+			var valuestr = 'attributeName=r' ; 
+			valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + beginval; 
+			objspecAttrList.push(valuestr);				
 		}//if(animParams.objectType == 'RECTANGLE')		
 							
 		GXRDE_addMultipleAnimObjects(containerGroupID, 'ANIMATE_ZOOM', newAttr, IDList, objspecAttrList); 
@@ -2276,20 +2318,15 @@ function GX_RemoveAnimInfoFromList(animID)
 				animParam.attribute = 'ANIMATE_ZOOM'; 
 				animParam.values =  animNode.classList[3]; 				
 				var animNode1 = animNode.childNodes[0]; 
-				animParam.numChildAnims = animNode.childNodes.length; 
+				numAnim = animParam.numChildAnims = animNode.childNodes.length; 
 				//get the duration values 
-				
-				
 				var tempStr = animNode.childNodes[0].getAttribute('values').split(';'); 
 				var startVal = new Number(tempStr[0]) ;
 				var endVal = new Number(tempStr[1]) ; 
 				startVal = Math.round(startVal *100/endVal); //in terms of % 
-				animParam.startValue = startVal;
-				
-				
+				animParam.startValue = startVal;				
 				//now get the values from each child node 
-				var valStr = ''; 
-				
+				var valStr = ''; 				
 				for(var j=0; j < animParam.numChildAnims; j++){					
 					valStr += animNode.childNodes[j].getAttribute('values'); 
 					if(j < animParam.numChildAnims - 1)
@@ -3460,7 +3497,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		else if(attrtype == 'ANIMATE_PATH'){
 			animType = 'ANIMATE_PATH'; 
 			var objNode = document.getElementById(gInitAnimParam.UIObjectID); 			
-			if(objNode.classList[0] != 'SVG_PATH_OBJECT'){
+			if(objNode.classList[1] != 'POLYGON'){
 				Debug_Message('Animation Not applicable to Shape type Objects'); 
 				return; 
 			}
@@ -3481,15 +3518,15 @@ function GX_RemoveAnimInfoFromList(animID)
 			gInitAnimParam.duration = new Number(4); 
 			//gInitAnimParam.values = objNode.getAttribute('d'); 
 			var objType = objNode.classList[1];
-			if(objType == 'RECTANGLE'){
-				var x = objNode.getAttribute('x'); 
-				var y = objNode.getAttribute('y'); 
-				var w = objNode.getAttribute('width'); 
-				var h = objNode.getAttribute('height');
-				var dimVal = 'x='+x+ '#'+ 'y='+y+ '#'+ 'width='+w+ '#' +'height='+h;
+			if( objType == 'RECTANGLE'){
+				
 				gInitAnimParam.numChildAnims = new Number(4); 
-			}
-			gInitAnimParam.values = dimVal; 			
+			}	
+			else if (objType == 'ELLIPSE')
+				gInitAnimParam.numChildAnims = new Number(2);
+			else if (objType == 'CIRCLE')
+				gInitAnimParam.numChildAnims = new Number(1);
+			//gInitAnimParam.values = dimVal; 			
 			var objDim =  GX_GetRectObjectDim(objNode);
 			var startX = objDim.centerX; 
 			var startY = objDim.centerY;
