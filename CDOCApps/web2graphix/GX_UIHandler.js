@@ -6695,7 +6695,7 @@ function GX_UpdateGradAnimAttribute(bFlag, gradResID, attrName, from, to, durati
 	var animNode = document.querySelector('#'+animNodeID); 
 	if(animNode)
 	{
-		if(bFlag == 'true')
+		if(bFlag == true)
 		{
 			GX_SetObjectAttribute(animNode, 'from', from , true, false);
     		GX_SetObjectAttribute(animNode, 'to', to , true, false);
@@ -6708,7 +6708,7 @@ function GX_UpdateGradAnimAttribute(bFlag, gradResID, attrName, from, to, durati
 	}
 	else
 	{
-		if(bFlag == 'true')
+		if(bFlag == true)
 		{
 			GX_AddGradientAnimation(gradResID,animNodeID, attrName, from,to, duration ); 
 			//Debug_Message("Reached Here"); 
