@@ -111,7 +111,7 @@ var gShowTooltip =  true;
 var gOrigPointerPos = new sPoint();
 var gShowGrid =  true; 
 var bPointerMove = false; 
-
+var gOrigFreedrawPathVal = 0; 
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -1750,6 +1750,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	 //$(TTSel).jqxTooltip('close');//open(); 
     	 $(TTSel).jqxTooltip('destroy');//open();
     	// Debug_Message('Tooltip Closed');
+    	 gOrigFreedrawPathVal = 0; 
     	 
     	 
     	return ; 
@@ -3413,6 +3414,8 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('erase_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('modify_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('addpoint_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('smoothen_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    
     WAL_createCustomButton('deletepoint_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     
     
@@ -3804,6 +3807,9 @@ function GX_ToolbarHandler(Node)
 		break;
 	case 'deletepoint_icon':
 		GX_DeletePoint(); 
+		break; 
+	case 'smoothen_icon':
+		GX_Smoothen(); 
 		break; 
 	case 'stroke_color_icon':
 		WAL_hideWidget('colorpickwidget', true); 
@@ -7300,4 +7306,67 @@ function OnPointerMarkerMouseOut(evt)
 	 gsvgRootNode.setAttribute("cursor", 'auto');  
 	 markerNode.setAttribute('r', '6');
 	  
+}
+
+function GX_Smoothen(){
+	
+	
+	//get the current selected object 
+	if(!gCurrentObjectSelected) return ; 
+	
+	var objType = gCurrentObjectSelected.classList[1];
+	if(objType !=  'FREEDRAW_PATH')
+		return ; 
+	
+	//now get the path data values
+	if(gOrigFreedrawPathVal){
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'd', gOrigFreedrawPathVal, true, false); 
+		gOrigFreedrawPathVal = 0;
+	}		
+	else
+		{
+			gOrigFreedrawPathVal = gCurrentObjectSelected.getAttribute('d'); 
+		//smoothen the points
+			var dval = Smoothen(gOrigFreedrawPathVal);		
+		//now set the path data point of the current object
+			GX_SetObjectAttribute(gCurrentObjectSelected, 'd', dval, true, false);
+		}
+	 
+}
+
+function Smoothen(Points){
+	
+	//get all the points and convert into array of x y separated by ','
+	var srcArr = Points.split(' ');
+	var dstArr=[]; 
+	var dstStr = ''; 
+	var newX, newY, srcPoint; 
+	var avgX, avgY; 
+	var firstPoint = srcArr.splice(0,1);    
+	dstStr = firstPoint+' '; 
+	with(Math){
+		for(var i= 5; i < srcArr.length-5; i++){
+			//now start from 5th index onwwards 
+			avgX = avgY = 0; 
+			for(var j = -5; j < 5; j++){
+				srcPoint = srcArr[i + j].split(','); 
+				avgX += new Number(srcPoint[0]); 
+				avgY += new Number(srcPoint[1]); 
+			}
+			//avgX /= 10; 
+			//avgY /= 10;
+			avgX = round(avgX / 10);
+			avgY = round(avgY / 10);
+			dstStr += avgX + ',' +  avgY + ' '; 			
+			//take -5 points and +5 points and form an average. 
+			//store it into a new array
+		}
+	}
+	
+	return dstStr; 
+	
+	
+	//once done then conbvert into a string and return the valeue
+	
+	
 }
