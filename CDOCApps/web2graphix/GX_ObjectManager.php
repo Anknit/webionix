@@ -771,7 +771,7 @@ function GX_OBJ_AddMultipleSVGAnimation(&$respData)
 	$SVGFileName = $_SESSION['svg_xml_FileName'];	
 	$numOfObj =  count($objInfoArray); 
 	
-	if($animTypeVal = 'ANIMATE_PATH'){
+	if(($animTypeVal = 'ANIMATE_PATH') || ($animTypeVal = 'ANIMATE_ZOOM') ){
 		foreach ($objInfoArray as $animID => $namevalue){
 			$myanimID = $animID;
 			$namevalue = $objInfoArray[$animID];
