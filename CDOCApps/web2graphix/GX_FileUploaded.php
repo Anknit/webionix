@@ -9,13 +9,13 @@ include_once "GX_CommonAPI.php";
 		//echo "Session could not be validated";
 		return ;
 	}
-	if(!isset($_SESSION['projHTMLDOM']))
+	if(!isset($_SESSION['svg_xml_dom']))
 		return false;
-	if(!isset($_SESSION['projHTMLFilename']))
-		return false;
-	
+	if(!isset($_SESSION['svg_xml_FileName']))
+		return false;	
 	$resID = $_POST['resIDvalue']; 
 	$imgfname = $_POST['imgFnamevalue']; 
+	echo 'resID= ' . $_POST['resIDvalue'] . 'imgfname= ' . $_POST['imgFnamevalue'] . 'resTypevalue=' . $_POST['resTypevalue'];
 	$retval = HandleImageFileUpload($resID, $imgfname); 
 	if($retval != true)
 		echo "Image could not be stored on Server"; 
@@ -25,21 +25,13 @@ include_once "GX_CommonAPI.php";
 	$resType = $_POST['resTypevalue'];
 	$resType = strtoupper($resType);
 	if($resType == 'IMAGE')
-	{
-		//now get the image node 
-		$retval = CDOC_COMMON_setHTMLAttributeInObject($_SESSION['projHTMLDOM'], $_SESSION['projHTMLFilename'], $resID, 'src', $imgfname);
-		if($retval != true)
-			echo "Image source could not be set"; 
-		else
-			header("Location:CommonEditor.html");
+	{		
 		//then set the source node to that of the one returned by HandleFileUpload
+		$attrArr['xlink:href'] =  $imgfname; 
+		$retval = GX_COMMON_UpdateSVGAttributes($_SESSION['svg_xml_dom'], $_SESSION['svg_xml_FileName'], $resID, $attrArr);
+		header("Location:GX_Editor.html");
 	}
-	else if($resType == 'BKGRND_IMAGE')
-	{
-		//now get the image node 
-		header("Location:CommonEditor.html");
-		//then set the source node to that of the one returned by HandleFileUpload
-	}
+	
 
 	return ; 
 	
