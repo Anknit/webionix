@@ -627,6 +627,27 @@
             </div>
        </div>          
    </div>
-      
+   
+   
+   <div id="imageLoadDlg" style="display:none"><div id="Div2">Please Select Image file</div>
+        <div id='Div4' style="overflow: hidden">           
+            <form enctype="multipart/form-data" action="GX_FileUploaded.php" id="imgForm" method="post" name="frmImageLoad">
+                <input id="imgFile" name="file4Upload" type="file" accept="image/*" onchange="GX_updateImageFilename(this.value)" />     			
+     			<input id="resID" name="resIDvalue" type="hidden" value="unknown"/>
+     			<input id="resType" name="resTypevalue" type="hidden" value="unknown"/>
+     			<input id="imgFname" name="imgFnamevalue" type="hidden" value="unknown"/>
+     			
+             </form> 
+              <div> 
+                <input type="button" id ='imageOK'     value="OK" />
+                <input type="button" id ='imageCancel' value="Cancel"  />
+            </div>          
+       </div>          
+     </div>
+     
+     <div id="waitwindow" ><div id="windowtitle">Wait......</div> 
+       <div id='mycontent'style="overflow: hidden">                     
+       </div>        
+    </div>
 </body>
 </html>
