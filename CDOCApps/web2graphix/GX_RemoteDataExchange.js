@@ -127,6 +127,14 @@ function GXRDE_DeleteObject(currobjID)
 	var reqbody = "&CURROBJECTID=" + currobjID;
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "307", reqbody);	
 }
+
+function GXRDE_getCurrentSessionFileName()
+{
+	var reqbody = "";
+	var respstring = AJX_RequestWithReponseData("text", "WKSM", "108", "");	
+	return respstring; 
+}
+
 function GXRDE_CopyShapeObject(objectID, groupID, newID)
 {
 	var reqbody = "&OBJECTID=" + objectID + "&NEWOBJDID=" + newID + "&GROUPID=" + groupID ;
