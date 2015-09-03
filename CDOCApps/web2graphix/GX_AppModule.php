@@ -11,6 +11,7 @@
 include_once "GX_SessionMgr.php" ;
 include_once "GX_WKSMgrModule.php";
 include_once "GX_ObjectManager.php";
+include_once "GX_PageMgrModule.php"; 
 include_once "Debuglog.php"; 
 
 
