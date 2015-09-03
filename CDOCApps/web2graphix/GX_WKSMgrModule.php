@@ -139,7 +139,7 @@ function GX_WKS_Initialize($wksname)
 	
 	//$_SESSION['wksdir']  = $_SESSION['user_data_path'].$_SESSION['pathSeparator'].$wksname; ;
 	$_SESSION['baseWKSURI'] = $_SESSION['baseWKSURI']."/".$wksname; 
-
+	$_SESSION['userProjectDataPath'] = $_SESSION['baseWKSURI'] . "/" . "SVG/" ; 
 	//checks whether the director already exists
 	$retval = 0;
 	if(!is_dir($_SESSION['wksdir']))
