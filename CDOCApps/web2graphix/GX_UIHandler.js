@@ -3575,6 +3575,7 @@ function GX_InitializeToolbar()
     WAL_createDropdownListwithButton("curveDDL", '0','0',curveTypes, "GX_DDLHandler", '140', '80','curve_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
   //  WAL_createCustomButton('path_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('text_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('image_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     //WAL_createCustomButton('blink_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('grid_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     
@@ -3867,6 +3868,10 @@ function GX_ToolbarHandler(Node)
 	case 'freehand_icon':
 		GX_AddNewSVGObject('freedraw_path',''); 
 		GX_StartFreeDraw();
+		break; 
+	case 'image_icon':
+		var respstr = GXRDE_getProjectDataPath(); 
+		Debug_Message(respstr); 
 		break; 
 		
 		/*
