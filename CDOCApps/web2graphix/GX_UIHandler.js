@@ -1382,34 +1382,6 @@ function IsNameValid(strname)
 }
 
 
-function GX_creatShape(Type,elemID, parentID, objXMLStr)
-{
-	var parentNode = document.getElementById(parentID);
-	 
-	if(Type == 'RECTANGLE')
-	{
-		var elem = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-		elem.setAttribute('id', elemID);
-		elem.setAttribute('class', 'SVG_SHAPE_OBJECT');
-		elem.setAttribute('x', '10px');
-		elem.setAttribute('y', '10px');
-		elem.setAttribute('width', '100');
-		elem.setAttribute('height', '100');
-		elem.setAttribute('fill', 'none');
-		elem.setAttribute('stroke', 'red');
-		elem.setAttribute('stroke-width', '3');
-		elem = parentNode.appendChild(elem); 	
-	}
-	var trialstr = '<rect id="RECT1002" class="SVG_SHAPE_OBJECT" x="10px" y="10px" width="100" height="100" fill="none" stroke="black" stroke-width="3"></rect>';
-	var XMLDoc =  loadXMLString(trialstr);
-	var objNode = XMLDoc.firstChild; 
-	objNode = document.importNode(objNode, true);
-	 //objNode = document.adoptNode(objNode);	 
-	parentNode.replaceChild(objNode, elem);
-	return true; 
-	//<rect id="RECT1001" class="SVG_SHAPE_OBJECT" x="10px" y="10px" width="100" height="100"
-//fill="none" stroke="black" stroke-width="3"/>
-}
 
 function loadXMLString(txt)  
 {
@@ -2974,7 +2946,7 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 		}
 		else if(objectType == 'SVG_SHAPE_OBJECT')
 		{
-			if(shapeType == 'RECTANGLE')
+			if( (shapeType == 'RECTANGLE') || (shapeType == 'IMAGE') )
 			{
 				gNode.setAttribute('x',transfDim.x); 
 				gNode.setAttribute('y',transfDim.y); 
@@ -3150,7 +3122,7 @@ function GX_GetRectObjectDim(ObjNode)
 	    var x, y, width, height; 
 	    //get the parent layer node
 	    //get the dimension of the same 
-	    if (ObjNode.nodeName == 'rect') {
+	    if( (ObjNode.nodeName == 'rect') || (ObjNode.nodeName == 'image') ) {
 	    	 mypoint.x = new Number(ObjNode.getAttribute('x')); 
 		     mypoint.y = new Number(ObjNode.getAttribute('y'));
 		     mypoint.width = new Number(ObjNode.getAttribute('width')); 
@@ -3159,6 +3131,7 @@ function GX_GetRectObjectDim(ObjNode)
 		     mypoint.centerY = mypoint.y + mypoint.height /2; 
 		     
 	    }
+	    
 	    else if(ObjNode.nodeName == 'ellipse') {	        
 	    	mypoint.centerX = mypoint.x = new Number(ObjNode.getAttribute('cx')); 
 	    	mypoint.centerY = mypoint.y = new Number(ObjNode.getAttribute('cy'));
@@ -3274,7 +3247,7 @@ function GX_SetRectObjectDim(ObjNode, newDim)
    	 return false ;
     }
     
-    if (ObjNode.nodeName == 'rect') {
+    if((ObjNode.nodeName == 'rect') || (ObjNode.nodeName == 'image') ) {
             ObjNode.setAttribute('x', modDim.x);
             ObjNode.setAttribute('y', modDim.y);
             ObjNode.setAttribute('width', modDim.width);
@@ -5639,7 +5612,7 @@ function OnFreeDrawClick(evt)
 		    gPrevY = 10000;
 		}
 		else if( (objectType == 'RECTANGLE') || (objectType == 'ELLIPSE') || (objectType == 'CIRCLE') || (objectType == 'LINE_PATH')||
-				(objectType == 'CUBIC_BEZIER') || (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC') )
+				(objectType == 'CUBIC_BEZIER') || (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC') || (objectType == 'IMAGE') )
 		{
 			gCurrSelectedObjectDim = new sDimension(); 
 			gCurrSelectedObjectDim.x = X; 
@@ -5662,7 +5635,7 @@ function OnFreeDrawClick(evt)
 			gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
 			GX_SetObjectAttribute(gCurrentObjectSelected, 'PATH_DATA', gPathDataArray, true, false);
 		}
-		else if( (objectType == 'RECTANGLE')|| (objectType == 'ELLIPSE')|| (objectType == 'CIRCLE') || (objectType == 'LINE_PATH')||(objectType == 'CUBIC_BEZIER')
+		else if( (objectType == 'RECTANGLE')|| (objectType == 'IMAGE') || (objectType == 'ELLIPSE')|| (objectType == 'CIRCLE') || (objectType == 'LINE_PATH')||(objectType == 'CUBIC_BEZIER')
 				|| (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC'))
 		{
 			GX_SetObjectAttribute(gCurrentObjectSelected, 'DIMENSION', gCurrSelectedObjectDim, true, false);
@@ -5717,7 +5690,7 @@ function OnFreeDraw(evt)
 	     gPrevY = Y; 
 	     return ; 
 	}
-	else if((objType ==  'RECTANGLE') || (objType ==  'ELLIPSE')|| (objType == 'CIRCLE') || (objType == 'LINE_PATH')||(objType == 'CUBIC_BEZIER')
+	else if((objType ==  'RECTANGLE') || (objectType == 'IMAGE') || (objectType == 'IMAGE') || (objType ==  'ELLIPSE')|| (objType == 'CIRCLE') || (objType == 'LINE_PATH')||(objType == 'CUBIC_BEZIER')
 			|| (objType == 'QUADRATIC_BEZIER')|| (objType == 'ELLIPTIC'))
 	{
 		gCurrSelectedObjectDim.width = X - gCurrSelectedObjectDim.x; 
