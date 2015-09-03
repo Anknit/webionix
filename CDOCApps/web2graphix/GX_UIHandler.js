@@ -112,6 +112,7 @@ var gOrigPointerPos = new sPoint();
 var gShowGrid =  true; 
 var bPointerMove = false; 
 var gOrigFreedrawPathVal = 0; 
+var gImageDlg 	= 'imageLoadDlg';
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -924,7 +925,9 @@ function GX_Initialize()
     WAL_createButton('fillcolAnimAddBtn', 'GX_FillBtnHandler', '60', 24, true);
     WAL_createButton('fillcolAnimPreviewBtn', 'GX_FillBtnHandler', '60', 24, true);
     WAL_createCheckBox('animateFillColor', 'GX_FillColorAnimCheckValueChange', '50', gWidgetHeight, '13', false, false);
-    WAL_createModelessWindow('fillcolorDlg', '250', '150', 'fillcolOK', 'fillcolCancel');   
+    WAL_createModelessWindow('fillcolorDlg', '250', '150', 'fillcolOK', 'fillcolCancel');
+    
+    WAL_createModalWindow(gImageDlg, '250', '150', 'imageOK', 'imageCancel');
    /* $(document).on('contextmenu', function (e) {
         return false;
     });
@@ -932,6 +935,11 @@ function GX_Initialize()
     
     GX_MenuDisable(true);
     
+    var currFileName =  GXRDE_getCurrentSessionFileName(); 
+    if(currFileName){
+    	GX_MenuDisable(false);
+    	GX_OpenFile(currFileName);    	
+    }
    
    // Debug_Message("DBM Initialized Successfully");    
 }
@@ -1322,9 +1330,9 @@ function GX_LBOKHandler(){
      var fnamearr = fname.split('('); 
      fname = fnamearr[0];
      GX_SetSelection(gCurrentObjectSelected, false, true);
-     
+     GX_OpenFile(fname);
          
-     
+    /* 
      var retval = GXRDE_openSVGFile(fname); 
      var HTMLstr=""; 
      if(retval)
@@ -1341,9 +1349,27 @@ function GX_LBOKHandler(){
       	 GX_updateTreeWidget(xmlstr);   
      WAL_expandAllTreeItems(gTreeNodeID, true);
      WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
-    
+    */
 }
 
+function GX_OpenFile(fname){
+	 var retval = GXRDE_openSVGFile(fname); 
+     var HTMLstr=""; 
+     if(retval)
+     {
+    	 GX_CloseSVGFile(); 
+    	 var dataNode = document.getElementById('objectcontainer');   	 
+    	 dataNode.innerHTML += retval; 
+    	 GX_InitializeDocument(fname);     	 
+     }	
+    
+   
+     var xmlstr = GXRDE_GetSVGMetaXML(fname);    
+     if(xmlstr)
+      	 GX_updateTreeWidget(xmlstr);   
+     WAL_expandAllTreeItems(gTreeNodeID, true);
+     WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
+}
 
 function IsNameValid(strname)
 {
@@ -1550,7 +1576,8 @@ function GX_AddNewSVGObject(Type, name)
 	}
 	else		
 		retval = GXRDE_addNewSVGObject(ObjID, parentID, objectType);
-	
+	if(objectType ==  'IMAGE')
+		return ObjID; 
 	var myobjType; 
 	 var nodeTitle; 
 	if(retval != 'ERROR')
@@ -3870,8 +3897,8 @@ function GX_ToolbarHandler(Node)
 		GX_StartFreeDraw();
 		break; 
 	case 'image_icon':
-		var respstr = GXRDE_getProjectDataPath(); 
-		Debug_Message(respstr); 
+		GX_AddNewImageSVG(); 
+		
 		break; 
 		
 		/*
@@ -7374,4 +7401,62 @@ function Smoothen(Points){
 	//once done then conbvert into a string and return the valeue
 	
 	
+}
+var gImageObjID = 0; 
+function GX_AddNewImageSVG(){
+	//add new image SVG object 
+	gImageObjID = GX_AddNewSVGObject('image', ''); 
+	
+	//BlockUIinAjax(true);
+	WAL_showModalWindow(gImageDlg,"GX_ImageLoadOK", "" );	
+	
+	//now get the entire SVG file 
+	//var respstr = GXRDE_getProjectDataPath(); 
+	//Debug_Message(respstr); 
+}
+function GX_ImageLoadOK(){
+	var nodename = 'IMAGE'; 
+	var objectID = gImageObjID; 
+	var currNodeID = 0; 	
+	BlockUIinAjax(true);
+	if(nodename == 'IMAGE')
+	{
+		currNodeID = objectID; 
+		node = document.getElementById("resID");
+		node.setAttribute('value',currNodeID ); 
+		node = document.getElementById("resType");
+		node.setAttribute('value','IMAGE');	
+		//now first remove the data-background and then save it before doing anything else 
+		node = document.getElementById("imgFname");
+		var fname = node.getAttribute('value'); 	
+		Debug_Message('File name:' +  fname); 
+		var itemname = "Image:(" + fname + ")";		
+		node = document.getElementById("imgFile");
+		var filename = node.getAttribute('value');		
+		document.getElementById("imgForm").submit();	
+		//BlockUIinAjax(false);
+		//return ; 
+	}
+	//BlockUIinAjax(false);	
+}
+function GX_updateImageFilename(filename)
+{
+	node = document.getElementById("imgFname");
+	var fakepathlen = 12; 
+	var str = filename.substring(0,12 ); 
+	var fakestr = "C:\\fakepath\\"; //typically Chrome/IE specific issue
+	////Debug_Message("Fake str = " + fakestr); 
+	//Debug_Message("str = " + str); 
+	if(str ==fakestr )
+	{
+		//Debug_Message("Need to Remove fakepath");
+		str = filename.substring(fakestr.length, filename.length); 
+		//Debug_Message("str = " + str); 
+		node.setAttribute("value", str); 
+	}
+	else
+		node.setAttribute("value", filename); 
+			
+	
+	//Debug_Message("UIH_updateFilename:Filname = " + node.getAttribute('value')); 
 }

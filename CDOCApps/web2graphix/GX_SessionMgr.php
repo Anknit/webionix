@@ -64,6 +64,7 @@ function CDOC_Session_Init(&$name, &$id, $workspacename)
 	$_SESSION['user_data_path'] = $USER_DATA_PATH;
 	$_SESSION['svg_xml_dom'] = 0;
 	$_SESSION['svg_xml_FileName'] = 0;
+	$_SESSION['current_svg_FileName'] = 0;
 	
 	  
 	

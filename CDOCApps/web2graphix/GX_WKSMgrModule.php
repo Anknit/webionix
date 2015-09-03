@@ -52,20 +52,11 @@ function GX_WKS_ProcessRequest($ReqID, &$responseData)
 		$retval = GX_WKS_GetPageLink($responseData);
 		return $retval;
 	}
-	
-	
-	/*else if($ReqID == '103')
+	else if($ReqID == '108')
 	{
-		$retval = CDOC_WKS_DeleteProject($responseData);
-		if($retval == true)
-		{
-			$retval  = CDOC_WKS_GetWorkspaceStringData($responseData);
-		}
+		$retval = GX_WKS_GetCurrentSessionFileName($responseData);
 		return $retval;
-	}*/
-	
-	
-
+	}
 }
 
 function CDOC_WKS_GetWorkspaceXMLData(&$responseData)
@@ -367,7 +358,9 @@ function GX_WKS_OpenSVGFile(&$respData)
 	$svgFileName = $respData; 
 	$_SESSION['svg_xml_dom'] = new DOMDocument("1.0", "utf-8");
 	$_SESSION['svg_xml_FileName'] = $_SESSION['projDataPath'].$_SESSION['pathSeparator'].$respData;
-
+	$_SESSION['current_svg_FileName'] = $respData;
+	
+	
 	if(!file_exists($_SESSION['svg_xml_FileName']))
 	{
 		$respData = "";
@@ -563,3 +556,12 @@ function  GX_WKS_GetPageLink(&$respData)
 	return true;
 }
 
+
+function GX_WKS_GetCurrentSessionFileName(&$respData){
+	
+	if(!isset($_SESSION['current_svg_FileName']))
+		$respData = 0; 
+	else 
+		$respData = $_SESSION['current_svg_FileName']; 
+	return true; 
+}
