@@ -260,3 +260,13 @@ function GXRDE_removeAttribute(elemtID, attrname){
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "314", reqbody);	
 	return respstring; 	
 }
+
+function GXRDE_getProjectDataPath()
+{
+	 var respstr = AJX_RequestWithReponseData("text", "PRJM", "209", "");
+	    if (respstr == "FAIL") {
+	        Debug_Message("Failed to Get Project Data Path due to some error");
+	        return 'FAIL'; 
+	    }
+	 return respstr; 
+}
