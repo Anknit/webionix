@@ -100,7 +100,7 @@ var gMoveIndicatorPath = false;
 var gAttrList=[]; 
 gAttrList['Fill-Color'] = 'fill'; 
 gAttrList['Stroke-Color'] = 'stroke'; 
-gAttrList['Opacity'] = 'fill-opacity'; 
+gAttrList['Opacity'] = 'opacity'; 
 gAttrList['Visibility'] = 'visibility'; 
 gAttrList['Stroke-Width'] = 'stroke-width';
 gAttrList['Motion along Path'] = 'pathmotion';// 'translate';
@@ -118,7 +118,7 @@ gAttrList['Zoom'] = 'ANIMATE_ZOOM';
 var gReverseAttrList =[]; 
 gReverseAttrList['fill']           =  'Fill-Color'     ; 
 gReverseAttrList['stroke']         =  'Stroke-Color'   ; 
-gReverseAttrList['fill-opacity']   =  'Opacity'  ; 
+gReverseAttrList['opacity']   =  'Opacity'  ; 
 gReverseAttrList['visibility']     =  'Visibility'  ; 
 gReverseAttrList['stroke-width']   =  'Stroke-Width' ;
 gReverseAttrList['pathmotion']     =  'Motion along Path'   ;
@@ -522,7 +522,7 @@ function GX_SetAnimParamOnUI(animParam) {
 	case 'skewY':
 		WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
 		break; 
-	case 'fill-opacity':
+	case 'opacity':
 		WAL_setNumberInputValue('startOpacityValueIP', animParam.startValue, false);	
 		break;
 	case 'scale':
@@ -855,7 +855,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 	case 'skewY':			
 		animParams.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
 		break; 		
-	case 'fill-opacity':
+	case 'opacity':
 		animParams.startValue = WAL_getMaskedInputValue('startOpacityValueIP');	
 		break;
 	case 'scale':
@@ -1517,7 +1517,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		 $(JQSel).hide(); 		
 		 //Debug_Message('Anim Attribute=' + value); 
 		 
-		 if(itemval == 'fill-opacity')
+		 if(itemval == 'opacity')
 		 {
 			 JQSel = '#OPACITY_UI_GROUP';			 
 			 $(JQSel)[0].style.display='inline-block'; 
@@ -1565,7 +1565,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			JQSel = '#MOTION_PATH_GROUP'; 
 			$(JQSel)[0].style.display='inline-block';				 
 		 }
-		 if(itemval == 'fill-opacity'){
+		 if(itemval == 'opacity'){
 				JQSel = '#OPACITY_UI_GROUP'; 
 				$(JQSel)[0].style.display='inline-block';				 
 		 }
@@ -2126,10 +2126,10 @@ function GX_RemoveAnimInfoFromList(animID)
 		
 		 if(animParams.animType == 'ANIM_ATTRIBUTE')
 		 {
-			
-		    attrData = ['attributeName',animParams.attribute];  
-		    attrArray.push(attrData);   
-		    
+			 
+			attrData = ['attributeName',animParams.attribute];  
+			attrArray.push(attrData);   
+		   
 		    attrData = ['from',animParams.startValue];  
 		    attrArray.push(attrData); 
 		    
@@ -3404,7 +3404,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	    gInitAnimParam.PathStartPoint=new sPoint();
 	    gInitAnimParam.center = '';  //centre of rotation 	
 		var animType = 'ANIM_ATTRIBUTE'; 
-		if(attrtype == 'fill-opacity'){
+		if(attrtype == 'opacity'){
 			gInitAnimParam.startValue = '0.5';
 		 	gInitAnimParam.endValue = '1';
 		}
@@ -3484,7 +3484,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			gInitAnimParam.pace = 0; 
 			var startPoint =  new sPoint();
 			var endPoint = new sPoint(); 
-			if(gInitAnimParam.objectType == 'RECTANGLE'){
+			if((gInitAnimParam.objectType == 'RECTANGLE') || (gInitAnimParam.objectType == 'IMAGE') ){
 				startPoint.x = new Number(gCurrentObjectSelected.getAttribute('x')); 
 				startPoint.y = new Number(gCurrentObjectSelected.getAttribute('y')); 				
 			}
@@ -3518,7 +3518,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			gInitAnimParam.duration = new Number(4); 
 			//gInitAnimParam.values = objNode.getAttribute('d'); 
 			var objType = objNode.classList[1];
-			if( objType == 'RECTANGLE'){
+			if( (objType == 'RECTANGLE') || (objType == 'IMAGE') ){
 				
 				gInitAnimParam.numChildAnims = new Number(4); 
 			}	
