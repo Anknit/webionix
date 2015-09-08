@@ -54,6 +54,7 @@ var gPanX = new Number(0);
 var gPanY = new Number(0); 
 var gPanDelta = new Number(20); 
 var gCurrentObjectSelected=0; 
+var gCurrentObjectType = 0; 
 var gCurrSelectedObjectDim = new sDimension();
 var gGrabberDim = new sDimension(); 
 var gOrigMousePosX, gOrigMousePosY;
@@ -1738,8 +1739,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	JQSel = '#' + gCurrentObjectSelected.id; 
     	
     	if(gCurrAnimNode)
-    	{
-    			
+    	{    			
     		GX_RestoreAnimationObject(gCurrAnimNode.id);  
     		gCurrAnimNode=0;
     	}
@@ -3570,9 +3570,13 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('square_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('freehand_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('line_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+   // WAL_createCustomButton('line_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     var curveTypes = ['Cubic Bezier','Quadratic Bezier','Elliptic']; 
     WAL_createDropdownListwithButton("curveDDL", '0','0',curveTypes, "GX_DDLHandler", '140', '80','curve_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
+    
+    var lineTypes = ['Horizontal','Vertical','Normal']; 
+    WAL_createDropdownListwithButton("lineDDL", '0','0',lineTypes, "GX_DDLHandler", '140', '80','line_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
+    
   //  WAL_createCustomButton('path_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('text_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('image_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -3855,10 +3859,11 @@ function GX_ToolbarHandler(Node)
 		 GX_AddNewSVGObject('rectangle',''); 
 		 GX_StartFreeDraw();
 		break; 
-	case 'line_icon':
+	/*case 'line_icon':
 		 GX_AddNewSVGObject('line_path',''); 
 		 GX_StartFreeDraw();
 		break;
+		*/
 	case 'polygon_icon':
 		WAL_showModalWindow(gPolyInputDlg,"GX_PolyInputDlgOK", "" );
 		break; 
@@ -4318,7 +4323,7 @@ function GX_ConvertArrayToPathData(pathID, inputpathParam) {
     if( (pathType == 'LINE_PATH') || (pathType == 'POLYGON') || (pathType == 'FREEDRAW_PATH')||(pathType == 'CUBIC_BEZIER') 
     		|| (pathType == 'QUADRATIC_BEZIER'))
     {
-    	  	
+    	  	1
     	for (var k = 0; k < inputpathParam.length; k++) {
     		if( (inputpathParam[k][3] == 'POINT') || (inputpathParam[k][3] == 'START_POINT')||(inputpathParam[k][3] == 'END_POINT'))
     		{
@@ -4342,6 +4347,15 @@ function GX_ConvertArrayToPathData(pathID, inputpathParam) {
      if(inputpathParam[inputpathParam.length-1][0] == 'z')
  		pathParam += "z";
  }     //M10,10 a25,50 -30 0,1 50,70
+ else if (pathType == 'HOR_LINE_PATH'){
+	 pathParam += ("M" + inputpathParam[0][1] + "," + inputpathParam[0][2] + " ");
+	 pathParam += ("H" + inputpathParam[1][1]);
+ }
+ else if (pathType == 'VERT_LINE_PATH'){
+	 pathParam += ("M" + inputpathParam[0][1] + "," + inputpathParam[0][2] + " ");
+	 pathParam += ("V" + inputpathParam[1][2]);
+ }
+	 
     pathNode.setAttribute("d", pathParam);
     return true; 
     
@@ -4448,6 +4462,51 @@ function GX_ConvertPathDataToArray(pathNode)
 				}			
 			}			
 		}
+		else if(pathType == 'HOR_LINE_PATH'){
+			
+			var entryArr = array1[j].split(",");				
+			var item1 = entryArr[0].substring(0,1); 
+			if( (item1 >= 0) && (item1 <= 9) )
+			{
+				item1 = ""; 
+				item2 = entryArr[0]; 
+			}
+			else
+			{				
+				item2 = entryArr[0].substring(1); 
+			}	
+			if(item1 != 'H')
+				var item3 = entryArr[1];
+			else
+				var item3 = newArr[0][2];
+			var newentry = [item1, item2, item3, "NONE"]; 
+			newArr.push(newentry); 
+		}//(pathType == 'HOR_LINE_PATH')
+		else if(pathType == 'VERT_LINE_PATH'){
+			
+			var entryArr = array1[j].split(",");				
+			var item1 = entryArr[0].substring(0,1); 
+			if( (item1 >= 0) && (item1 <= 9) )
+			{
+				item1 = ""; 
+				item2 = entryArr[0]; 
+			}
+			else
+			{				
+				item2 = entryArr[0].substring(1); 
+			}	
+			if(item1 != 'V')
+				var item3 = entryArr[1];
+			else
+				var item3 = newArr[0][1];
+			//this is hack so that one can get corrct rectngular dimension later on 
+			//need a counter hack on the ArraytoPath data conversion.
+			if(item1 == 'V')
+				var newentry = [item1, item3, item2, "NONE"]; 
+			else
+				var newentry = [item1, item2, item3, "NONE"]; 
+			newArr.push(newentry); 
+		}//(pathType == 'VERT_LINE_PATH')
 		else
 		{
 			if(array1[j][0])
@@ -4518,14 +4577,15 @@ function GX_GetDimensionOfPath(pathArray)
 			minX = Math.min(minX, entry[1]);					
 
 			if(entry[2] <  minY)
-				pathDim.minYIndex = j;			
-			minY = Math.min(minY, entry[2]);
+				pathDim.minYIndex = j;		
+			//if(entry[0] != 'H')
+				minY = Math.min(minY, entry[2]);
 			
-			if(entry[1] > maxX)
+			if(entry[1] >= maxX)
 				pathDim.maxXIndex = j;	
 			maxX = Math.max(maxX, entry[1]);
 			
-			if(entry[2] > maxY)
+			if(entry[2] >= maxY)
 				pathDim.maxYIndex = j;
 			maxY = Math.max(maxY, entry[2]);			
 		}
@@ -4878,6 +4938,18 @@ function GX_DDLHandler(Node, value)
 		GX_StartFreeDraw();
 		return; 		
 	}
+	else if(wdgtId == 'lineDDL')
+	{
+		if(value =='Horizontal' )
+			var drawType = 'HOR_LINE_PATH'
+		else if(value =='Vertical' )
+			var drawType = 'VERT_LINE_PATH';
+		else if(value =='Normal' )
+			var drawType = 'LINE_PATH';	
+		GX_AddNewSVGObject(drawType,''); 
+		GX_StartFreeDraw();
+		return; 		
+	}
 	
 	
 	if(wdgtId == 'listanimDDL')
@@ -5138,7 +5210,7 @@ function OnPathMarkerMouseMove(evt) {
     if (bMarkerMove == true) {
         //now also set the parameters corresponding to the marker index
         relX = new Number(ClientX - gOrigMousePosX)*gZoomFactor;
-        relY = new Number(ClientY - gOrigMousePosY)*gZoomFactor;
+        relY = new Number(ClientY - gOrigMousePosY)*gZoomFactor;       
         var newcX, newcY;
         newcX = gCurrSelectedObjectDim.x;
         newcY = gCurrSelectedObjectDim.y;
@@ -5611,7 +5683,7 @@ function OnFreeDrawClick(evt)
 		    gPrevX = 10000; 
 		    gPrevY = 10000;
 		}
-		else if( (objectType == 'RECTANGLE') || (objectType == 'ELLIPSE') || (objectType == 'CIRCLE') || (objectType == 'LINE_PATH')||
+		else if( (objectType == 'RECTANGLE') || (objectType == 'ELLIPSE') || (objectType == 'CIRCLE') || (objectType == 'LINE_PATH')|| (objectType == 'HOR_LINE_PATH') || (objectType == 'VERT_LINE_PATH') ||
 				(objectType == 'CUBIC_BEZIER') || (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC') || (objectType == 'IMAGE') )
 		{
 			gCurrSelectedObjectDim = new sDimension(); 
@@ -5635,7 +5707,7 @@ function OnFreeDrawClick(evt)
 			gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
 			GX_SetObjectAttribute(gCurrentObjectSelected, 'PATH_DATA', gPathDataArray, true, false);
 		}
-		else if( (objectType == 'RECTANGLE')|| (objectType == 'IMAGE') || (objectType == 'ELLIPSE')|| (objectType == 'CIRCLE') || (objectType == 'LINE_PATH')||(objectType == 'CUBIC_BEZIER')
+		else if( (objectType == 'RECTANGLE')|| (objectType == 'IMAGE') || (objectType == 'ELLIPSE')|| (objectType == 'CIRCLE') || (objectType == 'LINE_PATH')|| (objectType == 'HOR_LINE_PATH')|| (objectType == 'VERT_LINE_PATH') || (objectType == 'CUBIC_BEZIER')
 				|| (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC'))
 		{
 			GX_SetObjectAttribute(gCurrentObjectSelected, 'DIMENSION', gCurrSelectedObjectDim, true, false);
@@ -5690,7 +5762,7 @@ function OnFreeDraw(evt)
 	     gPrevY = Y; 
 	     return ; 
 	}
-	else if((objType ==  'RECTANGLE') || (objectType == 'IMAGE') || (objectType == 'IMAGE') || (objType ==  'ELLIPSE')|| (objType == 'CIRCLE') || (objType == 'LINE_PATH')||(objType == 'CUBIC_BEZIER')
+	else if((objType ==  'RECTANGLE') || (objType == 'IMAGE') || (objType ==  'ELLIPSE')|| (objType == 'CIRCLE') || (objType == 'LINE_PATH')||(objType == 'HOR_LINE_PATH') || (objType == 'VERT_LINE_PATH') || (objType == 'CUBIC_BEZIER')
 			|| (objType == 'QUADRATIC_BEZIER')|| (objType == 'ELLIPTIC'))
 	{
 		gCurrSelectedObjectDim.width = X - gCurrSelectedObjectDim.x; 
@@ -7260,10 +7332,12 @@ function OnPointerMarkerMouseMove(evt)
 	  var ClientX, ClientY; 
 	  ClientX = new Number(evt.clientX - gClientXOffset); 
 	  ClientY = new Number(evt.clientY- gClientYOffset);
+	 
 	  relX = new Number(ClientX);
       relY = new Number(ClientY);
       relX = (relX - gOrigMousePosX)*gZoomFactor;
       relY = (relY - gOrigMousePosY)*gZoomFactor;
+      
       newObjDim.x = gOrigPointerPos.x + relX;
       newObjDim.y = gOrigPointerPos.y + relY;   
       newObjDim.width = 10; 
