@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Draggable HTML</title>
+<link rel="stylesheet" href="http://localhost/CDOCApps/CommonCSS/jquery.ui.all.css">
+	<script src="http://localhost/CDOCApps/CommonJS/jquery.js"></script>
+	<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.core.js"></script>
+	<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.widget.js"></script>
+	<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.mouse.js"></script>
+	<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.draggable.js"></script>
+	<link rel="stylesheet" href="http://localhost/CDOCApps/CommonCSS/demos.css">
+	<style>
+	#draggable2{ width: 160px; height: 60px; padding: 1px; float: left; margin: 0 1px 1px 0; visibility:hidden }
+	</style>
+	<script>
+	$(function() {
+		//$( "#draggable" ).draggable({ cursor: "move", cursorAt: { top: 56, left: 56 } });
+		//$( "#draggable2" ).draggable({ cursor: "move", cursorAt: { top: 25, left: 25 } });
+		$( "#draggable2" ).draggable({ cursor: "move" });
+		//$( "#draggable3" ).draggable({ cursorAt: { bottom: 0 } });
+	});
+	function OnBtnHandler(event){
+		var Node = document.getElementById('draggable2'); 
+		alert('x= ' + Node.style.left + 'y= ' + Node.style.top); 
+	}
+	function OnObjectSelection(evt){
+		alert('clciekd= ' + evt.target.id); 
+		//get the node 
+		var objNode = evt.target; 
+		var svgNode = objNode.parentNode; 
+		var svgPosition = $('#SVGOBJECTCONTAINER').position(); 
+		var objPosition = $('#' + objNode.id).position(); 
+		var dragNode = document.getElementById('draggable2');
+		if(objNode.nodeName == 'circle'){
+			var width = new Number(objNode.getAttribute('r')); 
+			var height = new Number(objNode.getAttribute('r')); 
+			width  *= 2; 
+			height *= 2; 
+		}		
+		//set the draggable node width, position, etc. to that of the object
+		var JQSel = '#draggable2'; 
+		$(JQSel).width(width + 'px'); 
+		$(JQSel).height(height + 'px'); 
+		//$(JQSel).css({left:objPosition.left, top: objPosition.top} ); 
+		var cursorX = new Number(108 + width/2); 
+		var cursorY =  new Number(22 +  height/2); 
+		$(JQSel).css({left:'108px', top: '22px', visibility:'visible'} ); 
+		$(JQSel).show(); 
+		
+		
+		$('#objectcontainer1').attr('width', width + 'px');
+		$('#objectcontainer1').attr('height', height + 'px');
+		var viewBox1 = '0 0 ' + width + ' ' + height; 
+		var node = document.getElementById('objectcontainer1'); 
+		var viewboxstr = node.getAttribute('viewBox'); 
+		node.setAttribute('viewBox',viewBox1); 
+		//move the node inside the objectcontainer 
+		MoveObjectNode(objNode.id, 'objectcontainer1'); 
+		//make the draggbale visible 
+		
+	}
+	
+	function MoveObjectNode(objNodeID, destNodeID){
+		var objNode = document.getElementById(objNodeID); 
+		var srcParentNode = objNode.parentNode; 
+		var destParentNode =  document.getElementById(destNodeID); 		
+		var clonedNode =  objNode.cloneNode(true); 
+		srcParentNode.removeChild(objNode); 
+		destParentNode.appendChild(clonedNode); 
+	}
+	</script>
+</head>
+<body>
+<button id='getvalue' onclick='OnBtnHandler(event)'>GetValue</button>
+<div id="draggable2" class="ui-widget-content" style='border:2px dotted blue'>	
+	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="objectcontainer1" x="0px" y="0px" width="60px" height="60px" viewBox="0 0 60 60" version="1.1"></svg>	
+			
+</div>
+
+<div id='svgcontainer' >
+	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="SVGOBJECTCONTAINER" x="0px" y="0px" width="800px" height="800px" viewBox="0 0 800 800" version="1.1">
+			      <title>New SVG File</title><defs id="SVGDEFINITION"> </defs>
+			<rect id='containerrect' x='0' y='0' width='800' height='800' stroke='blue' stroke-width='2px' fill='none' />
+		    <g id="ANIMATION_GROUP" class="ANIMATION_LIST_GROUP"/>
+			<g id="BASEGROUP" class="GROUP BaseGroup" transform="translate(0,0) scale(1,1) rotate(0 0,0)">	
+			<circle id="SVG_359" class="SVG_SHAPE_OBJECT CIRCLE ROTATE,0" cx="50" cy="50" r="50" transform="translate(0,0) scale(1,1) rotate(0 0,0)" fill="#A82323" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="1.0" pointer-events="visible" onclick='OnObjectSelection(evt)'/>
+		
+			</g>
+	</svg>
+
+</div>
+</body>
+</html>
