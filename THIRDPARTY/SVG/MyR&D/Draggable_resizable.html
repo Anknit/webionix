@@ -9,6 +9,7 @@
 	<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.widget.js"></script>
 	<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.mouse.js"></script>
 	<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.draggable.js"></script>
+	<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.resizable.js"></script>
 	<link rel="stylesheet" href="http://localhost/CDOCApps/CommonCSS/demos.css">
 	<style>
 	#draggable2{ width: 160px; height: 60px; padding: 1px; float: left; margin: 0 1px 1px 0; visibility:hidden }
@@ -58,6 +59,7 @@
 		//$( "#draggable" ).draggable({ cursor: "move", cursorAt: { top: 56, left: 56 } });
 		//$( "#draggable2" ).draggable({ cursor: "move", cursorAt: { top: 25, left: 25 } });
 		$( "#draggable2" ).draggable({ cursor: "move" });
+		$( "#draggable2" ).resizable();
 		//$( "#draggable3" ).draggable({ cursorAt: { bottom: 0 } });
 	});
 	function OnBtnHandler(event){
@@ -164,11 +166,7 @@
 	</script>
 </head>
 <body>
-<button id='getvalue' onclick='OnBtnHandler(event)'>GetValue</button>
-<div id="draggable2" class="ui-widget-content" style='border:2px dotted blue'>	
-	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="objectcontainer1" x="0px" y="0px" width="60px" height="60px" viewBox="0 0 60 60" version="1.1"></svg>	
-			
-</div>
+
 
 <div id='svgcontainer' >
 	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="SVGOBJECTCONTAINER" x="0px" y="0px" width="800px" height="800px" viewBox="0 0 800 800" version="1.1">
@@ -181,6 +179,12 @@
 			</g>
 	</svg>
 
+</div>
+
+<button id='getvalue' onclick='OnBtnHandler(event)'>GetValue</button>
+<div id="draggable2" class="ui-widget-content" style='border:2px dotted blue; position:absolute'>	
+	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="objectcontainer1" x="0px" y="0px" width="60px" height="60px" viewBox="0 0 60 60" version="1.1"></svg>	
+			
 </div>
 </body>
 </html>
