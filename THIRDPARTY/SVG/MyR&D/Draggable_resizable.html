@@ -14,6 +14,46 @@
 	#draggable2{ width: 160px; height: 60px; padding: 1px; float: left; margin: 0 1px 1px 0; visibility:hidden }
 	</style>
 	<script>
+	sDimension.prototype.x = new Number(0);
+	sDimension.prototype.y = new Number(0);
+	sDimension.prototype.width = new Number(0);
+	sDimension.prototype.height = new Number(0);
+	sDimension.prototype.centerX =  new Number(0); 
+	sDimension.prototype.centerY =  new Number(0); 
+
+	sDimension.prototype.minXIndex = -1; 
+	sDimension.prototype.minYIndex = -1;
+	sDimension.prototype.maxYIndex  = -1;
+	sDimension.prototype.maxXIndex = -1; 
+	//added to tap in the rotation params as well 
+	sDimension.prototype.rotate = 0; 
+	sDimension.prototype.rotCentreX = 0; 
+	sDimension.prototype.rotCentreY = 0; 
+	function sDimension() {
+	    sDimension.prototype.x = new Number(0);
+	    sDimension.prototype.y = new Number(0);
+	    sDimension.prototype.width = new Number(0);
+	    sDimension.prototype.height = new Number(0);
+	    
+	    //to take account of path specific nuances adding these indices
+	    sDimension.prototype.minXIndex = -1; 
+	    sDimension.prototype.minYIndex = -1;
+	    sDimension.prototype.maxYIndex  = -1;
+	    sDimension.prototype.maxXIndex = -1; 
+	    
+	    sDimension.prototype.rotate = 0; 
+	    sDimension.prototype.rotCentreX = 0; 
+	    sDimension.prototype.rotCentreY = 0; 
+	    
+	    sDimension.prototype.centerX =  new Number(0); 
+	    sDimension.prototype.centerY =  new Number(0);
+	    
+	}
+	var ginitWidth = 0; 
+	var ginitHeight = 0; 
+	var ginitObjDimension = 0; 
+	var gfinalObjDimension = 0; 
+	
 	$(function() {
 		//$( "#draggable" ).draggable({ cursor: "move", cursorAt: { top: 56, left: 56 } });
 		//$( "#draggable2" ).draggable({ cursor: "move", cursorAt: { top: 25, left: 25 } });
@@ -32,12 +72,19 @@
 		var svgPosition = $('#SVGOBJECTCONTAINER').position(); 
 		var objPosition = $('#' + objNode.id).position(); 
 		var dragNode = document.getElementById('draggable2');
+		ginitObjDimension = GX_GetRectObjectDim(objNode); 
+		var width = ginitObjDimension.width; 
+		var height = ginitObjDimension.height; 
+		var x = ginitObjDimension.x;
+		var y = ginitObjDimension.y; 
+		/*
 		if(objNode.nodeName == 'circle'){
 			var width = new Number(objNode.getAttribute('r')); 
 			var height = new Number(objNode.getAttribute('r')); 
 			width  *= 2; 
 			height *= 2; 
-		}		
+		}*/
+		
 		//set the draggable node width, position, etc. to that of the object
 		var JQSel = '#draggable2'; 
 		$(JQSel).width(width + 'px'); 
@@ -45,7 +92,8 @@
 		//$(JQSel).css({left:objPosition.left, top: objPosition.top} ); 
 		var cursorX = new Number(108 + width/2); 
 		var cursorY =  new Number(22 +  height/2); 
-		$(JQSel).css({left:'108px', top: '22px', visibility:'visible'} ); 
+		//$(JQSel).css({left:'108px', top: '22px', visibility:'visible'} ); 
+		$(JQSel).css({left:x + 'px', top: y + 'px', visibility:'visible'} ); 
 		$(JQSel).show(); 
 		
 		
@@ -68,6 +116,50 @@
 		var clonedNode =  objNode.cloneNode(true); 
 		srcParentNode.removeChild(objNode); 
 		destParentNode.appendChild(clonedNode); 
+	}
+	
+	function GX_GetRectObjectDim(ObjNode)
+	{
+		 	var mypoint = new sDimension();
+		    var objClass = ObjNode.classList[0] ;//'class'); 
+		    var x, y, width, height; 
+		    //get the parent layer node
+		    //get the dimension of the same 
+		    if( (ObjNode.nodeName == 'rect') || (ObjNode.nodeName == 'image') ) {
+		    	 mypoint.x = new Number(ObjNode.getAttribute('x')); 
+			     mypoint.y = new Number(ObjNode.getAttribute('y'));
+			     mypoint.width = new Number(ObjNode.getAttribute('width')); 
+			     mypoint.height = new Number(ObjNode.getAttribute('height'));	
+			     mypoint.centerX = mypoint.x + mypoint.width /2; 
+			     mypoint.centerY = mypoint.y + mypoint.height /2; 			     
+		    }		    
+		    else if(ObjNode.nodeName == 'ellipse') {	        
+		    	mypoint.centerX = mypoint.x = new Number(ObjNode.getAttribute('cx')); 
+		    	mypoint.centerY = mypoint.y = new Number(ObjNode.getAttribute('cy'));
+		        mypoint.width = new Number(ObjNode.getAttribute('rx')); 
+		        mypoint.height = new Number(ObjNode.getAttribute('ry'));
+		        mypoint.x -=  mypoint.width; 
+		        mypoint.y -=  mypoint.height;   
+		        mypoint.width = 2*mypoint.width; 
+		        mypoint.height = 2* mypoint.height; 		        
+		    }  
+		    else if(ObjNode.nodeName == 'circle') {	        
+		    	mypoint.centerX = mypoint.x = new Number(ObjNode.getAttribute('cx')); 
+		    	mypoint.centerY = mypoint.y = new Number(ObjNode.getAttribute('cy'));
+		        mypoint.width = new Number(ObjNode.getAttribute('r'));	       
+		        mypoint.x -=  mypoint.width; 
+		        mypoint.y -=  mypoint.width;   
+		        mypoint.width = 2*mypoint.width; 
+		        mypoint.height = mypoint.width; 		        
+		    }  
+		    else if(ObjNode.nodeName == 'text')
+		    {
+		    	mypoint = ObjNode.getBBox(); 
+		    	var y = ObjNode.getAttribute('y');	    	 
+		    	//mypoint.x = ObjNode.getAttribute('x');
+		    	//mypoint.y = ObjNode.getAttribute('y');
+		    }	   
+		     return mypoint;
 	}
 	</script>
 </head>
