@@ -1972,7 +1972,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	//get the gripper dimension 
     	//GX_MoveObjectToParent(gCurrentObjectSelected.id, gCurrObjectParentID);
     	//gCurrentObjectSelected = document.getElementById(gCurrentObjectSelected.id); 
-    	GX_RemoveObjectCopyFromParent(gCurrentObjectSelected.id );
+    	gCurrentObjectSelected =  GX_RemoveObjectCopyFromParent(gCurrentObjectSelected.id );
     	bMove = false; 
     	//gCurrentObjectSelected.setAttribute('visibility', 'hidden'); 
     	var finalGrabDim = GX_GetRectObjectDim($(gSelectionGripper)[0]); 
@@ -1989,7 +1989,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	{    		
     		newObjDim.x = gInitialObjDim.x+relDim.x; 
             newObjDim.y = gInitialObjDim.y+relDim.y;           
-    		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim); 	
+    		//GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
+    		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',relDim); 
     		GX_UpdateLayerChildElements(gCurrentObjectSelected);
     	}       
     	else if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT') )
@@ -2131,7 +2132,10 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
 	    	newDim.x =0; 
 	    	newDim.y = 0; 
 	    	newDim.width = gGrabberDim.width; 
-	    	newDim.height = gGrabberDim.height; 	
+	    	newDim.height = gGrabberDim.height; 
+	    	gCurrentObjectSelected = GX_MoveObjectCopyToParent(gCurrentObjectSelected.id, 'sel_object_container'); 
+	    	
+	    	
     	if(nodeClass != 'GROUP'){
     		GX_SetRectObjectDim(gCurrentObjectSelected, newDim);
     	}    		
@@ -2139,9 +2143,9 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     		newDim.x = Number(0 - gInitialObjDim.x) ;//gCurrSelectedObjectDim.x+relX; 
     		newDim.y = Number(0- gInitialObjDim.y) ;// gCurrSelectedObjectDim.y+relY;      
     		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newDim);
-    		gCurrentObjectSelected.setAttribute('visibility', 'hidden'); 
+    		
     	}
-        GX_MoveObjectCopyToParent(gCurrentObjectSelected.id, 'sel_object_container');   
+        //GX_MoveObjectCopyToParent(gCurrentObjectSelected.id, 'sel_object_container');   
         //now hide the original one 
        // gCurrentObjectSelected.setAttribute('visibility', 'hidden'); 
     }
@@ -7917,19 +7921,20 @@ function GX_MoveObjectCopyToParent(objNodeID, destNodeID){
 		clonedNode.setAttribute('id',objNodeID + '_Copy' ); 
 		clonedNode.setAttribute('visibility', 'visible' ); 
 		//srcParentNode.removeChild(objNode); 
-		destParentNode.appendChild(clonedNode); 
+		var clonedNode = destParentNode.appendChild(clonedNode); 
 		//hide the original node here 
-		//objNode.setAttribute('visibility', 'hidden'); 
+		objNode.setAttribute('opacity', '0.2'); 
+		return clonedNode; 
 }
 
-function GX_RemoveObjectCopyFromParent(objNodeID){	
-	var objNode = document.getElementById(objNodeID); 
-	var copyObjID = objNodeID + '_Copy'; 
-	var copiedobjNode = document.getElementById(copyObjID); 
+function GX_RemoveObjectCopyFromParent(copiedObjNodeID){	
+	var origID = copiedObjNodeID.substring(0,copiedObjNodeID.length-5 );  
+	var copiedobjNode = document.getElementById(copiedObjNodeID); 
 	var parentNode = copiedobjNode.parentNode; 
 	parentNode.removeChild(copiedobjNode); 
-	objNode.setAttribute('visibility', 'visible'); 
-	
+	var origNode =  document.getElementById(origID); 
+	origNode.setAttribute('opacity', '1');
+	return origNode; 	
 }
 
 
