@@ -57,6 +57,7 @@ var gCurrentObjectSelected=0;
 var gCurrentObjectType = 0; 
 var gCurrSelectedObjectDim = new sDimension();
 var gGrabberDim = new sDimension(); 
+var gRegionLimit = new sDimension(); 
 var gOrigMousePosX, gOrigMousePosY;
 var gsvgRootNode = 0;
 var gCursorXOffset = 8;
@@ -64,6 +65,7 @@ var gCursorYOffset = 5;
 var bMove = false;
 var bDraw = false;
 var gCurrGrabber = 0;
+var gCurrGripperSel = '#sel_gripper'; 
 var bResize = false;
 var bMarkerMove = false; 
 var gIndicatorPath = []; 
@@ -133,7 +135,7 @@ var gCurrAttributeList =[];
 var gObjectEditList = [];
 var gCompactEditList = []; 
 var gSVGFilename = 0; 
-var gClientYOffset = 100;
+var gClientYOffset = 0;
 var gClientXOffset = 0; 
 var gMaxLeft, gMaxTop, gMaxRight, gMaxBottom; 
 var gPreviousTreeNode =0; 
@@ -942,7 +944,45 @@ function GX_Initialize()
     	GX_OpenFile(currFileName);    	
     }
    
-   // Debug_Message("DBM Initialized Successfully");    
+    //create the draggable drawing pen  here 
+   	var JQSel = "#drawingpen" ;
+	$(JQSel).draggable({ cursor: "crosshair", cursorAt:{top: 2, left: 2} });	
+	$(JQSel).css({left:'100px', top:'200px', visibility:'visible' });	
+	$(JQSel).on( "drag", function( event, ui ) {
+		OnFreeDrawDrag(event); 
+	});
+	$(JQSel).on( "dragstart", function( event, ui ) {
+		OnFreeDrawDragStart(event); 		
+	});
+	$(JQSel).on( "dragstop", function( event, ui ) {
+		OnFreeDrawDragEnd(event); 		
+	});
+	
+	JQSel = '#sel_gripper'; 
+	//create the selection gripper here 
+	$(JQSel).draggable({ cursor: "move" });	
+	$(JQSel).resizable();
+	$(JQSel).on( "resizestop", function( event, ui ) {
+		OnResizeEnd(event); 		
+	});
+	$(JQSel).on( "dragstart", function( event, ui ) {
+		OnObjectDragStart(event,ui);
+	});
+	
+	$(JQSel).on( "drOnObjectMouseDownagstop", function( event, ui ) {
+		OnObjectDragStop(event,ui); 
+	});
+	
+	$(JQSel).on( "drag", function( event, ui ) {
+		OnObjectDrag(event,ui); 
+	});
+	
+	$(JQSel).css({visibility:'hidden'}); 
+
+	gClientYOffset = $('#toolbar').height(); 
+	//gClientXOffset = $('#toolbar').width(); 
+	 
+   
 }
 
 function GX_MenuDisable(bFlag)
@@ -1136,28 +1176,7 @@ function GX_MenuItemShow(menuid, itemText)
 		 GX_menu_delete_svgfrom_remote();
 		 break;
 		 
-		 /*
-	 case 'rectangle':
-	 case 'ellipse':
-	 case 'line_path':
-	 case 'cbezier_path':
-	 case 'qbezier_path':	
-	 case 'elliptic_path':		
-		 GX_AddNewSVGObject(menuid); 
-		 GX_StartFreeDraw();
-		 break;
-		
-	 case 'polygon_path':
-		 WAL_showModalWindow(gPolyInputDlg,"GX_PolyInputDlgOK", "" );
-		 break; 
-	 case 'freedraw_path':
-		 GX_AddNewSVGObject(menuid); 
-		 GX_StartFreeDraw();
-		 break;
-	 case 'text':
-		 GX_AddNewSVGObject(menuid); 
-		 break; 	
-		  */		 
+		 
 	 case 'save':
 		 EL_SaveEditList(gCompactEditList, true); 
 		 break; 
@@ -1182,10 +1201,7 @@ function GX_MenuItemShow(menuid, itemText)
 	 case 'move_bottom':
 		 GX_MoveObjectZIndex(gCurrentObjectSelected, 'BOTTOM'); 
 		 break;
-	/* case 'layer':
-		 GX_AddNewSVGObject('GROUP'); 
-		 break;
-		 */
+	
 		 
 	 case 'removenode':
 		 GX_RemoveObject(gCurrentObjectSelected); 
@@ -1629,7 +1645,7 @@ function GX_CloseSVGFile()
 	gFileNameTitleNode.innerHTML = gInitTitle + ""; 
 	gFileNameHolder.innerHTML = "";
 	gSVGFilename = "";
-	gCurrGrabber.setAttribute("visibility", "hidden");
+	$(gCurrGripperSel).css({visibility: "hidden"});
 	GX_UpdateMarkers(0, false, false); 
 	WAL_ClearTreeItem(gTreeWidgetID); 
 	
@@ -1664,7 +1680,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
 		return ; 
     var node = objNode; 
     if(!gCurrGrabber)
-    	gCurrGrabber = document.getElementById("gripper");
+    	gCurrGrabber = document.getElementById("sel_gripper");
     var x, y, w, h;
     var num;
     var initPoint;   
@@ -1716,9 +1732,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     }
     if(bFlag == false)
     {
-    	gCurrGrabber.setAttribute("visibility", "hidden");
-    	objNode.setAttribute('pointer-events', 'visible'); 
-    	//gCurrGrabber.setAttribute("pointer-events", "none");
+    	$(gCurrGripperSel).css({visibility:"hidden"});
+    	objNode.setAttribute('pointer-events', 'visible');    	
     	if(objNode != gCurrentObjectSelected)
     		return ;      	 
          	    	
@@ -1754,13 +1769,15 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	 
     	return ; 
     }
-    gCurrGrabber.setAttribute("visibility", "visible");
+    $(gCurrGripperSel).css({visibility:"visible"});
+    /*
     if(gObjectEditMode == 'LAYOUT_MODE')
     	gCurrGrabber.setAttribute("pointer-events", "visible");
     else
     	gCurrGrabber.setAttribute("pointer-events", "visible");
+    */
     
-    gCurrGrabber.setAttribute("stroke-opacity", "1.0");
+    //gCurrGrabber.setAttribute("stroke-opacity", "1.0");
     var x,y, w, h; 
     x = y = w = h = 0;
     
@@ -1786,10 +1803,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	  $(JQSel).attr('opacity', gOpacityUnSelect); 
     	   
     	 JQSel = '#' + node.id; 
-    	 $(JQSel).removeAttr('opacity');   
-    	 
-    	
-    	
+    	 $(JQSel).removeAttr('opacity');       	
     }
     else if(nodeClass == 'GROUP')
     {
@@ -1805,12 +1819,35 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	gPrevAttributeList = EL_getObjectAttributes(node);
     
     gCurrentObjectSelected = node;   
-    gCurrGrabber.setAttribute("x", x-5);
-    gCurrGrabber.setAttribute("y", y-6);
-    gCurrGrabber.setAttribute("width", w+10);
-    gCurrGrabber.setAttribute("height", h+10);
+   
+    gGrabberDim = new sDimension(); 
+    gGrabberDim.x = x +5; 
+    gGrabberDim.y = new Number(y + gClientYOffset +5); 
+    gGrabberDim.width = w; 
+    gGrabberDim.height = h; 
+    /*gCurrGrabber.setAttribute("x", x);
+    gCurrGrabber.setAttribute("y", y);
+    gCurrGrabber.setAttribute("width", w0);
+    gCurrGrabber.setAttribute("height", h);
+    */
+    $(gCurrGripperSel).css({left:gGrabberDim.x+'px', top:gGrabberDim.y+'px',
+    	width:gGrabberDim.width+'px', height:gGrabberDim.height+'px'}); 
+    
+    //now restrict the region of containtment 
+    var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
+    var svgDim = GX_GetRectObjectDim(svgNode);
+    var x1, y1, x2, y2; 
+    x1 = svgDim.x + 5; 
+    y1 = svgDim.y + gClientYOffset +5;
+    x2 = svgDim.x + svgDim.width -5 - gGrabberDim.width; 
+    y2 = y1 + svgDim.height - 5 - gGrabberDim.height;     
+    var region = [x1, y1, x2, y2]; 
+    $(gCurrGripperSel).draggable( "option", "containment", region );
+    
+    
    // WAL_ShowTooltip(gSelectorTooltipID, false); 
     //set the tooltip here
+    /*
     var TTSel ='#' +  gSelectorTooltipID; 
     var ttText = 'To Move or Resize Click Once and then Move the mouse without any Button down </br>' + 
     'Click once again to freeze the final value  ' 
@@ -1827,14 +1864,16 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
         //WAL_ShowTooltip(gSelectorTooltipID, true); 
      	$(TTSel).jqxTooltip('open');//open();
     }  
+    */
+    
     //this is to ensure while a new object is being added with 0 Dim. doesnt show up 
     if( (w == 0) && (h == 0) )
-    	gCurrGrabber.setAttribute('visibility', 'hidden'); 
+    	$(gCurrGripperSel).css({visibility:'hidden'}); 
     
-    gGrabberDim = GX_GetRectObjectDim(gCurrGrabber); 
+    //gGrabberDim = GX_GetRectObjectDim(gCurrGrabber); 
    
-    if( (nodeClass == 'SVG_SHAPE_OBJECT') && (bShowMarkers ==  true) )
-       	GX_UpdateMarkers(gGrabberDim, true, false);     
+    //if( (nodeClass == 'SVG_SHAPE_OBJECT') && (bShowMarkers ==  true) )
+    //   	GX_UpdateMarkers(gGrabberDim, true, false);     
     if(nodeClass == 'SVG_PATH_OBJECT')
     {    	
     	var pathType = node.classList[1]; 
@@ -1844,8 +1883,6 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	WAL_setCheckBoxValue('pathclose', bClose);    	
     	GX_UpdateEllipticParam(gCurrentObjectSelected);     	
     }
-    	
-    	
     
     if(nodeClass == 'GROUP')
     {    	
@@ -1864,11 +1901,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	WAL_setNumberInputValue('rotateIP', gCurrSelectedObjectDim.rotate+'', false); 
     	
     	var strokewidth = gCurrentObjectSelected.getAttribute('stroke-width'); 
-    	WAL_setNumberInputValue('strokeWeightIP', strokewidth, false); 
-    	
-    //	var strokeopacity = gCurrentObjectSelected.getAttribute('stroke-opacity'); 
-    	//strokeopacity = Math.round(strokeopacity * 100);
-    	//WAL_setNumberInputValue('strokeOpacityIP', strokeopacity, false); 
+    	WAL_setNumberInputValue('strokeWeightIP', strokewidth, false);    
     	
     	var fillopacity = gCurrentObjectSelected.getAttribute('fill-opacity'); 
     	//fillopacity = Math.round(fillopacity);
@@ -2185,7 +2218,7 @@ function GX_SaveObjectProperties(objNode, bAsync)
 }
 
 
-function OnObjectMouseDown(evt) {	
+function OnObjectMouseDown(evt,ui) {	
 	  
 	if(!gCurrentObjectSelected)
 		return ;
@@ -2327,7 +2360,7 @@ var gLastPosX = 0;
 var gLastPosY = 0;
 var gMaxPos = new Number(50); 
 
-function OnObjectMove(evt) {
+function OnObjectMove(evt,ui) {
 
     //trap new coordiantes and store the relative mouse coordinaes
     var relX, relY;
@@ -2355,14 +2388,15 @@ function OnObjectMove(evt) {
         newObjDim.x = gGrabberDim.x + relX;
         newObjDim.y = gGrabberDim.y + relY;   
         newObjDim.width = gGrabberDim.width; 
-        newObjDim.height = gGrabberDim.height;                  
-        retVal = GX_SetRectObjectDim(gCurrGrabber,newObjDim); 
+        newObjDim.height = gGrabberDim.height; 
+        
+       // retVal = GX_SetRectObjectDim(gCurrGrabber,newObjDim); 
       //  retVal =  GX_SetObjectAttribute(gCurrGrabber, "DIMENSION", newObjDim, false, false);
       //  Debug_Message("New x=" + newObjDim.x + "New y=" +newObjDim.y); 
         if(retVal == false)
         	return ; 
-        if(objectType == 'SVG_SHAPE_OBJECT')	
-        	GX_UpdateMarkers(newObjDim, true, false); 
+       // if(objectType == 'SVG_SHAPE_OBJECT')	
+        //	GX_UpdateMarkers(newObjDim, true, false); 
          
         if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
         {
@@ -2534,13 +2568,188 @@ function OnObjectMove(evt) {
 			}
             
         }
+    }   
+}
+
+function OnObjectDragStart(evt, ui){
+	
+	if(!gCurrentObjectSelected)
+		return ;
+	//Debug_Message('Object Mouse Down'); 
+	//if(gObjectEditMode == 'ANIMATION_EDIT_MODE')
+	//	return; 
+	var objectType; 
+	if(gbContextMenuShow == true)
+		return; 
+	objectType =  gCurrentObjectSelected.classList[0];  	
+	if (!gsvgRootNode)
+    {
+    	 gsvgRootNode = document.getElementById('SVGContainer');
+    	 num = gsvgRootNode.getAttribute('x'); 
+    	 num = num.substring(0, num.length-2); 
+    	 gMaxLeft = new Number(num); 
+    	 
+    	 num = gsvgRootNode.getAttribute('y'); 
+    	 num = num.substring(0, num.length-2); 
+    	 gMaxTop = new Number(num);             	 
+    	 
+    	 num = gsvgRootNode.getAttribute('width'); 
+    	 num = num.substring(0, num.length-2); 
+    	 gMaxRight = new Number(num);
+    	 gMaxRight = gMaxLeft + gMaxRight;             	 
+    	 
+    	 num = gsvgRootNode.getAttribute('height'); 
+    	 num = num.substring(0, num.length-2); 
+    	 gMaxBottom = new Number(num);
+    	 gMaxBottom = gMaxBottom + gMaxTop;
+    	 //gMaxLeft, gMaxTop, gMaxRight, gMaxBottom; 
     }
-    
-    
+    //if it is not resize mode then check for 
+	
+	//gGrabberDim = GX_GetObjectAttribute(gCurrGrabber, 'DIMENSION');
+	
+	//Debug_Message("x=" + gGrabberDim.x + "y=" +gGrabberDim.y); 
+	if(objectType == 'SVG_SHAPE_OBJECT') 
+		gCurrSelectedObjectDim = GX_GetObjectAttribute(gCurrentObjectSelected, 'DIMENSION');
+	else if(objectType == 'SVG_TEXT_OBJECT')
+	{
+		gCurrSelectedObjectDim = GX_GetObjectAttribute(gCurrentObjectSelected, 'DIMENSION');
+		//_rm to override the boundary box dimension 
+		gCurrSelectedObjectDim.x = gCurrentObjectSelected.getAttribute('x'); 
+		gCurrSelectedObjectDim.y = gCurrentObjectSelected.getAttribute('y');		
+	}
+	else if(objectType == 'GROUP')
+	{
+		gCurrSelectedObjectDim = GX_GetTransformProperty(gCurrentObjectSelected, 'translate'); 
+		//Debug_Message("CurrX=" +gCurrSelectedObjectDim.x +"CuerrY=" +  gCurrSelectedObjectDim.y); 
+	}    
+	else if(objectType == 'SVG_PATH_OBJECT')
+	{
+		GX_UpdatePathData(gCurrentObjectSelected); 
+		GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, false); 
+		
+	}
+}
+
+function OnObjectDrag(evt, ui){
+	
+	    var relX, relY;
+	    var retVal=true;
+	    if (!gCurrentObjectSelected)
+            return;
+	    if(gCurrentObjectSelected)
+	    	var objectType = gCurrentObjectSelected.classList[0];
+	   if(gbContextMenuShow == true){
+		   bMove = false;
+	   }
+	   
+	    var newObjDim = new sDimension(); 	   
+	        
+	        relX = new Number(ui.position.left - ui.originalPosition.left);
+	        relY = new Number(ui.position.top - ui.originalPosition.top);	
+	        if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
+	        {
+	        	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
+	            newObjDim.y = gCurrSelectedObjectDim.y + relY; 
+	            newObjDim.width = gCurrSelectedObjectDim.width; 
+	            newObjDim.height =  gCurrSelectedObjectDim.height; 
+	            newObjDim.rotate = gCurrSelectedObjectDim.rotate;          
+	            newObjDim.rotCentreX = Math.round(newObjDim.x + newObjDim.width/2);
+	            newObjDim.rotCentreY = Math.round(newObjDim.y + newObjDim.height/2);
+	            if(gCurrentObjectSelected.classList[1]== 'ELLIPSE')
+	            {
+	            	newObjDim.x = newObjDim.rotCentreX;
+	                newObjDim.y = newObjDim.rotCentreY; 
+	            } 
+	            else if(gCurrentObjectSelected.classList[1]== 'CIRCLE')
+	            {
+	            	newObjDim.x = newObjDim.rotCentreX;
+	                newObjDim.y = newObjDim.rotCentreY; 
+	            }  
+	            //retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
+	            GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
+	        }        	
+	    	else if(objectType == 'GROUP')
+	    	{    		
+	    		newObjDim.x = gCurrSelectedObjectDim.x+relX; 
+	            newObjDim.y = gCurrSelectedObjectDim.y+relY;       
+	           // Debug_Message("NewX="+newObjDim.x + "NewY="+ newObjDim.y +"gCurrSelectedObjectDim.x=" + gCurrSelectedObjectDim.x + "relX=" + relX);
+	    		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
+	    		//GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
+	    		
+	    	}   
+	    	else if(objectType == 'SVG_PATH_OBJECT')
+	    	{
+	    		newObjDim.x = relX ;//gCurrSelectedObjectDim.x+relX;
+	    		newObjDim.y = relY ;// gCurrSelectedObjectDim.y+relY;          
+	    		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
+	    	}
+	       // if(objectType == 'SVG_SHAPE_OBJECT')
+	        //	GX_UpdatePropertyOnUI('DIMENSION', newObjDim); 	
+	
 }
 
 
 
+function OnObjectDragStop(evt,ui){
+	
+	var objectType =  gCurrentObjectSelected.classList[0];  	 
+	var newObjDim = new sDimension(); 	   
+    var retVal=true;
+    if (!gCurrentObjectSelected)
+        return;
+    if(gCurrentObjectSelected)
+    	var objectType = gCurrentObjectSelected.classList[0];
+   if(gbContextMenuShow == true){
+	   bMove = false;
+   }
+   
+    var newObjDim = new sDimension();         
+    relX = new Number(ui.position.left - ui.originalPosition.left);
+    relY = new Number(ui.position.top - ui.originalPosition.top);
+        
+    if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
+    {
+    	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
+        newObjDim.y = gCurrSelectedObjectDim.y + relY; 
+        newObjDim.width = gCurrSelectedObjectDim.width; 
+        newObjDim.height =  gCurrSelectedObjectDim.height; 
+        newObjDim.rotate = gCurrSelectedObjectDim.rotate;          
+        newObjDim.rotCentreX = Math.round(newObjDim.x + newObjDim.width/2);
+        newObjDim.rotCentreY = Math.round(newObjDim.y + newObjDim.height/2);
+        if(gCurrentObjectSelected.classList[1]== 'ELLIPSE')
+        {
+        	newObjDim.x = newObjDim.rotCentreX;
+            newObjDim.y = newObjDim.rotCentreY; 
+        } 
+        else if(gCurrentObjectSelected.classList[1]== 'CIRCLE')
+        {
+        	newObjDim.x = newObjDim.rotCentreX;
+            newObjDim.y = newObjDim.rotCentreY; 
+        }  
+        retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
+                  
+    }        	
+	else if(objectType == 'GROUP')
+	{    		
+		newObjDim.x = gCurrSelectedObjectDim.x+relX; 
+        newObjDim.y = gCurrSelectedObjectDim.y+relY;       
+       // Debug_Message("NewX="+newObjDim.x + "NewY="+ newObjDim.y +"gCurrSelectedObjectDim.x=" + gCurrSelectedObjectDim.x + "relX=" + relX);
+		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
+		//GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
+		
+	}   
+	else if(objectType == 'SVG_PATH_OBJECT')
+	{
+		newObjDim.x = relX ;//gCurrSelectedObjectDim.x+relX;
+		newObjDim.y = relY ;// gCurrSelectedObjectDim.y+relY;          
+		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
+	}
+    if(objectType == 'SVG_SHAPE_OBJECT')
+    	GX_UpdatePropertyOnUI('DIMENSION', newObjDim); 
+
+	
+}
 
 
 function OnObjectMouseOut(evt)
@@ -3128,10 +3337,21 @@ function GX_GetRectObjectDim(ObjNode)
 		     mypoint.width = new Number(ObjNode.getAttribute('width')); 
 		     mypoint.height = new Number(ObjNode.getAttribute('height'));	
 		     mypoint.centerX = mypoint.x + mypoint.width /2; 
-		     mypoint.centerY = mypoint.y + mypoint.height /2; 
-		     
+		     mypoint.centerY = mypoint.y + mypoint.height /2; 		     
+	    }	
+	    else if(ObjNode.nodeName == 'svg'){
+	    	mypoint.x =  ObjNode.getAttribute('x');
+	    	mypoint.x = new Number( mypoint.x.substring(0, mypoint.x.length-2 )); 
+	    	
+	    	mypoint.y =  ObjNode.getAttribute('y');
+	    	mypoint.y = new Number(mypoint.y.substring(0, mypoint.y.length-2 ));  
+	    	
+	    	mypoint.width =  ObjNode.getAttribute('width');
+	    	mypoint.width = new Number(mypoint.width.substring(0, mypoint.width.length-2 ));
+	    	
+	    	mypoint.height =  ObjNode.getAttribute('height');
+	    	mypoint.height = new Number (mypoint.height.substring(0, mypoint.height.length-2 ));
 	    }
-	    
 	    else if(ObjNode.nodeName == 'ellipse') {	        
 	    	mypoint.centerX = mypoint.x = new Number(ObjNode.getAttribute('cx')); 
 	    	mypoint.centerY = mypoint.y = new Number(ObjNode.getAttribute('cy'));
@@ -3140,8 +3360,7 @@ function GX_GetRectObjectDim(ObjNode)
 	        mypoint.x -=  mypoint.width; 
 	        mypoint.y -=  mypoint.height;   
 	        mypoint.width = 2*mypoint.width; 
-	        mypoint.height = 2* mypoint.height; 
-	        
+	        mypoint.height = 2* mypoint.height; 	        
 	    }  
 	    else if(ObjNode.nodeName == 'circle') {	        
 	    	mypoint.centerX = mypoint.x = new Number(ObjNode.getAttribute('cx')); 
@@ -3171,6 +3390,7 @@ function GX_GetRectObjectDim(ObjNode)
 	    	mypoint.centerX = mypoint.x +  mypoint.width/2; 
 	    	mypoint.centerY = mypoint.y +  mypoint.height/2; 	    	
 	    }
+	    
 	    var rotParam = ObjNode.classList[2]; 
 	    if(rotParam)
 	    {
@@ -3252,7 +3472,16 @@ function GX_SetRectObjectDim(ObjNode, newDim)
             ObjNode.setAttribute('y', modDim.y);
             ObjNode.setAttribute('width', modDim.width);
             ObjNode.setAttribute('height', myheight);              
-    }      
+    }  
+    else if(ObjNode.nodeName == 'svg'){    		
+    		var viewBoxstr = ObjNode.getAttribute('viewBox'); 
+    		viewBoxstr = modDim.x + ' ' +  modDim.y + ' ' + modDim.width + ' ' +  modDim.height;
+    		ObjNode.setAttribute('viewBox',viewBoxstr );
+    		ObjNode.setAttribute('x' ,modDim.x + 'px' ); 
+    		ObjNode.setAttribute('y' ,modDim.y + 'px' ); 
+    		ObjNode.setAttribute('width' ,modDim.width + 'px' ); 
+    		ObjNode.setAttribute('height' ,modDim.height + 'px' ); 
+    }
     else if (ObjNode.nodeName == 'text') {
         ObjNode.setAttribute('x', modDim.x);      
         ObjNode.setAttribute('y', modDim.y);                   
@@ -4704,7 +4933,7 @@ function GX_SelectObjectInMultiMode(Node)
 		//get the Rect Object DIm 
 	
 	//create a clone from gripper
-	var gripperNode = document.getElementById('gripper'); 	
+	var gripperNode = document.getElementById('sel_gripper'); 	
 	gripperNode.removeAttribute('stroke-opacity'); 
 	var gripParentNode = gripperNode.parentNode;
 	var gripClonenode = gripperNode.cloneNode(true); 
