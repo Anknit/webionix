@@ -4,6 +4,8 @@
 <meta charset="ISO-8859-1">
 <title id="filename">Web2.0 Graphics Editor :</title>
  <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.base.css" type="text/css" /> 
+ <link rel="stylesheet" href="http://localhost/CDOCApps/CommonCSS/demos.css">
+ <link rel="stylesheet" href="http://localhost/CDOCApps/CommonCSS/jquery.ui.all.css">
  <!-- <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.energyblue.css" type="text/css" />-->
  <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.bootstrap.css" type="text/css" />
   <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.black.css" type="text/css" />
@@ -11,6 +13,13 @@
  <script type="text/javascript" src="../ThirdParty/jqwidget_ver3.7/scripts/jquery-1.11.1.min.js"></script>    
  <script type="text/javascript" src="../ThirdParty/jqwidget_ver3.7/jqwidgets/jqxcore.js"></script> 
  <script type="text/javascript" src="../ThirdParty/jqwidget_ver3.7/jqwidgets/jqx-all.js"></script>
+ 
+ <script src="http://localhost/CDOCApps/CommonJS/jquery.ui.core.js"></script>
+ <script src="http://localhost/CDOCApps/CommonJS/jquery.ui.widget.js"></script>
+ <script src="http://localhost/CDOCApps/CommonJS/jquery.ui.mouse.js"></script>
+ <script src="http://localhost/CDOCApps/CommonJS/jquery.ui.draggable.js"></script>
+ <script src="http://localhost/CDOCApps/CommonJS/jquery.ui.resizable.js"></script>
+ 
  <script type="text/javascript" src="../CommonJS/gettheme.js"></script>
  <script type="text/javascript" src="../CommonJS/Utilities.js"></script>
  <script type="text/javascript" src="../CommonJS/CDOCWAL_V2.js"></script> 
@@ -267,7 +276,7 @@
 				       <circle cx="5" cy="5" r="5" fill="black" />
 				   </marker>  				    
 				 </defs>   
-			<rect id="gridpattern" x="0" y="0" width="100%" height="100%" fill="url(#bigrectpattern)" onclick="OnSVGParentClick(evt)" pointer-events="fill" onmousemove="OnObjectMove(evt)" />
+			<rect id="gridpattern" x="0" y="0" width="100%" height="100%" fill="url(#bigrectpattern)" onclick="OnSVGParentClick(evt)" pointer-events="fill" />
 		<!-- <rect id="svgborder" x="0" y="0" width="800" height="800" stroke="red" stroke-width="6" fill="none" visibility="visible"/>-->
 		  </svg>
 		<svg id="objectcontainer" width="100%" height="100%"  visibility="visible"></svg>
@@ -278,7 +287,7 @@
         	<path id="erasepath" visibility="hidden" class='ERASE_PATH' stroke="white" stroke-width="4" fill="none" d="" />
         	<rect id='eraser1_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
         	<rect id='eraser2_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
-			<rect id="gripper_orig" x="10" y="10" width="50" height="50" stroke="blue" stroke-width="3" fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible" onmousemove="OnObjectMove(evt)" onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)"></rect>
+			<rect id="gripper_orig" x="10" y="10" width="50" height="50" stroke="blue" stroke-width="3" fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible"  onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)"></rect>
 			
 			<circle id="markerTL_orig" class="CUSTOM_MARKER_ORIG" cx="0" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="nw-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
 	        <circle id="markerTM_orig" class="CUSTOM_MARKER_ORIG" cx="25" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="n-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
@@ -289,7 +298,7 @@
 	        <circle id="markerBL_orig" class="CUSTOM_MARKER_ORIG" cx="150" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="sw-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
 	        <circle id="markerML_orig" class="CUSTOM_MARKER_ORIG" cx="170" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="w-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
 	        <circle id="markerPoint_orig" class="CUSTOM_MARKER_ORIG" cx="170" cy="0" r="6" stroke="blue" stroke-width="2" fill="grey" fill-opacity="1" visibility="hidden" data-direction="w-resize" onmousemove="OnPointerMarkerMouseMove(evt)" onmousedown="OnPointerMarkerMouseDown(evt)" onmouseout="OnPointerMarkerMouseOut(evt)"></circle>
-	        <rect id="freedraw_orig" x="10" y="10" width="250" height="150" stroke="green" stroke-width="1" stroke-opacity='0.9' fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible" onmousemove="OnFreeDraw(evt)" onmousedown="OnFreeDrawClick(evt)" ></rect>
+	        <rect id="freedraw_orig" x="10" y="10" width="250" height="150" stroke="green" stroke-width="1" stroke-opacity='0.9' fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible" onmousedown="OnFreeDrawClick(evt)" onmousemove='OnFreeDrawMouseMove(evt)' ></rect>
        </svg>
         
 	</svg>
@@ -650,5 +659,7 @@
        <div id='mycontent'style="overflow: hidden">                     
        </div>        
     </div>
+    <div id="drawingpen" class="ui-widget-content" style='border:2px solid black; position:absolute; width:4px;height:4px;left:50px; top:50px; visibility:hidden'></div>
+    <div id="sel_gripper" class="ui-widget-content " style='border:2px dotted blue; position:absolute'></div>
 </body>
 </html>
