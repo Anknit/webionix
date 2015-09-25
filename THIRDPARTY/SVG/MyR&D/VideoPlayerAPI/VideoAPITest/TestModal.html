@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+	<link rel="stylesheet" href="http://localhost/CDOCApps/CommonCSS/jquery.ui.all.css">
+	<script src="http://localhost/CDOCApps/CommonJS/jquery.js"></script>
+	<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.core.js"></script>
+<!-- <script src="http://localhost/CDOCApps/CommonJS/jquery.ui.widget.js"></script>
+	<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.mouse.js"></script>
+-->
+	<script src="http://localhost/CDOCApps/CommonJS/jquery-ui-1.9.2.custom.min.js"></script> 
+
+<script>
+	$(function() {
+		$( "#dialog-modal" ).dialog({
+			height: 140,
+			modal: true,
+			autoOpen: false
+		});
+		$( "#dialog-modal" ).close(); 
+	});
+	
+	var duration = 5000; 
+	function OnBtnHandlr(event){
+		if(event.target.id == 'show'){
+			alert('My previous line '); 
+			showWithModal(); 
+			alert('My next line '); 
+		}
+		else if(event.target.id == 'close'){
+			$("#dialog-modal").dialog('close');	
+		}
+		else if(event.target.id == 'mybtn'){
+			alert('Clicked me'); 
+		}
+	}
+	
+	function showWithModal(){
+		setTimeout(function(){
+			$("#dialog-modal").dialog('close');		 
+		 }, 
+		 duration);
+		$("#dialog-modal").dialog('open');	
+		alert('Called after dialog-modal'); 
+	}
+	
+	</script>
+
+</head>
+<body>
+<div id="dialog-modal" title="Basic modal dialog">
+	<p>Adding the modal overlay screen makes the dialog look more prominent because it dims out the page content.</p>
+</div>
+<button  id='show' onclick= 'OnBtnHandlr(event)'>Show<button> 
+<button  id='close' onclick= 'OnBtnHandlr(event)'>Close<button> 
+<button  id='mybtn' onclick= 'OnBtnHandlr(event)'>click Me <button> 
+</body>
+</html>
