@@ -246,14 +246,19 @@ function CheckIfPlayerExists(ID){
 		 		 
 		 break; 
 	 case gEventTypes.ON_PAUSE:
-		 if(gPlayerObject.OnPauseHandlerfn){
+		 if(gPlayerObject.playSegmentFlag == true){
+			 if(gTimerObj){
+				 clearTimeout(gTimerObj); 
+				 gTimerObj = 0; 
+				 //alert('Buffering Now starttime= ' + startTime); 
+			 }
+		 }
+		 else if(gPlayerObject.OnPauseHandlerfn){
 			 fnStr = gPlayerObject.OnPauseHandlerfn + '()'; 
 			 eval(fnStr); 
 		 }		
 		 break;	 
-	 case gEventTypes.ON_BUFFERING:
-		 
-		 
+	 case gEventTypes.ON_BUFFERING:		 
 		 if(gPlayerObject.playSegmentFlag == true){
 			 if(gTimerObj){
 				 clearTimeout(gTimerObj); 
