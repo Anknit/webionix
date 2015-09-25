@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+	.LINK_EFFECT:hover{ 				   
+         		  /* border:inset 2px grey;*/ 	 
+                   box-shadow: 5px 8px 7px #888888;                           
+                   cursor:pointer;   
+                   width:300px;    
+                   color:blue;                                              
+                     } 
+	.modalWindow {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background: rgba(0,0,0,0.2);
+		z-index: 99999;
+		opacity:0;
+		pointer-events: none;
+		text-align:center;
+	}
+	.modalWindow:target {
+		opacity:1;
+		pointer-events: auto;
+	}
+	.modalWindow > div {
+		width: 500px;
+		position: relative;
+		margin: 10% auto;
+		background: #fff;
+	}
+	</style>
+	<script src="http://localhost/CDOCApps/CommonJS/jquery.js"></script>
+	<script type='text/javascript' src='http://localhost/Web_Project_Workspace/Web_Projects_trunk2013/VideoPlayerAPI/VideoPlayerClass.js' ></script>
+	<script type="text/javascript">
+	 var vidPlayerObject =   CreatePlayerWidget('YT', 'YTPlayerDiv',640, 480, false,true);
+	 var currSegIndex =-1; 
+	 if(!vidPlayerObject){
+		  alert('Player Object could not be created');		  
+	  }		  
+	</script>	
+	<script type='text/javascript' src='https://www.youtube.com/iframe_api' ></script>
+	  
+	  <script type='text/javascript'>
+	 // var videoId = 'hraRkGJ6ZKQ'; 
+	 function OnYTPlayerReady() {
+		  	  
+		  alert('YT Player is Ready'); 
+		  if(vidPlayerObject.playerHandle)
+			  alert('Player Handler Initialized'); 
+		  else
+			  alert('Player Handler Null'); 
+		  //now add handling function heres 
+		  vidPlayerObject.SetEventHandler(gEventTypes.ON_PLAY, 'MyHandlePlay'); 
+		  vidPlayerObject.SetEventHandler(gEventTypes.ON_PAUSE,'MyHandlePause'); 
+		  vidPlayerObject.SetEventHandler(gEventTypes.ON_ERROR,'MyHandleError'); 
+		  vidPlayerObject.SetEventHandler(gEventTypes.ON_END,'MyHandleEnd');
+		  vidPlayerObject.SetEventHandler(gEventTypes.ON_BUFFERING,'MyHandleBuffering');
+		  if(!vidPlayerObject.playerHandle){
+			  alert('PlayerHandle not ready yet'); 
+		  }
+    
+	 }  
+		  
+	  function OnBtnHandler(event){
+		  if(event.target.id  == 'resizevideo'){
+			  var iframeNode = document.getElementById('YTPlayerDiv'); 
+			  var width = new Number(iframeNode.getAttribute('width'));
+			  var height = new Number(iframeNode.getAttribute('height'));
+			  width =  Math.round(width/2);
+			  height =  Math.round(height/2); 
+			  iframeNode.setAttribute('width',width ); 
+			  iframeNode.setAttribute('height',height );			  
+		  }
+		  else if(event.target.id  == 'loadvideo'){
+			 vidPlayerObject.LoadNewVideoByID(videoId, 0);
+		  }
+		  else if(event.target.id  == 'hidevideo'){
+			  vidPlayerObject.ShowVideoPlayer(false); 			  
+		  }
+		  else if(event.target.id  == 'play'){
+			  vidPlayerObject.Play(); 			  
+		  }
+		  else if(event.target.id  == 'pause'){
+			  vidPlayerObject.Pause(); 			  
+		  }
+		  else if(event.target.id  == 'fwd'){
+			  var currTime = new Number(vidPlayerObject.GetCurrentPTS());
+			  currTime += 2; 			  
+			  vidPlayerObject.SeekTo(currTime); 			  
+		  }
+		  else if(event.target.id  == 'bwd'){
+			  var currTime = new Number(vidPlayerObject.GetCurrentPTS());
+			  currTime -= 2; 			  
+			  vidPlayerObject.SeekTo(currTime); 			  
+		  }
+		  else if(event.target.id  == 'playsegments'){
+			  vidPlayerObject.LoadNewVideoSegment(newSegInfo.videoID, 'HandleSegmentEnd');
+			  currSegIndex++; 
+			  var segInfo = newSegInfo.segmentList[currSegIndex]; 
+			  UpdateUI(currSegIndex); 
+			  vidPlayerObject.PlaySegmentwise(segInfo.startTime, segInfo.endTime); 		   		  
+		  }	 
+		  else if (event.target.id == 'modaldlg'){
+			  var dlgNode = document.getElementById('openModal'); 
+			  dlgNode.style.visibility = 'visible'; 
+		  }
+	  }
+	  
+	  function HandleSegmentEnd(){
+		 
+		  currSegIndex++; 
+		  if(currSegIndex > newSegInfo.segmentList.length)
+			  {
+			  alert('End of Segmenet'); 
+			  return ; 
+			  }
+		  UpdateUI(currSegIndex); 
+		  var segInfo = newSegInfo.segmentList[currSegIndex]; 
+		  vidPlayerObject.PlaySegmentwise(segInfo.startTime, segInfo.endTime); 		 	  
+	  }
+	  
+	  function HandleSegmentPlay(event){
+		  var nodeID = event.target.id; 
+		  var segIndex = new Number(nodeID); 
+		  currSegIndex = segIndex; 
+		  var segInfo = newSegInfo.segmentList[currSegIndex]; 
+		  vidPlayerObject.PlaySegmentwise(segInfo.startTime, segInfo.endTime); 	 
+		  UpdateUI(currSegIndex); 
+	  }
+	  
+	  function UpdateUI(uid){
+		  if(currItemNode)
+			  prevItemNode = currItemNode;		  
+		  currItemNode = document.getElementById(uid);		 	 
+		  currItemNode.style.textDecoration = 'underline'; 
+		  if(prevItemNode)
+		 	 prevItemNode.style.textDecoration = 'none'; 
+	  }
+	  
+	  function HandlePlay(event){
+		  var node = event.target;
+		   var myvideoID = node.getAttribute('data-videoID'); 
+		   vidPlayerObject.LoadNewVideoByID(myvideoID, 0);	  
+	  }
+	  
+	   sSegmentInfo.prototype.videoID = 0; 	   
+	   sSegmentInfo.prototype.segmentList = 0;
+	   function sSegmentInfo(){
+		   sSegmentInfo.prototype.videoID = 0;		  
+		   sSegmentInfo.prototype.segmentList = 0;
+	   } 
+	   var newSegInfo = new sSegmentInfo(); 
+	   newSegInfo.videoID = 'gvQPUjrBU1E'; 
+	   newSegInfo.segmentList = []; 
+	   
+	   var topicInfo = new sVideoSegment();	   
+	   topicInfo.startTime = 0; 
+	   topicInfo.endTime = 15; 
+	   topicInfo.topicText = 'Banta fools shopkeeper'; 
+	   newSegInfo.segmentList.push(topicInfo); 	   
+	   
+	   topicInfo = new sVideoSegment();
+	   topicInfo.startTime = 240; 
+	   topicInfo.endTime = 275; 
+	   topicInfo.topicText = 'Santa goes to a Bar'; 
+	   newSegInfo.segmentList.push(topicInfo); 
+	   
+	   topicInfo = new sVideoSegment();
+	   topicInfo.startTime = 420; 
+	   topicInfo.endTime = 435; 
+	   topicInfo.topicText = 'Santa selling Potato'; 
+	   newSegInfo.segmentList.push(topicInfo); 
+	   
+	   topicInfo = new sVideoSegment();
+	   topicInfo.startTime = 900; 
+	   topicInfo.endTime = 925; 
+	   topicInfo.topicText = 'Santa"s wife runs away with the driver'; 
+	   newSegInfo.segmentList.push(topicInfo); 
+	   
+	   topicInfo = new sVideoSegment();
+	   topicInfo.startTime = 1200; 
+	   topicInfo.endTime = 1325; 
+	   topicInfo.topicText = 'Sants complaints about the new Radio'; 
+	   newSegInfo.segmentList.push(topicInfo); 	   
+	  
+	   var currItemNode=0; 
+	   var prevItemNode=0; 
+	   
+	   
+	 //Testing various Event Handlers 
+	 function MyHandlePlay(){
+		 alert('My Playing Handled'); 
+	 }
+	 function MyHandlePause(){
+		 alert('My Pause Handled'); 
+	 }
+	  
+	 function MyHandleError(errCode){
+		 alert('Error Code= ' + errCode); 
+	 }
+	 
+	 function MyHandleEnd(){
+		 alert('End of video'); 
+		 
+	 }
+	 function MyHandleBuffering(){
+		 alert('Buffering Video'); 
+		 
+	 }
+	  
+     </script>
+   
+	
+
+</head>
+  <body>
+    <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+  <!--  <div>Embedded youtube APIs being rendered </div>
+    <div id="player" style='border:inset 3px solid; position:relative; top:200px; left:100px'></div>
+    -->
+	<div>Embedded youtube APIs being rendered </div>
+	<button id='loadvideo' onclick='OnBtnHandler(event)'>Load video</button> 
+	<button id='resizevideo' onclick='OnBtnHandler(event)'>Resize Player</button> 
+	<button id='hidevideo' onclick='OnBtnHandler(event)'>Hide Player</button> 
+	<button id='modaldlg' onclick='OnBtnHandler(event)'>Show Modal</button> 
+   <div>
+		<button id='play' onclick='OnBtnHandler(event)'>Play</button> 
+		<button id='pause' onclick='OnBtnHandler(event)'>Pause</button>
+		<button id='fwd' onclick='OnBtnHandler(event)'>Forward</button>
+		<button id='bwd' onclick='OnBtnHandler(event)'>Backward</button>   
+		
+		<button id='playsegments' onclick='OnBtnHandler(event)'>Play Topicwise</button> 
+	</div>
+	<!-- this is the youtube player HTML element  -->
+    <div id="YTPlayerDiv" style='border:inset 3px solid; position:relative; top:10px; left:100px; display:inline-block'>    
+   
+    </div>
+    <!--  topicwise segements  -->
+    <div style='display:inline-block; position:relative; left:100px; top:10px;'>
+    	<ul>
+		  <li  id='0' class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-0 is now being displayed: start time= 0</li>
+		  <li  id='1' class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-1 is now being displayed: start time= 240 </li>	
+		  <li  id='2' class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-2 is now being displayed: start time= 420</li>	
+		  <li  id='3'  class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-3 is now being displayed: start time= 900</li>	
+		  <li  id='4'  class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-4 is now being displayed: start time= 1200</li>		 
+ 		</ul>
+    </div> 
+    
+    <div style='left:100px; top:10px;'>
+    	<ul>
+		  <li  data-videoID='hraRkGJ6ZKQ' class='LINK_EFFECT' onclick='HandlePlay(event)'>Santa Banta</li>
+		  <li  data-videoID='h9DBCKbWvms' class='LINK_EFFECT' onclick='HandlePlay(event)'>Santa Doctor's joke</li>
+		  <li  data-videoID='gvQPUjrBU1E' class='LINK_EFFECT' onclick='HandlePlay(event)'>Jaspal Jee</li>
+		  <li  data-videoID='4a0FbQdH3dY' class='LINK_EFFECT' onclick='HandlePlay(event)'>Love of Physics</li>		 
+ 		</ul>
+    </div> 
+    
+    <div id="openModal" class="modalWindow" style='visibility:hidden'>
+		<div>
+				<h2>This is a sample modal window</h2>
+				<p>This is a sample modal window that can be created using CSS3 and HTML5.</p>
+				<a href="#ok" title="Ok" class="ok">Ok</a>
+		</div>
+	</div>
+    
+  </body>
+</html>
