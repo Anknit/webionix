@@ -12,7 +12,7 @@
 	
 	</style>
 	<!-- PLEASE WRITE THE SCRIPTING PART AS IT IS IN THE APPLICATION CODE -->
-	<script type='text/javascript' src='http://localhost/Web_Project_Workspace/Web_Projects_trunk2013/VideoPlayerAPI/VideoPlayerClass.js' ></script>
+	<script type='text/javascript' src='http://localhost/CDOCApps/MyR&D/SVG/MyR&D/VideoPlayerAPI/VideoAPITest/VideoPlayerClass.js' ></script>
 	<script type="text/javascript">
 	 var vidPlayerObject =   CreatePlayerWidget('YT', 'YTPlayerDiv',640, 480, false,true);
 	 var currSegIndex =-1; 
@@ -33,14 +33,15 @@
 		  else
 			  alert('Player Handler Null'); 
 		  //now add handling function heres 
-		  vidPlayerObject.SetEventHandler(gEventTypes.ON_PLAY, 'MyHandlePlay'); 
+		/*  vidPlayerObject.SetEventHandler(gEventTypes.ON_PLAY, 'MyHandlePlay'); 
 		  vidPlayerObject.SetEventHandler(gEventTypes.ON_PAUSE,'MyHandlePause'); 
 		  vidPlayerObject.SetEventHandler(gEventTypes.ON_ERROR,'MyHandleError'); 
 		  vidPlayerObject.SetEventHandler(gEventTypes.ON_END,'MyHandleEnd');
 		  vidPlayerObject.SetEventHandler(gEventTypes.ON_BUFFERING,'MyHandleBuffering');
 		  if(!vidPlayerObject.playerHandle){
 			  alert('PlayerHandle not ready yet'); 
-		  }
+		  }*/
+		  
 		   
 	 }  
 		  /*Initiates the segmentwise playback from here
@@ -48,12 +49,20 @@
 		  */
 	  function OnBtnHandler(event){		
 		  if(event.target.id  == 'playsegments'){
+			  
+			  var YTNode = vidPlayerObject.playerHandle.getIframe(); 
+			  YTNode.disabled = true; 
 			  vidPlayerObject.LoadNewVideoSegment(newSegInfo.videoID, 'HandleSegmentEnd');
 			  currSegIndex++; 
 			  var segInfo = newSegInfo.segmentList[currSegIndex]; 
 			  UpdateUI(currSegIndex); 
 			  vidPlayerObject.PlaySegmentwise(segInfo.startTime, segInfo.endTime); 		   		  
-		  }	 		 
+		  }	 
+		  else if(event.target.id  == 'playfull'){
+			  vidPlayerObject.LoadNewVideoByID(newSegInfo.videoID, 0); 
+		  }
+			  
+		  
 	  }
 	  /*
 	  * This handler function handles the segment end . 
@@ -109,31 +118,31 @@
 	   
 	   var topicInfo = new sVideoSegment();	   
 	   topicInfo.startTime = 0; 
-	   topicInfo.endTime = 15; 
+	   topicInfo.endTime = 20; 
 	   topicInfo.topicText = 'Banta fools shopkeeper'; 
 	   newSegInfo.segmentList.push(topicInfo); 	   
 	   
 	   topicInfo = new sVideoSegment();
-	   topicInfo.startTime = 240; 
-	   topicInfo.endTime = 275; 
+	   topicInfo.startTime = 300; 
+	   topicInfo.endTime = 320; 
 	   topicInfo.topicText = 'Santa goes to a Bar'; 
 	   newSegInfo.segmentList.push(topicInfo); 
 	   
 	   topicInfo = new sVideoSegment();
-	   topicInfo.startTime = 420; 
-	   topicInfo.endTime = 435; 
+	   topicInfo.startTime = 600; 
+	   topicInfo.endTime = 620; 
 	   topicInfo.topicText = 'Santa selling Potato'; 
 	   newSegInfo.segmentList.push(topicInfo); 
 	   
 	   topicInfo = new sVideoSegment();
 	   topicInfo.startTime = 900; 
-	   topicInfo.endTime = 925; 
+	   topicInfo.endTime = 920; 
 	   topicInfo.topicText = 'Santa"s wife runs away with the driver'; 
 	   newSegInfo.segmentList.push(topicInfo); 
 	   
 	   topicInfo = new sVideoSegment();
 	   topicInfo.startTime = 1200; 
-	   topicInfo.endTime = 1325; 
+	   topicInfo.endTime = 1220; 
 	   topicInfo.topicText = 'Sants complaints about the new Radio'; 
 	   newSegInfo.segmentList.push(topicInfo); 	   
 	  
@@ -153,6 +162,7 @@
 	
    <div>	
 		<button id='playsegments' onclick='OnBtnHandler(event)'>Play Topicwise</button> 
+		<button id='playfull' onclick='OnBtnHandler(event)'>Play Full</button>
 	</div>
 	<!-- this is the youtube player HTML element  -->
     <div id="YTPlayerDiv" style='border:inset 3px solid; position:relative; top:10px; left:100px; display:inline-block'>    
@@ -161,11 +171,11 @@
     <!--  topicwise segements  -->
     <div style='display:inline-block; position:relative; left:100px; top:10px;'>
     	<ul>
-		  <li  id='0' class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-0 is now being displayed: start time= 0 - 15</li>
-		  <li  id='1' class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-1 is now being displayed: start time= 240- 275</li>	
-		  <li  id='2' class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-2 is now being displayed: start time= 420 - 435</li>	
-		  <li  id='3'  class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-3 is now being displayed: start time= 900 - 925</li>	
-		  <li  id='4'  class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-4 is now being displayed: start time= 1200 -1325</li>		 
+		  <li  id='0' class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-0 is now being displayed: start time= 0 - 20</li>
+		  <li  id='1' class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-1 is now being displayed: start time= 300-320</li>	
+		  <li  id='2' class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-2 is now being displayed: start time= 600 - 620</li>	
+		  <li  id='3'  class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-3 is now being displayed: start time= 900 - 920</li>	
+		  <li  id='4'  class='LINK_EFFECT'  onclick='HandleSegmentPlay(event)'>Topic-4 is now being displayed: start time= 1200 -1220</li>		 
  		</ul>
     </div>   
     

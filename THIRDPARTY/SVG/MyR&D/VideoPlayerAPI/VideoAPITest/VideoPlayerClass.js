@@ -1,7 +1,7 @@
 
 var gPlayerList = [];
 var gPlayerObject = 0; 
-
+var gTimerObj = 0; 
 var gEventTypes = {	  ON_END:0, 
 	                  ON_PLAY:1, 
 	                  ON_PAUSE:2,
@@ -67,11 +67,15 @@ function onYouTubeIframeAPIReady(){
 	gPlayerObject.playerHandle = new YT.Player(gPlayerObject.iFrameID,
     {
 	        width: gPlayerObject.Width,
-	        height: gPlayerObject.Height,             
-	        autoplay:0,//true,
-	        controls:0 , //gPlayerObject.Controls,     
-	        modestbranding:1, 
-	        rel:0,
+	        height: gPlayerObject.Height,  
+	        playerVars: {
+	            'autoplay': 0,
+	            'controls': 1,
+	            'frameborder':0,
+	            'modestbranding': 1,
+	            'rel': 0,
+	            'showinfo': 0
+	        },
 	        events: {
 	          'onReady': OnYTPlayerReady,
 	          'onStateChange': gPlayerObject.onPlayerStateChange, 
@@ -115,6 +119,7 @@ function CVideoPlayer(playerType, divID, width, height, bShow,bControls){
 	this.OnEndHandlderFn = 0; 
 	this.OnBufferingHandlerFn=0; 
 	
+	
 	//first check if a player of this ID already exists, if yes then return an error string 'ERR_ALREADY_EXISTS'
 	  
 }
@@ -130,6 +135,7 @@ CVideoPlayer.prototype.LoadNewVideoByID = function(videoID, startTime){
 		  this.playerHandle.loadVideoById({videoId:videoID, startSeconds:startTime}); 
 		 // this.playerHandle.playVideo(); 
 		  this.playerState = 'PLAYING';
+		  playSegmentFlag = false; 
 	  }	 
 }
 /*
@@ -212,12 +218,32 @@ function CheckIfPlayerExists(ID){
  CVideoPlayer.prototype.onPlayerStateChange = function(event){	
 	 var state = event.data; 
 	 var fnStr=''; 
+	 var dur = 0; 
+	
 	 switch(state){	 
-	 case gEventTypes.ON_PLAY:
-		 if(gPlayerObject.OnPlayHandlerFn){
-			 fnStr = gPlayerObject.OnPlayHandlerFn + '()'; 
-			 eval(fnStr); 
-		 }			 
+	 case gEventTypes.ON_PLAY:	
+		 var startTime = new Number (gPlayerObject.GetCurrentPTS()); 
+		 dur =  new Number(gPlayerObject.endPTS - startTime); 
+		 dur = dur * 1000; 
+		 if(gPlayerObject.playSegmentFlag == true){			 
+			 if(dur < 0)
+				 return ; 
+			 gTimerObj = setTimeout(function(){
+					// gPlayerObject.Pause();
+					 var fnstr = gPlayerObject.segmentHandlerfn + '()'; 
+					 eval(fnstr);		 
+				 }, 
+				 dur);
+			 
+		 }
+		 else{
+			 if(gPlayerObject.OnPlayHandlerFn){
+				 fnStr = gPlayerObject.OnPlayHandlerFn + '()'; 
+				 eval(fnStr); 
+			 }	
+		 }
+		 //alert('Timeout for : duration=' + dur + 'starttime= ' + startTime);
+		 		 
 		 break; 
 	 case gEventTypes.ON_PAUSE:
 		 if(gPlayerObject.OnPauseHandlerfn){
@@ -226,16 +252,35 @@ function CheckIfPlayerExists(ID){
 		 }		
 		 break;	 
 	 case gEventTypes.ON_BUFFERING:
-		 if(gPlayerObject.OnBufferingHandlerFn){
-			 fnStr = gPlayerObject.OnBufferingHandlerFn + '()'; 
-			 eval(fnStr); 
-		 }		
+		 
+		 
+		 if(gPlayerObject.playSegmentFlag == true){
+			 if(gTimerObj){
+				 clearTimeout(gTimerObj); 
+				 gTimerObj = 0; 
+				 //alert('Buffering Now starttime= ' + startTime); 
+			 }
+		 }
+		 else{
+			 if(gPlayerObject.OnBufferingHandlerFn){
+				 fnStr = gPlayerObject.OnBufferingHandlerFn + '()'; 
+				 eval(fnStr); 
+			 } 
+		 }
+		 	
 		 break; 
 	 case gEventTypes.ON_END:
 		 if(gPlayerObject.OnEndHandlderFn){
 			 fnStr = gPlayerObject.OnEndHandlderFn + '()'; 
 			 eval(fnStr); 
-		 }		
+		 }	
+		 if(gPlayerObject.playSegmentFlag == true){
+			 if(gTimerObj){
+				 clearTimeout(gTimerObj); 
+				 gTimerObj = 0; 
+			 } 
+		 }
+		
 		 break; 	
 	 default:
 		 break; 
@@ -262,53 +307,20 @@ function CheckIfPlayerExists(ID){
 			 eval(fnStr); 
 	}	
  }
- /*
-  * -1 (unstarted)
-0 (ended)
-1 (playing)
-2 (paused)
-3 (buffering)
-5 (video cued).
-  */
- /*
- CVideoPlayer.prototype.PlayVideoSegments =  function(videoID, segmentList, segEndHandler){
-	 //set the segmentPlay flag to be true 
-	 this.playSegmentFlag =  true; 
-	 this.segmentHandlerfn = segEndHandler;
-	 this.SegmentList = segmentList; 
-	 this.currentVideoID = videoID;
-	 this.currentSegIndex = 0; 
-	 this.ShowVideoPlayer(true); 
-	 this.PlayVideoSegment(this.currentSegIndex); 	
-	 //set the segendHandler to a object variable 	 
-	 //loop around the list  
-	 //return this.playerHandle.getPlayerState(); 
- }
 
- CVideoPlayer.prototype.PlayVideoSegment= function(segIndex){	 
-	 var segInfo = this.SegmentList[segIndex];
-	 var starttime =  new Number(segInfo.startTime); 
-	 var fnstr = gPlayerObject.segmentHandlerfn + '(' + segIndex + ')' ; 
-	 eval(fnstr); 
-	 var endtime =  new Number(segInfo.endTime); 
-	 if(segIndex == 0)
-		 this.playerHandle.loadVideoById({videoId:this.currentVideoID,startSeconds:starttime, endSeconds:endtime});
-	 else{
-		 this.PlayWithinInterval(starttime,endtime);
-	 }	 
- }
- */
- 
  
  //load the new videoID but doesn't play it.  
  CVideoPlayer.prototype.LoadNewVideoSegment= function(videoID, handlerFn){
 	 this.currentVideoID = videoID; 
 	 this.segmentHandlerfn = handlerFn;
 	 this.playerHandle.loadVideoById({videoId:this.currentVideoID});
+	 this.playSegmentFlag = true; 
 	 this.Pause(); 
  }
  
  CVideoPlayer.prototype.PlaySegmentwise=function(startTime, endTime){
+	 this.startPTS = startTime; 
+	 this.endPTS = endTime; 
 	 var duration =  new Number(1000* (endTime - startTime)); 
 	 if(duration < 0)
 		 return 0; 
@@ -316,12 +328,7 @@ function CheckIfPlayerExists(ID){
 	 this.SeekTo(new Number(startTime)); 	 
 	 //play from there
 	 this.Play(); 	
-	 setTimeout(function(){
-		// gPlayerObject.Pause();
-		 var fnstr = gPlayerObject.segmentHandlerfn + '()'; 
-		 eval(fnstr);		 
-	 }, 
-	 duration);
+	 
 }
  
  CVideoPlayer.prototype.PlayWithinInterval= function(startTime, endTime){
