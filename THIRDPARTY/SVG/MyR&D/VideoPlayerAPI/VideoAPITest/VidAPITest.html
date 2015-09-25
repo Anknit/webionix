@@ -9,30 +9,9 @@
                    width:300px;    
                    color:blue;                                              
                      } 
-	.modalWindow {
-		position: fixed;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		background: rgba(0,0,0,0.2);
-		z-index: 99999;
-		opacity:0;
-		pointer-events: none;
-		text-align:center;
-	}
-	.modalWindow:target {
-		opacity:1;
-		pointer-events: auto;
-	}
-	.modalWindow > div {
-		width: 500px;
-		position: relative;
-		margin: 10% auto;
-		background: #fff;
-	}
+	
 	</style>
-	<script src="http://localhost/CDOCApps/CommonJS/jquery.js"></script>
+	
 	<script type='text/javascript' src='http://localhost/Web_Project_Workspace/Web_Projects_trunk2013/VideoPlayerAPI/VideoPlayerClass.js' ></script>
 	<script type="text/javascript">
 	 var vidPlayerObject =   CreatePlayerWidget('YT', 'YTPlayerDiv',640, 480, false,true);
