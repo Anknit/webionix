@@ -70,3 +70,11 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; style:font-weight:bold;}
    div#sel_gripper{ width: 20px; height: 20px; padding: 1px; float: left; margin: 0 1px 1px 0; visibility:hidden; 
     background-color:transparent }
   
+  #DivPathMarker {
+  			 border-radius: 10px;
+   			 background-color: red;
+   			 border:solid blue 1px; 
+    		 padding: 1px;
+    		 width: 10px;
+    		 height: 10px;
+}
