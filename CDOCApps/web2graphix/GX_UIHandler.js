@@ -1963,7 +1963,7 @@ function OnSVGParentClick(evt)
 	//check if the click is outside the gripper rectangle only then act
 	 WAL_ShowTooltip(gWidgetTooltipID, false); 
 	
-	var status = gCurrGrabber.getAttribute('visibility'); 
+	var status = gCurrGrabber.style.visibility ; //getAttribute('visibility'); 
 	if(status == 'visible')
 	{
 		var dim = GX_GetRectObjectDim(gCurrGrabber); 
@@ -3350,7 +3350,8 @@ function GX_GetRectObjectDim(ObjNode)
 	    var x, y, width, height; 
 	    //get the parent layer node
 	    //get the dimension of the same 
-	    if( (ObjNode.nodeName == 'rect') || (ObjNode.nodeName == 'image') ) {
+	    var nodename = ObjNode.nodeName.toLowerCase(); 
+	    if( (nodename == 'rect') || (nodename == 'image') ) {
 	    	 mypoint.x = new Number(ObjNode.getAttribute('x')); 
 		     mypoint.y = new Number(ObjNode.getAttribute('y'));
 		     mypoint.width = new Number(ObjNode.getAttribute('width')); 
@@ -3358,7 +3359,7 @@ function GX_GetRectObjectDim(ObjNode)
 		     mypoint.centerX = mypoint.x + mypoint.width /2; 
 		     mypoint.centerY = mypoint.y + mypoint.height /2; 		     
 	    }	
-	    else if(ObjNode.nodeName == 'svg'){
+	    else if(nodename == 'svg'){
 	    	mypoint.x =  ObjNode.getAttribute('x');
 	    	mypoint.x = new Number( mypoint.x.substring(0, mypoint.x.length-2 )); 
 	    	
@@ -3371,7 +3372,7 @@ function GX_GetRectObjectDim(ObjNode)
 	    	mypoint.height =  ObjNode.getAttribute('height');
 	    	mypoint.height = new Number (mypoint.height.substring(0, mypoint.height.length-2 ));
 	    }
-	    else if(ObjNode.nodeName == 'ellipse') {	        
+	    else if(nodename == 'ellipse') {	        
 	    	mypoint.centerX = mypoint.x = new Number(ObjNode.getAttribute('cx')); 
 	    	mypoint.centerY = mypoint.y = new Number(ObjNode.getAttribute('cy'));
 	        mypoint.width = new Number(ObjNode.getAttribute('rx')); 
@@ -3381,7 +3382,7 @@ function GX_GetRectObjectDim(ObjNode)
 	        mypoint.width = 2*mypoint.width; 
 	        mypoint.height = 2* mypoint.height; 	        
 	    }  
-	    else if(ObjNode.nodeName == 'circle') {	        
+	    else if(nodename == 'circle') {	        
 	    	mypoint.centerX = mypoint.x = new Number(ObjNode.getAttribute('cx')); 
 	    	mypoint.centerY = mypoint.y = new Number(ObjNode.getAttribute('cy'));
 	        mypoint.width = new Number(ObjNode.getAttribute('r'));	       
@@ -3391,19 +3392,19 @@ function GX_GetRectObjectDim(ObjNode)
 	        mypoint.height = mypoint.width; 
 	        
 	    }  
-	    else if(ObjNode.nodeName == 'text')
+	    else if(nodename == 'text')
 	    {
 	    	mypoint = ObjNode.getBBox(); 
 	    	var y = ObjNode.getAttribute('y');	    	 
 	    	//mypoint.x = ObjNode.getAttribute('x');
 	    	//mypoint.y = ObjNode.getAttribute('y');
 	    }
-	    else if(ObjNode.nodeName == 'g')
+	    else if(nodename == 'g')
 	    {
 	    	var tempDim = GX_GetTransformProperty(ObjNode, 'translate'); 
 	    	return tempDim; 
 	    }	 
-	    else if(ObjNode.nodeName == 'div'){
+	    else if(nodename == 'div'){
 	    	var JQSel = '#' + ObjNode.id; 
 	    	var pos = $(JQSel).position(); 
 	    	mypoint.x =  pos.left; 
@@ -3467,7 +3468,7 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     var myheight = modDim.height + 0; 
     rightLimit = modDim.x + modDim.width; 
     bottomLimit = modDim.y + modDim.height;
-    if(modDim.x <= gMaxLeft )
+    if(modDim.x < gMaxLeft )
     {
     	//gCurrSelectedObjectDim.x
     	//gGrabberDim.x
@@ -4108,15 +4109,15 @@ function GX_ToolbarHandler(Node)
 		 WAL_showModalWindow(gSVGGroupNameDlgID,"GX_SVGGroupDlgNameOK", "" );	
 		break;
 	case 'circle_icon':
-		 GX_AddNewSVGObject('circle',''); 
+		gNewObjectID = GX_AddNewSVGObject('circle',''); 
 		 GX_StartFreeDraw();
 		break; 
 	case 'ellipse_icon':
-		 GX_AddNewSVGObject('ellipse',''); 
+		gNewObjectID = GX_AddNewSVGObject('ellipse',''); 
 		 GX_StartFreeDraw();
 		break; 
 	case 'square_icon':
-		 GX_AddNewSVGObject('rectangle',''); 
+		gNewObjectID = GX_AddNewSVGObject('rectangle',''); 
 		 GX_StartFreeDraw();
 		break; 
 	/*case 'line_icon':
@@ -4131,7 +4132,7 @@ function GX_ToolbarHandler(Node)
 		GX_AddNewSVGObject('text',''); 
 		break; 
 	case 'freehand_icon':
-		GX_AddNewSVGObject('freedraw_path',''); 
+		gNewObjectID = GX_AddNewSVGObject('freedraw_path',''); 
 		GX_StartFreeDraw();
 		break; 
 	case 'image_icon':
@@ -4964,7 +4965,7 @@ function GX_SelectObjectInMultiMode(Node)
 		//get the Rect Object DIm 
 	
 	//create a clone from gripper
-	var gripperNode = document.getElementById('sel_gripper'); 	
+	var gripperNode = document.getElementById('gripper'); 	
 	gripperNode.removeAttribute('stroke-opacity'); 
 	var gripParentNode = gripperNode.parentNode;
 	var gripClonenode = gripperNode.cloneNode(true); 
@@ -5816,34 +5817,41 @@ function GX_PolyInputDlgOK()
 function GX_StartFreeDraw()
 {
 	//hide current grabber
-	if(!gCurrentObjectSelected)
-		return;
+	//anything selected now should be unselected 
+	if(gCurrentObjectSelected)
+		GX_SetSelection(gCurrentObjectSelected, false, false); 
 	
-	var pathType = gCurrentObjectSelected.classList[1]; 
-	//if(pathType != 'FREEDRAW_PATH')
-		//return ; 		
-	//make free draw visible 
-	
+	gCurrentObjectSelected =  document.getElementById(gNewObjectID); 	
+	var pathType = gCurrentObjectSelected.classList[1]; 	
 	GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, true); 	
+	gPrevAttributeList = EL_getObjectAttributes(gCurrentObjectSelected);
+	
 }
 
 
 function GX_SetFreeDrawEditAttributes(ObjNode, bFlag)
 {
 
+	if(!gsvgRootNode)
+		gsvgRootNode = document.getElementById('SVGContainer');
+	
 	if(bFlag == true)
 	{
 		var freedrawNode = document.getElementById('freedraw'); 
 		freedrawNode.setAttribute('visibility', 'visible'); 
 		freedrawNode.setAttribute('pointer-events', 'visible'); 
-		gCurrGrabber.setAttribute('pointer-events', 'none'); 
+		//gCurrGrabber.setAttribute('pointer-events', 'none'); 
 		bDraw = false; 
+		var JQSel = '#drawingpen'; 
+		$(JQSel).css('visibility', 'visible'); 
 	}
 	else
 	{
 		var freedrawNode = document.getElementById('freedraw'); 
-		freedrawNode.setAttribute('visibility', 'hidden');		
-		gCurrGrabber.setAttribute('pointer-events', 'visible'); 
+		freedrawNode.setAttribute('visibility', 'hidden');	
+		$(JQSel).css('visibility', 'hidden'); 
+		//gCurrGrabber.setAttribute('pointer-events', 'visible'); 
+		
 	}
 }
 
@@ -5911,6 +5919,49 @@ function OnEraseClick(evt)
 }
 function OnFreeDrawClick(evt)
 {
+	if(bDraw == false)
+	{
+		//gFreeDrawStarted = false; 
+		//bDraw = true; 
+		//now move the drawing pen here 
+		var JQSel = '#drawingpen'; 
+		$(JQSel).css({left: evt.clientX +'px', top: evt.clientY + 'px', visibility:'visible'} ); 
+		var JQSel = 'freedraw'; 
+		$(JQSel).attr('pointer-events', 'none'); 
+	}
+	else{
+		var objectType = gCurrentObjectSelected.classList[1]; 
+		gsvgRootNode.setAttribute("cursor", "auto");		
+		GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, false);
+		if(objectType == 'FREEDRAW_PATH')
+		{
+			gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
+			GX_SetObjectAttribute(gCurrentObjectSelected, 'PATH_DATA', gPathDataArray, true, false);
+		}
+		else if( (objectType == 'RECTANGLE')|| (objectType == 'IMAGE') || (objectType == 'ELLIPSE')|| (objectType == 'CIRCLE') || (objectType == 'LINE_PATH')|| (objectType == 'HOR_LINE_PATH')|| (objectType == 'VERT_LINE_PATH') || (objectType == 'CUBIC_BEZIER')
+				|| (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC'))
+		{
+			GX_SetObjectAttribute(gCurrentObjectSelected, 'DIMENSION', gCurrSelectedObjectDim, true, false);
+			
+		}		
+		 gFreeDrawStarted = false; 
+		 GX_SetSelection(gCurrentObjectSelected, true, true); 
+	}
+	
+}
+
+
+function OnFreeDrawMouseMove(evt){
+	var JQSel = '#drawingpen'; 
+	$(JQSel).css({left: evt.clientX +'px', top: evt.clientY + 'px'} ); 	
+}
+
+function OnFreeDrawDragStart(evt){
+	if(!gCurrentObjectSelected){
+		Debug_Message('Object not selected');
+		return ; 	
+	}
+	
 	var nodeid = evt.target.id; 
 	//alert("my nodeid =" +  nodeid); 
 	var node = evt.target;
@@ -5934,6 +5985,9 @@ function OnFreeDrawClick(evt)
 	{
 		gFreeDrawStarted = false; 
 		bDraw = true; 
+		//now move the drawing pen here 
+		//var JQSel = '#drawingpen'; 
+		//$(JQSel).css({left: evt.clientX +'px', top: evt.clientY + 'px'} ); 	
 		if(objectType == 'FREEDRAW_PATH')
 		{
 			gFreeDrawPathData = gCurrentObjectSelected.getAttribute('d'); 		
@@ -5979,7 +6033,34 @@ function OnFreeDrawClick(evt)
 	}		
 }
 
-function OnFreeDraw(evt)
+function OnFreeDrawDragEnd(evt){	
+	
+	var objectType = gCurrentObjectSelected.classList[1]; 
+	gsvgRootNode.setAttribute("cursor", "auto");		
+	GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, false);
+	if(objectType == 'FREEDRAW_PATH')
+	{
+		gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'PATH_DATA', gPathDataArray, true, false);
+	}
+	else if( (objectType == 'RECTANGLE')|| (objectType == 'IMAGE') || (objectType == 'ELLIPSE')|| (objectType == 'CIRCLE') || (objectType == 'LINE_PATH')|| (objectType == 'HOR_LINE_PATH')|| (objectType == 'VERT_LINE_PATH') || (objectType == 'CUBIC_BEZIER')
+			|| (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC'))
+	{
+		gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected); 
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'DIMENSION', gCurrSelectedObjectDim, false, false);	
+		GX_SetObjectAttribute(gCurrentObjectSelected, '', '', true, false);
+    	GX_SaveObjectProperties(gCurrentObjectSelected, true);		
+	}		
+	 gFreeDrawStarted = false; 
+	 GX_SetSelection(gCurrentObjectSelected, true, true);
+	 var JQSel = '#drawingpen'; 
+	 $(JQSel).css('visibility', 'hidden'); 
+	 var JQSel = 'freedraw'; 
+	 $(JQSel).attr('pointer-events', 'visible');
+	// Debug_Message('Drag End'); 
+}
+
+function OnFreeDrawDrag(evt)
 {
 	//now grab the points and add it to indicaotr path 
 	 if (bDraw != true)
