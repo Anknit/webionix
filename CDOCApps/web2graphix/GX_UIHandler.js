@@ -963,13 +963,15 @@ function GX_Initialize()
 	$(JQSel).draggable({ cursor: "move" });	
 	$(JQSel).resizable();
 	$(JQSel).on( "resizestop", function( event, ui ) {
-		OnResizeEnd(event); 		
+		OnObjectResizeStop(event, ui); 		
 	});
+	
+	
 	$(JQSel).on( "dragstart", function( event, ui ) {
 		OnObjectDragStart(event,ui);
 	});
 	
-	$(JQSel).on( "drOnObjectMouseDownagstop", function( event, ui ) {
+	$(JQSel).on( "dragstop", function( event, ui ) {
 		OnObjectDragStop(event,ui); 
 	});
 	
@@ -1819,19 +1821,16 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	gPrevAttributeList = EL_getObjectAttributes(node);
     
     gCurrentObjectSelected = node;   
-   
     gGrabberDim = new sDimension(); 
-    gGrabberDim.x = x +5; 
-    gGrabberDim.y = new Number(y + gClientYOffset +5); 
-    gGrabberDim.width = w; 
-    gGrabberDim.height = h; 
-    /*gCurrGrabber.setAttribute("x", x);
-    gCurrGrabber.setAttribute("y", y);
-    gCurrGrabber.setAttribute("width", w0);
-    gCurrGrabber.setAttribute("height", h);
-    */
-    $(gCurrGripperSel).css({left:gGrabberDim.x+'px', top:gGrabberDim.y+'px',
-    	width:gGrabberDim.width+'px', height:gGrabberDim.height+'px'}); 
+    gGrabberDim.x = gCurrSelectedObjectDim.x; 
+    gGrabberDim.y = gCurrSelectedObjectDim.y; 
+    gGrabberDim.width = gCurrSelectedObjectDim.width; 
+    gGrabberDim.height = gCurrSelectedObjectDim.height; 
+    GX_SetRectObjectDim(gCurrGrabber, gGrabberDim);
+   /* $(gCurrGripperSel).css({left:gGrabberDim.x+'px', top:gGrabberDim.y+'px',
+    	width:gGrabberDim.width+'px', height:gGrabberDim.height+'px'});
+    	*/
+    
     
     //now restrict the region of containtment 
     var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
@@ -1845,7 +1844,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     $(gCurrGripperSel).draggable( "option", "containment", region );
     
     
-   // WAL_ShowTooltip(gSelectorTooltipID, false); 
+   // WAL_ShowTooltip(gSelectorTooltipID, false)f; 
     //set the tooltip here
     /*
     var TTSel ='#' +  gSelectorTooltipID; 
@@ -2741,13 +2740,33 @@ function OnObjectDragStop(evt,ui){
 	}   
 	else if(objectType == 'SVG_PATH_OBJECT')
 	{
-		newObjDim.x = relX ;//gCurrSelectedObjectDim.x+relX;
-		newObjDim.y = relY ;// gCurrSelectedObjectDim.y+relY;          
-		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
+		GX_UpdatePathData(gCurrentObjectSelected); 
+		GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
 	}
     if(objectType == 'SVG_SHAPE_OBJECT')
     	GX_UpdatePropertyOnUI('DIMENSION', newObjDim); 
 
+    gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected); 
+    gGrabberDim = GX_GetRectObjectDim(gCurrGrabber);
+	
+}
+
+function OnObjectResizeStop(event, ui){
+	var relW, relH; 
+	var objectType = gCurrentObjectSelected.classList[0]; 
+	var newObjDim = new sDimension(); 
+	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
+		relW = new Number(ui.size.width - ui.originalSize.width ); 
+		relH = new Number(ui.size.height - ui.originalSize.height ); 
+		newObjDim.x = gCurrSelectedObjectDim.x ; 
+	    newObjDim.y = gCurrSelectedObjectDim.y ; 
+	    newObjDim.width = gCurrSelectedObjectDim.width + relW; 
+	    newObjDim.height =  gCurrSelectedObjectDim.height + relH;     
+		GX_SetRectObjectDim(gCurrentObjectSelected,newObjDim);
+		gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected);		
+		GX_SetRectObjectDim(gCurrGrabber,gCurrSelectedObjectDim);
+		gGrabberDim = GX_GetRectObjectDim(gCurrGrabber); 
+	}
 	
 }
 
@@ -3383,7 +3402,15 @@ function GX_GetRectObjectDim(ObjNode)
 	    {
 	    	var tempDim = GX_GetTransformProperty(ObjNode, 'translate'); 
 	    	return tempDim; 
-	    }	  
+	    }	 
+	    else if(ObjNode.nodeName == 'div'){
+	    	var JQSel = '#' + ObjNode.id; 
+	    	var pos = $(JQSel).position(); 
+	    	mypoint.x =  pos.left; 
+	    	mypoint.y = pos.top; 
+	    	mypoint.width = $(JQSel).width();
+	    	mypoint.height = $(JQSel).height();
+	    }
 	    else if(objClass = 'SVG_PATH_OBJECT')
 	    {
 	    	mypoint = GX_GetPathDimension(ObjNode);
@@ -3407,19 +3434,16 @@ function GX_GetRectObjectDim(ObjNode)
 }
 
 function GX_SetRectObjectDim(ObjNode, newDim) 
-{
-   
+{   
     var rightLimit, bottomLimit; 
     var x, y, width, height; 
     //check the limits 
-    var modDim = newDim; 
-    modDim.x = Math.round(modDim.x);
-    modDim.y = Math.round(modDim.y);
-    modDim.width = Math.round(modDim.width);
-    modDim.height = Math.round(modDim.height);
-    
-    var objectType = ObjNode.classList[1]; 
-       
+    var modDim = new sDimension() ; //newDim; 
+    modDim.x = Math.round(newDim.x);
+    modDim.y = Math.round(newDim.y);
+    modDim.width = Math.round(newDim.width);
+    modDim.height = Math.round(newDim.height);    
+    var objectType = ObjNode.classList[1];        
     var nodeclass = ObjNode.classList[0]; 
     if(gSnapToGrid == true)
     {
@@ -3450,30 +3474,30 @@ function GX_SetRectObjectDim(ObjNode, newDim)
    	// alert("Left Boundary: modDimX=" + modDim.x + "gCurrSelectedObjectDim.x="+gCurrSelectedObjectDim.x+ "gGrabberDim.x"+ gGrabberDim.x); 
    	 return false;
     }
-    if(modDim.y <= gMaxTop )
+    if(modDim.y < gMaxTop )
     {
    	// alert("Top Boundary"); 
    	 return false ;
     }
     
-    if(rightLimit >= gMaxRight)
+    if(rightLimit > gMaxRight)
     {
    	 //alert("Right Boundary"); 
    	 return false;
     }
-    if(bottomLimit >= gMaxBottom)
+    if(bottomLimit > gMaxBottom)
     {
    	 //alert("Bottom Boundary"); 
    	 return false ;
     }
-    
-    if((ObjNode.nodeName == 'rect') || (ObjNode.nodeName == 'image') ) {
+    var nodename = ObjNode.nodeName.toLowerCase(); 
+    if((nodename == 'rect') || (nodename == 'image') ) {
             ObjNode.setAttribute('x', modDim.x);
             ObjNode.setAttribute('y', modDim.y);
             ObjNode.setAttribute('width', modDim.width);
             ObjNode.setAttribute('height', myheight);              
     }  
-    else if(ObjNode.nodeName == 'svg'){    		
+    else if(nodename == 'svg'){    		
     		var viewBoxstr = ObjNode.getAttribute('viewBox'); 
     		viewBoxstr = modDim.x + ' ' +  modDim.y + ' ' + modDim.width + ' ' +  modDim.height;
     		ObjNode.setAttribute('viewBox',viewBoxstr );
@@ -3482,12 +3506,12 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     		ObjNode.setAttribute('width' ,modDim.width + 'px' ); 
     		ObjNode.setAttribute('height' ,modDim.height + 'px' ); 
     }
-    else if (ObjNode.nodeName == 'text') {
+    else if (nodename == 'text') {
         ObjNode.setAttribute('x', modDim.x);      
         ObjNode.setAttribute('y', modDim.y);                   
     }       
        //assuming that a container rectangle dim is passed  
-    else if(ObjNode.nodeName == 'ellipse') {
+    else if(nodename == 'ellipse') {
       	 var cx = modDim.x; 
       	 var cy = modDim.y; 
       	 var rx = modDim.width/2;
@@ -3499,10 +3523,11 @@ function GX_SetRectObjectDim(ObjNode, newDim)
         ObjNode.setAttribute('rx', rx);
         ObjNode.setAttribute('ry', ry);
     }  
-    else if(ObjNode.nodeName == 'circle') {
+    else if(nodename == 'circle') {
      	 var cx = modDim.x; 
      	 var cy = modDim.y; 
-     	 var r = modDim.width/2;
+     	 var r = Math.min(modDim.width, modDim.height); 
+     	 var r = Math.round(r/2);
      	// var ry = modDim.height/2; 
      	 cx += r; 
      	 cy += r
@@ -3510,6 +3535,12 @@ function GX_SetRectObjectDim(ObjNode, newDim)
        ObjNode.setAttribute('cy',cy);
        ObjNode.setAttribute('r', r);       
    }    
+    else if(nodename == 'div'){    	    
+    	    modDim.x = modDim.x +5; 
+    	    modDim.y = new Number(modDim.y + gClientYOffset +5);    	    
+    	var JQSel = '#' + ObjNode.id;
+    	$(JQSel).css({left:modDim.x +'px', top:modDim.y + 'px', width: modDim.width + 'px', height:modDim.height + 'px'}); 
+    }
     else if(nodeclass == 'SVG_PATH_OBJECT')
     {
     	if(objectType == 'CUBIC_BEZIER')
@@ -5654,8 +5685,8 @@ function GX_UpdatePathMarker(pathID, pathParam, bShow)
     	$(JQSel).attr('visibility', 'hidden'); 
     	 return ;
     }
-    if(gObjectEditMode != 'PROPERTIES_MODE')
-		  return ; 
+    //if(gObjectEditMode != 'PROPERTIES_MODE')
+	//	  return ; 
     var pathNode = document.getElementById(pathID);  
     var pathType = pathNode.classList[1]; 
     if(pathType == 'FREEDRAW_PATH')
