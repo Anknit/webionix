@@ -281,8 +281,8 @@
 		  </svg>
 		<svg id="objectcontainer" width="100%" height="100%"  visibility="visible"></svg>
 		<svg id="editingassets_orig" width="100%" height="100%" visibility="visible">
-		   <circle id="pathmarker" cx="0" cy="0" r="5" stroke="black" stroke-width="2"  fill="blue" fill-opacity="1.0" pointer-event="visible"  visibility="hidden" data-index="" 
-        onmousemove="OnPathMarkerMouseMove(evt)" onclick="OnPathMarkerMouseDown(evt)" onmouseout="OnPathMarkerMouseOut(evt)"/>
+		   <circle id="pathmarker" cx="0" cy="0" r="5" stroke="black" stroke-width="1"  fill="blue" fill-opacity="1.0" pointer-events="visible"  visibility="hidden" data-index="" 
+             onclick="OnPathMarkerMouseDown(evt)" onmousemove='OnPathMarkerMouseMove(evt)' onmouseout='OnPathMarkerMouseOut(evt)' />
         	<path id="indicatorpath" visibility="hidden" class='INDICATOR_PATH LINE_PATH' stroke="grey" stroke-width="2" stroke-opacity="1" stroke-dasharray="4 2" fill="none" d="M50 130 L200 100 L300 150" />   	  
         	<path id="erasepath" visibility="hidden" class='ERASE_PATH' stroke="white" stroke-width="4" fill="none" d="" />
         	<rect id='eraser1_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
@@ -661,5 +661,6 @@
     </div>
     <div id="drawingpen" class="ui-widget-content" style='border:2px solid black; position:absolute; width:4px;height:4px;left:50px; top:50px; visibility:hidden'></div>
     <div id="sel_gripper" class="ui-widget-content " style='border:2px dotted blue; position:absolute'></div>
+    <div id='DivPathMarker' class="ui-widget-content" style='border:2px dotted blue; position:absolute' />
 </body>
 </html>

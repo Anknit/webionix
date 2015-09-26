@@ -170,6 +170,7 @@ var gTE_DDLHeight = '24' ; //'26px'
 var gTE_EditWidth = "35"
 var gGroupList=[]; 
 var gbNewGradObject =  false; 
+var gDivPathMarkerSel = 0; 
 /*var ClientX = new Number(0);
 var ClientY = new Number(0);
 var newObjDim = new sDimension();
@@ -980,6 +981,17 @@ function GX_Initialize()
 	});
 	
 	$(JQSel).css({visibility:'hidden'}); 
+	
+	//path marker related 
+	gDivPathMarkerSel = '#DivPathMarker'; 
+	$(gDivPathMarkerSel).draggable({ cursor: "move" });
+	$(gDivPathMarkerSel).on( "dragstop", function( event, ui ) {
+		OnDivPathMarkerDragStop(event, ui); 
+	});
+	$(gDivPathMarkerSel).on( "drag", function( event, ui ) {
+		OnDivPathMarkerDrag(event, ui); 		
+	});
+	
 
 	gClientYOffset = $('#toolbar').height(); 
 	//gClientXOffset = $('#toolbar').width(); 
@@ -1872,7 +1884,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     //gGrabberDim = GX_GetRectObjectDim(gCurrGrabber); 
    
     //if( (nodeClass == 'SVG_SHAPE_OBJECT') && (bShowMarkers ==  true) )
-    //   	GX_UpdateMarkers(gGrabberDim, true, false);     
+    //   	GX_UpdateMarkers(gGrabberDim, true, false);   
+    $(gCurrGripperSel).resizable( "enable" );
     if(nodeClass == 'SVG_PATH_OBJECT')
     {    	
     	var pathType = node.classList[1]; 
@@ -1880,7 +1893,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     		GX_AddPathMarker(node.id, gPathDataArray, true);  
     	var bClose = GX_IsPathClose(node); 
     	WAL_setCheckBoxValue('pathclose', bClose);    	
-    	GX_UpdateEllipticParam(gCurrentObjectSelected);     	
+    	GX_UpdateEllipticParam(gCurrentObjectSelected);  
+    	$(gCurrGripperSel).resizable( "disable" );
     }
     
     if(nodeClass == 'GROUP')
@@ -2186,9 +2200,7 @@ function OnMarkerMouseDown(evt)
             gGrabberDim.width = dim.width + gObjectTolerance;
             gGrabberDim.height = dim.height + gObjectTolerance;
         }
-        GX_SetObjectAttribute(gCurrGrabber, "stroke-opacity", gOpacityUnSelect, false, false); 
-        GX_SetObjectAttribute(gCurrGrabber, "DIMENSION", gGrabberDim, false, false);
-        GX_SetObjectAttribute(gCurrGrabber, "pointer-events", "visible", false, false);
+       
        // gCurrGrabber.setAttribute("stroke-opacity", gOpacityUnSelect);
        // GX_SetRectObjectDim(gCurrGrabber, gGrabberDim);           
        // gCurrGrabber.setAttribute("pointer-events", "all");           
@@ -3446,6 +3458,9 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     modDim.height = Math.round(newDim.height);    
     var objectType = ObjNode.classList[1];        
     var nodeclass = ObjNode.classList[0]; 
+    var objectType = 0; 
+    if(gCurrentObjectSelected)
+    		objectType =  gCurrentObjectSelected.classList[0]; 
     if(gSnapToGrid == true)
     {
     	modDim.x = modDim.x / 10; 
@@ -3536,9 +3551,28 @@ function GX_SetRectObjectDim(ObjNode, newDim)
        ObjNode.setAttribute('cy',cy);
        ObjNode.setAttribute('r', r);       
    }    
-    else if(nodename == 'div'){    	    
-    	    modDim.x = modDim.x +5; 
-    	    modDim.y = new Number(modDim.y + gClientYOffset +5);    	    
+    else if(nodename == 'div'){    
+    	if(ObjNode.id == 'sel_gripper'){
+    		if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
+        		modDim.x = modDim.x ; 
+        	    modDim.y = new Number(modDim.y + gClientYOffset );   
+        	    modDim.width += 10; 
+        	    modDim.height += 10; 
+        	}
+        	else if(objectType == 'SVG_PATH_OBJECT'){
+        		with (Math){
+        			var offset = new Number(10); 
+            		modDim.x = modDim.x  + offset; 
+            	    modDim.y = new Number(modDim.y + gClientYOffset +  offset);   
+            	    modDim.width -= (2*offset); 
+            	    modDim.height -= (2*offset);
+        		}    		
+        	}
+    	}
+    	else{
+    		modDim.x = modDim.x +5; 
+    	    modDim.y = new Number(modDim.y + gClientYOffset + 5 );   	    
+    	}    	    
     	var JQSel = '#' + ObjNode.id;
     	$(JQSel).css({left:modDim.x +'px', top:modDim.y + 'px', width: modDim.width + 'px', height:modDim.height + 'px'}); 
     }
@@ -5464,7 +5498,7 @@ function OnPathMarkerMouseMove(evt) {
      }
 	if(bMarkerMove == false)
 	{
-		markerNode.setAttribute('r', '8'); 	   
+		markerNode.setAttribute('r', '10'); 	   
 	}
  
 	 
@@ -5517,7 +5551,7 @@ function OnPathMarkerMouseDown(evt) {
     	
     	gCurrentMarkerNode = markerNode; 
     	GX_SetMarkerNodeSelection(gCurrentMarkerNode, true);    	 
-    	return ; 
+    	//return ; 
     	//then assign the new marker node here 
     	//change the color 
     }
@@ -5538,8 +5572,8 @@ function OnPathMarkerMouseDown(evt) {
     if (bMarkerMove == false) {
         gsvgRootNode.setAttribute("cursor", "pointer");
         bMarkerMove = true;          
-        markerNode.setAttribute('r', '12'); 
-	    markerNode.setAttribute('opacity', '1'); 
+      //  markerNode.setAttribute('r', '12'); 
+	   // markerNode.setAttribute('opacity', '1'); 
         var index = markerNode.getAttribute("data-index");
         if (!index)
             return;
@@ -6520,19 +6554,35 @@ function GX_SetMarkerNodeSelection(markerNode, bFlag)
 			colorCode ='blue';
 		else 
 			return; 
+		/*
 		markerNode.setAttribute('fill', colorCode); 
 		markerNode.setAttribute('r', '5');	        	
 		markerNode.setAttribute('stroke-width', '2');
 		markerNode.removeAttribute('stroke-dasharray');
+		*/
+		$(gDivPathMarkerSel).css({visibility:'hidden'});
+		markerNode.setAttribute('r', '5');
+		markerNode.setAttribute('visibility', 'visible');	 
+		GX_UpdatePathData(gCurrentObjectSelected); 
+		GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
 		bMarkerSelected = false ; 
 	}
 	else
 	{		
+		//make the divmarker node visible here 
+		$(gCurrGripperSel).css({visibility: 'hidden'}); 
+		var currDim = GX_GetRectObjectDim(markerNode); 
+		GX_SetRectObjectDim($(gDivPathMarkerSel)[0], currDim); 
+		markerNode.setAttribute('visibility', 'hidden'); 
+		$(gDivPathMarkerSel).css({visibility:'visible'}); 
+		//disable the pointer movements of path markers 
+		/*
 		var colorCode = "yellow";     	
 		markerNode.setAttribute('fill', colorCode); 
 		markerNode.setAttribute('r', '8');
 		markerNode.setAttribute('stroke-width', '4');
 		markerNode.setAttribute('stroke-dasharray', "1 1");  
+		*/
 		bMarkerSelected = true; 
 	}	    
 }
@@ -7847,4 +7897,82 @@ function GX_updateImageFilename(filename)
 			
 	
 	//Debug_Message("UIH_updateFilename:Filname = " + node.getAttribute('value')); 
+}
+
+
+function OnDivPathMarkerDrag(event, ui){
+	
+	 if (bMarkerMove == true) {
+	        //now also set the parameters corresponding to the marker index
+	        relX = new Number(ui.position.left - ui.originalPosition.left);
+	        relY = new Number(ui.position.top - ui.originalPosition.top);	
+	        var newcX, newcY;
+	        newcX = gCurrSelectedObjectDim.x;
+	        newcY = gCurrSelectedObjectDim.y;
+	        var num = new Number(newcX);
+	        num += relX;
+	       // markerNode.setAttribute("cx", num);
+	        newcX = num; 
+	        
+	        var num = new Number(newcY);
+	        num += relY;
+	       // markerNode.setAttribute("cy", num);
+	        newcY = num;              
+	        
+	        //_rm is this the cause of unpredicatble mousedown event  ?? 
+	        if(gMouseMoveCounter >= 10)
+	        {       
+	        	gIndicatorPath[1][1] = newcX-gPanX;
+	            gIndicatorPath[1][2] = newcY-gPanY;
+	            gIndicatorPath[1][3] = 'POINT'; 
+	        	GX_ConvertArrayToPathData('indicatorpath', gIndicatorPath);
+	        	gMouseMoveCounter = 0; 
+	        }
+	        else
+	        	gMouseMoveCounter++;      
+	        //call the update path and add markers. could be a major overhead
+	    }//bMarkerMove
+}
+
+function OnDivPathMarkerDragStop(event, ui){
+	 var pathNode = document.getElementById("indicatorpath");    
+	 var currentPos;
+	 var arrLen = new Number(gPathDataArray.length); 	    
+	relX = new Number(ui.position.left - ui.originalPosition.left);
+    relY = new Number(ui.position.top - ui.originalPosition.top);
+    relX = Math.round(relX); 
+    relY = Math.round(relY); 
+    bMarkerMove = false;
+    gsvgRootNode.setAttribute("cursor", "auto");
+    //now set the new path here 
+    var newpathvalue = new Number(gPathDataArray[gpathSegIndex][1]); 
+    newpathvalue += relX; 
+    if(gSnapToGrid == true)
+    {
+    	newpathvalue = newpathvalue/10; 
+    	newpathvalue = Math.round(newpathvalue); 
+    	newpathvalue *= 10; 
+    }
+    gPathDataArray[gpathSegIndex][1] = newpathvalue;
+    
+    newpathvalue = new Number(gPathDataArray[gpathSegIndex][2]);
+    newpathvalue += relY;
+    if(gSnapToGrid == true)
+    {
+    	newpathvalue = newpathvalue/10; 
+    	newpathvalue = Math.round(newpathvalue); 
+    	newpathvalue *= 10; 
+    }
+    gPathDataArray[gpathSegIndex][2] = newpathvalue; 	  
+    GX_SetMarkerNodeSelection(gCurrentMarkerNode, false);
+    //GX_UpdatePathData(gCurrentObjectSelected); 
+    //GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);       
+    pathNode.setAttribute("visibility", "hidden");
+    gIndicatorPath = []; 
+    //GX_SetSelection(gCurrentObjectSelected, true, true); 
+   
+}
+
+function OnDivPathMarkerDragStart(event, ui){
+	gCurrentMarkerNode.setAttribute('visibility', 'hidden'); 
 }
