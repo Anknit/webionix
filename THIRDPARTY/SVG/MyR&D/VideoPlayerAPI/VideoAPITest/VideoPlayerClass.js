@@ -70,7 +70,7 @@ function onYouTubeIframeAPIReady(){
 	        height: gPlayerObject.Height,  
 	        playerVars: {
 	            'autoplay': 0,
-	            'controls': 1,
+	            'controls': 0,
 	            'frameborder':0,
 	            'modestbranding': 1,
 	            'rel': 0,
