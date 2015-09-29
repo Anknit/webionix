@@ -2028,7 +2028,7 @@ function GX_ResetAllSelections()
 		bMarkerMove = false;  
 		GX_SetMarkerNodeSelection(gCurrentMarkerNode, false);   
 	}
-	
+	$(gDivPathMarkerSel).css({visibility:'hidden'});
 	if(gbMultiSelection == true)
 	{
 		GX_DeselectObjectFromMultiMode(); 
