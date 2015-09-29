@@ -1821,11 +1821,13 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     }
     else if(nodeClass == 'GROUP')
     {
-    	var layerDim = GX_GetLayerDimension(node.id);
+    	/*var layerDim = GX_GetLayerDimension(node.id);
     	x = layerDim.x; 
    	 	y = layerDim.y; 
    	 	w = layerDim.width;
-   	 	h = layerDim.height; 
+   	 	h = layerDim.height;
+   	 	*/  
+   	 gCurrSelectedObjectDim = GX_GetLayerDimension(node.id);
     }      
    
     
@@ -1878,13 +1880,9 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     */
     
     //this is to ensure while a new object is being added with 0 Dim. doesnt show up 
-    if( (w == 0) && (h == 0) )
-    	$(gCurrGripperSel).css({visibility:'hidden'}); 
+    if( (gCurrSelectedObjectDim.width == 0) && (gCurrSelectedObjectDim.height == 0) )
+    	$(gCurrGripperSel).css({visibility:'hidden'});
     
-    //gGrabberDim = GX_GetRectObjectDim(gCurrGrabber); 
-   
-    //if( (nodeClass == 'SVG_SHAPE_OBJECT') && (bShowMarkers ==  true) )
-    //   	GX_UpdateMarkers(gGrabberDim, true, false);   
     $(gCurrGripperSel).resizable( "enable" );
     if(nodeClass == 'SVG_PATH_OBJECT')
     {    	
@@ -1893,13 +1891,14 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     		GX_AddPathMarker(node.id, gPathDataArray, true);  
     	var bClose = GX_IsPathClose(node); 
     	WAL_setCheckBoxValue('pathclose', bClose);    	
-    	GX_UpdateEllipticParam(gCurrentObjectSelected);  
-    	$(gCurrGripperSel).resizable( "disable" );
+    	GX_UpdateEllipticParam(gCurrentObjectSelected);    	
     }
+    if( (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'GROUP'))
+    		$(gCurrGripperSel).resizable( "disable" );
     
     if(nodeClass == 'GROUP')
     {    	
-    	GX_UpdatePropertyOnUI('DIMENSION',layerDim );    	
+    	GX_UpdatePropertyOnUI('DIMENSION',gCurrSelectedObjectDim );    	
     }    	  
     else if(nodeClass == 'SVG_SHAPE_OBJECT')
     {    	
@@ -3458,9 +3457,9 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     modDim.height = Math.round(newDim.height);    
     var objectType = ObjNode.classList[1];        
     var nodeclass = ObjNode.classList[0]; 
-    var objectType = 0; 
+    var currObjectType = 0; 
     if(gCurrentObjectSelected)
-    		objectType =  gCurrentObjectSelected.classList[0]; 
+    	currObjectType =  gCurrentObjectSelected.classList[0]; 
     if(gSnapToGrid == true)
     {
     	modDim.x = modDim.x / 10; 
@@ -3553,13 +3552,13 @@ function GX_SetRectObjectDim(ObjNode, newDim)
    }    
     else if(nodename == 'div'){    
     	if(ObjNode.id == 'sel_gripper'){
-    		if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
+    		if( (currObjectType == 'SVG_SHAPE_OBJECT') || (currObjectType == 'SVG_TEXT_OBJECT')|| (currObjectType == 'GROUP') ){
         		modDim.x = modDim.x ; 
         	    modDim.y = new Number(modDim.y + gClientYOffset );   
         	    modDim.width += 10; 
         	    modDim.height += 10; 
         	}
-        	else if(objectType == 'SVG_PATH_OBJECT'){
+        	else if(currObjectType == 'SVG_PATH_OBJECT'){
         		with (Math){
         			var offset = new Number(10); 
             		modDim.x = modDim.x  + offset; 
