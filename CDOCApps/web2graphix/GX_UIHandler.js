@@ -1827,9 +1827,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
    	 	w = layerDim.width;
    	 	h = layerDim.height;
    	 	*/  
-   	 gCurrSelectedObjectDim = GX_GetLayerDimension(node.id);
+   	 	gCurrSelectedObjectDim = GX_GetLayerDimension(node.id);
     }      
-   
     
     if(gCurrentObjectSelected != node)   	
     	gPrevAttributeList = EL_getObjectAttributes(node);
@@ -7406,7 +7405,8 @@ function GX_MakeTextEditable(srcTextNode)
 	//$(editJQSel).prop('font-size', '35');	//$x.prop("color","FF0000");editornode.style.fontSize = "34" ;//+fontsize; 
 	//editornode.style.color = node.getAttribute('fill');
 	editorParentNode.style.display = 'block';  
-	node.setAttribute('opacity', '0.3'); 
+	//_rm bug due to the opacity settings here
+	//node.setAttribute('opacity', '0.3'); 
 }
 
 function GX_SaveText(editedTextNode)
