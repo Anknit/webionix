@@ -1892,7 +1892,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	WAL_setCheckBoxValue('pathclose', bClose);    	
     	GX_UpdateEllipticParam(gCurrentObjectSelected);    	
     }
-    if( (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'GROUP'))
+    if( (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'GROUP') || (nodeClass == 'SVG_TEXT_OBJECT'))
     		$(gCurrGripperSel).resizable( "disable" );
     
     if(nodeClass == 'GROUP')
@@ -2755,6 +2755,9 @@ function OnObjectDragStop(evt,ui){
 	}
     if(objectType == 'SVG_SHAPE_OBJECT')
     	GX_UpdatePropertyOnUI('DIMENSION', newObjDim); 
+    //positiong the editor accoridng to new text position 
+    if(objectType == 'SVG_TEXT_OBJECT')
+    	GX_MakeTextEditable(gCurrentObjectSelected); 
 
     gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected); 
     gGrabberDim = GX_GetRectObjectDim(gCurrGrabber);
@@ -3441,6 +3444,9 @@ function GX_GetRectObjectDim(ObjNode)
 	 	    }
 	    }
 	   
+	    mypoint.x = Math.abs(mypoint.x); 
+	    mypoint.y = Math.abs(mypoint.y); 
+	    
 	     return mypoint;
 }
 
@@ -3451,7 +3457,11 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     //check the limits 
     var modDim = new sDimension() ; //newDim; 
     modDim.x = Math.round(newDim.x);
+    modDim.x =  Math.abs(modDim.x);
+    
     modDim.y = Math.round(newDim.y);
+    modDim.y =  Math.abs(modDim.y);
+    
     modDim.width = Math.round(newDim.width);
     modDim.height = Math.round(newDim.height);    
     var objectType = ObjNode.classList[1];        
@@ -7409,6 +7419,10 @@ function GX_MakeTextEditable(srcTextNode)
 	//node.setAttribute('opacity', '0.3'); 
 }
 
+
+function GX_UpdateTextEditorPos(x, y){
+	
+}
 function GX_SaveText(editedTextNode)
 {
 	var temptextNode = document.getElementById('tempText');	
