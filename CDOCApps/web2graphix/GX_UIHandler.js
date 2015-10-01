@@ -1805,7 +1805,13 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
         	 w = gCurrSelectedObjectDim.width;
         	 h = gCurrSelectedObjectDim.height; 
         	 x = x  + gCurrLayerTranslateValues.x;
-         	 y = y  + gCurrLayerTranslateValues.y;  
+         	 y = y  + gCurrLayerTranslateValues.y;
+         	 if(gSnapToGrid == true){
+         		gCurrSelectedObjectDim.x = GX_ConvertToMultipleOf(gCurrSelectedObjectDim.x, 10) ; 
+         		gCurrSelectedObjectDim.y = GX_ConvertToMultipleOf(gCurrSelectedObjectDim.y, 10) ; 
+         		if(nodeClass != 'SVG_PATH_OBJECT')
+         			GX_SetRectObjectDim(node, gCurrSelectedObjectDim); 
+         	 }
     	 }
     	  var JQSel = '.SVG_SHAPE_OBJECT'; 
     	  $(JQSel).attr('opacity', gOpacityUnSelect); 
@@ -1828,8 +1834,16 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
    	 	h = layerDim.height;
    	 	*/  
    	 	gCurrSelectedObjectDim = GX_GetLayerDimension(node.id);
-    }      
+    }    
     
+    if(gSnapToGrid == true){		
+		$(gCurrGripperSel).draggable( "option", "grid",[10,10]);
+		$(gCurrGripperSel).resizable( "option", "grid",[10,10]);
+	}
+	else{
+		$(gCurrGripperSel).draggable( "option", "grid",[1,1]);
+		$(gCurrGripperSel).resizable( "option", "grid",[1,1]);
+	}    
     if(gCurrentObjectSelected != node)   	
     	gPrevAttributeList = EL_getObjectAttributes(node);
     
@@ -2635,9 +2649,10 @@ function OnObjectDragStart(evt, ui){
 	else if(objectType == 'SVG_PATH_OBJECT')
 	{
 		GX_UpdatePathData(gCurrentObjectSelected); 
-		GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, false); 
-		
+		GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, false); 		
 	}
+	//var currdim = GX_GetRectObjectDim(gCurrentObjectSelected);
+	
 }
 
 function OnObjectDrag(evt, ui){
@@ -2721,6 +2736,10 @@ function OnObjectDragStop(evt,ui){
     {
     	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
         newObjDim.y = gCurrSelectedObjectDim.y + relY; 
+        if(gSnapToGrid == true){
+        	newObjDim.x = GX_ConvertToMultipleOf(newObjDim.x, 10); 
+        	newObjDim.y = GX_ConvertToMultipleOf(newObjDim.y, 10); 
+        }
         newObjDim.width = gCurrSelectedObjectDim.width; 
         newObjDim.height =  gCurrSelectedObjectDim.height; 
         newObjDim.rotate = gCurrSelectedObjectDim.rotate;          
@@ -2742,7 +2761,11 @@ function OnObjectDragStop(evt,ui){
 	else if(objectType == 'GROUP')
 	{    		
 		newObjDim.x = gCurrSelectedObjectDim.x+relX; 
-        newObjDim.y = gCurrSelectedObjectDim.y+relY;       
+        newObjDim.y = gCurrSelectedObjectDim.y+relY;  
+        if(gSnapToGrid == true){
+        	newObjDim.x = GX_ConvertToMultipleOf(newObjDim.x, 10); 
+        	newObjDim.y = GX_ConvertToMultipleOf(newObjDim.y, 10); 
+        }
        // Debug_Message("NewX="+newObjDim.x + "NewY="+ newObjDim.y +"gCurrSelectedObjectDim.x=" + gCurrSelectedObjectDim.x + "relX=" + relX);
 		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
 		//GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
@@ -2774,7 +2797,11 @@ function OnObjectResizeStop(event, ui){
 		newObjDim.x = gCurrSelectedObjectDim.x ; 
 	    newObjDim.y = gCurrSelectedObjectDim.y ; 
 	    newObjDim.width = gCurrSelectedObjectDim.width + relW; 
-	    newObjDim.height =  gCurrSelectedObjectDim.height + relH;     
+	    newObjDim.height =  gCurrSelectedObjectDim.height + relH; 
+	    if(gSnapToGrid == true){
+        	newObjDim.width = GX_ConvertToMultipleOf(newObjDim.width, 10); 
+        	newObjDim.height = GX_ConvertToMultipleOf(newObjDim.height, 10); 
+        }
 		GX_SetRectObjectDim(gCurrentObjectSelected,newObjDim);
 		gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected);		
 		GX_SetRectObjectDim(gCurrGrabber,gCurrSelectedObjectDim);
@@ -3469,6 +3496,8 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     var currObjectType = 0; 
     if(gCurrentObjectSelected)
     	currObjectType =  gCurrentObjectSelected.classList[0]; 
+    /*
+     * _rm should we not remove this.... 
     if(gSnapToGrid == true)
     {
     	modDim.x = modDim.x / 10; 
@@ -3485,9 +3514,10 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     	
     	modDim.height = modDim.height / 10; 
     	modDim.height = Math.round(modDim.height); 
-    	modDim.height *= 10;
-    	
+    	modDim.height *= 10;    	
     }
+    */
+    
     var myheight = modDim.height + 0; 
     rightLimit = modDim.x + modDim.width; 
     bottomLimit = modDim.y + modDim.height;
@@ -4481,7 +4511,14 @@ function GX_CheckValueChange(event)
 	var state = event.args.checked; 
 	var JQSel; 
 	var node; 		
-	var objectType = gCurrentObjectSelected.classList[1]; 
+	if(CBID != 'snaptogrid'){
+		if(!gCurrentObjectSelected){
+			Debug_Message('No Object Selected'); 
+			return ; 
+		}
+		var objectType = gCurrentObjectSelected.classList[1];
+	}
+		
 	
 	switch(CBID)
 	{
@@ -7988,4 +8025,13 @@ function OnDivPathMarkerDragStop(event, ui){
 
 function OnDivPathMarkerDragStart(event, ui){
 	gCurrentMarkerNode.setAttribute('visibility', 'hidden'); 
+}
+
+function GX_ConvertToMultipleOf(val, multiple){
+	var result; 
+	with (Math){
+		result = round(val / 10);
+		result *= 10; 
+		return result; 
+	}
 }
