@@ -50,6 +50,7 @@ var gFileNameHolder = 0;
 var gResizeDirection = ['NONE', 'E-RESIZE', 'NE-RESIZE', 'NW-RESIZE', 'N-RESIZE', 'SE-RESIZE', 'SW-RESIZE', 'S-RESIZE', 'W-RESIZE'];
 var gpathSegIndex = -1;
 var gZoomFactor = new Number(1.0); 
+var gInvZoomFactor = new Number(1.0); 
 var gPanX = new Number(0); 
 var gPanY = new Number(0); 
 var gPanDelta = new Number(20); 
@@ -683,7 +684,7 @@ function sGradientWidget(WdgtID, GradResID) {
    this.GradResourceNode = document.getElementById(GradResID);  
    if(!this.GradResourceNode)
         return 0;
-   Debug_Message('Grad Res ID=' + this.GradResourceNode.id); 
+  
    
     //now get the gradient property
     this.GradParam = this.getGradientProperty();
@@ -1778,9 +1779,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	 //$(TTSel).jqxTooltip('close');//open(); 
     	 $(TTSel).jqxTooltip('destroy');//open();
     	// Debug_Message('Tooltip Closed');
-    	 gOrigFreedrawPathVal = 0; 
-    	 
-    	 
+    	 gOrigFreedrawPathVal = 0;     	 
     	return ; 
     }
     $(gCurrGripperSel).css({visibility:"visible"});
@@ -1862,11 +1861,16 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     //now restrict the region of containtment 
     var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
     var svgDim = GX_GetRectObjectDim(svgNode);
-    var x1, y1, x2, y2; 
-    x1 = svgDim.x + 5; 
-    y1 = svgDim.y + gClientYOffset +5;
-    x2 = svgDim.x + svgDim.width -5 - gGrabberDim.width; 
-    y2 = y1 + svgDim.height - 5 - gGrabberDim.height;     
+    var x1, y1, x2, y2;
+    with(Math){
+    	x1 = round((svgDim.x + 5 - gPanX)*gInvZoomFactor); 
+        y1 = round((svgDim.y + 5 - gPanY)*gInvZoomFactor + gClientYOffset);
+        x2 = round( (x1 + svgDim.width -5 - gGrabberDim.width)*gInvZoomFactor); 
+        y2 = round((y1 + svgDim.height - 5 - gGrabberDim.height)*gInvZoomFactor);
+        
+        //x2 = round((svgDim.x + svgDim.width -5 - gGrabberDim.width)*gInvZoomFactor); 
+        //y2 = round((y1 + svgDim.height - 5 - gGrabberDim.height)*gInvZoomFactor); 	
+    }        
     var region = [x1, y1, x2, y2]; 
     $(gCurrGripperSel).draggable( "option", "containment", region );
     
@@ -2671,6 +2675,8 @@ function OnObjectDrag(evt, ui){
 	        
 	        relX = new Number(ui.position.left - ui.originalPosition.left);
 	        relY = new Number(ui.position.top - ui.originalPosition.top);	
+	        relX *= gZoomFactor; 
+	        relY *= gZoomFactor;
 	        if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
 	        {
 	        	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
@@ -2731,7 +2737,8 @@ function OnObjectDragStop(evt,ui){
     var newObjDim = new sDimension();         
     relX = new Number(ui.position.left - ui.originalPosition.left);
     relY = new Number(ui.position.top - ui.originalPosition.top);
-        
+    relX *= gZoomFactor; 
+    relY *= gZoomFactor; 
     if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
     {
     	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
@@ -3590,28 +3597,36 @@ function GX_SetRectObjectDim(ObjNode, newDim)
        ObjNode.setAttribute('r', r);       
    }    
     else if(nodename == 'div'){    
-    	if(ObjNode.id == 'sel_gripper'){
+    	with (Math) {    	
+    		var tolerance = round(10 * gInvZoomFactor); 
+    		modDim.x = round((modDim.x - gPanX) * gInvZoomFactor); 
+    		modDim.y = round( (modDim.y - gPanY) * gInvZoomFactor);
+    		modDim.width = round(modDim.width * gInvZoomFactor);
+    		modDim.height = round(modDim.height * gInvZoomFactor);
+    		var YOffset = round(gClientYOffset);// * gInvZoomFactor); 
+    		if(ObjNode.id == 'sel_gripper'){
     		if( (currObjectType == 'SVG_SHAPE_OBJECT') || (currObjectType == 'SVG_TEXT_OBJECT')|| (currObjectType == 'GROUP') ){
         		modDim.x = modDim.x ; 
-        	    modDim.y = new Number(modDim.y + gClientYOffset );   
-        	    modDim.width += 10; 
-        	    modDim.height += 10; 
+        	    modDim.y = modDim.y + YOffset ;   
+        	    modDim.width += tolerance; 
+        	    modDim.height += tolerance; 
         	}
         	else if(currObjectType == 'SVG_PATH_OBJECT'){
-        		with (Math){
-        			var offset = new Number(10); 
-            		modDim.x = modDim.x  + offset; 
-            	    modDim.y = new Number(modDim.y + gClientYOffset +  offset);   
-            	    modDim.width -= (2*offset); 
-            	    modDim.height -= (2*offset);
+        		with (Math){        			
+            		modDim.x = modDim.x  + tolerance; 
+            	    modDim.y = modDim.y + YOffset +  tolerance;   
+            	    modDim.width -= (2*tolerance); 
+            	    modDim.height -= (2*tolerance);
         		}    		
         	}
     	}
     	else{
-    		modDim.x = modDim.x +5; 
-    	    modDim.y = new Number(modDim.y + gClientYOffset + 5 );   	    
-    	}    	    
+    		modDim.x = modDim.x + round(tolerance/2); 
+    	    modDim.y = new Number(modDim.y + YOffset + round(tolerance/2) );   	    
+    	}  
+    }//Math
     	var JQSel = '#' + ObjNode.id;
+    	
     	$(JQSel).css({left:modDim.x +'px', top:modDim.y + 'px', width: modDim.width + 'px', height:modDim.height + 'px'}); 
     }
     else if(nodeclass == 'SVG_PATH_OBJECT')
@@ -5234,6 +5249,8 @@ function GX_ApplyZoom(zoomFactor)
 	if(!gsvgRootNode)
 		gsvgRootNode = document.getElementById('SVGContainer'); 
 	
+	GX_ResetAllSelections();  
+	
 	var widthVal = gsvgRootNode.getAttribute('width');	
 	widthVal = widthVal.substring(0, widthVal.length-2);
 	
@@ -5264,6 +5281,7 @@ function GX_DDLHandler(Node, value)
 	{
 		var zoomval = new Number(value); 
 		gZoomFactor = 1.0/zoomval; 
+		gInvZoomFactor =  zoomval; 
 		GX_ApplyZoom(gZoomFactor); 		
 	}
 	else if(wdgtId == 'curveDDL')
@@ -5479,6 +5497,7 @@ function GX_RemoveGradFromList(gradTitle, gradList)
 
 function GX_ApplyPan(bHorizontal, panDelta)
 {
+	GX_ResetAllSelections(); 
 	var node = document.getElementById('objectcontainer'); 
 	var viewbox = node.getAttribute('viewBox'); 
 	var viewboxarr = viewbox.split(' '); 
@@ -7956,6 +7975,8 @@ function OnDivPathMarkerDrag(event, ui){
 	        //now also set the parameters corresponding to the marker index
 	        relX = new Number(ui.position.left - ui.originalPosition.left);
 	        relY = new Number(ui.position.top - ui.originalPosition.top);	
+	        relX *= gZoomFactor; 
+	        relY *= gZoomFactor;
 	        var newcX, newcY;
 	        newcX = gCurrSelectedObjectDim.x;
 	        newcY = gCurrSelectedObjectDim.y;
@@ -7990,8 +8011,9 @@ function OnDivPathMarkerDragStop(event, ui){
 	 var arrLen = new Number(gPathDataArray.length); 	    
 	relX = new Number(ui.position.left - ui.originalPosition.left);
     relY = new Number(ui.position.top - ui.originalPosition.top);
-    relX = Math.round(relX); 
-    relY = Math.round(relY); 
+    relX = Math.round(relX * gZoomFactor); 
+   
+    relY = Math.round(relY * gZoomFactor); 
     bMarkerMove = false;
     gsvgRootNode.setAttribute("cursor", "auto");
     //now set the new path here 
