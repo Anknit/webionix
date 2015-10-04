@@ -303,31 +303,34 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
         value = value.substring(0, value.length-1); 
         value = new Number(value); 
         value = Math.round((value * gGradWidth)/100); 
-        //indNode.setAttribute('x1',value+'' ); 
-        //markerNode.setAttribute('cx',value+5+'' ); 
-        indNode.setAttribute('x1',value ); 
-        markerNode.setAttribute('cx',value+5 );
+       
+        indNode.setAttribute('x1',value );         
+        var x = new Number(value); 
+       
+        //markerNode.setAttribute('cx',value+5 );
         
         value = gradProp.LGGradStart.y; 
         value = value.substring(0, value.length-1); 
         value = new Number(value); 
         value = Math.round((value * gGradHeight)/100); 
         //indNode.setAttribute('y1',value+'' ); 
+        var y = new Number(value); 
         //markerNode.setAttribute('cy',value+5+'' ); 
         indNode.setAttribute('y1',value ); 
-        markerNode.setAttribute('cy',value+5 ); 
-        
+       // markerNode.setAttribute('cy',value+5 );
+        var JQSel = '#START_POINT'; 
+       // $(JQSel).css({left: x +'px', top: y + 'px'}); 
         //END_POINT
-       
-        markerNode = document.getElementById('END_POINT');
+        this.SetGradMarkerPosition('START_POINT', x,y);
+        //markerNode = document.getElementById('END_POINT');
         var value = gradProp.LGGradStop.x; 
         value = value.substring(0, value.length-1); 
         value = new Number(value); 
         value = Math.round((value * gGradWidth)/100); 
-        //indNode.setAttribute('x2',value+'' ); 
-       //markerNode.setAttribute('cx',(value-5)+'' ); 
+       
         indNode.setAttribute('x2',value ); 
-        markerNode.setAttribute('cx',(value-5) );
+        var x2 =  new Number(value); 
+       // markerNode.setAttribute('cx',(value-5) );
         
         value = gradProp.LGGradStop.y; 
         value = value.substring(0, value.length-1); 
@@ -336,7 +339,11 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
        // indNode.setAttribute('y2',value+'' ); 
        // markerNode.setAttribute('cy',(value-5)+'' ); 
         indNode.setAttribute('y2',value ); 
-        markerNode.setAttribute('cy',(value-5) );
+        var y2 = new Number(value); 
+        var JQSel = '#END_POINT'; 
+       // $(JQSel).css({left: x2 +'px', top: y2 + 'px'});
+        this.SetGradMarkerPosition('END_POINT', x2,y2);
+       // markerNode.setAttribute('cy',(value-5) );
         
     }
     else if (gradProp.GradMode == 'RADIAL') {
@@ -398,6 +405,33 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
         }
     
 };
+
+sGradientWidget.prototype.SetGradMarkerPosition =  function(ID, x, y){
+	 
+	var newX = new Number(x); 	
+	var newY =  new Number(y); 	
+	var pos = $('#LinearGradpreview').position(); 
+	var left = new Number(pos.left); 
+	var top  = new Number(pos.top); 
+	newX += left; 
+	newY += top; 
+	if(ID == 'START_POINT'){
+		var JQSel = '#START_POINT'; 
+		var xOff = new Number(0) ; 
+		var yOff = new Number(0); 
+		newX += xOff; 
+		newY += yOff; 
+		$(JQSel).css({left: newX + 'px', top: newY + 'px'}); 
+	}
+	else if(ID == 'END_POINT'){
+		var JQSel = '#END_POINT'; 
+		var xOff = new Number(-10) ; 
+		var yOff = new Number(-10); 
+		newX += xOff; 
+		newY += yOff; 
+		$(JQSel).css({left: newX + 'px', top: newY + 'px'}); 
+	}
+}
 
 sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
 
@@ -728,8 +762,35 @@ function GX_CreateGradientWidget(wdgtID)
         WAL_createDecimalNumberInput("durStopColIP", '50px', '24', "GX_GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
         WAL_createButton('apply_Stop_Col', '', '55', 25, true);
         WAL_createButton('animPreviewStop', '', '70', 25, true);  
-       
         
+        var JQSel = '#START_POINT'; 
+        $(JQSel).draggable({ cursor: "move" });
+        $(JQSel).on( "drag", function( event, ui ) {
+        	OnGradMouseMove(event); 		
+    	});
+        $(JQSel).on( "dragstart", function( event, ui ) {
+        	OnGradDragStart(event); 		
+    	});
+        $(JQSel).on( "dragstop", function( event, ui ) {
+        	OnGradDragStop(event); 		
+    	});
+        
+        $(JQSel).hide(); 
+        
+        var JQSel = '#END_POINT'; 
+        $(JQSel).draggable({ cursor: "move" });
+        $(JQSel).on( "drag", function( event, ui ) {
+        	OnGradMouseMove(event); 		
+    	});
+        $(JQSel).on( "dragstart", function( event, ui ) {
+        	OnGradDragStart(event); 		
+    	});
+        $(JQSel).on( "dragstop", function( event, ui ) {
+        	OnGradDragStop(event); 		
+    	});
+        
+        $(JQSel).hide();
+       
         WAL_createColorPickerWindow("gradcolorpickwidget", "gradcolorpicker", '350', '250', "gradokbtn", "gradcancelbtn");
       
 }
@@ -939,13 +1000,14 @@ function GX_Initialize()
     */
     
     GX_MenuDisable(true);
-    
+    /*
+     * remove for the time being as it results into buggy behaviour
     var currFileName =  GXRDE_getCurrentSessionFileName(); 
     if(currFileName){
     	GX_MenuDisable(false);
     	GX_OpenFile(currFileName);    	
     }
-   
+   */
     //create the draggable drawing pen  here 
    	var JQSel = "#drawingpen" ;
 	$(JQSel).draggable({ cursor: "crosshair", cursorAt:{top: 2, left: 2} });	
@@ -6821,7 +6883,7 @@ function OnGradPointClick(evt) {
         		gGradSVGNode = document.getElementById('RG_CIRCLE');
         }
                       
-        node.setAttribute("cursor", "move");
+       // node.setAttribute("cursor", "move");
         gInitMousePoint = new sPoint();
         gInitMousePoint.x = new Number(evt.clientX);
         gInitMousePoint.y = new Number(evt.clientY);
@@ -6865,6 +6927,59 @@ function OnGradPointClick(evt) {
     }       
 }
 
+function OnGradDragStart(evt){		
+	    var node = evt.target;		
+	    if (bGradPointMove == false) {
+	        if (!gGradSVGNode)
+	        {
+	        	if(gCurrentGradientType == 'LINEAR_GRAD' )
+	        		gGradSVGNode = document.getElementById('LINEAR_GRAD_PREVIEW_RECTANGLE');
+	        	else if(gCurrentGradientType == 'RADIAL_GRAD' )
+	        		gGradSVGNode = document.getElementById('RG_CIRCLE');
+	        }	       
+	        gInitMousePoint = new sPoint();
+	        gInitMousePoint.x = new Number(evt.clientX);
+	        gInitMousePoint.y = new Number(evt.clientY);
+	        gInitMarkerPoint = new sPoint();
+	        gInitMarkerPoint.x = new Number(node.getAttribute('cx'));
+	        gInitMarkerPoint.y = new Number(node.getAttribute('cy'));
+	        gInitLinePoint = new sPoint(); 
+	        gInitFocusPoint = new sPoint(); 	        
+	      
+	        gCircleNode = document.getElementById('RG_CIRCLE');	       
+	        gFocusNode = document.getElementById('RG_FOCUS_POINT');
+	        gInitFocusPoint.x = new Number(gFocusNode.getAttribute('cx')); 
+	        gInitFocusPoint.y = new Number(gFocusNode.getAttribute('cy')); 
+	        
+	        if(node.id == 'RG_CIRCLE')
+	        {
+	        	 gCenterNode = document.getElementById('RG_CENTER');         	 
+	        }        
+	        else
+	        {
+	        	gLineNode = document.getElementById('LG_INDICATOR_LINE');                   
+	            if (node.id == 'START_POINT') {
+	                gInitLinePoint.x = new Number(gLineNode.getAttribute('x1'));
+	                gInitLinePoint.y = new Number(gLineNode.getAttribute('y1'));
+	            }
+	            else if (node.id == 'END_POINT') {
+	                gInitLinePoint.x = new Number(gLineNode.getAttribute('x2'));
+	                gInitLinePoint.y = new Number(gLineNode.getAttribute('y2'));
+	            }
+	        }                
+	        bGradPointMove = true;                	
+	        return;
+	    }	         
+
+}
+
+function OnGradDragStop(evt){	
+	if (bGradPointMove == true) {
+        bGradPointMove = false;       
+        gCircleNode.setAttribute('pointer-events', 'visible'); 
+        gGradSVGNode = 0; 
+    }    
+}
 
 function OnGradMouseMove(evt) {
     var node = evt.target;
@@ -6988,7 +7103,7 @@ function GX_ShowGradWindow(gradID, gradType)
      gCurrentGradientType = gradType; 
      var rgnode = document.getElementById('RGSpecific'); 
  	 var lgnode = document.getElementById('LGSpecific');
- 	 
+ 	 gGradientObj = new sGradientWidget('gradientWidget', gradID);
  	 if(gbNewGradObject == false){
  		var JQSel = "#" + 'gradTitleIP';        
         WAL_disableWidget('gradTitleIP', 'data-jqxInput', false, true);
@@ -7005,7 +7120,22 @@ function GX_ShowGradWindow(gradID, gradType)
      	 JQSel = '.RG_MARKERS';
      	 $(JQSel).hide();         	            
      	 JQSel = '.LG_MARKERS'; 
-     	 $(JQSel).show();        	
+     	 $(JQSel).show();
+     	 JQSel = '#LinearGradpreview'; 
+    	 var pos  = $(JQSel).position();
+     	 var width = new Number(150) ;//$('#LinearGradpreview').width();
+     	 var height = new Number(150) ;//$('#LinearGradpreview').height();
+     	 var x1 =  new Number(pos.left); 
+     	 var y1 =  new Number(pos.top);      	 
+     	 x2 = 150; 
+     	 y2 = 150;     	 
+     	 
+     	JQSel = '#START_POINT'; 
+     	$(JQSel).show(); 
+     	
+     	JQSel = '#END_POINT'; 
+     	$(JQSel).show(); 
+     	
      }
      else if(gradType == 'RADIAL_GRAD')
      {
@@ -7017,10 +7147,24 @@ function GX_ShowGradWindow(gradID, gradType)
      	 JQSel = '.LG_MARKERS'; 
      	 $(JQSel).hide();        	
      } 	 
-     gGradientObj = new sGradientWidget('gradientWidget', gradID);
+     
+     //gGradientObj.UpdateUI(gGradientObj.GradParam);
+     WAL_showModalWindow('gradientDlg', "OnclickInputOK", "");    
      gGradientObj.UpdateUI(gGradientObj.GradParam);
-     WAL_showModalWindow('gradientDlg', "OnclickInputOK", "");     
-    
+     
+  /*   JQSel = '#LinearGradpreview'; 
+	 var pos  = $(JQSel).position();
+ 	 var width = new Number(150) ;//$('#LinearGradpreview').width();
+ 	 var height = new Number(150) ;//$('#LinearGradpreview').height();
+ 	 var x1 =  new Number(pos.left); 
+ 	 var y1 =  new Number(pos.top); 
+     gGradientObj.SetGradMarkerPosition('START_POINT', x1,y1);      	 
+ 	 $('#START_POINT').show();
+ 	 
+ 	JQSel = '#END_POINT'; 
+ 	gGradientObj.SetGradMarkerPosition('END_POINT', x2,y2); 
+	$(JQSel).show();
+	*/ 
 }
 
 function GX_AddNewAnimation()
