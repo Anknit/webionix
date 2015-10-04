@@ -204,7 +204,8 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$topnodeid = $objectIDVal . '_TOP_GRAD_ANIM'; 			
 			$attrdefinition = array('id'=>$topnodeid, 'dur'=>'0.2s', 'calcMode'=>"linear", 'restart'=>'never','repeatCount'=>"0", 'fill'=>"freeze", 'begin'=>"0s", 'attributeType'=>"XML", 
 				'attributeName'=>"x1", 'from'=>"0%", 'to'=>"1%");
-			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'animate',$topnodeid, 0, $objectIDVal, $attrdefinition,'');
+			//_removing animation effect from here instead it should be put under animation section
+			//$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'animate',$topnodeid, 0, $objectIDVal, $attrdefinition,'');
 			
 			for($i=0; $i < 4; $i++)
 			{
@@ -242,10 +243,14 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 				$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'radialGradient',$objectIDVal,0, $parentIDVal, $attrdefinition,$tagval);
 				if(!$respData)
 					return ;
+				/*
+				 * //_removing animation effect from here instead it should be put under animation section
 				$topnodeid = $objectIDVal . '_TOP_GRAD_ANIM';
 				$attrdefinition = array('id'=>$topnodeid, 'dur'=>'0.2s', 'calcMode'=>"linear", 'restart'=>'never','repeatCount'=>"0", 'fill'=>"freeze", 'begin'=>"0s", 'attributeType'=>"XML",
 						'attributeName'=>"cx", 'from'=>"0%", 'to'=>"1%");
+				
 				$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'animate',$topnodeid, 0, $objectIDVal, $attrdefinition,'');
+				*/
 				
 				for($i=0; $i < 4; $i++)
 				{

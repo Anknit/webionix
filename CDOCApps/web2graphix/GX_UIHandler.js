@@ -354,9 +354,16 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
     	var height = width;    	
     	gGradWidth = width;
         gGradHeight = height;
+        var focusPt = new sPoint();
+        focusPt.x =  new Number (gradProp.focus.x.substring(0,gradProp.focus.x.length-1 )); 
+        focusPt.y =  new Number (gradProp.focus.y.substring(0,gradProp.focus.y.length-1 )); 
+        with(Math){
+        	focusPt.x = round((focusPt.x * gGradWidth)/100); 
+        	focusPt.y = round((focusPt.y * gGradHeight)/100); 
+        }       
+        this.SetGradMarkerPosition('RG_FOCUS_POINT', focusPt.x, focusPt.y);
         
-    }
-    
+    }    
         
        // var titlenode = document.getElementById('gradTitleIP'); 
     	//titlenode.setAttribute('value',gradProp.Title); 
@@ -370,9 +377,7 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
                 index = j;
                 break;
             }
-        }
-        
-       
+        }        
         var gradurl = 'url(#' + this.GradResourceID + ')';
         prevNode.setAttribute('fill', gradurl);
 
@@ -429,6 +434,21 @@ sGradientWidget.prototype.SetGradMarkerPosition =  function(ID, x, y){
 		var yOff = new Number(-10); 
 		newX += xOff; 
 		newY += yOff; 
+		$(JQSel).css({left: newX + 'px', top: newY + 'px'}); 
+	}
+	else if(ID == 'RG_FOCUS_POINT'){
+		pos = $('#RadialGradPreview').position(); 
+		with(Math){
+			left = pos.left; 
+			top = pos.top; 
+			newX += left; 
+			newY += top;
+		}
+		var xOff = new Number(0) ; 
+		var yOff = new Number(0); 
+		newX += xOff; 
+		newY += yOff; 
+		JQSel = '#RG_FOCUS_POINT';
 		$(JQSel).css({left: newX + 'px', top: newY + 'px'}); 
 	}
 }
@@ -787,9 +807,21 @@ function GX_CreateGradientWidget(wdgtID)
     	});
         $(JQSel).on( "dragstop", function( event, ui ) {
         	OnGradDragStop(event); 		
+    	});        
+        $(JQSel).hide();
+        
+        var JQSel = '#RG_FOCUS_POINT'; 
+        $(JQSel).draggable({ cursor: "move" });
+        $(JQSel).on( "drag", function( event, ui ) {
+        	OnGradMouseMove(event); 		
+    	});
+        $(JQSel).on( "dragstart", function( event, ui ) {
+        	OnGradDragStart(event); 		
+    	});
+        $(JQSel).on( "dragstop", function( event, ui ) {
+        	OnGradDragStop(event); 		
     	});
         
-        $(JQSel).hide();
        
         WAL_createColorPickerWindow("gradcolorpickwidget", "gradcolorpicker", '350', '250', "gradokbtn", "gradcancelbtn");
       
@@ -6897,9 +6929,11 @@ function OnGradPointClick(evt) {
         gCircleNode = document.getElementById('RG_CIRCLE');
        // gMarkerNode = document.getElementById('RG_RADIUS_END_POINT');
         gFocusNode = document.getElementById('RG_FOCUS_POINT');
-        gInitFocusPoint.x = new Number(gFocusNode.getAttribute('cx')); 
-        gInitFocusPoint.y = new Number(gFocusNode.getAttribute('cy')); 
-        
+        //gInitFocusPoint.x = new Number(gFocusNode.getAttribute('cx')); 
+       // gInitFocusPoint.y = new Number(gFocusNode.getAttribute('cy')); 
+        var pos = $('#RG_FOCUS_POINT').position(); 
+        gInitFocusPoint.x = pos.left; 
+        gInitFocusPoint.y = pos.top; 
         if(node.id == 'RG_CIRCLE')
         {
         	 gCenterNode = document.getElementById('RG_CENTER');         	 
@@ -6928,7 +6962,16 @@ function OnGradPointClick(evt) {
 }
 
 function OnGradDragStart(evt){		
-	    var node = evt.target;		
+	    var node = evt.target;	
+	    if(node.id == 'RG_FOCUS_POINT'){
+	    	var pos = $('#RadialGradPreview').position(); 
+	    	var x1 =  new Number(pos.left); 
+	    	var y1 =  new Number(pos.top);
+	    	var x2 =  new Number(x1 + 150);
+	    	var y2 =  new Number(y1 + 150);
+	    	//var region = [x1, y1, x2, y2]; 
+	       // $('#RG_FOCUS_POINT').draggable( "option", "containment", region );
+	    }
 	    if (bGradPointMove == false) {
 	        if (!gGradSVGNode)
 	        {
@@ -6948,8 +6991,11 @@ function OnGradDragStart(evt){
 	      
 	        gCircleNode = document.getElementById('RG_CIRCLE');	       
 	        gFocusNode = document.getElementById('RG_FOCUS_POINT');
-	        gInitFocusPoint.x = new Number(gFocusNode.getAttribute('cx')); 
-	        gInitFocusPoint.y = new Number(gFocusNode.getAttribute('cy')); 
+	        //gInitFocusPoint.x = new Number(gFocusNode.getAttribute('cx')); 
+	        //gInitFocusPoint.y = new Number(gFocusNode.getAttribute('cy')); 
+	        var pos = $('#RG_FOCUS_POINT').position(); 
+	        gInitFocusPoint.x = pos.left; 
+	        gInitFocusPoint.y = pos.top; 
 	        
 	        if(node.id == 'RG_CIRCLE')
 	        {
@@ -7072,6 +7118,13 @@ function OnGradMouseMove(evt) {
             {
             	newX = gInitMarkerPoint.x + relPosition.x;
                 newY = gInitMarkerPoint.y + relPosition.y;
+                var gradX1 = Math.round((newX * 100) / gGradWidth);
+                if( (gradX1 < 0) || (gradX1 > 100) )
+                	return ; 
+                var gradY1 = Math.round((newY * 100) / gGradHeight);
+                if( (gradY1 < 0) || (gradY1 > 100) )
+                	return ; 
+                
                 node.setAttribute('cx', newX);
                 node.setAttribute('cy', newY);
                 var cx1 = Math.round((newX * 100) / gGradWidth); 
