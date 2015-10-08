@@ -560,10 +560,11 @@ function GX_SetAnimParamOnUI(animParam) {
 		endY = new Number(objPos.centerY); 
 		endX += new Number(endArr[0]); 
 		endY += new Number(endArr[1]); 
-		var markerNode = document.getElementById('markerPoint'); 
-    	markerNode.setAttribute('cx', endX); 
-    	markerNode.setAttribute('cy', endY); 
-    	markerNode.setAttribute('visibility', 'visible');
+		var markerdim = new sDimension(); 
+		markerdim.x = endX; 
+		markerdim.y = endY; 
+		GX_UpdateMarkers(markerdim, true, true); 
+		
     	gMoveIndicatorPath =  true; 
     	var currentPos = ["M", objPos.centerX, objPos.centerY, 'POINT'];
         gIndicatorPath.push(currentPos);        
@@ -795,17 +796,17 @@ function GX_GetAnimParamsFromUI(inputParam)
     	animParams.startValue = value;     	
     	animParams.autoReverse = WAL_getCheckBoxValue('autoRotateReverseCB');
     	//get the center value 
-    	var markerNode = document.getElementById('markerPoint'); 
-    	var x = markerNode.getAttribute('cx'); 
-    	var y = markerNode.getAttribute('cy'); 
-    	animParams.center = x + ',' + y; 
+    	var markerNode = document.getElementById('markerPoint');    	
+    	var markDim = GX_GetRectObjectDim(markerNode);
+    	animParams.center = markDim.centerX + ',' + markDim.centerY; 
     	//animParams.endValue += ' ' +animParams.center;
     	//animParams.startValue += ' ' +animParams.center;
 		break; 		
 	case 'translate':
 		var markerNode = document.getElementById('markerPoint'); 
-    	var endX = new Number(markerNode.getAttribute('cx')); 
-    	var endY = new Number(markerNode.getAttribute('cy'));
+		var markDim = GX_GetRectObjectDim(markerNode);
+    	var endX = new Number(markDim.centerX); 
+    	var endY = new Number(markDim.centerY);
     	var startArr = animParams.center.split(' '); 
     	var startX =new Number(startArr[0]);
     	var startY =new Number(startArr[1]); 
@@ -3306,8 +3307,11 @@ function GX_RemoveAnimInfoFromList(animID)
 	 var arr =  value.split('-'); 
 	 gbAnimationEnd = true; 
 	 var animTitle = arr[0]; 
-	 if(gCurrentObjectSelected)
-			GX_SetSelection(gCurrentObjectSelected, false, false); 	
+	 if(gCurrentObjectSelected){
+		 GX_SetSelection(gCurrentObjectSelected, false, false); 	
+		 //GX_UpdateMarkers(0, false, true); 
+	 }
+			
 	 	gCurrentAnimInfo = GX_GetAnimInfoByTitle(animTitle); 
 		var animNode =  document.getElementById(gCurrentAnimInfo[0]); 
 		if(!animNode)

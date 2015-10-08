@@ -811,7 +811,8 @@ function GX_CreateGradientWidget(wdgtID)
         $(JQSel).hide();
         
         var JQSel = '#RG_FOCUS_POINT'; 
-        $(JQSel).draggable({ cursor: "move" });
+        $(JQSel).draggable({cursor: "move" }); 
+       // $(JQSel).draggable({cursorAt:{left: '5px',top:'5px'}});
         $(JQSel).on( "drag", function( event, ui ) {
         	OnGradMouseMove(event); 		
     	});
@@ -1087,7 +1088,16 @@ function GX_Initialize()
 		OnDivPathMarkerDrag(event, ui); 		
 	});
 	
-
+	var JQSel = '#markerPoint'; 
+	$(JQSel).draggable({ cursor: "move" });
+	/*$(JQSel).on( "dragstop", function( event, ui ) {
+		OnDivPathMarkerDragStop(event, ui); 
+	});
+	$(gDivPathMarkerSel).on( "drag", function( event, ui ) {
+		OnDivPathMarkerDrag(event, ui); 		
+	});
+	*/
+	
 	gClientYOffset = $('#toolbar').height(); 
 	//gClientXOffset = $('#toolbar').width(); 
 	 
@@ -1846,7 +1856,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	if(objNode != gCurrentObjectSelected)
     		return ;      	 
          	    	
-    	GX_UpdateMarkers(0, false, false); 
+    	GX_UpdateMarkers(0, false, true); 
     	if(nodeClass == 'SVG_PATH_OBJECT')
     	{
     		GX_UpdatePathMarker(node.id, gPathDataArray, false);
@@ -2162,16 +2172,23 @@ function GX_UpdateMarkers(GrabberDim, bShow, bPointMarker)
 	  var origMarkY = new Number(GrabberDim.y); 
 	  markX = origMarkX; 
 	  markY = origMarkY; 
-	  if(bShow == false)
+	  if( (bShow == false) && (bPointMarker == true) )
 	  {
-		  $(JQSel).attr("visibility", "hidden");
+		  JQSel = '#markerPoint'; 
+		  $(JQSel).css({visibility: "hidden"});
 		  return ; 
 	  }    
 	  if(bPointMarker == true){
 		JQSel = "#markerPoint";
-		$(JQSel).attr("visibility", "visible"); 
-		$(JQSel).attr("cx", markX); 
-		$(JQSel).attr("cy", markY); 
+		//var markerNode = document.getElementById('markerPoint');
+		//assuming that the co-ordinates passed are for the center 
+		var x =  new Number(markX); 
+		var y = new Number(markY + gClientYOffset); 
+		var width = new Number($(JQSel).width()); 
+		var height = new Number($(JQSel).height()); 
+		x = x - Math.round(width/2); 
+		y = y - Math.round(height/2);		
+		$(JQSel).css({visibility:'visible', left:x +'px', top:y+'px' });	
 		return ; 
 	  }
 	  if( (GrabberDim.width == 0) || (GrabberDim.height == 0))
@@ -3549,9 +3566,11 @@ function GX_GetRectObjectDim(ObjNode)
 	    	var JQSel = '#' + ObjNode.id; 
 	    	var pos = $(JQSel).position(); 
 	    	mypoint.x =  pos.left; 
-	    	mypoint.y = pos.top; 
+	    	mypoint.y = pos.top - gClientYOffset; 
 	    	mypoint.width = $(JQSel).width();
 	    	mypoint.height = $(JQSel).height();
+	    	mypoint.centerX = mypoint.x +  mypoint.width/2; 
+	    	mypoint.centerY = mypoint.y +  mypoint.height/2; 
 	    }
 	    else if(objClass = 'SVG_PATH_OBJECT')
 	    {
@@ -7198,7 +7217,10 @@ function GX_ShowGradWindow(gradID, gradType)
      	 JQSel = '.RG_MARKERS';
      	 $(JQSel).show();         	
      	 JQSel = '.LG_MARKERS'; 
-     	 $(JQSel).hide();        	
+     	 $(JQSel).hide();   
+     	JQSel = '#RG_FOCUS_POINT'; 
+     	$(JQSel).show();
+     	 
      } 	 
      
      //gGradientObj.UpdateUI(gGradientObj.GradParam);
@@ -8004,8 +8026,7 @@ function OnPointerMarkerMouseMove(evt)
     	  gIndicatorPath[1][1] = newObjDim.x;
           gIndicatorPath[1][2] = newObjDim.y;
           gIndicatorPath[1][3] = 'POINT'; 
-      	GX_ConvertArrayToPathData('indicatorpath', gIndicatorPath);
-    	  
+      	GX_ConvertArrayToPathData('indicatorpath', gIndicatorPath);    	  
       }
 }
  
