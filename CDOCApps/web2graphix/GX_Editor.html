@@ -78,6 +78,7 @@
 	       </li>       
 	       <li id='object'><a href="#Object">Object</a></li>
 	       <li id="properties"><a href="#Properties">Properties</a></li>
+	       <li id="markers"><a href="#Markers">Markers</a></li>
 	       <li id="layout"><a href="#Layout">Layout</a></li>	       
 	       <li id="animate"><a href="#Animate">Animate</a></li>	       
 	       <li id="filters"><a href="#Filters">Filters</a></li>	      
@@ -136,8 +137,8 @@
     	  	<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='pandown_icon' value=''  src='../CommonCSS/icons/Version1/pandown.png' data-tooltiptext='Pan Down' data-helptext='Pans in the Downward direction'/></div>
     	  	
 		     </div>   	  
-	<div>		
-		</div id='pangroup' style="display:inline-block; height:36px; vertical-align: top; ">    	
+	     
+		<div id='pangroup' style="display:inline-block; height:36px; vertical-align: top; "></div>    	
     	</div>
     	<div id='common_property_interface' style="display: none; position:absolute; left:10px; top: 40px;" class='PROPERTY_INTERFACE'>
     		<div id='stroke_interface' style="display:inline-block; width:auto; height:32px;  border-right: ridge 2px #f0f0f0;" >
@@ -248,9 +249,21 @@
 	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='text_icon' value=''  src='../CommonCSS/icons/Version1/textobject.png' data-tooltiptext='Text' data-helptext='Adds Text object'/></div>
 	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='image_icon' value=''  src='../CommonCSS/icons/Version1/imageload.png' data-tooltiptext='Text' data-helptext='Adds Image object'/></div>
     	</div>	    	   	 	
-     </div> 	
+      </div> 	
+      <div id='marker_interface' style="display: none; position:absolute; left:10px; top: 40px;" class='PROPERTY_INTERFACE'>
+      <div style= 'display:inline-block;'>	
+		<div id='markerTypelistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Marker Type<div id='markerTypeListDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
+		<div id='markerShapelistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Shape<div id='markerShapeListDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
+	   </div>      
+		<div style='display:inline-block'>
+			<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='add_marker_icon' value=''  src='../CommonCSS/icons/Version1/addpoints.png'  data-tooltiptext=' Add Marker' data-helptext='Adds Marker'/></div>
+			<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='delete_marker_icon' value=''  src='../CommonCSS/icons/Version1/deletepoints.png'  data-tooltiptext='Remove Marker' data-helptext='Adds Marker'/></div>
+		</div>
+		
+		
+      </div>
     
-  		</div> 
+  </div> 
     </div>
        
        <div>

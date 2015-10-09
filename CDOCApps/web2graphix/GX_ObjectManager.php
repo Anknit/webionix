@@ -151,7 +151,8 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'g',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;				
 		case 'LINE_PATH':
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT ' . $objectTypeVal . ' ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'd'=>'M0,0 L5,5', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'fill'=>'none','visibility'=>'visible');
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT ' . $objectTypeVal . ' ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'd'=>'M0,0 L5,5', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'fill'=>'none','visibility'=>'visible',
+			'marker-start'=>'', 'marker-mid'=>'', 'marker-end'=>'');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'path',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'HOR_LINE_PATH':
@@ -280,7 +281,15 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			}
 			$objNode = $SVGDom->getElementById($objectIDVal);
 			$respData = $SVGDom->saveXML($objNode);
-			break;		
+			break;
+		case 'MARKER_TRIANGLE': 
+			//first add the marker node			
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_MARKER_OBJECT MARKER_TRIANGLE', 'stroke'=>'black', 'stroke-width'=>'1', 'fill'=>'none', 'stroke-dasharray'=>'none','fill-opacity'=>'1','visibility'=>'visible',
+			'viewBox'=>"0 0 10 10", 'refX'=>"5", 'refY'=>"5", 'markerUnits'=>"strokeWidth",'markerWidth'=>"5", 'markerHeight'=>"5", 'orient'=>"auto" );
+			$childAttrDefn = array('d' => 'M 0 0 L 10 5 L 0 10 z'); 			
+			$respData = GX_COMMON_AddSVGElementWithChild($SVGDom, $SVGFileName, 'marker', $objectIDVal, $parentIDVal, $attrdefinition,
+					'path', $childAttrDefn, '');			
+			break;  		
 		default:
 			 break; 
 	}

@@ -58,6 +58,7 @@ function GX_COMMON_AddSVGElement($SVGDom, $SVGFilename, $tagname, $elemID, $befo
 	$objNode = $SVGDom->getElementById($elemID);
 	//$objNode = $SVGDom->getElementById($parentID);	
 	$retval = $SVGDom->saveXML($objNode);
+	$retval =  htmlentities($retval);
 	return $retval;
 
 }

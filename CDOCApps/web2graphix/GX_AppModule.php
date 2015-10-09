@@ -105,7 +105,8 @@ include_once "Debuglog.php";
    		$respcode = $respdata; // $reqid . '='.$respdata;
    	else
    		$respcode = $respdata;
-   	print($respcode); 
+   	//print($respcode);
+   	echo  $respcode; 
    }     
    else{
    	$respcode = 'FAIL';
