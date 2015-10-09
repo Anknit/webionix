@@ -1109,6 +1109,7 @@ function GX_MenuDisable(bFlag)
 	WAL_DisableMenuItem('GXmenu', 'edit', bFlag);
 	WAL_DisableMenuItem('GXmenu', 'object', bFlag);
 	WAL_DisableMenuItem('GXmenu', 'properties', bFlag);
+	WAL_DisableMenuItem('GXmenu', 'markers', bFlag);
 	WAL_DisableMenuItem('GXmenu', 'layout', bFlag);
 	WAL_DisableMenuItem('GXmenu', 'animate', bFlag);
 	WAL_DisableMenuItem('GXmenu', 'filters', bFlag);
@@ -1268,6 +1269,9 @@ function GX_MenuItemShow(menuid, itemText)
 		// else
 			  GX_showEditorInterface('PROPERTIES_MODE');		
 		 break; 
+	 case 'markers':
+			GX_showEditorInterface('MARKER_MODE');		
+			break; 
 	 case 'animate':
 		 GX_showEditorInterface('ANIM_MODE'); 
 		 GX_UpdateAnimationListbox(); 
@@ -1657,8 +1661,26 @@ function GX_AddNewSVGObject(Type, name)
 		GX_AddNewNodeFromXMLString(parentID, retval); 
 		//var gradinfo = ['Default:Linear', ObjID]; 
 		//gGradientList.push(gradinfo); 
-		return ObjID;
+		return ObjID;		
+	}
+	if(objectType == 'MARKER_TRIANGLE'){
 		
+		if(!gCurrentObjectSelected){
+			Debug_Message('Select a Path Object to Add Markers'); 
+			return ; 
+		}
+		var currObjType = gCurrentObjectSelected.classList[0]; 
+		if(currObjType != 'SVG_PATH_OBJECT'){
+			Debug_Message('Select a Path Object to Add Markers'); 
+			return ; 
+		}
+		ObjID = gCurrentObjectSelected.id + '_' + name; 
+		ObjID = ObjID.toUpperCase(); 
+		parentID = 'MARKER_GROUP'; 
+		retval = GXRDE_addNewSVGObject(ObjID, parentID, objectType);
+		GX_AddNewNodeFromXMLString(parentID, retval); 
+		gCurrentObjectSelected.setAttribute(name, 'url(#' +ObjID + ')' ); 
+		return ; 
 	}
 	
 	var currNodeType = gCurrentTreeNode.getAttribute('type');
@@ -4060,6 +4082,15 @@ function GX_InitializeToolbar()
     //create the animationlist widget here 
     GX_CreateAnimationWidget(0); 
     
+    //Create Marker Interface
+    var typelist = ['Start Marker', 'Middle Marker', 'End Marker']; 
+    WAL_createDropdownList('markerTypeListDDL', '140', '24', false, typelist, "GX_DDLHandler", '80');
+    
+    var shapelist = ['Circle', 'Triangle', 'Square']; 
+    WAL_createDropdownList('markerShapeListDDL', '140', '24', false, shapelist, "", '80');
+    WAL_createCustomButton('add_marker_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('delete_marker_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    
 }
 
 function GX_EditBoxValueChange(value, widgetnode)
@@ -4339,51 +4370,28 @@ function GX_ToolbarHandler(Node)
 		GX_AddNewImageSVG(); 
 		
 		break; 
-		
-		/*
-	case 'linear_grad_icon':
-	{
-		 var gradID = GX_AddNewSVGObject('LINEAR_GRADIENT');		
-		 GX_ShowGradWindow(gradID, 'LINEAR_GRAD');		
-		if(!gradID)
-		{
-			Debug_Message("Grad title not Found");
-			return; 
+	case 'add_marker_icon':
+		var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
+		var markerShape = WAL_getDropdownListSelection('markerShapeListDDL');
+		if(markerType == 'Start Marker') {
+			switch(markerShape){
+			case 'Triangle':
+				markerType = 'marker-start'; 
+				break; 
+			case 'Circle':
+				markerType = '';
+				break; 
+			case 'Square':
+				markerType = ''; 
+				break; 
+			default:
+				markerType = ''; 
+				break; 
+			}
 		}
-		//add it to the list items		
-		if(gCurrentObjectSelected) 
-		{
-			var objectType = gCurrentObjectSelected.classList[0]; 
-			if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
-			{
-				var fillurl = 'url(#' + gradID + ')';				
-				GX_SetObjectAttribute(gCurrentObjectSelected, "fill", fillurl, true, false);				
-			}			
-		}		
-	}
+		if(markerType)
+			GX_AddNewSVGObject('MARKER_TRIANGLE', markerType); 
 		break; 
-	case 'radial_grad_icon':
-	{
-		var gradID = GX_AddNewSVGObject('RADIAL_GRADIENT');		
-		 GX_ShowGradWindow(gradID, 'RADIAL_GRAD');		
-		if(!gradID)
-		{
-			Debug_Message("Grad title not Found");
-			return; 
-		}
-		//add it to the list items		
-		if(gCurrentObjectSelected) 
-		{
-			var objectType = gCurrentObjectSelected.classList[0]; 
-			if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
-			{
-				var fillurl = 'url(#' + gradID + ')';				
-				GX_SetObjectAttribute(gCurrentObjectSelected, "fill", fillurl, true, false);				
-			}			
-		}		
-	}
-		break;		
-		*/
 	case 'delete_grad_icon':
 		var currgradTitle = WAL_getDropdownListSelection('gradlistDDL');
 		var gradInfo = GX_GetGradInfoByTitle(currgradTitle); 
@@ -4566,8 +4574,7 @@ function GX_showEditorInterface(Mode)
 		WAL_hideWidget('zoompan_interface', false);
 		WAL_hideWidget('stroke_interface', false); 			
 		break; 
-	case 'FILL_MODE':
-		
+	case 'FILL_MODE':		
 		WAL_hideWidget('zoompan_interface', false);
 		WAL_hideWidget('fill_interface', false); 	
 		break;
@@ -4594,8 +4601,10 @@ function GX_showEditorInterface(Mode)
 		GX_UpdatePropertyOnUI('FONT_SIZE', fontsize);
 		var fontname = currObjectNode.getAttribute('font-family');
 		GX_UpdatePropertyOnUI('FONT_NAME', fontname);
-		
-		
+		break; 
+	case 'MARKER_MODE':
+		WAL_hideWidget('marker_interface', false);
+		WAL_hideWidget('fill_interface', false); 
 		break; 
 	default:
 		break; 	
