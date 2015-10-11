@@ -172,6 +172,11 @@ var gTE_EditWidth = "35"
 var gGroupList=[]; 
 var gbNewGradObject =  false; 
 var gDivPathMarkerSel = 0; 
+//marker related 
+var gMarkerType = []; 
+ gMarkerType['Start Marker'] = 'marker-start'; 
+ gMarkerType['Middle Marker'] = 'marker-mid'; 
+ gMarkerType['End Marker'] = 'marker-end'; 
 /*var ClientX = new Number(0);
 var ClientY = new Number(0);
 var newObjDim = new sDimension();
@@ -1663,7 +1668,7 @@ function GX_AddNewSVGObject(Type, name)
 		//gGradientList.push(gradinfo); 
 		return ObjID;		
 	}
-	if(objectType == 'MARKER_TRIANGLE'){
+	if( (objectType == 'MARKER_TRIANGLE') || (objectType == 'MARKER_SQUARE') || (objectType == 'MARKER_CIRCLE') ){
 		
 		if(!gCurrentObjectSelected){
 			Debug_Message('Select a Path Object to Add Markers'); 
@@ -1677,6 +1682,7 @@ function GX_AddNewSVGObject(Type, name)
 		ObjID = gCurrentObjectSelected.id + '_' + name; 
 		ObjID = ObjID.toUpperCase(); 
 		parentID = 'MARKER_GROUP'; 
+		GX_DeleteObject(ObjID);		
 		retval = GXRDE_addNewSVGObject(ObjID, parentID, objectType);
 		GX_AddNewNodeFromXMLString(parentID, retval); 
 		gCurrentObjectSelected.setAttribute(name, 'url(#' +ObjID + ')' ); 
@@ -4323,8 +4329,7 @@ function GX_ToolbarHandler(Node)
 			
 	        gbNewGradObject = false; 
 			GX_ShowGradWindow(gradInfo[1], gradInfo[2]);			
-		}
-		
+		}		
 		break; 
 	case 'group_icon':
 		//GX_AddNewSVGObject('GROUP'); 
@@ -4372,25 +4377,20 @@ function GX_ToolbarHandler(Node)
 		break; 
 	case 'add_marker_icon':
 		var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
+		markerType = gMarkerType[markerType]; 		
 		var markerShape = WAL_getDropdownListSelection('markerShapeListDDL');
-		if(markerType == 'Start Marker') {
-			switch(markerShape){
-			case 'Triangle':
-				markerType = 'marker-start'; 
-				break; 
-			case 'Circle':
-				markerType = '';
-				break; 
-			case 'Square':
-				markerType = ''; 
-				break; 
-			default:
-				markerType = ''; 
-				break; 
-			}
-		}
-		if(markerType)
-			GX_AddNewSVGObject('MARKER_TRIANGLE', markerType); 
+		markerShape = markerShape.toUpperCase();	
+		
+		GX_AddNewSVGObject('MARKER_' + markerShape, markerType); 
+		break; 
+	case 'delete_marker_icon':
+		if(!gCurrentObjectSelected)
+			return ; 
+		if(gCurrentObjectSelected.classList[0] != 'SVG_PATH_OBJECT')
+			return ; 
+		var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
+		markerType = gMarkerType[markerType]; 	
+		GX_DeleteMarkerObject(gCurrentObjectSelected.id,markerType ); 
 		break; 
 	case 'delete_grad_icon':
 		var currgradTitle = WAL_getDropdownListSelection('gradlistDDL');
@@ -8283,4 +8283,16 @@ function GX_ConvertToMultipleOf(val, multiple){
 		result *= 10; 
 		return result; 
 	}
+}
+
+function GX_DeleteMarkerObject(objectID, markerType){	
+	//create the appropriate ID for the marker to be removed
+	var markerID = objectID + '_' + markerType.toUpperCase(); 
+	
+	//remove the marker from the Remote 
+	GX_DeleteObject(markerID);	
+
+	//change the markertype attribute on the target object 
+	var objNode = document.getElementById(objectID); 
+	objNode.setAttribute(markerType, ''); 	
 }
