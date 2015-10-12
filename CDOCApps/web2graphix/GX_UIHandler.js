@@ -117,6 +117,7 @@ var gShowGrid =  true;
 var bPointerMove = false; 
 var gOrigFreedrawPathVal = 0; 
 var gImageDlg 	= 'imageLoadDlg';
+var gCurrentMarkerNode = 0; 
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -1668,7 +1669,8 @@ function GX_AddNewSVGObject(Type, name)
 		//gGradientList.push(gradinfo); 
 		return ObjID;		
 	}
-	if( (objectType == 'MARKER_TRIANGLE') || (objectType == 'MARKER_SQUARE') || (objectType == 'MARKER_CIRCLE') ){
+	if( (objectType == 'MARKER_TRIANGLE') || (objectType == 'MARKER_SQUARE') || (objectType == 'MARKER_CIRCLE')
+			|| (objectType == 'MARKER_STAR') || (objectType == 'MARKER_CURVEDTRIANGLE')|| (objectType == 'MARKER_CROSS') ){
 		
 		if(!gCurrentObjectSelected){
 			Debug_Message('Select a Path Object to Add Markers'); 
@@ -2037,7 +2039,11 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     {    	
     	var pathType = node.classList[1]; 
     	if((bShowMarkers ==  true)  || (gObjectEditMode == 'PROPERTIES_MODE') )		  
-    		GX_AddPathMarker(node.id, gPathDataArray, true);  
+    		GX_AddPathMarker(node.id, gPathDataArray, true); 
+    	
+    	if(gObjectEditMode == 'MARKER_MODE')
+    		GX_UpdatePathMarker(node.id, gPathDataArray, false); 
+    	
     	var bClose = GX_IsPathClose(node); 
     	WAL_setCheckBoxValue('pathclose', bClose);    	
     	GX_UpdateEllipticParam(gCurrentObjectSelected);    	
@@ -2439,8 +2445,7 @@ function OnObjectMouseDown(evt,ui) {
 	else if(objectType == 'SVG_PATH_OBJECT')
 	{
 		GX_UpdatePathData(gCurrentObjectSelected); 
-		GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, false); 
-		
+		GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, false); 		
 	}
     if(bResize == false)
     {
@@ -2448,8 +2453,7 @@ function OnObjectMouseDown(evt,ui) {
             gsvgRootNode.setAttribute("cursor", "move");           
             gOrigMousePosX = -1;
             gOrigMousePosY = -1;                
-            bMove = true;    
-         
+            bMove = true;         
         }
         else {
             gsvgRootNode.setAttribute("cursor", "auto");
@@ -3926,14 +3930,13 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('stroke_dash_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('stroke_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createColorPickerWindow("colorpickwidget", "colorpicker", '350', '250', "okbtn", "cancelbtn");
+    WAL_createColorPickerWindow("marker_colorpickwidget", "marker_colorpicker", '350', '250', "marker_okbtn", "marker_cancelbtn");
     
      
     WAL_createCustomButton('stroke_linjoin_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     var linecapValues = ['round','miter', 'bevel']; 
     WAL_createDropdownListwithButton("strokeLinejoinDDL", '0','0',linecapValues, "GX_DDLHandler", '80', '80','stroke_linjoin_icon', gButtonWidth, 
-    		gButtonHeight, gWidgetTooltipID);
-    
-    
+    		gButtonHeight, gWidgetTooltipID);    
    // var listBoxSrc = []; 
     var listBoxSrc = new Array();
     var image=""; 
@@ -3978,6 +3981,7 @@ function GX_InitializeToolbar()
         listBoxSrc[i] = { html: html, value:dashValue};
     }
     //WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource,  handlerFnName, DDLdropDownWidth, DDLdropDownHeight, buttonID, buttonwidth, buttonheight)
+
     WAL_createDropdownListwithButton("strokedashDDL", '0','0',listBoxSrc, "GX_DDLHandler", '140', '80','stroke_dash_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);     
   
     
@@ -4092,10 +4096,47 @@ function GX_InitializeToolbar()
     var typelist = ['Start Marker', 'Middle Marker', 'End Marker']; 
     WAL_createDropdownList('markerTypeListDDL', '140', '24', false, typelist, "GX_DDLHandler", '80');
     
-    var shapelist = ['Circle', 'Triangle', 'Square']; 
-    WAL_createDropdownList('markerShapeListDDL', '140', '24', false, shapelist, "", '80');
+    
+    var listBoxSrc = new Array();
+    var image=""; 
+    var markerValue;
+    var numMarkers = 6; 
+    for (i = 0; i < numMarkers; i++) {
+       image = 'marker' + i + '.svg';          
+        var html = "<div style='padding: 0px; margin: 0px; height: 20px; float: left;'><img width='auto' style='float: left; margin-top: 1px; margin-right: 2px;' src='../USER_DATA/shared/Markers/" + image + "'/></div>";        
+        switch(i)
+        {
+        case 0:
+        	markerValue = "Circle"; 
+        	break; 
+        case 1:
+        	markerValue = "Square"; 
+        	break;         
+        case 2:
+        	markerValue = "Triangle"; 
+        	break;         
+        case 3:
+        	markerValue = "Star"; 
+        	break;         
+        case 4:
+        	markerValue = "CurvedTriangle"; 
+        	break;         
+        case 5:
+        	markerValue = "Cross"; 
+        	break;         
+        default:
+        	break;        	
+        }
+        listBoxSrc[i] = { html: html, value:markerValue};
+    }
+    //WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource,  handlerFnName, DDLdropDownWidth, DDLdropDownHeight, buttonID, buttonwidth, buttonheight)
+   // WAL_createDropdownListwithButton("markerShapeListDDL", '0','0',listBoxSrc, "", '140', '80','marker_shape_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);     
+   
+    WAL_createDropdownList('markerShapeListDDL', '60', '24', false, listBoxSrc, "", '120');
     WAL_createCustomButton('add_marker_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('delete_marker_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('marker_stroke_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('marker_fill_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID);  
     
 }
 
@@ -4321,6 +4362,8 @@ function GX_ToolbarHandler(Node)
 		var initColVal = gCurrentObjectSelected.getAttribute('stroke'); 		
 		WAL_showColorPickerWidget('colorpickwidget', '', 'stroke_color_icon','stroke', initColVal, gCurrentObjectSelected.id);
 		break; 
+	
+		
 	case 'edit_grad_icon':
 		var currgradTitle = WAL_getDropdownListSelection('gradlistDDL');
 		var gradInfo = GX_GetGradInfoByTitle(currgradTitle); 
@@ -4392,6 +4435,35 @@ function GX_ToolbarHandler(Node)
 		markerType = gMarkerType[markerType]; 	
 		GX_DeleteMarkerObject(gCurrentObjectSelected.id,markerType ); 
 		break; 
+	case 'marker_stroke_color_icon':
+		WAL_hideWidget('marker_colorpickwidget', true); 
+		if(!gCurrentObjectSelected)
+			return ; 
+		var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
+		markerType = gMarkerType[markerType].toUpperCase();		
+		var markerID = gCurrentObjectSelected.id + '_' + markerType;		
+		gCurrentMarkerNode = document.getElementById(markerID);
+		if(!gCurrentMarkerNode)
+			return ; 
+	    gPrevAttributeList = EL_getObjectAttributes(gCurrentMarkerNode);
+		var initColVal = gCurrentMarkerNode.getAttribute('stroke'); 		
+		WAL_showColorPickerWidget('marker_colorpickwidget', '', 'marker_stroke_color_icon','stroke', initColVal, markerID);
+		break; 
+	case 'marker_fill_color_icon':
+		WAL_hideWidget('marker_colorpickwidget', true); 
+		if(!gCurrentObjectSelected)
+			return ; 
+		var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
+		markerType = gMarkerType[markerType].toUpperCase();		
+		var markerID = gCurrentObjectSelected.id + '_' + markerType; 
+		gCurrentMarkerNode = document.getElementById(markerID);
+		if(!gCurrentMarkerNode)
+			return ; 
+		gPrevAttributeList = EL_getObjectAttributes(gCurrentMarkerNode);
+		var initColVal = gCurrentMarkerNode.getAttribute('fill'); 		
+		WAL_showColorPickerWidget('marker_colorpickwidget', '', 'marker_fill_color_icon','fill', initColVal, markerID);
+		break;
+		
 	case 'delete_grad_icon':
 		var currgradTitle = WAL_getDropdownListSelection('gradlistDDL');
 		var gradInfo = GX_GetGradInfoByTitle(currgradTitle); 
@@ -4603,8 +4675,10 @@ function GX_showEditorInterface(Mode)
 		GX_UpdatePropertyOnUI('FONT_NAME', fontname);
 		break; 
 	case 'MARKER_MODE':
-		WAL_hideWidget('marker_interface', false);
-		WAL_hideWidget('fill_interface', false); 
+		WAL_hideWidget('marker_interface', false);		
+		gObjectEditMode = 'MARKER_MODE'; 
+		if( (gCurrentObjectSelected) && (gCurrentObjectSelected.classList[0] == 'SVG_PATH-OBJECT') )
+			GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, false); 
 		break; 
 	default:
 		break; 	
@@ -6924,11 +6998,8 @@ function GX_ColorWidgetOK(event)
 function GX_StrokeColorHandler(attrName, value)
 {
 	if(!gCurrentObjectSelected)
-		return ;
-	
+		return ;	
 	gCurrentObjectSelected.setAttribute(attrName,value );
-	//UIH_ApplyStyleProperty(gCurrentObjContainerNode, "ALL_BORDER_COLOR", value, false);
-	//gCurrentObjContainerNode.style.borderColor =  value; 
 }
 
 function OnGradPointClick(evt) {
@@ -8295,4 +8366,28 @@ function GX_DeleteMarkerObject(objectID, markerType){
 	//change the markertype attribute on the target object 
 	var objNode = document.getElementById(objectID); 
 	objNode.setAttribute(markerType, ''); 	
+}
+
+function GX_Marker_ColorWidgetOK(event){
+	if(gCurrentMarkerNode){		
+		var colWdgt = document.getElementById('marker_colorpickwidget'); 
+		if(!colWdgt)
+		 return ;
+		var colAttrName = colWdgt.getAttribute('data-attrName');
+		var colorval = WAL_getColorPickerValue('marker_colorpickwidget');
+		GX_SetObjectAttribute(gCurrentMarkerNode, colAttrName, colorval, true, false);
+		GX_SetObjectAttribute(gCurrentMarkerNode, "", "", true, false);
+	}
+}
+
+function GX_Marker_ColorWidgetCANCEL(event){
+	if(!gCurrentMarkerNode)
+		return ;
+	var colWdgt = document.getElementById('marker_colorpickwidget'); 
+	if(!colWdgt)
+		return ;
+	var colAttrName = colWdgt.getAttribute('data-attrName');
+	var initcolAttrValue = colWdgt.getAttribute('data-attrValue');
+	//restoring the original color 
+	gCurrentMarkerNode.setAttribute(colAttrName, initcolAttrValue );
 }

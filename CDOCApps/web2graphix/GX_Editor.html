@@ -253,13 +253,22 @@
       <div id='marker_interface' style="display: none; position:absolute; left:10px; top: 40px;" class='PROPERTY_INTERFACE'>
       <div style= 'display:inline-block;'>	
 		<div id='markerTypelistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Marker Type<div id='markerTypeListDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
+		
 		<div id='markerShapelistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Shape<div id='markerShapeListDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
 	   </div>      
 		<div style='display:inline-block'>
 			<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='add_marker_icon' value=''  src='../CommonCSS/icons/Version1/addpoints.png'  data-tooltiptext=' Add Marker' data-helptext='Adds Marker'/></div>
 			<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='delete_marker_icon' value=''  src='../CommonCSS/icons/Version1/deletepoints.png'  data-tooltiptext='Remove Marker' data-helptext='Adds Marker'/></div>
 		</div>
-		
+		<div style='display:inline-block'>
+			<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='add_marker_icon' value=''  src='../CommonCSS/icons/Version1/addpoints.png'  data-tooltiptext=' Add Marker' data-helptext='Adds Marker'/></div>
+			<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='delete_marker_icon' value=''  src='../CommonCSS/icons/Version1/deletepoints.png'  data-tooltiptext='Remove Marker' data-helptext='Remove Marker'/></div>
+		</div>
+		<div style='display:inline-block'>
+			<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='marker_stroke_color_icon' value=''  src='../CommonCSS/icons/Version1/bordercolor.png' data-tooltiptext='Stroke Color' data-helptext='Select any color from the pallete to apply as stroke color'/></div>
+		    <div id='marker_strokeweightEdit' style='display:inline-block; margin-left:5px; margin-right:5px;' data-tooltiptext='Stroke Width' data-helptext='Select value to modify the stroke width'>Thickness<div id='marker_strokeWeightIP' class='EDIT_BOX group6' type='STROKE_WEIGHT' ></div></div>
+		    <div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='marker_fill_color_icon' value=''  src='../CommonCSS/icons/Version1/fillcolor.png' data-tooltiptext='Fill Color' data-helptext='Select any color from the pallete to apply as Fill color'/></div>
+		</div>
 		
       </div>
     
@@ -444,6 +453,15 @@
                 <div id="colorpicker"></div> 
                 	<input type="button" id='okbtn' value="Ok" onclick="GX_ColorWidgetOK(event)"/>  
                 	<input type="button" id='cancelbtn'  value="Cancel" onclick="GX_ColorWidgetCANCEL(event)"/>                	
+            </div>        
+  </div>  
+  
+  <div id='marker_colorpickwidget' style='display:none'>
+            <div id='marker_colorhdr'>Choose Color</div>
+            <div id='marker_colorcontent' style="overflow: hidden">
+                <div id="marker_colorpicker"></div> 
+                	<input type="button" id='marker_okbtn' value="Ok" onclick="GX_Marker_ColorWidgetOK(event)"/>  
+                	<input type="button" id='marker_cancelbtn'  value="Cancel" onclick="GX_Marker_ColorWidgetCANCEL(event)"/>                	
             </div>        
   </div>       
    
