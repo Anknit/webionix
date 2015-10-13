@@ -1707,7 +1707,7 @@ function GX_AddNewSVGObject(Type, name)
 	else
 		parentID = gCurrentTreeNode.getAttribute('dataid');
 	
-	if(objectType == 'POLYGON_PATH')
+	if(objectType == 'POLYGON')
 		retval = GXRDE_addNewSVGPolygonObject(ObjID, parentID, objectType, gnPolygonSides, gPolygonLength); 
 	else if(objectType == 'GROUP'){
 		retval = GXRDE_addNewSVGGroupObject(ObjID, parentID, objectType, name); 		
@@ -2041,8 +2041,15 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	if((bShowMarkers ==  true)  || (gObjectEditMode == 'PROPERTIES_MODE') )		  
     		GX_AddPathMarker(node.id, gPathDataArray, true); 
     	
-    	if(gObjectEditMode == 'MARKER_MODE')
+    	if(gObjectEditMode == 'MARKER_MODE'){
+    		if(node.classList[1] == 'POLYGON')
+    			WAL_enableDropdownListItem('markerTypeListDDL', 1); 
+    		else
+    			WAL_disableDropdownListItem('markerTypeListDDL', 1); 
+    			
     		GX_UpdatePathMarker(node.id, gPathDataArray, false); 
+    	}
+    		
     	
     	var bClose = GX_IsPathClose(node); 
     	WAL_setCheckBoxValue('pathclose', bClose);    	
@@ -4095,7 +4102,7 @@ function GX_InitializeToolbar()
     //Create Marker Interface
     var typelist = ['Start Marker', 'Middle Marker', 'End Marker']; 
     WAL_createDropdownList('markerTypeListDDL', '140', '24', false, typelist, "GX_DDLHandler", '80');
-    
+    WAL_SetItemInDropDownList('markerTypeListDDL', 0, false);
     
     var listBoxSrc = new Array();
     var image=""; 
@@ -4136,7 +4143,9 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('add_marker_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('delete_marker_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('marker_stroke_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('marker_fill_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID);  
+    WAL_createCustomButton('marker_fill_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
+    WAL_createNumberInput("marker_strokeWeightIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,0,1, gWidgetTooltipID);
+    WAL_setNumberInputValue('marker_strokeWeightIP', 1, false);
     
 }
 
@@ -4203,8 +4212,17 @@ function GX_EditBoxValueChange(value, widgetnode)
 		}//if(wdgtType == 'DIMENSION')				
 	} //(nodeClass == 'SVG_SHAPE_OBJECT')
 	var objType = currnodeSel.classList[1]; 
+	
 	if( (nodeClass == 'SVG_SHAPE_OBJECT')||(nodeClass == 'SVG_PATH_OBJECT')|| (nodeClass == 'SVG_TEXT_OBJECT') )
 	{
+		if(nodeClass == 'SVG_PATH_OBJECT'){
+			if(widgetnode.id == 'marker_strokeWeightIP'){
+				gCurrentMarkerNode = GX_GetCurrentMarkerSelection(); 
+				if(!gCurrentMarkerNode)
+					return ; 
+				GX_SetObjectAttribute(gCurrentMarkerNode, 'stroke-width', value, true, false);
+			}
+		}
 		if(widgetnode.id == 'strokeWeightIP')
 		{
 			GX_SetObjectAttribute(gCurrentObjectSelected, 'stroke-width', value, true, false);
@@ -4276,9 +4294,7 @@ function GX_EditBoxValueChange(value, widgetnode)
 				var centerPt = GX_GetPolygonParam(gCurrentObjectSelected); 
 				GX_DrawPolygon(gCurrentObjectSelected, centerPt.x+'',centerPt.y+'', nSides, value); 
 			}			 
-		}
-		
-		
+		}	
 		
 	}
 	
@@ -4422,8 +4438,7 @@ function GX_ToolbarHandler(Node)
 		var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
 		markerType = gMarkerType[markerType]; 		
 		var markerShape = WAL_getDropdownListSelection('markerShapeListDDL');
-		markerShape = markerShape.toUpperCase();	
-		
+		markerShape = markerShape.toUpperCase();			
 		GX_AddNewSVGObject('MARKER_' + markerShape, markerType); 
 		break; 
 	case 'delete_marker_icon':
@@ -4439,31 +4454,26 @@ function GX_ToolbarHandler(Node)
 		WAL_hideWidget('marker_colorpickwidget', true); 
 		if(!gCurrentObjectSelected)
 			return ; 
-		var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
-		markerType = gMarkerType[markerType].toUpperCase();		
-		var markerID = gCurrentObjectSelected.id + '_' + markerType;		
-		gCurrentMarkerNode = document.getElementById(markerID);
+		//var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
+		//markerType = gMarkerType[markerType].toUpperCase();	
+		gCurrentMarkerNode = GX_GetCurrentMarkerSelection();		
 		if(!gCurrentMarkerNode)
 			return ; 
-	    gPrevAttributeList = EL_getObjectAttributes(gCurrentMarkerNode);
+	    
 		var initColVal = gCurrentMarkerNode.getAttribute('stroke'); 		
-		WAL_showColorPickerWidget('marker_colorpickwidget', '', 'marker_stroke_color_icon','stroke', initColVal, markerID);
+		WAL_showColorPickerWidget('marker_colorpickwidget', '', 'marker_stroke_color_icon','stroke', initColVal, gCurrentMarkerNode.id);
 		break; 
 	case 'marker_fill_color_icon':
 		WAL_hideWidget('marker_colorpickwidget', true); 
 		if(!gCurrentObjectSelected)
-			return ; 
-		var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
-		markerType = gMarkerType[markerType].toUpperCase();		
-		var markerID = gCurrentObjectSelected.id + '_' + markerType; 
-		gCurrentMarkerNode = document.getElementById(markerID);
+			return ; 					
+		gCurrentMarkerNode = GX_GetCurrentMarkerSelection();	
 		if(!gCurrentMarkerNode)
 			return ; 
-		gPrevAttributeList = EL_getObjectAttributes(gCurrentMarkerNode);
-		var initColVal = gCurrentMarkerNode.getAttribute('fill'); 		
-		WAL_showColorPickerWidget('marker_colorpickwidget', '', 'marker_fill_color_icon','fill', initColVal, markerID);
-		break;
 		
+		var initColVal = gCurrentMarkerNode.getAttribute('fill'); 		
+		WAL_showColorPickerWidget('marker_colorpickwidget', '', 'marker_fill_color_icon','fill', initColVal, gCurrentMarkerNode.id);
+		break;		
 	case 'delete_grad_icon':
 		var currgradTitle = WAL_getDropdownListSelection('gradlistDDL');
 		var gradInfo = GX_GetGradInfoByTitle(currgradTitle); 
@@ -5975,11 +5985,12 @@ function GX_UpdatePathMarker(pathID, pathParam, bShow)
 	var JQSel = ".markerclass";  
 	bMarkerSelected = false; 
 	gCurrentMarkerNode = 0; 
-    if(bShow == false)
+    if( (bShow == false) || (gObjectEditMode == 'MARKER_MODE') )
     {
     	$(JQSel).attr('visibility', 'hidden'); 
     	 return ;
     }
+    
     //if(gObjectEditMode != 'PROPERTIES_MODE')
 	//	  return ; 
     var pathNode = document.getElementById(pathID);  
@@ -8373,10 +8384,12 @@ function GX_Marker_ColorWidgetOK(event){
 		var colWdgt = document.getElementById('marker_colorpickwidget'); 
 		if(!colWdgt)
 		 return ;
+		
 		var colAttrName = colWdgt.getAttribute('data-attrName');
 		var colorval = WAL_getColorPickerValue('marker_colorpickwidget');
 		GX_SetObjectAttribute(gCurrentMarkerNode, colAttrName, colorval, true, false);
 		GX_SetObjectAttribute(gCurrentMarkerNode, "", "", true, false);
+		
 	}
 }
 
@@ -8390,4 +8403,19 @@ function GX_Marker_ColorWidgetCANCEL(event){
 	var initcolAttrValue = colWdgt.getAttribute('data-attrValue');
 	//restoring the original color 
 	gCurrentMarkerNode.setAttribute(colAttrName, initcolAttrValue );
+}
+
+function GX_GetCurrentMarkerSelection(){	
+	if(! ((gCurrentObjectSelected)&&(gCurrentObjectSelected.classList[0] == 'SVG_PATH_OBJECT')) )
+		return ;	
+	var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
+	markerType = gMarkerType[markerType].toUpperCase();		
+	var markerID = gCurrentObjectSelected.id + '_' + markerType;		
+	var MarkerNode = document.getElementById(markerID);
+	if(MarkerNode){
+		gPrevAttributeList = EL_getObjectAttributes(MarkerNode);
+		return MarkerNode;
+	}
+		
+	 return 0; 
 }

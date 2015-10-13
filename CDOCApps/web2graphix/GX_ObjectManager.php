@@ -95,6 +95,10 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 	$objectIDVal   = strtoupper($OBJECTID);
 	$parentIDVal   = strtoupper($REFID);
 	
+	if($parentIDVal == 'MARKER_GROUP'){
+		GX_OBJ_DeleteSVGElement($objectIDVal);
+	}
+	
 	if($OBJECTTYPE == 'POLYGON_PATH')
 	{
 		$nSides = $NUMSIDES;
@@ -291,28 +295,50 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			break;
 		case 'MARKER_TRIANGLE': 
 			//first add the marker node			
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_MARKER_OBJECT MARKER_TRIANGLE', 'stroke'=>'black', 'stroke-width'=>'1', 'fill'=>'none', 'stroke-dasharray'=>'none','fill-opacity'=>'1',
-			'viewBox'=>"0 0 10 10", 'refX'=>"5", 'refY'=>"5", 'markerUnits'=>"strokeWidth",'markerWidth'=>"5", 'markerHeight'=>"5", 'orient'=>"auto" );
-			$childAttrDefn = array('d' => 'M 0 0 L 10 5 L 0 10 z'); 			
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_MARKER_OBJECT MARKER_TRIANGLE', 'stroke'=>'black', 'stroke-width'=>'2', 'fill'=>'black', 'stroke-dasharray'=>'none','fill-opacity'=>'1',
+			'viewBox'=>"0 0 100 100", 'refX'=>"50", 'refY'=>"50", 'markerUnits'=>"strokeWidth",'markerWidth'=>"5", 'markerHeight'=>"5", 'orient'=>"auto" );
+			$childAttrDefn = array('d' => 'M 0 0 L 100 50 L 0 100 z'); 	
+			//$childAttrDefn = array('d' => 'm10,80 l40,-60 l30,60z');			
 			$respData = GX_COMMON_AddSVGElementWithChild($SVGDom, $SVGFileName, 'marker', $objectIDVal, $parentIDVal, $attrdefinition,
 					'path', $childAttrDefn, '');			
 			break; 
 		case 'MARKER_CIRCLE':
-				//first add the marker node
-				$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_MARKER_OBJECT MARKER_CIRCLE', 'stroke'=>'black', 'stroke-width'=>'1', 'fill'=>'none', 'stroke-dasharray'=>'none','fill-opacity'=>'1',
-				'viewBox'=>"0 0 10 10", 'refX'=>"5", 'refY'=>"5", 'markerUnits'=>"strokeWidth",'markerWidth'=>"5", 'markerHeight'=>"5", 'orient'=>"auto" );
-				$childAttrDefn = array('cx' =>'5', 'cy' =>'5', 'r' =>'2.5' );
+				//first add the marker node			
+				$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_MARKER_OBJECT MARKER_CIRCLE', 'stroke'=>'black', 'stroke-width'=>'2', 'fill'=>'black', 'stroke-dasharray'=>'none','fill-opacity'=>'1',
+				'viewBox'=>"0 0 100 100", 'refX'=>"50", 'refY'=>"50", 'markerUnits'=>"strokeWidth",'markerWidth'=>"5", 'markerHeight'=>"5", 'orient'=>"auto" );
+				$childAttrDefn = array('cx' =>'50', 'cy' =>'50', 'r' =>'25' );
 				$respData = GX_COMMON_AddSVGElementWithChild($SVGDom, $SVGFileName, 'marker', $objectIDVal, $parentIDVal, $attrdefinition,
 						'circle', $childAttrDefn, '');
 				break;	
 		case 'MARKER_SQUARE':
-					//first add the marker node
-					$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_MARKER_OBJECT MARKER_SQUARE', 'stroke'=>'black', 'stroke-width'=>'1', 'fill'=>'none', 'stroke-dasharray'=>'none','fill-opacity'=>'1',
-					'viewBox'=>"0 0 10 10", 'refX'=>"5", 'refY'=>"2.5", 'markerUnits'=>"strokeWidth",'markerWidth'=>"5", 'markerHeight'=>"5", 'orient'=>"auto" );
-					$childAttrDefn = array('x' =>'0', 'y' =>'0', 'width' =>'5', 'height'=>'5' );					
-					$respData = GX_COMMON_AddSVGElementWithChild($SVGDom, $SVGFileName, 'marker', $objectIDVal, $parentIDVal, $attrdefinition,
-							'rect', $childAttrDefn, '');
-					break;
+					//first add the marker node		
+				$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_MARKER_OBJECT MARKER_SQUARE', 'stroke'=>'black', 'stroke-width'=>'2', 'fill'=>'black', 'stroke-dasharray'=>'none','fill-opacity'=>'1',
+				'viewBox'=>"0 0 100 100", 'refX'=>"50", 'refY'=>"50", 'markerUnits'=>"strokeWidth",'markerWidth'=>"5", 'markerHeight'=>"5", 'orient'=>"auto" );
+				$childAttrDefn = array('d' =>'m20,20 l0,60 l60,0 l0,-60 l-60,0z');					
+				$respData = GX_COMMON_AddSVGElementWithChild($SVGDom, $SVGFileName, 'marker', $objectIDVal, $parentIDVal, $attrdefinition,
+				'path', $childAttrDefn, '');
+			break;
+		case 'MARKER_STAR':			
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_MARKER_OBJECT MARKER_SQUARE', 'stroke'=>'black', 'stroke-width'=>'2', 'fill'=>'black', 'stroke-dasharray'=>'none','fill-opacity'=>'1',
+					'viewBox'=>"0 0 100 100", 'refX'=>"50", 'refY'=>"50", 'markerUnits'=>"strokeWidth",'markerWidth'=>"5", 'markerHeight'=>"5", 'orient'=>"auto" );
+			$childAttrDefn = array('d' =>'m10,30 l80,0 l-70,60 l30,-80 l30,80 z');
+			$respData = GX_COMMON_AddSVGElementWithChild($SVGDom, $SVGFileName, 'marker', $objectIDVal, $parentIDVal, $attrdefinition,
+					'path', $childAttrDefn, '');
+			break; 
+		case 'MARKER_CURVEDTRIANGLE':			
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_MARKER_OBJECT MARKER_SQUARE', 'stroke'=>'black', 'stroke-width'=>'2', 'fill'=>'black', 'stroke-dasharray'=>'none','fill-opacity'=>'1',
+			'viewBox'=>"0 0 100 100", 'refX'=>"50", 'refY'=>"50", 'markerUnits'=>"strokeWidth",'markerWidth'=>"5", 'markerHeight'=>"5", 'orient'=>"auto" );
+			$childAttrDefn = array('d' =>'m100,50l-100,40l30,-40l-30,-40z');
+			$respData = GX_COMMON_AddSVGElementWithChild($SVGDom, $SVGFileName, 'marker', $objectIDVal, $parentIDVal, $attrdefinition,
+					'path', $childAttrDefn, '');
+			break;
+		case 'MARKER_CROSS':
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_MARKER_OBJECT MARKER_SQUARE', 'stroke'=>'black', 'stroke-width'=>'6', 'fill'=>'black', 'stroke-dasharray'=>'none','fill-opacity'=>'1',
+			'viewBox'=>"0 0 100 100", 'refX'=>"50", 'refY'=>"50", 'markerUnits'=>"strokeWidth",'markerWidth'=>"5", 'markerHeight'=>"5", 'orient'=>"auto" );
+			$childAttrDefn = array('d' =>'m20,80 l60,-60 m0,60 l-60,-60');
+			$respData = GX_COMMON_AddSVGElementWithChild($SVGDom, $SVGFileName, 'marker', $objectIDVal, $parentIDVal, $attrdefinition,
+					'path', $childAttrDefn, '');
+			break;
 		default:
 			 break; 
 	}
