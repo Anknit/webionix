@@ -405,7 +405,7 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
             
             //now get the stopanimation param here 
             objProp =  gradProp.gradAnimList['stop-color'+index]; 
-            if(objProp)
+           /* if(objProp)
             {
             	WAL_setCheckBoxValue('animateStop_col', objProp.bAnimate);             	
             	var durIPID= 'durStopColIP'; 
@@ -413,6 +413,8 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
             }          
             else
             	WAL_setCheckBoxValue('animateStop_col', false);
+            	*/
+            
         }
     
 };
@@ -468,7 +470,7 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     
    
    
-     
+   /*  
     if(CBID == 'animateStop_col')
     {
     	if(state ==  true)
@@ -482,9 +484,9 @@ sGradientWidget.prototype.OnGradCheckBoxHdlr = function(event) {
     		WAL_setNumberInputValue("durStopColIP", 0.0, false);
     	}    		
     }  
-        
+    */        
     
-    else if (state == true) {
+     if (state == true) {
         stopnodeid = this.GradResourceNode.id + '_STOP' + index;
         var stopNode = document.getElementById(stopnodeid);
         stopNode.setAttribute('offset', '100%');
@@ -784,10 +786,10 @@ function GX_CreateGradientWidget(wdgtID)
         WAL_createSlider('stop0_offset_slider', '110px', '15px', false, 0, 100,1, 25, false, false, 'GX_GradientEditBoxValueChange', false, '');
         WAL_createSlider('stop1_offset_slider', '110px', '15px', false, 0, 100,1, 25, false, false, 'GX_GradientEditBoxValueChange', false, '');
         
-        WAL_createCheckBox('animateStop_col', 'GX_GradientCheckValueChange', '70', gWidgetHeight, '13', false, false);
-        WAL_createDecimalNumberInput("durStopColIP", '50px', '24', "GX_GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
-        WAL_createButton('apply_Stop_Col', '', '55', 25, true);
-        WAL_createButton('animPreviewStop', '', '70', 25, true);  
+       // WAL_createCheckBox('animateStop_col', 'GX_GradientCheckValueChange', '70', gWidgetHeight, '13', false, false);
+        //WAL_createDecimalNumberInput("durStopColIP", '50px', '24', "GX_GradientEditBoxValueChange", true, 5.0, 0.0, 0.1);
+        //WAL_createButton('apply_Stop_Col', '', '55', 25, true);
+        //WAL_createButton('animPreviewStop', '', '70', 25, true);  
         
         var JQSel = '#START_POINT'; 
         $(JQSel).draggable({ cursor: "move" });
@@ -3766,9 +3768,9 @@ function GX_SetRectObjectDim(ObjNode, newDim)
         	else if(currObjectType == 'SVG_PATH_OBJECT'){
         		with (Math){        			
             		modDim.x = modDim.x  + tolerance; 
-            	    modDim.y = modDim.y + YOffset +  tolerance;   
-            	    modDim.width -= (2*tolerance); 
-            	    modDim.height -= (2*tolerance);
+            	    modDim.y = modDim.y + YOffset + tolerance;   
+            	    modDim.width -= (tolerance); 
+            	    modDim.height -= (tolerance);
         		}    		
         	}
     	}
@@ -7563,7 +7565,7 @@ function GX_UpdateGradAnimAttribute(bFlag, gradResID, attrName, from, to, durati
 		}    			
 	 }    	
  }	
-
+/*
 function GX_GradAnimApplyBtnHdlr(event)
 {
 	var btnID = event.target.id; 
@@ -7574,11 +7576,7 @@ function GX_GradAnimApplyBtnHdlr(event)
 		
 		node = document.getElementById('stop1_color') ;  
 		var tocolval = node.style.backgroundColor;
-		
-		var bState = WAL_getCheckBoxValue('animateStop_col'); 
-		var stopNodeid = gGradientObj.GradResourceID + '_STOP1'; 
-		var dur = WAL_getMaskedInputValue('durStopColIP');		
-		GX_UpdateGradAnimAttribute(bState, stopNodeid, 'stop-color', fromcolval, tocolval, dur);		
+			
 	}
 	
 }
@@ -7606,18 +7604,9 @@ function GX_GradAnimPreviewBtnHdlr(event){
 	
 	
 	
-	/*
-	var resID = gGradientObj.GradResourceNode.id; 
-	var animID = resID + '_TOP_GRAD_ANIM'; 
-	//var animNode = document.querySelector('#' + animID);
-	//animNode.setAttribute('begin', ''); 
-	//animNode.setAttribute('fill', 'remove'); 	
-	GX_PreviewAnimation(animID);
-	*/
 	
-	//Debug_Message('Animating Gradient'); 
-	//set the anim begin value and
 }
+*/ 
 
 function GX_RemoveGradient(gradID, gradTitle)
 {
@@ -7901,12 +7890,19 @@ function OnMenuCBChange(event){
 		gShowTooltip = bChecked; 
 		break; 
 	case 'showgrid_cb':
-		var gridNode = document.getElementById('gridpattern'); 		
+		var gridNode = document.getElementById('gridpattern'); 	
+		var bigGridNode =  document.getElementById('bigrectpattern'); 
+		
 		gShowGrid = bChecked; 
-		if(gShowGrid == true)
+		if(gShowGrid == true){
+			bigGridNode.setAttribute('visibility', 'visible'); 
 			gridNode.setAttribute('visibility', 'visible'); 
-		else
+		}			
+		else{
+			bigGridNode.setAttribute('visibility', 'hidden'); 
 			gridNode.setAttribute('visibility', 'hidden'); 
+		}
+			
 		break;
 	default:
 		break; 
