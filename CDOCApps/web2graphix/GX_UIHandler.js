@@ -1035,10 +1035,7 @@ function GX_Initialize()
     WAL_createModelessWindow('fillcolorDlg', '250', '150', 'fillcolOK', 'fillcolCancel');
     
     WAL_createModalWindow(gImageDlg, '250', '150', 'imageOK', 'imageCancel');
-   /* $(document).on('contextmenu', function (e) {
-        return false;
-    });
-    */
+    WAL_createModalWindow('deleteConfirmDlg', '250', '150', 'deleteOK', 'deleteCancel');
     
     GX_MenuDisable(true);
     /*
@@ -1335,8 +1332,10 @@ function GX_MenuItemShow(menuid, itemText)
 	
 		 
 	 case 'removenode':
-		 GX_RemoveObject(gCurrentObjectSelected); 
-		 WAL_expandAllTreeItems(gTreeNodeID, true);
+		 
+		 WAL_showModalWindow('deleteConfirmDlg','', ''); 
+		// GX_RemoveObject(gCurrentObjectSelected); 
+		 //WAL_expandAllTreeItems(gTreeNodeID, true);
 		 break; 
 	
 	 case 'copy':
@@ -8449,6 +8448,9 @@ function OnKeyDown(event){
 		relY = 1; 
 		bMoveObject = true; 
 		break; 
+	case 'U+007F':
+		 WAL_showModalWindow('deleteConfirmDlg','', ''); 
+		break; 
 	default:
 		break; 
 	}
@@ -8520,4 +8522,11 @@ function GX_MoveSelectedObject(relX, relY){
 
     gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected); 
     gGrabberDim = GX_GetRectObjectDim(gCurrGrabber);
+}
+
+function GX_DeleteConfirmDlgOK(){
+	if(!gCurrentObjectSelected)
+		return ; 
+	 GX_RemoveObject(gCurrentObjectSelected); 
+	 WAL_expandAllTreeItems(gTreeNodeID, true);
 }

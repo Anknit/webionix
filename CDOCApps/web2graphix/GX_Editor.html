@@ -695,5 +695,15 @@
     
     <div id='markerPoint'  class='CUSTOM_MARKER' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1;'></div>
     
+    <div id="deleteConfirmDlg" style="display:none"><div ">Confirm</div>
+        <div  style="overflow: hidden"> 
+        	<div  style= 'display:inline-block; margin-left:2px; margin-top:14px;'>Are You Sure You Want to Delete the Object ?</div>         	           
+            <div> 
+                <input type="button" id ='deleteOK'     value="Yes" onclick='GX_DeleteConfirmDlgOK()'/>
+                <input type="button" id ='deleteCancel' value="No"  />
+            </div>
+       </div>          
+   </div>
+    
 </body>
 </html>
