@@ -99,7 +99,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 		GX_OBJ_DeleteSVGElement($objectIDVal);
 	}
 	
-	if($OBJECTTYPE == 'POLYGON_PATH')
+	if($OBJECTTYPE == 'POLYGON')
 	{
 		$nSides = $NUMSIDES;
 		$length = $CIRCRADIUS;
@@ -190,7 +190,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 				'font-style'=>'normal', 'font-variant'=>'normal', 'text-decoration'=>'normal', 'x'=>'5', 'y'=>'25', 'stroke'=>'black', 'stroke-width'=>'1', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter','stroke-opacity'=>'1',  'fill'=>'none','visibility'=>'visible');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'text',$objectIDVal, 0, $parentIDVal, $attrdefinition,'Enter Your Text Here      ');
 			break; 
-		case 'POLYGON_PATH':
+		case 'POLYGON':
 			$x = 150;
 			$y = 150;			
 			$dvalue = GX_OBJ_GetPolygonParams($x, $y, $nSides, $length); 

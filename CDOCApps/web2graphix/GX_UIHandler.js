@@ -2873,24 +2873,25 @@ function OnObjectDrag(evt, ui){
 
 
 
-function OnObjectDragStop(evt,ui){
-	
-	var objectType =  gCurrentObjectSelected.classList[0];  	 
-	var newObjDim = new sDimension(); 	   
+function OnObjectDragStop(evt,ui){	 
+	   
     var retVal=true;
     if (!gCurrentObjectSelected)
         return;
-    if(gCurrentObjectSelected)
-    	var objectType = gCurrentObjectSelected.classList[0];
+   
    if(gbContextMenuShow == true){
 	   bMove = false;
    }
    
-    var newObjDim = new sDimension();         
+         
     relX = new Number(ui.position.left - ui.originalPosition.left);
     relY = new Number(ui.position.top - ui.originalPosition.top);
     relX *= gZoomFactor; 
     relY *= gZoomFactor; 
+    GX_MoveSelectedObject(relX, relY); 
+    /*
+    var objectType =  gCurrentObjectSelected.classList[0];
+    var newObjDim = new sDimension();   
     if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
     {
     	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
@@ -2942,8 +2943,8 @@ function OnObjectDragStop(evt,ui){
     	GX_MakeTextEditable(gCurrentObjectSelected); 
 
     gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected); 
-    gGrabberDim = GX_GetRectObjectDim(gCurrGrabber);
-	
+    gGrabberDim = GX_GetRectObjectDim(gCurrGrabber);	
+    */ 
 }
 
 function OnObjectResizeStop(event, ui){
@@ -4592,16 +4593,21 @@ function GX_ToolbarHandler(Node)
 			 Prop = 'small-caps'; 
 		 GX_SetObjectAttribute(gCurrentObjectSelected, "font-variant", Prop, true, false);
 		 break; 
-		 //not supported yet
-	/* case 'blink_icon':	 
-		 var Prop = gCurrentObjectSelected.getAttribute('text-decoration'); 
-		 if(Prop == 'blink')
-			 Prop = 'normal'; 
-		 else
-			 Prop = 'blink'; 
-		 GX_SetObjectAttribute(gCurrentObjectSelected, "text-decoration", Prop, true, false);
-		 break;
-		 */
+	 case 'grid_icon':	
+		var gridNode = document.getElementById('gridpattern'); 	
+		var bigGridNode =  document.getElementById('bigrectpattern');
+		 if(gShowGrid == false){
+			    gShowGrid = true; 
+				bigGridNode.setAttribute('visibility', 'visible'); 
+				gridNode.setAttribute('visibility', 'visible'); 
+			}			
+			else{
+				gShowGrid = false; 
+				bigGridNode.setAttribute('visibility', 'hidden'); 
+				gridNode.setAttribute('visibility', 'hidden'); 
+			}
+		 
+		 break; 
 		 
 	 default:
 		break; 
@@ -6118,7 +6124,7 @@ function GX_PolyInputDlgOK()
 	var Length = WAL_getMaskedInputValue('polyLengthIP');
 	gnPolygonSides = nSides;
 	gPolygonLength = Length; 
-	GX_AddNewSVGObject('polygon_path',''); 
+	GX_AddNewSVGObject('POLYGON',''); 
 }
 
 function GX_StartFreeDraw()
@@ -6661,7 +6667,7 @@ function GX_FindAnchorPointIndex(pathArray, boundary, pointX, pointY, startIndex
 
 function OnWindowScroll(event)
 {	
-	if(bNewObjectAdding ==  true)
+	if( (bNewObjectAdding ==  true) || (bMoveObject == true) )
 	{
 		if( (window.pageXOffset != 0) || (window.pageYOffset != 0 ))
 		{
@@ -7891,8 +7897,7 @@ function OnMenuCBChange(event){
 		break; 
 	case 'showgrid_cb':
 		var gridNode = document.getElementById('gridpattern'); 	
-		var bigGridNode =  document.getElementById('bigrectpattern'); 
-		
+		var bigGridNode =  document.getElementById('bigrectpattern'); 		
 		gShowGrid = bChecked; 
 		if(gShowGrid == true){
 			bigGridNode.setAttribute('visibility', 'visible'); 
@@ -8411,7 +8416,108 @@ function GX_GetCurrentMarkerSelection(){
 	if(MarkerNode){
 		gPrevAttributeList = EL_getObjectAttributes(MarkerNode);
 		return MarkerNode;
-	}
-		
+	}		
 	 return 0; 
+}
+var bMoveObject = false; 
+function OnKeyDown(event){
+	
+	//alert('Key ID = ' +  event.keyIdentifier);
+	if(!gCurrentObjectSelected)
+		return ; 
+	var pos = $(gCurrGripperSel).position(); 
+	var left = new Number(pos.left); 
+	var top =  new Number(pos.top); 
+	var keyID = event.keyIdentifier.toUpperCase(); 
+	bMoveObject = false; 
+	var relX = new Number(0);
+	var relY = new Number(0);  
+	switch(keyID){
+	case 'LEFT':
+		relX = -1; 
+		bMoveObject = true;  
+		break;
+	case 'RIGHT':
+		relX = 1; 
+		bMoveObject = true; 
+		break; 
+	case 'UP':
+		relY = -1; 
+		bMoveObject = true; 
+		break; 
+	case 'DOWN':
+		relY = 1; 
+		bMoveObject = true; 
+		break; 
+	default:
+		break; 
+	}
+	if(bMoveObject == true){
+		left = left + relX; 
+		top = top + relY; 
+		$(gCurrGripperSel).css({left : left +'px', top : top + 'px'}); 
+		GX_MoveSelectedObject(relX, relY); 
+	}
+	event.stopPropagation(); 
+}
+
+function GX_MoveSelectedObject(relX, relY){
+	
+	var objectType =  gCurrentObjectSelected.classList[0];
+    var newObjDim = new sDimension();   
+    if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
+    {
+    	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
+        newObjDim.y = gCurrSelectedObjectDim.y + relY; 
+        if(gSnapToGrid == true){
+        	newObjDim.x = GX_ConvertToMultipleOf(newObjDim.x, 10); 
+        	newObjDim.y = GX_ConvertToMultipleOf(newObjDim.y, 10); 
+        }
+        newObjDim.width = gCurrSelectedObjectDim.width; 
+        newObjDim.height =  gCurrSelectedObjectDim.height; 
+        newObjDim.rotate = gCurrSelectedObjectDim.rotate;          
+        newObjDim.rotCentreX = Math.round(newObjDim.x + newObjDim.width/2);
+        newObjDim.rotCentreY = Math.round(newObjDim.y + newObjDim.height/2);
+        if(gCurrentObjectSelected.classList[1]== 'ELLIPSE')
+        {
+        	newObjDim.x = newObjDim.rotCentreX;
+            newObjDim.y = newObjDim.rotCentreY; 
+        } 
+        else if(gCurrentObjectSelected.classList[1]== 'CIRCLE')
+        {
+        	newObjDim.x = newObjDim.rotCentreX;
+            newObjDim.y = newObjDim.rotCentreY; 
+        }  
+        retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
+                  
+    }        	
+	else if(objectType == 'GROUP')
+	{    		
+		newObjDim.x = gCurrSelectedObjectDim.x+relX; 
+        newObjDim.y = gCurrSelectedObjectDim.y+relY;  
+        if(gSnapToGrid == true){
+        	newObjDim.x = GX_ConvertToMultipleOf(newObjDim.x, 10); 
+        	newObjDim.y = GX_ConvertToMultipleOf(newObjDim.y, 10); 
+        }
+       // Debug_Message("NewX="+newObjDim.x + "NewY="+ newObjDim.y +"gCurrSelectedObjectDim.x=" + gCurrSelectedObjectDim.x + "relX=" + relX);
+		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
+		//GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
+		
+	}   
+	else if(objectType == 'SVG_PATH_OBJECT')
+	{		
+    	newObjDim.x = relX ;//gCurrSelectedObjectDim.x+relX;
+    	newObjDim.y = relY ;// gCurrSelectedObjectDim.y+relY;          
+    	GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);    	
+		GX_UpdatePathData(gCurrentObjectSelected); 
+		GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
+	}
+    if(objectType == 'SVG_SHAPE_OBJECT')
+    	GX_UpdatePropertyOnUI('DIMENSION', newObjDim); 
+    //positiong the editor accoridng to new text position 
+    if(objectType == 'SVG_TEXT_OBJECT')
+    	GX_MakeTextEditable(gCurrentObjectSelected); 
+
+    gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected); 
+    gGrabberDim = GX_GetRectObjectDim(gCurrGrabber);
 }
