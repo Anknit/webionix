@@ -67,6 +67,7 @@ var bMove = false;
 var bDraw = false;
 var gCurrGrabber = 0;
 var gCurrGripperSel = '#sel_gripper'; 
+var gGripperTextSpanNode =''; 
 var bResize = false;
 var bMarkerMove = false; 
 var gIndicatorPath = []; 
@@ -107,7 +108,11 @@ var gInitFillColor = 0;
 var gInitFillValue = 0; 
 var bNewObjectAdding = false; 
 var gWidgetTooltipID = 'widgettooltip' ; // 'dataContainerSplitter'; 
-var gSelectorTooltipID = 'selectortooltip' ; 
+var gSelectorTooltipID = 'selectortooltip' ;
+var gCurrTooltipSel = '#selectortooltip'; 
+var gttHeight = 30; 
+var gTooltipOffset = new sPoint(-5, -30 ); 
+var gCurrTooltipPos = new sPoint(); 
 var gTooltipTheme = 'black'; 
 var gSVGContainerbordercol = 'blue';
 var gUsername = ''; 
@@ -1062,26 +1067,27 @@ function GX_Initialize()
 	
 	JQSel = '#sel_gripper'; 
 	//create the selection gripper here 
-	$(JQSel).draggable({ cursor: "move" });	
-	$(JQSel).resizable();
-	$(JQSel).on( "resizestop", function( event, ui ) {
+	$(gCurrGripperSel).draggable({ cursor: "move" });	
+	$(gCurrGripperSel).resizable();
+	$(gCurrGripperSel).on( "resizestop", function( event, ui ) {
 		OnObjectResizeStop(event, ui); 		
 	});
 	
+	//gGripperTextSpanNode = $(gCurrGripperSel)[0].firstElementChild; 
 	
-	$(JQSel).on( "dragstart", function( event, ui ) {
+	$(gCurrGripperSel).on( "dragstart", function( event, ui ) {
 		OnObjectDragStart(event,ui);
 	});
 	
-	$(JQSel).on( "dragstop", function( event, ui ) {
+	$(gCurrGripperSel).on( "dragstop", function( event, ui ) {
 		OnObjectDragStop(event,ui); 
 	});
 	
-	$(JQSel).on( "drag", function( event, ui ) {
+	$(gCurrGripperSel).on( "drag", function( event, ui ) {
 		OnObjectDrag(event,ui); 
 	});
 	
-	$(JQSel).css({visibility:'hidden'}); 
+	$(gCurrGripperSel).css({visibility:'hidden'}); 
 	
 	//path marker related 
 	gDivPathMarkerSel = '#DivPathMarker'; 
@@ -1909,10 +1915,10 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     		gCurrAnimNode=0;
     	}
     	gIndicatorPathNode.setAttribute('visibility', 'hidden'); 
-    	 var TTSel ='#' +  gSelectorTooltipID; 
+    	 //var TTSel ='#' +  gSelectorTooltipID; 
     	 //$(TTSel).jqxTooltip({content: ttText, theme: gTheme, position:'absolute', showArrow:true,  absolutePositionX:graberOffset.left, absolutePositionY:graberOffset.top, showDelay:gShowDelay});
     	 //$(TTSel).jqxTooltip('close');//open(); 
-    	 $(TTSel).jqxTooltip('destroy');//open();
+    	 $(gCurrTooltipSel).jqxTooltip('destroy');//open();
     	// Debug_Message('Tooltip Closed');
     	 gOrigFreedrawPathVal = 0;     	 
     	return ; 
@@ -1988,11 +1994,9 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     gGrabberDim.width = gCurrSelectedObjectDim.width; 
     gGrabberDim.height = gCurrSelectedObjectDim.height; 
     GX_SetRectObjectDim(gCurrGrabber, gGrabberDim);
-   /* $(gCurrGripperSel).css({left:gGrabberDim.x+'px', top:gGrabberDim.y+'px',
-    	width:gGrabberDim.width+'px', height:gGrabberDim.height+'px'});
-    	*/
-    
-    
+    //gGripperTextSpanNode.innerHTML = 'X-Pos: '+ gCurrSelectedObjectDim.x + 'px Y-Pos: ' + gCurrSelectedObjectDim.y + 'px'; 
+   
+        
     //now restrict the region of containtment 
     var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
     var svgDim = GX_GetRectObjectDim(svgNode);
@@ -2012,7 +2016,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     
    // WAL_ShowTooltip(gSelectorTooltipID, false)f; 
     //set the tooltip here
-    /*
+   
     var TTSel ='#' +  gSelectorTooltipID; 
     var ttText = 'To Move or Resize Click Once and then Move the mouse without any Button down </br>' + 
     'Click once again to freeze the final value  ' 
@@ -2020,16 +2024,21 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     var grabSel = '#' + gCurrGrabber.id;
     var graberOffset = $(grabSel).offset(); 
     var ttHeight = 45; //$(TTSel).jqxTooltip('height'); 
+     
     var top = new Number(graberOffset.top -ttHeight-5); 
     if(gShowTooltip == true)
     {
-    	$(TTSel).jqxTooltip({content: ttText, theme: gTheme, position:'absolute', showArrow:true,  
-        	absolutePositionX:graberOffset.left, absolutePositionY:top, showDelay:gShowDelay, autoHide:5000});
-     	//$(TTSel).jqxTooltip('refresh');//open(); 
-        //WAL_ShowTooltip(gSelectorTooltipID, true); 
-     	$(TTSel).jqxTooltip('open');//open();
+    	gTooltipOffset.x = 0;
+    	gTooltipOffset.y = 0;    	
+    	gCurrTooltipPos.x = gGrabberDim.x + gTooltipOffset.x; 
+        gCurrTooltipPos.y = gGrabberDim.y + gClientYOffset + gTooltipOffset.y - gttHeight;
+        
+    	var tipText = 'X-Pos: '+ gCurrSelectedObjectDim.x + 'px Y-Pos: ' + gCurrSelectedObjectDim.y + 'px'; 
+    	$(gCurrTooltipSel).jqxTooltip({content: tipText, theme: gTheme, position:'absolute', showArrow:true,  
+        	absolutePositionX:gCurrTooltipPos.x, absolutePositionY:gCurrTooltipPos.y , showDelay:gShowDelay, autoHide:5000});     	 
+     	$(gCurrTooltipSel).jqxTooltip('open');//open();
     }  
-    */
+    
     
     //this is to ensure while a new object is being added with 0 Dim. doesnt show up 
     if( (gCurrSelectedObjectDim.width == 0) && (gCurrSelectedObjectDim.height == 0) )
@@ -2837,6 +2846,7 @@ function OnObjectDrag(evt, ui){
 	            newObjDim.rotate = gCurrSelectedObjectDim.rotate;          
 	            newObjDim.rotCentreX = Math.round(newObjDim.x + newObjDim.width/2);
 	            newObjDim.rotCentreY = Math.round(newObjDim.y + newObjDim.height/2);
+	            var tipText = 'X-Pos: '+ newObjDim.x + 'px Y-Pos: ' + newObjDim.y + 'px'; 
 	            if(gCurrentObjectSelected.classList[1]== 'ELLIPSE')
 	            {
 	            	newObjDim.x = newObjDim.rotCentreX;
@@ -2848,6 +2858,7 @@ function OnObjectDrag(evt, ui){
 	                newObjDim.y = newObjDim.rotCentreY; 
 	            }  
 	            //retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
+	            
 	            GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
 	        }        	
 	    	else if(objectType == 'GROUP')
@@ -2855,6 +2866,7 @@ function OnObjectDrag(evt, ui){
 	    		newObjDim.x = gCurrSelectedObjectDim.x+relX; 
 	            newObjDim.y = gCurrSelectedObjectDim.y+relY;       
 	           // Debug_Message("NewX="+newObjDim.x + "NewY="+ newObjDim.y +"gCurrSelectedObjectDim.x=" + gCurrSelectedObjectDim.x + "relX=" + relX);
+	            var tipText = 'X-Pos: '+ newObjDim.x + 'px Y-Pos: ' + newObjDim.y + 'px'; 
 	    		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
 	    		//GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
 	    		
@@ -2863,11 +2875,19 @@ function OnObjectDrag(evt, ui){
 	    	{
 	    		newObjDim.x = relX ;//gCurrSelectedObjectDim.x+relX;
 	    		newObjDim.y = relY ;// gCurrSelectedObjectDim.y+relY;          
+	    		var tipText = 'X-Pos: '+ newObjDim.x + 'px Y-Pos: ' + newObjDim.y + 'px'; 
 	    		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
 	    	}
-	       // if(objectType == 'SVG_SHAPE_OBJECT')
-	        //	GX_UpdatePropertyOnUI('DIMENSION', newObjDim); 	
-	
+	        
+	        if(gShowTooltip == true)
+	        {	        	
+	        	gCurrTooltipPos.x = ui.position.left + gTooltipOffset.x; 
+	            gCurrTooltipPos.y = ui.position.top + gTooltipOffset.y - gttHeight;	        	
+	        	$(gCurrTooltipSel).jqxTooltip({content: tipText, theme: gTheme, position:'absolute', showArrow:true,  
+	            	absolutePositionX:gCurrTooltipPos.x, absolutePositionY:gCurrTooltipPos.y, showDelay:gShowDelay, autoHide:5000});     	 
+	         	$(gCurrTooltipSel).jqxTooltip('open');
+	        } 
+	       
 }
 
 
@@ -8522,6 +8542,15 @@ function GX_MoveSelectedObject(relX, relY){
 
     gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected); 
     gGrabberDim = GX_GetRectObjectDim(gCurrGrabber);
+    if(gShowTooltip == true)
+    {	    
+    	var tipText = 'X-Pos: '+ gCurrSelectedObjectDim.x + 'px Y-Pos: ' + gCurrSelectedObjectDim.y + 'px'; 
+    	gCurrTooltipPos.x = gGrabberDim.x + gTooltipOffset.x; 
+        gCurrTooltipPos.y = gGrabberDim.y + gTooltipOffset.y + gClientYOffset - gttHeight;	        	
+    	$(gCurrTooltipSel).jqxTooltip({content: tipText, theme: gTheme, position:'absolute', showArrow:true,  
+        	absolutePositionX:gCurrTooltipPos.x, absolutePositionY:gCurrTooltipPos.y, showDelay:gShowDelay, autoHide:5000});     	 
+     	$(gCurrTooltipSel).jqxTooltip('open');
+    } 
 }
 
 function GX_DeleteConfirmDlgOK(){
