@@ -123,6 +123,7 @@ var bPointerMove = false;
 var gOrigFreedrawPathVal = 0; 
 var gImageDlg 	= 'imageLoadDlg';
 var gCurrentMarkerNode = 0; 
+var gObjectList = 0; 
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";

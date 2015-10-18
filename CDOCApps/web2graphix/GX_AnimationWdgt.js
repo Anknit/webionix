@@ -84,7 +84,7 @@ function sAnimParams() {
 var gAnimEndTimer = 400; 
 var gbAnimationEnd =  true; 
 var gInitAnimParam = 0; 
-var gObjectList = 0; 
+
 var gAnimList = 0; //[animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, refAnimID, refContainerID]; 
 var gCurrAttrname;
 var gCurrAnimNode = 0; 
