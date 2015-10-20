@@ -124,6 +124,8 @@ var gOrigFreedrawPathVal = 0;
 var gImageDlg 	= 'imageLoadDlg';
 var gCurrentMarkerNode = 0; 
 var gObjectList = 0; 
+var gObjectListInRoI = 0; 
+
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -163,6 +165,7 @@ var gObjectEditMode = 'OBJECT_MODE';//'PROPERTIES_MODE';
 var gSnapToGrid =  false; 
 var gSnapRes = new Number(10);
 var gbMultiSelection = false; 
+var gEnableMultiSelection = false; 
 var gMultiNodeArray = []; 
 var gMultiSelColor1 = 'red'; 
 var gMultiSelColor2 = 'green'; 
@@ -2205,8 +2208,11 @@ function GX_ResetAllSelections()
 	if(gbMultiSelection == true)
 	{
 		GX_DeselectObjectFromMultiMode(); 
-		gbMultiSelection = false;
-		
+		gbMultiSelection = false;		
+	}
+	if(gEnableMultiSelection == true){
+		$('#gripper').attr('visibility', 'hidden'); 
+		gEnableMultiSelection = false; 
 	}
 	var JQSel = '.SVG_SHAPE_OBJECT'; 
 	$(JQSel).removeAttr('opacity');   
@@ -3904,6 +3910,8 @@ function GX_InitializeToolbar()
 	WAL_createTooltip(gSelectorTooltipID, 'div', 1000, 50);
 	gShowTooltip =  true; 
 	
+	
+	WAL_createCustomButton('multiselect_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
 	WAL_createCustomButton('svgdim_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
 	WAL_createCheckBox('snaptogrid', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
 		
@@ -4369,6 +4377,20 @@ function GX_ToolbarHandler(Node)
 	case 'pandown_icon':
 		GX_ApplyPan(false, -50); 
 		break;
+	case 'multiselect_icon':
+		if(gCurrentObjectSelected)
+			GX_SetSelection(gCurrentObjectSelected, false, true); 
+		var gripperNode =  document.getElementById('gripper'); 
+		gripperNode.setAttribute('x', '0'); 
+		gripperNode.setAttribute('y', '0');
+		gripperNode.setAttribute('width', '0');
+		gripperNode.setAttribute('height', '0');
+		gripperNode.setAttribute('visibility', 'visible'); 
+		GX_SetSelection(gCurrentObjectSelected, true, false); 
+		gNewObjectID = 'gripper'; 
+		GX_StartFreeDraw();		 
+		gEnableMultiSelection = true; 
+		break; 
 	case 'svgdim_icon':
 		var svgdatanode = document.getElementById('SVGOBJECTCONTAINER'); 
 		var width = svgdatanode.getAttribute('width'); 
@@ -5293,26 +5315,28 @@ function GX_SelectObjectInMultiMode(Node)
 		//get the Rect Object DIm 
 	
 	//create a clone from gripper
-	var gripperNode = document.getElementById('gripper'); 	
-	gripperNode.removeAttribute('stroke-opacity'); 
-	var gripParentNode = gripperNode.parentNode;
-	var gripClonenode = gripperNode.cloneNode(true); 
-	gripClonenode.setAttribute('id', Node.id + 'GRIPPER'); 
-	gripClonenode.setAttribute('class', 'CLONED_GRIPPERS'); 
-	gripClonenode.setAttribute('visibility', 'visible'); 
+	if(gEnableMultiSelection == false){
+		var gripperNode = document.getElementById('gripper'); 	
+		gripperNode.removeAttribute('stroke-opacity'); 
+		var gripParentNode = gripperNode.parentNode;
+		var gripClonenode = gripperNode.cloneNode(true); 
+		gripClonenode.setAttribute('id', Node.id + 'GRIPPER'); 
+		gripClonenode.setAttribute('class', 'CLONED_GRIPPERS'); 
+		gripClonenode.setAttribute('visibility', 'visible'); 
+		
+		if(multiNodeArrLen < 1)
+			gripClonenode.setAttribute('stroke', gMultiSelColor1); 
+		else
+			gripClonenode.setAttribute('stroke', gMultiSelColor2);	
+		gripClonenode = gripParentNode.appendChild(gripClonenode); 
+		
+		objDim.x -= 5;
+		objDim.y -= 5; 
+		objDim.width += 10; 
+		objDim.height += 10; 		
+		GX_SetRectObjectDim(gripClonenode, objDim); 
+	}
 	
-	if(multiNodeArrLen < 1)
-		gripClonenode.setAttribute('stroke', gMultiSelColor1); 
-	else
-		gripClonenode.setAttribute('stroke', gMultiSelColor2);	
-	gripClonenode = gripParentNode.appendChild(gripClonenode); 
-	
-	objDim.x -= 5;
-	objDim.y -= 5; 
-	objDim.width += 10; 
-	objDim.height += 10; 
-	
-	GX_SetRectObjectDim(gripClonenode, objDim); 
 	gbMultiSelection = true; 
 	gMultiNodeArray.push(Node.id); 
 	//add iD woith ObjectID + 'gripper'
@@ -6313,7 +6337,8 @@ function OnFreeDrawDragStart(evt){
     var ClientX = new Number(evt.clientX - gClientXOffset); 
 	var ClientY =  new Number(evt.clientY- gClientYOffset); 
 	var objectType = gCurrentObjectSelected.classList[1]; 
-	
+	if(gEnableMultiSelection == true)
+		objectType = 'RECTANGLE'; 
 	if(bDraw == false)
 	{
 		gFreeDrawStarted = false; 
@@ -6369,6 +6394,8 @@ function OnFreeDrawDragStart(evt){
 function OnFreeDrawDragEnd(evt){	
 	
 	var objectType = gCurrentObjectSelected.classList[1]; 
+	if(gEnableMultiSelection == true)
+		objectType = 'RECTANGLE'; 
 	gsvgRootNode.setAttribute("cursor", "auto");		
 	GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, false);
 	if(objectType == 'FREEDRAW_PATH')
@@ -6385,11 +6412,22 @@ function OnFreeDrawDragEnd(evt){
     	GX_SaveObjectProperties(gCurrentObjectSelected, true);		
 	}		
 	 gFreeDrawStarted = false; 
-	 GX_SetSelection(gCurrentObjectSelected, true, true);
+	 //GX_SetSelection(gCurrentObjectSelected, true, true);
 	 var JQSel = '#drawingpen'; 
 	 $(JQSel).css('visibility', 'hidden'); 
 	 var JQSel = 'freedraw'; 
 	 $(JQSel).attr('pointer-events', 'visible');
+	 if(gEnableMultiSelection == true){
+		 var RoIDim = GX_GetRectObjectDim(gCurrentObjectSelected);		
+		 RoIDim = GX_GetObjectsWithinRoI(RoIDim, gObjectList);
+		 var gripperSel = '#gripper'; 
+		 $(gripperSel)[0].setAttribute('x',RoIDim.x); 
+		 $(gripperSel)[0].setAttribute('y',RoIDim.y); 
+		 $(gripperSel)[0].setAttribute('width',RoIDim.width); 
+		 $(gripperSel)[0].setAttribute('height',RoIDim.height); 
+		 return ; 
+	 }
+	 GX_SetSelection(gCurrentObjectSelected, true, true);
 	// Debug_Message('Drag End'); 
 }
 
@@ -6399,6 +6437,8 @@ function OnFreeDrawDrag(evt)
 	 if (bDraw != true)
          return; 
 	 var objType = gCurrentObjectSelected.classList[1];
+	 if(gEnableMultiSelection == true)
+		 objType = 'RECTANGLE'; 
      var node = evt.target;
      var ClientX = new Number(evt.clientX - gClientXOffset); 
  	 var ClientY =  new Number(evt.clientY- gClientYOffset); 	
@@ -6408,6 +6448,7 @@ function OnFreeDrawDrag(evt)
 	 Y = Math.round((Y + window.pageYOffset - gCursorYOffset)*gZoomFactor);	
 	 X += gPanX;
 	 Y += gPanY; 
+	 
 	
 	 if(gSnapToGrid == true)
 	 {
@@ -8560,3 +8601,155 @@ function GX_DeleteConfirmDlgOK(){
 	 GX_RemoveObject(gCurrentObjectSelected); 
 	 WAL_expandAllTreeItems(gTreeNodeID, true);
 }
+
+function GX_PopulateObjectList(ObjectType)
+{
+	 var ObjectList = new Array(); 
+	 var animInfo; 
+	 var JQSel = '';
+	 if(ObjectType == 'SHAPE_OBJECT')
+		 JQSel = '.SVG_SHAPE_OBJECT'; 
+	 else  if(ObjectType == 'PATH_OBJECT')
+		 JQSel = '.SVG_PATH_OBJECT'; 
+	 else if(ObjectType == 'ALL_OBJECTS')
+	 {
+		 JQSel = '.SVG_SHAPE_OBJECT';	 
+		// gAnimList = new Array(); 
+	 }		 
+    var size = $(JQSel).size(); 
+    var num = $(JQSel).size();
+	 var DOMArr = $(JQSel).toArray(); 
+	 for(var k=0; k < DOMArr.length; k++)
+	 {
+		var objID = DOMArr[k].getAttribute('id'); 			
+		var objDim = GX_GetRectObjectDim($('#'+objID)[0]);
+		var left = new Number(objDim.x); 
+		var top = new Number(objDim.y); 
+		var right = new Number(left + objDim.width); 
+		var bottom = new Number(top + objDim.height); 
+		var objarr = [objID, 'SVG_SHAPE_OBJECT', left, top, right, bottom ]; 	
+		ObjectList.push(objarr); 
+		
+		//now find animation object child 
+		var childNode = DOMArr[k].firstElementChild;  		
+		while(childNode)
+		{
+			GX_UpdateAnimInfoInList(childNode);	
+			childNode = childNode.nextSibling; 
+			
+		} 	//while		
+	 }
+	if(ObjectType == 'ALL_OBJECTS')
+	{
+		 JQSel = '.SVG_PATH_OBJECT'; 
+	 	 var size = $(JQSel).size(); 
+	     var num = $(JQSel).size();
+	 	 var DOMArr1 = $(JQSel).toArray(); 
+	 	 for(var k=0; k < DOMArr1.length; k++)
+	 	 {
+	 		var objID = DOMArr1[k].getAttribute('id'); 	
+	 		var objDim = GX_GetRectObjectDim($('#'+objID)[0]);
+			var left = new Number(objDim.x); 
+			var top = new Number(objDim.y); 
+			var right = new Number(left + objDim.width); 
+			var bottom = new Number(top + objDim.height); 
+	 		var objarr = [objID, 'SVG_PATH_OBJECT', left, top, right, bottom]; 		 
+	 		ObjectList.push(objarr); 
+	 		
+	 		var childNode = DOMArr1[k].firstElementChild;  		
+	 		while(childNode)
+	 		{
+	 			GX_UpdateAnimInfoInList(childNode);	
+	 			childNode = childNode.nextSibling; 
+	 			
+	 		} 	//while
+	 	 } 	 	
+	 	 
+	 	 //text object 
+	 	JQSel = '.SVG_TEXT_OBJECT'; 
+	 	 var size = $(JQSel).size(); 
+	     var num = $(JQSel).size();
+	 	 var DOMArr1 = $(JQSel).toArray(); 
+	 	 for(var k=0; k < DOMArr1.length; k++)
+	 	 {
+	 		var objID = DOMArr1[k].getAttribute('id'); 	
+	 		var objDim = GX_GetRectObjectDim($('#'+objID)[0]);
+			var left = new Number(objDim.x); 
+			var top = new Number(objDim.y); 
+			var right = new Number(left + objDim.width); 
+			var bottom = new Number(top + objDim.height); 
+			
+	 		var objarr = [objID, 'SVG_TEXT_OBJECT', left, top, right, bottom]; 		 
+	 		ObjectList.push(objarr); 
+	 		
+	 		var childNode = DOMArr1[k].firstElementChild;  		
+	 		while(childNode)
+	 		{
+	 			GX_UpdateAnimInfoInList(childNode);	
+	 			childNode = childNode.nextSibling; 
+	 			
+	 		} 	//while
+	 	 } 	 			
+	} 		
+	
+	return ObjectList;  	 	
+}
+
+
+function GX_IsWithinROI(ObjLeft, ObjTop, ObjRight, ObjBottom, RoILeft, RoITop, RoIRight, RoIBottom){
+	var bRetVal = false; 
+	with (Math){
+		var deltaLeft  = ObjLeft - RoILeft; 
+		var deltaRight = RoIRight - ObjRight;
+		var deltaTop  = ObjTop - RoITop; 
+		var deltaBottom  = RoIBottom - ObjBottom; 
+	}
+	if( (deltaLeft < 0) || (deltaRight < 0) || (deltaTop < 0) || (deltaBottom < 0) )
+		bRetVal = false; 
+	else
+		bRetVal = true; 	
+	return bRetVal;	
+}
+var minLeft, minTop, maxRight, maxBottom ; 
+function GX_GetObjectsWithinRoI(RoIDim, objectList){
+	//run a loop around list objectList
+	gObjectListInRoI = new Array(); 	
+	var RoILeft = new Number(RoIDim.x); 
+	var RoITop  = new Number(RoIDim.y); 
+	var RoIRight = new Number(RoIDim.x + RoIDim.width); 
+	var RoIBottom = new Number(RoIDim.y + RoIDim.height); 
+	
+	var ObjLeft, ObjTop, ObjRight, ObjBottom; 
+	var objItem ; 
+	var bObjectinRoI = false; 
+	var newItem ; 
+	var objNode;
+	//check if target object is within the RoI 
+	minLeft = minTop = new Number(5000); 
+	maxRight = maxBottom = new Number(0); 	
+	for(var j = 0; j < gObjectList.length; j++){		 
+		objItem = gObjectList[j]; 
+		ObjLeft = new Number(objItem[2]);
+		ObjTop = new Number(objItem[3]);
+		ObjRight = new Number(objItem[4]); 
+		ObjBottom = new Number(objItem[5]);
+		bObjectinRoI = GX_IsWithinROI(ObjLeft, ObjTop, ObjRight, ObjBottom, RoILeft, RoITop, RoIRight, RoIBottom);
+		if(bObjectinRoI == true){
+			objNode =  document.getElementById(objItem[0]); 
+			GX_SelectObjectInMultiMode(objNode); 
+			minLeft = Math.min(ObjLeft, minLeft); 
+			minTop = Math.min(ObjTop, minTop); 
+			maxRight  = Math.max(ObjRight, maxRight); 
+			maxBottom = Math.max(ObjBottom, maxBottom); 
+		}
+	}	
+	//if yes then put into a new array
+	//now set the dimension of the RoI to the tightest fitting rectangle 
+	RoIDim.x = minLeft; 
+	RoIDim.y = minTop; 
+	RoIDim.width = new Number(maxRight - minLeft);
+	RoIDim.height = new Number(maxBottom - minTop); 
+	return RoIDim; 
+	
+}
+

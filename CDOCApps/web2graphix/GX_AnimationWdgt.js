@@ -1149,7 +1149,7 @@ function GX_GetAnimParamsFromUI(inputParam)
                                
  }
  
- 
+ /*
 function GX_PopulateObjectList(ObjectType)
  {
 	 var ObjectList = new Array(); 
@@ -1226,6 +1226,8 @@ function GX_PopulateObjectList(ObjectType)
  	
  	return ObjectList;  	 	
  }
+ */
+ 
 /*
 function GX_SortAnimListInDisplayOrder(animList){
 	

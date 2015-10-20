@@ -124,6 +124,7 @@
     	</div> <!-- layout_interface -->
     	<div id='zoompan_interface' style="display: none; position:absolute; left:10px; top: 40px;" class='PROPERTY_INTERFACE'>
     		<div id='snapeditgroup'  style="display:inline-block; vertical-align: top; border:none; width:auto; height:32px; padding-top:1px; padding-right:1px; border-right: ridge 2px #f0f0f0;">
+    			<div class="BTN_CONTAINER" style='border-right: ridge 2px #f0f0f0;'><input class='dimaligngroup'  type = "image" id='multiselect_icon' value=''  src='../CommonCSS/icons/Version1/multiselect.png'  data-tooltiptext='Multiple Selection' data-helptext='Drag the mouse to choose multiple objects' /></div>
     		    <div class="BTN_CONTAINER" style='border-right: ridge 2px #f0f0f0;'><input class='dimaligngroup'  type = "image" id='svgdim_icon' value=''  src='../CommonCSS/icons/Version1/svgdim.png'  data-tooltiptext='Container Dimension' data-helptext='Modifies Dimensions of the Containing Rectangle' /></div>
    		    	<div id='snaptogrid' style="display:inline-block; margin-left:1px; margin-top:1px;" data-tooltiptext='Snap to Grid' data-helptext='Snaps to the Grid when Object is moved or resized' >Snap-To-Grid</div>
    		    	<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='grid_icon' value=''  src='../CommonCSS/icons/Version1/grid.png' data-tooltiptext='Show/Hide Grid' data-helptext='Shows or Hides the Grid'/></div>
@@ -304,7 +305,7 @@
         	<path id="erasepath" visibility="hidden" class='ERASE_PATH' stroke="white" stroke-width="4" fill="none" d="" />
         	<rect id='eraser1_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
         	<rect id='eraser2_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
-			<rect id="gripper_orig" x="10" y="10" width="50" height="50" stroke="blue" stroke-width="3" fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible"  onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)"></rect>
+			<rect id="gripper_orig" x="10" y="10" width="50" height="50" stroke="indigo" stroke-width="1" fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible"  onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)"></rect>
 			
 			<circle id="markerTL_orig" class="CUSTOM_MARKER_ORIG" cx="0" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="nw-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
 	        <circle id="markerTM_orig" class="CUSTOM_MARKER_ORIG" cx="25" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="n-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
