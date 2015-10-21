@@ -7,7 +7,7 @@ sObjAttrParam.prototype.prevValue = '';
 sObjAttrParam.prototype.Status = '';
 */
 sObjAttrParam.prototype.ID = 0;
-sObjAttrParam.prototype.type = 'ATTRIBUTE ';//can be sub-attribute as well 
+sObjAttrParam.prototype.type = 'ATTRIBUTE';//can be sub-attribute as well 
 sObjAttrParam.prototype.name = '';
 sObjAttrParam.prototype.currValue = '';
 sObjAttrParam.prototype.prevValue = '';
@@ -15,7 +15,7 @@ sObjAttrParam.prototype.Status = '';
 
 function sObjAttrParam() {
 	sObjAttrParam.prototype.ID = 0;
-	sObjAttrParam.prototype.type = 'ATTRIBUTE ';//can be sub-attribute as well 
+	sObjAttrParam.prototype.type = 'ATTRIBUTE';//can be sub-attribute as well 
 	sObjAttrParam.prototype.name = '';
 	sObjAttrParam.prototype.currValue = '';
 	sObjAttrParam.prototype.prevValue = '';

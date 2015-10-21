@@ -1341,8 +1341,7 @@ function GX_MenuItemShow(menuid, itemText)
 		 break;
 	
 		 
-	 case 'removenode':
-		 
+	 case 'removenode':		 
 		 WAL_showModalWindow('deleteConfirmDlg','', ''); 
 		// GX_RemoveObject(gCurrentObjectSelected); 
 		 //WAL_expandAllTreeItems(gTreeNodeID, true);
@@ -2207,6 +2206,7 @@ function GX_ResetAllSelections()
 	$(gDivPathMarkerSel).css({visibility:'hidden'});
 	if(gbMultiSelection == true)
 	{
+		EL_SaveEditList(gCompactEditList, true); 
 		GX_DeselectObjectFromMultiMode(); 
 		gbMultiSelection = false;		
 	}
@@ -4418,9 +4418,17 @@ function GX_ToolbarHandler(Node)
 		break; 
 	case 'stroke_color_icon':
 		WAL_hideWidget('colorpickwidget', true); 
+		var initColVal = '#ffffff'; 
+		if(gbMultiSelection == true){
+			if(gMultiNodeArray.length < 1)
+				return ; 				
+			WAL_showColorPickerWidget('colorpickwidget', 'GX_ApplyPropertyToMultipleObjects', 'stroke_color_icon','stroke', initColVal, 0);
+			return ; 
+		}
+		
 		if(!gCurrentObjectSelected)
 			return ; 
-		var initColVal = gCurrentObjectSelected.getAttribute('stroke'); 		
+		initColVal = gCurrentObjectSelected.getAttribute('stroke');		
 		WAL_showColorPickerWidget('colorpickwidget', '', 'stroke_color_icon','stroke', initColVal, gCurrentObjectSelected.id);
 		break; 
 	
@@ -4671,6 +4679,8 @@ function GX_showEditorInterface(Mode)
 	switch(Mode)
 	{
 	case 'LAYOUT_MODE':
+		
+		WAL_hideWidget('multiselect_inteface', false);
 		WAL_hideWidget('zoompan_interface', false); 
 		var width = $('#zoompan_interface').width(); 
 		var left = $('#zoompan_interface').position().left; 
@@ -4700,6 +4710,7 @@ function GX_showEditorInterface(Mode)
 		gObjectEditMode = 'PROPERTIES_MODE';
 		gGradientList = GX_GetGradientList(); 
 		GX_UpdateGradientList(gGradientList);
+		WAL_hideWidget('multiselect_inteface', false);
 		WAL_hideWidget('common_property_interface', false); 				
 		break;			
 	case 'STROKE_MODE':
@@ -5354,7 +5365,12 @@ function GX_SelectObjectInMultiMode(Node)
 function GX_DeselectObjectFromMultiMode()
 {
 	var JQSel = '.CLONED_GRIPPERS'; 
-	$(JQSel).remove(); 	
+	$(JQSel).remove(); 
+	for(var j=0; j < gMultiNodeArray.length; j++){
+		var objNode = $('#' + gMultiNodeArray[j])[0]; 
+		GX_SetObjectAttribute(objNode, '', '', true, false); 		
+	}
+	
 	gMultiNodeArray.splice(0, gMultiNodeArray.length); 
 }
 
@@ -5437,6 +5453,7 @@ function GX_AlignDimension(alignType)
 		GX_SetRectObjectDim(gripperNode, gripperDim);		
 		//set attribute 
 	}	
+	 //EL_SaveEditList(gCompactEditList, true); 
 }
 
 function GX_CopyObject(objNode)
@@ -5580,7 +5597,7 @@ function GX_DDLHandler(Node, value)
 		return ; 	
 	}
 	
-	if(!gCurrentObjectSelected)
+	if( (!gCurrentObjectSelected) && (gbMultiSelection == false) ) 
 		return ; 
 	
 	if(wdgtId == 'strokedashDDL')
@@ -5647,9 +5664,15 @@ function GX_DDLHandler(Node, value)
 	else if(wdgtId == 'fillcolorDDL')
 	{
 		if(value == 'Solid'){
-			if(!gCurrentObjectSelected)
-				return ; 
-		 gInitFillValue = gCurrentObjectSelected.getAttribute('fill');
+			//if(!gCurrentObjectSelected)
+			//	return ; 
+			if(gbMultiSelection == true){
+				gInitFillValue = 'none'; 
+			}
+			else{
+				 gInitFillValue = gCurrentObjectSelected.getAttribute('fill');
+			}
+		
 		 if(gInitFillValue == 'none')
 			 gInitFillValue = '#aaaaaa';
 		 
@@ -7062,19 +7085,40 @@ function GX_ColorWidgetCANCEL(event)
 	gCurrentObjectSelected.setAttribute(colAttrName, initcolAttrValue );
 }
 
-function GX_ColorWidgetOK(event)
-{
-
-	if(!gCurrentObjectSelected)
-		return ;
+function GX_ColorWidgetOK(event){	
 	var colWdgt = document.getElementById('colorpickwidget'); 
 	if(!colWdgt)
 	 return ;
 	var colAttrName = colWdgt.getAttribute('data-attrName');
 	var colorval = WAL_getColorPickerValue('colorpickwidget');
+	
+	var objectAttr =  new sObjAttrParam();	
+	if(gbMultiSelection == true){
+		for(var j=0; j < gMultiNodeArray.length; j++){
+			//var objNode = $('#' + gMultiNodeArray[j])[0]; 
+			//GX_SetObjectAttribute(objNode, colAttrName, colorval, true, false);
+			objectAttr.ID = gMultiNodeArray[j]; 
+			objectAttr.name = colAttrName; 
+			objectAttr.currValue = colorval; 
+			objectAttr.prevValue = ''; 
+			EL_UpdateCompactList(objectAttr, gCompactEditList); 
+		}
+		return ; 
+	}
+	if(!gCurrentObjectSelected)
+		return ;
 	GX_SetObjectAttribute(gCurrentObjectSelected, colAttrName, colorval, true, false); 
 }
-
+/*
+ *  compactList[indexToWrite].ID = attributeParams.ID;		
+	compactList[indexToWrite].type = attributeParams.type; 
+	compactList[indexToWrite].name =  attributeParams.name; 
+	compactList[indexToWrite].currValue = attributeParams.currValue;
+	compactList[indexToWrite].prevValue = ""; 
+	compactList[indexToWrite].Status = 'PENDING';	
+	
+	EL_UpdateCompactList(attributeParams, compactList)
+ */
 function GX_StrokeColorHandler(attrName, value)
 {
 	if(!gCurrentObjectSelected)
@@ -7708,6 +7752,13 @@ function GX_ShowFillColorWidget()
 {
 	//var btnID =  event.target.id; 
 	var attrName = 'fill';
+	var initColVal = '#ffffff'; 
+	if(gbMultiSelection == true){
+		if(gMultiNodeArray.length < 1)
+			return ; 				
+		WAL_showColorPickerWidget('colorpickwidget', 'GX_ApplyPropertyToMultipleObjects', 'fill_color_icon','fill', initColVal, 0);
+		return ; 
+	}
 	if(!gCurrentObjectSelected)
 		return ; 
 	var tgtNode = gCurrentObjectSelected;    
@@ -8596,6 +8647,18 @@ function GX_MoveSelectedObject(relX, relY){
 }
 
 function GX_DeleteConfirmDlgOK(){
+	
+	if(gEnableMultiSelection == true){
+		for(var k=0; k < gMultiNodeArray.length; k++){
+			var objNode =  document.getElementById(gMultiNodeArray[k]);
+			GX_RemoveObject(objNode); 
+		}
+		WAL_expandAllTreeItems(gTreeNodeID, true);
+		var gripperSel = '#gripper'; 
+		$(gripperSel)[0].setAttribute('visibility', 'hidden'); 
+		return ; 
+		
+	}
 	if(!gCurrentObjectSelected)
 		return ; 
 	 GX_RemoveObject(gCurrentObjectSelected); 
@@ -8749,7 +8812,18 @@ function GX_GetObjectsWithinRoI(RoIDim, objectList){
 	RoIDim.y = minTop; 
 	RoIDim.width = new Number(maxRight - minLeft);
 	RoIDim.height = new Number(maxBottom - minTop); 
-	return RoIDim; 
-	
+	return RoIDim; 	
 }
 
+
+function GX_ApplyPropertyToMultipleObjects(attrName, value){
+	
+	if(gEnableMultiSelection != true)
+		return ;
+	
+	var objNode = 0; 	
+	
+	for(var i=0; i < gMultiNodeArray.length; i++){
+		$('#' +gMultiNodeArray[i])[0].setAttribute(attrName, value);		
+	}
+}
