@@ -4187,17 +4187,21 @@ function GX_EditBoxValueChange(value, widgetnode)
 {
 	var DimValue; 
 	var retVal; 
-	if(!gCurrentObjectSelected)
+	if((!gCurrentObjectSelected) && (gbMultiSelection == false))
 		return ; 	
-	var nodeClass =  gCurrentObjectSelected.classList[0]; //('class');	
-	var wdgtType = widgetnode.getAttribute('type'); 
-	DimValue = GX_GetRectObjectDim(gCurrentObjectSelected); 
-	if(nodeClass == 'SVG_TEXT_OBJECT' )
-	{
-		DimValue.x = gCurrentObjectSelected.getAttribute('x'); 
-		DimValue.y = gCurrentObjectSelected.getAttribute('y'); 
-	}		
-	var currnodeSel = gCurrentObjectSelected;	
+	if(gCurrentObjectSelected){
+		var nodeClass =  gCurrentObjectSelected.classList[0]; //('class');	
+		var wdgtType = widgetnode.getAttribute('type'); 
+		DimValue = GX_GetRectObjectDim(gCurrentObjectSelected); 
+		if(nodeClass == 'SVG_TEXT_OBJECT' )
+		{
+			DimValue.x = gCurrentObjectSelected.getAttribute('x'); 
+			DimValue.y = gCurrentObjectSelected.getAttribute('y'); 
+		}	
+	
+		var currnodeSel = gCurrentObjectSelected;	
+	}
+	nodeClass = 'MULTIOBJECTS'; 
 	if(nodeClass == 'SVG_TEXT_OBJECT')
 	{
 		switch(widgetnode.id)
@@ -4245,9 +4249,10 @@ function GX_EditBoxValueChange(value, widgetnode)
 			return ; 			
 		}//if(wdgtType == 'DIMENSION')				
 	} //(nodeClass == 'SVG_SHAPE_OBJECT')
-	var objType = currnodeSel.classList[1]; 
+	if(currnodeSel)
+		var objType = currnodeSel.classList[1]; 
 	
-	if( (nodeClass == 'SVG_SHAPE_OBJECT')||(nodeClass == 'SVG_PATH_OBJECT')|| (nodeClass == 'SVG_TEXT_OBJECT') )
+	if( (nodeClass == 'SVG_SHAPE_OBJECT')||(nodeClass == 'SVG_PATH_OBJECT')|| (nodeClass == 'SVG_TEXT_OBJECT') || (nodeClass == 'MULTIOBJECTS' ) )
 	{
 		if(nodeClass == 'SVG_PATH_OBJECT'){
 			if(widgetnode.id == 'marker_strokeWeightIP'){
@@ -4259,7 +4264,13 @@ function GX_EditBoxValueChange(value, widgetnode)
 		}
 		if(widgetnode.id == 'strokeWeightIP')
 		{
-			GX_SetObjectAttribute(gCurrentObjectSelected, 'stroke-width', value, true, false);
+			if(gbMultiSelection == true){
+				GX_ApplyPropertyToMultipleObjects('stroke-width', value); 
+				GX_UpdatePropertyForMultipleObjects('stroke-width', value); 
+			}
+			else{
+				GX_SetObjectAttribute(gCurrentObjectSelected, 'stroke-width', value, true, false);
+			}
 			return; 
 		}
 		/*else if(widgetnode.id == 'strokeOpacityIP')
@@ -4271,7 +4282,14 @@ function GX_EditBoxValueChange(value, widgetnode)
 		else if(widgetnode.id == 'fillopacityIP')
 		{
 			var opacity = value; 
-			GX_SetObjectAttribute(gCurrentObjectSelected, 'fill-opacity', opacity, true, false);
+			if(gbMultiSelection == true){
+				GX_ApplyPropertyToMultipleObjects('fill-opacity', opacity); 
+				GX_UpdatePropertyForMultipleObjects('fill-opacity', opacity); 
+			}
+			else{
+				GX_SetObjectAttribute(gCurrentObjectSelected, 'fill-opacity', opacity, true, false);
+			}
+			
 			return; 
 		} 
 		
@@ -5606,8 +5624,14 @@ function GX_DDLHandler(Node, value)
 	
 	if(wdgtId == 'strokedashDDL')
 	{
-		//GX_SetObjectAttribute(gCurren, AttrName, AttrValue, bListStore, bUpdateUI)
-		GX_SetObjectAttribute(gCurrentObjectSelected, "stroke-dasharray", value, true, false);
+		if(gbMultiSelection == true){
+			GX_ApplyPropertyToMultipleObjects('stroke-dasharray', value); 
+			GX_UpdatePropertyForMultipleObjects('stroke-dasharray', value); 
+		}
+		else{
+			GX_SetObjectAttribute(gCurrentObjectSelected, "stroke-dasharray", value, true, false);
+		}
+		
 	}
 	else if(wdgtId == 'strokeLinejoinDDL')
 	{
@@ -5617,8 +5641,15 @@ function GX_DDLHandler(Node, value)
 	else if(wdgtId == 'gradlistDDL')
 	{
 		if(value == 'none')
-		{	if(gCurrentObjectSelected) 
+		{	
+			if(gbMultiSelection == true){
+				GX_ApplyPropertyToMultipleObjects("fill", 'none'); 
+				GX_UpdatePropertyForMultipleObjects("fill", 'none'); 
+			}
+			else if(gCurrentObjectSelected){
 				GX_SetObjectAttribute(gCurrentObjectSelected, "fill", 'none', true, false);
+			} 
+				
 			return; 
 		}
 		else if(value == 'New:Linear')
@@ -5644,13 +5675,16 @@ function GX_DDLHandler(Node, value)
 			Debug_Message("Grad title not Found");
 			return; 
 		}
-		//add it to the list items		
+		//add it to the list items	
+		var fillurl = 'url(#' + gradID + ')';	
+		if(gbMultiSelection == true){
+			GX_ApplyPropertyToMultipleObjects("fill", fillurl); 
+			GX_UpdatePropertyForMultipleObjects("fill", fillurl); 
+		}
 		if(gCurrentObjectSelected) 
-		{
-			 
+		{		
 			if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
-			{
-				var fillurl = 'url(#' + gradID + ')';				
+			{							
 				GX_SetObjectAttribute(gCurrentObjectSelected, "fill", fillurl, true, false);				
 			}			
 		}		
@@ -8814,10 +8848,11 @@ function GX_GetObjectsWithinRoI(RoIDim, objectList){
 	}	
 	//if yes then put into a new array
 	//now set the dimension of the RoI to the tightest fitting rectangle 
-	RoIDim.x = minLeft; 
-	RoIDim.y = minTop; 
-	RoIDim.width = new Number(maxRight - minLeft);
-	RoIDim.height = new Number(maxBottom - minTop); 
+	var offset = new Number(10); 
+	RoIDim.x = minLeft - offset; 
+	RoIDim.y = minTop - offset; 
+	RoIDim.width = new Number(maxRight - minLeft + offset);
+	RoIDim.height = new Number(maxBottom - minTop + offset); 
 	return RoIDim; 	
 }
 
