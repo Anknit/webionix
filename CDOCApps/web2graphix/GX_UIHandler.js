@@ -934,7 +934,10 @@ function GX_GradDlgOK() {
         	gGradientList.push(gradInfo); 
         }        
         GX_UpdateGradientList(gGradientList); 
-        WAL_SetItemByValueInList('gradlistDDL', gradTitle, 'true'); 
+        WAL_SetItemByValueInList('gradlistDDL', gradTitle, 'true');
+       
+        var fillurl = 'url(#' + currGradID + ')';
+        GX_UpdatePropertyForMultipleObjects('fill',fillurl); 
 }
 function GX_GradDlgCancel() {
     //alert("Cancel");
@@ -4380,6 +4383,7 @@ function GX_ToolbarHandler(Node)
 	case 'multiselect_icon':
 		if(gCurrentObjectSelected)
 			GX_SetSelection(gCurrentObjectSelected, false, true); 
+		gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
 		var gripperNode =  document.getElementById('gripper'); 
 		gripperNode.setAttribute('x', '0'); 
 		gripperNode.setAttribute('y', '0');
@@ -5696,8 +5700,12 @@ function GX_DDLHandler(Node, value)
 				Debug_Message("Grad title not Found");
 				return; 
 			}
-			//add it to the list items		
-			if(gCurrentObjectSelected) 
+			//add it to the list items
+			var fillurl = 'url(#' + gradID + ')';
+			if(gbMultiSelection == true){						
+					GX_ApplyPropertyToMultipleObjects('fill', fillurl);
+			}
+			else if(gCurrentObjectSelected) 
 			{
 				var objectType = gCurrentObjectSelected.classList[0]; 
 				if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
@@ -5716,13 +5724,17 @@ function GX_DDLHandler(Node, value)
 				Debug_Message("Grad title not Found");
 				return; 
 			}
-			//add it to the list items		
-			if(gCurrentObjectSelected) 
+			//add it to the list items	
+			var fillurl = 'url(#' + gradID + ')';
+			if(gbMultiSelection == true){						
+				GX_ApplyPropertyToMultipleObjects('fill', fillurl);
+			}
+			else if(gCurrentObjectSelected) 
 			{
 				var objectType = gCurrentObjectSelected.classList[0]; 
 				if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
 				{
-					var fillurl = 'url(#' + gradID + ')';				
+					//var fillurl = 'url(#' + gradID + ')';				
 					GX_SetObjectAttribute(gCurrentObjectSelected, "fill", fillurl, true, false);				
 				}			
 			}	
@@ -7094,15 +7106,9 @@ function GX_ColorWidgetOK(event){
 	
 	var objectAttr =  new sObjAttrParam();	
 	if(gbMultiSelection == true){
-		for(var j=0; j < gMultiNodeArray.length; j++){
-			//var objNode = $('#' + gMultiNodeArray[j])[0]; 
-			//GX_SetObjectAttribute(objNode, colAttrName, colorval, true, false);
-			objectAttr.ID = gMultiNodeArray[j]; 
-			objectAttr.name = colAttrName; 
-			objectAttr.currValue = colorval; 
-			objectAttr.prevValue = ''; 
-			EL_UpdateCompactList(objectAttr, gCompactEditList); 
-		}
+		//for(var j=0; j < gMultiNodeArray.length; j++){			
+		GX_UpdatePropertyForMultipleObjects(colAttrName,colorval ); 
+		//}
 		return ; 
 	}
 	if(!gCurrentObjectSelected)
@@ -8825,5 +8831,19 @@ function GX_ApplyPropertyToMultipleObjects(attrName, value){
 	
 	for(var i=0; i < gMultiNodeArray.length; i++){
 		$('#' +gMultiNodeArray[i])[0].setAttribute(attrName, value);		
+	}
+}
+
+
+function GX_UpdatePropertyForMultipleObjects(attrName, attrValue){
+	if(gbMultiSelection == true){
+		var objectAttr =  new sObjAttrParam();	
+		for(var j=0; j < gMultiNodeArray.length; j++){			
+			objectAttr.ID = gMultiNodeArray[j]; 
+			objectAttr.name = attrName; 
+			objectAttr.currValue = attrValue; 
+			objectAttr.prevValue = ''; 
+			EL_UpdateCompactList(objectAttr, gCompactEditList); 
+		}
 	}
 }
