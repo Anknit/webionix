@@ -612,6 +612,52 @@ function WAL_createDropdownList(ID, Width, Height, AutoOpen, DataSource, handler
     
     return;
 }
+
+function WAL_createDropdownListWithCheckbox(ID, Width, Height, AutoOpen, DataSource, handlerFnName, DDLdropDownHeight) {
+	 if (gInitialized != true)
+	        return;
+	    var widgetType = gWidgetType['jqxDropDownList']; 
+	    var JQSel = "#" + ID;
+	    var retval = WAL_IsWidgetCreated(ID, widgetType);
+	    if (retval == true)
+	        return;
+	    $(JQSel).jqxDropDownList({ width: Width, height: Height, theme: gTheme, autoOpen: AutoOpen, source: DataSource,  animationType: 'slide', openDelay:256, autoDropDownHeight:false,incrementalSearch : true, selectedIndex:1,
+	    	  dropDownHeight: DDLdropDownHeight, checkboxes:true});
+	    $(JQSel).attr(widgetType, "true");
+	    $(JQSel).attr('data-internalevent', 'false');
+	    $(JQSel).on('checkChange', function(event) {
+	    	alert('Check change event called'); 
+	    	 var flag = $(JQSel).attr('data-internalevent');
+		     if(flag ==  'true')
+		     {
+		    	 $(JQSel).attr('data-internalevent', 'false');
+		    	 return ;  
+		     }   
+	        var item = $(this).jqxDropDownList('getSelectedItem');
+	        var value = item.value; 
+	        var Node = event.currentTarget; 
+	        var checkedstate = item.checked; 
+	        //alert(" Closing Item=" + item.label);
+	        if (handlerFnName) {
+	            // alert("Outside Handler"); 
+	            var expr = handlerFnName + "(Node, value, checkedstate)";
+	            eval(expr);
+	        }
+	    });
+	    
+	    $(JQSel).on('open', function(event) {
+	    	//alert("Close Event"); 
+	    	$(this).jqxDropDownList('clearSelection'); 
+	       // var itemIndex = $(this).jqxDropDownList('getSelectedIndex');
+	      //  $(this).jqxDropDownList('unselectIndex', itemIndex ); 
+	        //alert("Unselected now");         
+	    });
+
+	   
+	    
+	    return;
+}
+
 function WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource,  handlerFnName, DDLdropDownWidth, DDLdropDownHeight, buttonID, buttonwidth, buttonheight, tooltipID) {
 	 if (gInitialized != true)
 	        return;
