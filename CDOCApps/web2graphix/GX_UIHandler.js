@@ -8365,7 +8365,7 @@ function Smoothen(Points){
 		}
 	}*/
 	with(Math){
-		for(var i= numPts; i < srcArr.length; i++){
+		for(var i= numPts; i < srcArr.length-1; i++){
 			//now start from 5th index onwwards 
 			avgX = avgY = 0; 
 			if(i < srcArr.length - numPts){
