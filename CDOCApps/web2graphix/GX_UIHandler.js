@@ -8345,24 +8345,50 @@ function Smoothen(Points){
 	var avgX, avgY; 
 	var firstPoint = srcArr.splice(0,1);    
 	dstStr = firstPoint+' '; 
-	with(Math){
-		for(var i= 5; i < srcArr.length-5; i++){
+	var numPts = new Number(10); 
+	/*with(Math){
+		for(var i= numPts; i < srcArr.length-numPts; i++){
 			//now start from 5th index onwwards 
 			avgX = avgY = 0; 
-			for(var j = -5; j < 5; j++){
+			for(var j = 0-numPts; j < numPts; j++){
 				srcPoint = srcArr[i + j].split(','); 
 				avgX += new Number(srcPoint[0]); 
 				avgY += new Number(srcPoint[1]); 
 			}
 			//avgX /= 10; 
 			//avgY /= 10;
-			avgX = round(avgX / 10);
-			avgY = round(avgY / 10);
+			avgX = round(avgX / (2*numPts));
+			avgY = round(avgY / (2*numPts));
 			dstStr += avgX + ',' +  avgY + ' '; 			
 			//take -5 points and +5 points and form an average. 
 			//store it into a new array
 		}
+	}*/
+	with(Math){
+		for(var i= numPts; i < srcArr.length; i++){
+			//now start from 5th index onwwards 
+			avgX = avgY = 0; 
+			if(i < srcArr.length - numPts){
+				for(var j = 0-numPts; j < numPts; j++){
+					srcPoint = srcArr[i + j].split(','); 
+					avgX += new Number(srcPoint[0]); 
+					avgY += new Number(srcPoint[1]); 
+				}
+				//avgX /= 10; 
+				//avgY /= 10;
+				avgX = round(avgX / (2*numPts));
+				avgY = round(avgY / (2*numPts));
+				dstStr += avgX + ',' +  avgY + ' '; 
+			}//if(i < srcArr.length - numPts)
+			else{
+				srcPoint = srcArr[i].split(',')
+				dstStr += srcPoint[0] + ',' + srcPoint[1] + ' '; 
+			}
+			
+			
+		}
 	}
+	
 	
 	return dstStr; 
 	
