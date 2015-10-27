@@ -1101,3 +1101,124 @@ function GX_COMMON_updateSCNodeTitle($XMLDOM,$XMLFile, $NodeID, $nodetitle)
 	
 	
 }
+
+function GX_COMMON_ImportSVGElement($SVGDom, $SVGFilename, $srcFileName, $srcobjectID, $newObjID )
+{
+	//libxml_use_internal_errors(true);
+	//libxml_clear_errors();
+
+	$retVal = $SVGDom->load($SVGFilename);
+	if($retVal != true)
+		return 0;
+	if (!$SVGDom->validate()) {
+		return false;
+	}
+
+	libxml_clear_errors();
+	$element = 0;
+
+	//load the source XML file into a DOM
+	$srcDOM = new DOMDocument("1.0", "utf-8");
+	$retVal = $srcDOM->load($srcFileName); 
+	if($retVal != true){
+		return 0; 
+	}
+	if (!$srcDOM->validate()) {
+		return false;
+	}
+	//get the srcObj node
+	$srcNode = $srcDOM->getElementById($srcobjectID); 
+	//change the ID of this node
+	$srcNode->setAttribute('id', $newObjID); 
+	
+	$newNode = $SVGDom->importNode($srcNode, true); 
+	//now import this node into the SVGDOM 
+	//save and return 
+	$baseNode = $SVGDom->getElementById('BASEGROUP'); 
+	$baseNode =  $baseNode->parentNode; 
+	$baseNode->appendChild($newNode); 
+	$SVGDom->save($_SESSION['svg_xml_FileName']);
+	
+	//$objNode = $SVGDom->getElementById($parentID);
+	$retval = $SVGDom->saveXML($objNode);
+	return $retval;
+
+}
+
+function GX_COMMON_ExportSVGElement($SVGDom, $SVGFilename, $tgtFileName, $tgtobjectID, $title, $objectName )
+{
+	//libxml_use_internal_errors(true);
+	//libxml_clear_errors();
+
+	$retVal = $SVGDom->load($SVGFilename);
+	if($retVal != true)
+		return 0;
+	if (!$SVGDom->validate()) {
+		return false;
+	}
+
+	libxml_clear_errors();
+	$element = 0;
+
+	$svgRootNode = $SVGDom->getElementById('SVGOBJECTCONTAINER');
+	$width = $svgRootNode->getAttribute('width'); 
+	$height = $svgRootNode->getAttribute('height'); 
+	$viewboxstr = $svgRootNode->getAttribute('viewBox'); 
+	
+	//load the source XML file into a DOM
+	$tgtDom = 0; 
+	if(file_exists($tgtFileName))
+	{
+		$respData = "ALREADY_EXISTS";
+		return false;
+	}
+	if(!file_exists($tgtFileName))
+	{
+		//CREATE THE FILE
+		$fh = fopen($tgtFileName,'x+');
+		if($fh == false)
+		{
+			return false;
+		}
+		$prologstr = '<?xml version="1.0"?><!DOCTYPE svg SYSTEM "svg11.dtd">';
+		$prologstr = $prologstr . '
+		<svg id="SVGOBJECTCONTAINER"  x="0px" y="0px" width="0px" height="0px" viewBox="0 0 0 0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+		<title>' . $title . '</title><defs></defs></svg>'; 
+		
+		$retval = fwrite($fh, $prologstr);	
+		if($retval == false){
+			return false;
+		}
+		//CLOSE THE FILE
+		fclose($fh);
+		$parentID = "0";
+	}
+	
+	$tgtDom = new DOMDocument("1.0", "utf-8");
+	$retVal = $tgtDom->load($tgtFileName);
+	if($retVal != true){
+		return 0;
+	}
+	if (!$tgtDom->validate()) {
+		return false;
+	}
+	//get the srcObj node
+	$tgtNode = $SVGDom->getElementById($tgtobjectID);
+	
+	//change the ID of this node
+	$tgtNode->setAttribute('id', $objectName);
+	$tgtNode->setAttribute('class', 'GROUP ' . $objectName); 
+	$newNode = $tgtDom->importNode($tgtNode, true);
+	
+	//now import this node into the SVGDOM
+	//save and return
+	$baseNode = $tgtDom->getElementById('SVGOBJECTCONTAINER');	
+	$baseNode->setAttribute('width',$width );
+	$baseNode->setAttribute('height',$height );
+	$baseNode->setAttribute('viewBox',$viewboxstr );
+	$baseNode->appendChild($newNode);
+	$retval = $tgtDom->save($tgtFileName);
+	return $retval;
+
+}
+

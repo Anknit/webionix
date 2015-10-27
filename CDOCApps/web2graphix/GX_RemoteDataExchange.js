@@ -278,3 +278,27 @@ function GXRDE_getProjectDataPath()
 	    }
 	 return respstr; 
 }
+
+function GXRDE_ImportObject(srcFilename,srcObjID, newobjectID)
+{
+	var reqbody = "&SRCFILENAME=" + srcFilename + "&SRCOBJID=" + srcObjID + "&OBJECTID=" + newobjectID ;
+	var respstring = AJX_RequestWithReponseData("text", "OBJM", "317", reqbody);
+	if(respstring)
+		return respstring;
+	else
+		return 'ERROR';	
+}
+
+
+function GXRDE_ExportObject(tgtObjName,tgtObjID, title)
+{
+	var reqbody = "&TARGETOBJECTNAME=" + tgtObjName + "&TARGETOBJID=" + tgtObjID + 
+	"&TITLE=" + title;
+	var respstring = AJX_RequestWithReponseData("text", "OBJM", "318", reqbody);
+	if(respstring)
+		return respstring;
+	else
+		return 'ERROR';	
+}
+
+

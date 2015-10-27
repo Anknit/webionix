@@ -77,6 +77,18 @@ function GX_OBJ_ProcessRequest($reqid, &$respdata )
 		$retval = GX_OBJ_UpdateMultipleSVGAnimation($respdata);
 		return $retval;
 	}
+	else if($reqid == '317')
+	{
+		$retval = GX_ImportObject($respdata);
+		return $retval;
+	}
+	else if($reqid == '318')
+	{
+		$retval = GX_Export($respdata);
+		return $retval;
+	}
+	
+	
 	
 }
 	
@@ -908,4 +920,43 @@ function GX_OBJ_UpdateMultipleSVGAnimation(&$respData)
 	$respData = 'OK';
 	return true;
 }
+
+function GX_ImportObject(&$respData){
+	//create the source XML dom by reading from the source XML file. 
+	parse_str($respData);
+	//DEPENDING ON OBJECT TYPE CALL THE APPROPRIATE FUNCTION
+	$srcFileName = $SRCFILENAME;
+	$srcobjectID   = strtoupper($SRCOBJID);
+	$newObjID = strtoupper($OBJECTID);	
+	$SVGDom = $_SESSION['svg_xml_dom'];
+	$SVGFileName = $_SESSION['svg_xml_FileName'];
+	//get the target node. 
+	//now import into the current DOM and then save
+	//needs to be chnaged later on to give the shared folder path 
+	$srcFileName = $_SESSION['projDataPath'].$_SESSION['pathSeparator'].$srcFileName; 
+	$respData = GX_COMMON_ImportSVGElement($SVGDom, $SVGFileName, $srcFileName, $srcobjectID, $newObjID); 
+}
+
+function GX_Export(&$respData){
+	parse_str($respData);
+	//DEPENDING ON OBJECT TYPE CALL THE APPROPRIATE FUNCTION
+	$tgtObjectName = $TARGETOBJECTNAME;
+	$tgtobjectID   = strtoupper($TARGETOBJID);
+	$tgtFileName = $tgtObjectName . '.svg'; 
+	$title = $TITLE; 
+	//$newObjID = strtoupper($OBJECTID);	
+	
+	$SVGDom = $_SESSION['svg_xml_dom'];
+	$SVGFileName = $_SESSION['svg_xml_FileName'];
+	//get the target node.
+	//now import into the current DOM and then save
+	//needs to be chnaged later on to give the shared folder path
+	$tgtFileName = $_SESSION['shareddir'].$tgtFileName;	
+	$retVal = GX_COMMON_ExportSVGElement($SVGDom, $SVGFileName, $tgtFileName, $tgtobjectID, $title, $tgtObjectName ); 
+	if($retVal == true)
+		$respData = 'OK';
+	else
+		$respData = 'FAIL';
+}
+
 ?>

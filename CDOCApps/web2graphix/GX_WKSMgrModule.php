@@ -123,6 +123,7 @@ function GX_WKS_Initialize($wksname)
 	//$basedir = "C:\Program Files\wamp\www";
 	$basedir = getcwd();	
 	$basedir = rtrim($basedir, 'web2graphix'); 
+	$_SESSION['shareddir'] = $basedir . "USER_DATA" . $_SESSION['pathSeparator'] . 'shared' . $_SESSION['pathSeparator'] . 'shapes' . $_SESSION['pathSeparator']; 
 	$_SESSION['wksdir']  = $_SESSION['pathSeparator']."USER_DATA". $_SESSION['pathSeparator'].$wksname;
 	$_SESSION['wksdir']  = $basedir.$_SESSION['wksdir'];
 	

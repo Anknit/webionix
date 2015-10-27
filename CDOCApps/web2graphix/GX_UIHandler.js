@@ -39,6 +39,7 @@ var gTreeWidgetID = 'node_panel';
 var gTreeNodeID = 'node_container'; 
 var gSVGFileOpenDlg = "svgfileopendlg"; 
 var gSVGFileNameDlgID = 'newSVGFileNameDlg'; 
+var gSVGExportDlgID = 'exportDlg'; 
 var gSVGGroupNameDlgID ='newGroupNameDlg'; 
 var gSVGFileDeleteDlg = "svgfiledeletedlg"; 
 var gSVGDimensionDlg = 'svgdimensiondlg'; 
@@ -1017,6 +1018,7 @@ function GX_Initialize()
  	 	
     WAL_createWindow(gSVGFileOpenDlg,"Asset List", true, '282', '350', false,	true, false, false, false, "", 'SVGFO_LB_okbtn', 'SVGFO_LB_cancelbtn');
     WAL_createModalWindow(gSVGFileNameDlgID, '250', '150', 'pageOK', 'pageCancel');
+    WAL_createModalWindow(gSVGExportDlgID, '320', '150', 'exportOK', 'exportCancel');
     
     //create group name dialog
     WAL_createModalWindow(gSVGGroupNameDlgID, '250', '150', 'groupOK', 'groupCancel');
@@ -1316,8 +1318,12 @@ function GX_MenuItemShow(menuid, itemText)
 	 case "deletefile":
 		 GX_menu_delete_svgfrom_remote();
 		 break;
-		 
-		 
+	 case 'import':		 	
+		 GX_ImportObject(); 
+		 break; 	
+	 case 'export':
+		 WAL_showModalWindow(gSVGExportDlgID, "GX_ExportObject()", "" );			 
+		 break; 
 	 case 'save':
 		 EL_SaveEditList(gCompactEditList, true); 
 		 break; 
@@ -8383,13 +8389,9 @@ function Smoothen(Points){
 			else{
 				srcPoint = srcArr[i].split(',')
 				dstStr += srcPoint[0] + ',' + srcPoint[1] + ' '; 
-			}
-			
-			
+			}		
 		}
 	}
-	
-	
 	return dstStr; 
 	
 	
@@ -8908,3 +8910,56 @@ function GX_UpdatePropertyForMultipleObjects(attrName, attrValue){
 		}
 	}
 }
+
+function GX_ImportObject(){	
+	var srcFilename = 'sourcesvg.svg'; 
+	var srcID = 'BASEGROUP'; 
+	var newObjID = 'SVG_2334'; 
+	var retVal = GXRDE_ImportObject(srcFilename,srcID, newObjID); 	
+}
+
+function GX_ExportObject(){	
+		
+	var JQSel = "#" + "objectNameIP";	
+	var objName  = $(JQSel).val();
+    if(!objName)
+    {
+    	Debug_Message("Please Enter a Valid Name ");
+    	$(JQSel).val("");
+    	WAL_showModalWindow(gSVGFileNameDlgID,"GX_SVGFileDlgNameOK", "" );
+    	return; 
+    }
+    var bretval = IsNameValid(objName); 
+    if(bretval == false)
+    {
+    	Debug_Message("Enter a Name without any Blank"); 
+    	$(JQSel).val("");
+    	WAL_showModalWindow(gSVGExportDlgID, "GX_ExportObject()", "" );	
+    	return;     	
+    }  
+    JQSel = '#objecttitleIP'; 
+    var Title = $(JQSel).val();
+    if(!Title)
+    {
+    	Debug_Message("Title Field cannot be Empty");
+    	$(JQSel).val("");
+    	WAL_showModalWindow(gSVGExportDlgID, "GX_ExportObject()", "" );
+    	return; 
+    }
+   
+    var tgtObjID; 
+    if( (gCurrentObjectSelected) && (gCurrentObjectSelected.classList[0] == 'GROUP'))
+    	tgtObjID = gCurrentObjectSelected.id; 
+    else
+    	tgtObjID = 'BASEGROUP'; 	
+	var retVal = GXRDE_ExportObject(objName,tgtObjID, Title) ;    
+   	if(retval == "ALREADY_EXISTS")
+   	{
+   		Debug_Message("This File Name Already Exists");
+   		$(JQSel).val("");
+   		WAL_showModalWindow(gSVGExportDlgID, "GX_ExportObject()", "" );
+    	return; 
+   	}
+   	
+}
+
