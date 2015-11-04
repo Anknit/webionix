@@ -3280,3 +3280,60 @@ function isRightClick(event) {
     else if (event.button) rightclick = (event.button == 2);
     return rightclick;
 }
+
+function WAL_createGrid(ID, Width, Height, handlerFnName, rowHeight, bPageable, pageSize, DataSource, colArray, Group){
+	
+	var JQSel = '#'+ID; 
+	var bGroupable = false; 
+	 var groupname = ''; 
+	 if(Group.length > 1){
+		 bGroupable = true; 
+		 groupname = [ '' +  Group + '' ]  ;//[ "category" ] 
+	 }
+	var dataAdapter = new $.jqx.dataAdapter(DataSource);
+	$(JQSel).jqxGrid(
+		{
+			width : Width, height: Height, columnsresize: true, enabletooltips:true,pageable : bPageable, pagesize : pageSize, rowsheight : rowHeight, groupable: bGroupable, groups: groupname,
+			source: dataAdapter, columnsmenu: true, columns: colArray
+		}); 
+	
+	$(JQSel).on('rowselect', function (event) 
+	{
+			    var args = event.args; 
+			    var row = args.rowindex;
+			    var selectedObj = args.row; 
+			    if(handlerFnName){
+			    	var str = handlerFnName + '(selectedObj)' ; 
+			    	eval(str); 
+			    }			   
+	});
+}
+
+function WAL_setSourceColumn(ID, source){
+	var JQSel = '#'+ID; 
+	 
+	var dataAdapter = new $.jqx.dataAdapter(source);
+	$(JQSel).jqxGrid({
+		source: dataAdapter				
+	}); 
+}
+/*
+$("#jqxgrid").jqxGrid(
+		 {
+		 width: 200,
+        source: dataAdapter,
+        columnsresize: true,
+        columns: [
+			{ text: 'Image', datafield: 'filename', width: 70, cellsrenderer: imagerenderer }	,
+			{text: 'Çategory', datafield:'category', width:120}
+           ], 
+                 
+         enabletooltips:true,
+         sortable: false,
+         editable: false,
+         editmode: 'click',
+         pageable:true,
+         pagesize : 5,
+         rowsheight : 50
+});
+*/
