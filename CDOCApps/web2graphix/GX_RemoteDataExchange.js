@@ -290,15 +290,24 @@ function GXRDE_ImportObject(srcFilename,srcObjID, newobjectID)
 }
 
 
-function GXRDE_ExportObject(tgtObjName,tgtObjID, title)
+function GXRDE_ExportObject(tgtObjName,tgtObjID, title, category)
 {
 	var reqbody = "&TARGETOBJECTNAME=" + tgtObjName + "&TARGETOBJID=" + tgtObjID + 
-	"&TITLE=" + title;
+	"&TITLE=" + title + "&CATEGORY=" +  category;
 	var respstring = AJX_RequestWithReponseData("text", "OBJM", "318", reqbody);
 	if(respstring)
 		return respstring;
 	else
 		return 'ERROR';	
+}
+function GXRDE_GetSVGImportList()
+{
+	var respstr = AJX_RequestWithReponseData("text", "OBJM", "319", "");
+    if (respstr == "FAIL") {
+        Debug_Message("Failed to Get Project Data Path due to some error");
+        return 'FAIL'; 
+    }
+ return respstr; 
 }
 
 

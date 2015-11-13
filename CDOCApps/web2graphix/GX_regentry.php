@@ -1,4 +1,5 @@
 <?php
+/*
 $fp = fopen("Config.txt", "r");
 if($fp == False)return False;
 $buffsize = 2000;
@@ -30,21 +31,8 @@ else
 	return False;
 
 
-/*
-$author = 'rajarshi';
-$user = 'cdoc';
-$pwd = 'cdoc';
-$dbname = 'cdocapptestdb';
-$hostaddr = 'localhost:3306';
 
-
-$author = 'rajarshi';
-$user = '1181608_cdoc';
-$pwd = 'cdoc';
-$dbname = '1181608_cdoc';
-$hostaddr = 'fdb4.runhosting.com';
-*/
-/* Initialisation of the database and the corresposndin tables */
+ Initialisation of the database and the corresposndin tables 
 
 //$dbhandle = mysql_connect($hostaddr, $user, $pwd);
 $dbhandle = mysqli_connect($hostaddr, $user, $pwd, $dbname);
@@ -54,6 +42,9 @@ if(!$dbhandle)
 	LogString("Database could not be connected");
 	return ;
 }
+*/
+
+$dbhandle = GX_DBInitialize(); 
 if(!$dbhandle)
 	echo "Database Server could not be connected </br>";
 

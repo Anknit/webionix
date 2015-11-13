@@ -40,6 +40,8 @@ var gTreeNodeID = 'node_container';
 var gSVGFileOpenDlg = "svgfileopendlg"; 
 var gSVGFileNameDlgID = 'newSVGFileNameDlg'; 
 var gSVGExportDlgID = 'exportDlg'; 
+var gSVGImportListDlgID = 'importListDlg'; 
+var gSVGImportList = 0; 
 var gSVGGroupNameDlgID ='newGroupNameDlg'; 
 var gSVGFileDeleteDlg = "svgfiledeletedlg"; 
 var gSVGDimensionDlg = 'svgdimensiondlg'; 
@@ -1018,9 +1020,21 @@ function GX_Initialize()
  	 	
     WAL_createWindow(gSVGFileOpenDlg,"Asset List", true, '282', '350', false,	true, false, false, false, "", 'SVGFO_LB_okbtn', 'SVGFO_LB_cancelbtn');
     WAL_createModalWindow(gSVGFileNameDlgID, '250', '150', 'pageOK', 'pageCancel');
-    WAL_createModalWindow(gSVGExportDlgID, '320', '150', 'exportOK', 'exportCancel');
+    WAL_createModalWindow(gSVGExportDlgID, '320', '180', 'exportOK', 'exportCancel');
     
-    //create group name dialog
+    var imagerenderer = function (row, datafield, value) {
+        return '<img style="margin-left: 5px; margin-top:5px; margin-bottom:5px" height="50" width="50" src="http://localhost/CDOCApps/USER_DATA/shared/shapes/' + value + '"/>';
+    }
+    var colArray = [
+					{ text: 'Image', datafield: 'filename', width: 70, cellsrenderer: imagerenderer },
+					{text: 'Çategory', datafield:'category', width:120}
+           		]; 
+    WAL_createGrid('importlistgrid', 250, 400, 'OnGridRowSelection', 50, true, 5, colArray, 'category'); 
+    //WAL_createGrid(ID, Width, Height, handlerFnName, rowHeight, bPageable, pageSize, colArray, Group)
+    WAL_createModalWindow(gSVGImportListDlgID, '320', '500', 'importOK', 'importCancel');
+    
+    
+    //create group name dialogcolArray
     WAL_createModalWindow(gSVGGroupNameDlgID, '250', '150', 'groupOK', 'groupCancel');
     
     
@@ -1319,7 +1333,30 @@ function GX_MenuItemShow(menuid, itemText)
 		 GX_menu_delete_svgfrom_remote();
 		 break;
 	 case 'import':		 	
-		 GX_ImportObject(); 
+		 //GX_ImportObject(); 
+		 if(!gSVGImportList){		 
+				 gSVGImportList = GXRDE_GetSVGImportList();
+			 if(!gSVGImportList){
+				 Debug_Message('No Data Available'); 
+				 return; 
+			 }
+			 var source =
+		     {
+		         datatype: "json",
+		         datafields: [
+		             { name: 'id', type: 'string' },
+		             { name: 'category', type: 'string' },
+		             { name: 'filename', type: 'string' }             
+		         ],
+		         id: 'id',
+		         localdata : gSVGImportList	         
+		     };
+		    
+		     
+		      
+		     WAL_setSourceColumn('importlistgrid', source);
+		}//if(!gSVGImportList)
+	     WAL_showModalWindow(gSVGImportListDlgID, "", "" );	
 		 break; 	
 	 case 'export':
 		 WAL_showModalWindow(gSVGExportDlgID, "GX_ExportObject()", "" );			 
@@ -8946,13 +8983,22 @@ function GX_ExportObject(){
     	WAL_showModalWindow(gSVGExportDlgID, "GX_ExportObject()", "" );
     	return; 
     }
-   
+    JQSel = '#categoryIP'; 
+    var category = $(JQSel).val();
+    if(!category)
+    {
+    	Debug_Message("Category Field cannot be Empty");
+    	$(JQSel).val("");
+    	WAL_showModalWindow(gSVGExportDlgID, "GX_ExportObject()", "" );
+    	return; 
+    }
+    
     var tgtObjID; 
     if( (gCurrentObjectSelected) && (gCurrentObjectSelected.classList[0] == 'GROUP'))
     	tgtObjID = gCurrentObjectSelected.id; 
     else
     	tgtObjID = 'BASEGROUP'; 	
-	var retVal = GXRDE_ExportObject(objName,tgtObjID, Title) ;    
+	var retVal = GXRDE_ExportObject(objName,tgtObjID, Title, category) ;    
    	if(retval == "ALREADY_EXISTS")
    	{
    		Debug_Message("This File Name Already Exists");

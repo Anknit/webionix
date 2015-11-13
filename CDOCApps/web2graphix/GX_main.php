@@ -1,9 +1,10 @@
 <?php
 Include_once "GX_SessionMgr.php"; 
 Include_once "GX_WKSMgrModule.php"; 
-
+Include_once "GX_DBInit.php";
 //finding the webserver configuration 
 
+/*
 $fp = fopen("Config.txt", "r");
 if($fp == False)return False;
 $buffsize = 2000;
@@ -33,11 +34,6 @@ else if($serverloc == "REMOTE")
 }
 else
 	return False; 
-
-
-
-
-/* Initialisation of the database and the corresposndin tables */
 $dbhandle = mysqli_connect($hostaddr, $user, $pwd, $dbname);
 if(!$dbhandle)
 {
@@ -45,17 +41,9 @@ if(!$dbhandle)
 	LogString("Database could not be connected");
 	return ; 
 }
-/*
-if(!mysql_select_db($dbname,$dbhandle))
-{
-	//echo "Database  ".$dbname." could not be Used </br>";
-	LogString("Database could not be Select");
-	return ;
-}
-*/	
-	//echo "Database  ".$dbname." could not be Used </br>";
 
-
+*/
+$dbhandle = GX_DBInitialize(); 
 
 //now get the input username:
 $usrname = "'".$_POST['txtUsername']."'";

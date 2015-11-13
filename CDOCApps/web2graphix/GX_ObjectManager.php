@@ -1,7 +1,7 @@
 <?php
 include_once "GX_CommonAPI.php";
 include_once "Debuglog.php";
-
+Include_once "GX_AssetManager.php"; 
 /* *******
  * This module is responsible for managing objects like Adding , deleting, copying etc. 
  * The module will call apropriate functions for specific object type. 
@@ -86,6 +86,10 @@ function GX_OBJ_ProcessRequest($reqid, &$respdata )
 	{
 		$retval = GX_Export($respdata);
 		return $retval;
+	}
+	else if($reqid == '319'){
+		$retval = GX_GetSVGImportList($respdata);
+		return $retval;	
 	}
 	
 	
@@ -921,6 +925,9 @@ function GX_OBJ_UpdateMultipleSVGAnimation(&$respData)
 	return true;
 }
 
+function GX_GetSVGImportList(&$respData){
+	$respData = GX_ImportMetaData(); 
+}
 function GX_ImportObject(&$respData){
 	//create the source XML dom by reading from the source XML file. 
 	parse_str($respData);
@@ -942,21 +949,23 @@ function GX_Export(&$respData){
 	//DEPENDING ON OBJECT TYPE CALL THE APPROPRIATE FUNCTION
 	$tgtObjectName = $TARGETOBJECTNAME;
 	$tgtobjectID   = strtoupper($TARGETOBJID);
-	$tgtFileName = $tgtObjectName . '.svg'; 
-	$title = $TITLE; 
-	//$newObjID = strtoupper($OBJECTID);	
-	
+	$origFilename = $tgtFileName = $tgtObjectName . '.svg';
+	$title = $TITLE;
+	$category = $CATEGORY; 
+	//$newObjID = strtoupper($OBJECTID);
+
 	$SVGDom = $_SESSION['svg_xml_dom'];
 	$SVGFileName = $_SESSION['svg_xml_FileName'];
 	//get the target node.
 	//now import into the current DOM and then save
 	//needs to be chnaged later on to give the shared folder path
-	$tgtFileName = $_SESSION['shareddir'].$tgtFileName;	
-	$retVal = GX_COMMON_ExportSVGElement($SVGDom, $SVGFileName, $tgtFileName, $tgtobjectID, $title, $tgtObjectName ); 
+	$tgtFileName = $_SESSION['shareddir'].$tgtFileName;
+	$retVal = GX_COMMON_ExportSVGElement($SVGDom, $SVGFileName, $tgtFileName, $tgtobjectID, $title, $tgtObjectName );
 	if($retVal == true)
 		$respData = 'OK';
 	else
 		$respData = 'FAIL';
+	$retval = GX_ExportMetaData($origFilename, $title, $category);
 }
 
 ?>
