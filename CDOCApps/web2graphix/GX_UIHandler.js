@@ -45,6 +45,7 @@ var gSVGImportList = 0;
 var gSVGGroupNameDlgID ='newGroupNameDlg'; 
 var gSVGFileDeleteDlg = "svgfiledeletedlg"; 
 var gSVGDimensionDlg = 'svgdimensiondlg'; 
+var gImportShapeFileName = ""; 
 var gPolyInputDlg = 'polygonipdlg';
 var gFileNameTitleNode = 0;
 var gInitTitle = "Web2.0 Graphics Editor: "; 
@@ -1350,13 +1351,10 @@ function GX_MenuItemShow(menuid, itemText)
 		         ],
 		         id: 'id',
 		         localdata : gSVGImportList	         
-		     };
-		    
-		     
-		      
+		     };		      
 		     WAL_setSourceColumn('importlistgrid', source);
 		}//if(!gSVGImportList)
-	     WAL_showModalWindow(gSVGImportListDlgID, "", "" );	
+	     WAL_showModalWindow(gSVGImportListDlgID, "GX_ImportShapedlgOK", "" );	
 		 break; 	
 	 case 'export':
 		 WAL_showModalWindow(gSVGExportDlgID, "GX_ExportObject()", "" );			 
@@ -8948,11 +8946,27 @@ function GX_UpdatePropertyForMultipleObjects(attrName, attrValue){
 	}
 }
 
-function GX_ImportObject(){	
-	var srcFilename = 'sourcesvg.svg'; 
-	var srcID = 'BASEGROUP'; 
-	var newObjID = 'SVG_2334'; 
-	var retVal = GXRDE_ImportObject(srcFilename,srcID, newObjID); 	
+function GX_ImportObject(srcFileName){	
+	var srcID = srcFileName.substring(0,srcFileName.length-4); 
+	var newObjID = GXRDE_GetUniqueID('SVG_'); 
+	var retVal = GXRDE_ImportObject(srcFileName,srcID, newObjID); 	
+	if(retVal != 'ERROR')
+	{		
+		parentID = 'SVGOBJECTCONTAINER'; 
+		WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+parentID);	
+		var svgFname = gSVGFilename; 
+		GX_CloseSVGFile();
+	   	 var dataNode = document.getElementById('objectcontainer');   	 
+	   	 dataNode.innerHTML += retVal;		   	
+	  	 GX_InitializeDocument(svgFname);	  	 
+	  	var xmlstr = GXRDE_GetSVGMetaXML(svgFname);    
+	    if(xmlstr)
+	       GX_updateTreeWidget(xmlstr);   
+	    WAL_expandAllTreeItems(gTreeNodeID, true);
+	    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+newObjID);	
+	}
+	WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+newObjID);		
+	return newObjID; 
 }
 
 function GX_ExportObject(){	
@@ -9005,7 +9019,20 @@ function GX_ExportObject(){
    		$(JQSel).val("");
    		WAL_showModalWindow(gSVGExportDlgID, "GX_ExportObject()", "" );
     	return; 
-   	}
-   	
+   	}   	
 }
 
+function OnGridRowSelection(obj){
+	if(obj){
+		gImportShapeFileName = obj.filename; 
+		alert('Object selected: ' +gImportShapeFileName ); 
+	}	
+}
+
+function GX_ImportShapedlgOK(){
+	var rowindex = $('#importlistgrid').jqxGrid('getselectedrowindex');
+	var data = $('#importlistgrid').jqxGrid('getrowdata', rowindex);
+	gImportShapeFileName = data.filename; 
+	if(gImportShapeFileName)
+		GX_ImportObject(gImportShapeFileName); 
+}
