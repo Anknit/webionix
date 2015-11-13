@@ -933,14 +933,14 @@ function GX_ImportObject(&$respData){
 	parse_str($respData);
 	//DEPENDING ON OBJECT TYPE CALL THE APPROPRIATE FUNCTION
 	$srcFileName = $SRCFILENAME;
-	$srcobjectID   = strtoupper($SRCOBJID);
+	$srcobjectID   = $SRCOBJID;
 	$newObjID = strtoupper($OBJECTID);	
 	$SVGDom = $_SESSION['svg_xml_dom'];
 	$SVGFileName = $_SESSION['svg_xml_FileName'];
 	//get the target node. 
 	//now import into the current DOM and then save
 	//needs to be chnaged later on to give the shared folder path 
-	$srcFileName = $_SESSION['projDataPath'].$_SESSION['pathSeparator'].$srcFileName; 
+	$srcFileName = $_SESSION['shareddir'].$_SESSION['pathSeparator'].$srcFileName; 
 	$respData = GX_COMMON_ImportSVGElement($SVGDom, $SVGFileName, $srcFileName, $srcobjectID, $newObjID); 
 }
 
