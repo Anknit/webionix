@@ -1131,7 +1131,30 @@ function GX_COMMON_ImportSVGElement($SVGDom, $SVGFilename, $srcFileName, $srcobj
 	//change the ID of this node
 	$srcNode->setAttribute('id', $newObjID); 
 	
-	$newNode = $SVGDom->importNode($srcNode, true); 
+	$newNode = $SVGDom->importNode($srcNode, true);
+	$nodeList = $newNode->childNodes;
+	$childNode = 0;	
+	for($i=0; $i < $nodeList->length; $i++)
+	{
+		$childNode = $nodeList->item($i);
+		if($childNode){
+			$classval = $childNode->getAttribute('class'); 
+			$classval = strtok($classval, ' ');		
+			if(($classval == 'SVG_SHAPE_OBJECT') || ($classval == 'SVG_PATH_OBJECT') || ($classval == 'SVG_TEXT_OBJECT')){
+				$bfound = false; 
+				do{
+					//finding the uniq ue id for each object 
+					
+					$objID = rand(50, 2000);
+					$objID = 'SVG_' . $objID; 
+					$node = $SVGDom->getElementById($objID); 
+					if(!isset($node))
+						$bfound = true; 
+				}while($bfound == false);			
+				$childNode->setAttribute('id',$objID ); 
+			}//	if(($classval == 'SVG_SHAPE_OBJECT')
+		}		
+	}
 	//now import this node into the SVGDOM 
 	//save and return 
 	$baseNode = $SVGDom->getElementById('BASEGROUP'); 
