@@ -1,6 +1,7 @@
 <?php
 /*
  * Author: Aditya 
+ * Author: Suhail
  * date: 31-jul-2014
  * Description: This module implments all database operations functionalities. 
  * Passing the query variables in defined format one can retireve/insert/update/delete the data from/into database. 
@@ -11,6 +12,9 @@
 //Includes complete implementation of DB operations
 require_once	__DIR__.'/DbMgr.php';
 require_once 	__DIR__.'/SSRV.php';
+
+$perform_Database_Operation = null; // Global variable to reuse the connection
+$error_code = null; // Global variable holding the error_code for a transaction
 
 function getDBConfig($config = ''){
 	$source =	'Func';
@@ -29,11 +33,11 @@ function getDBConfig($config = ''){
 	}
 	
 	$config['dbType']		=	strtolower($type);
-	$config['servername']	=	$config['servername'];
-	$config['Port']			=	$config['Port'];
-	$config['userName']		=	$config['userName'];
-	$config['passWord']		=	$config['passWord'];
-	$config['DatabaseName']	=	$config['DatabaseName'];
+	$config['servername']	=	$config['host'];
+	$config['Port']			=	$config['port'];
+	$config['userName']		=	$config['username'];
+	$config['passWord']		=	$config['password'];
+	$config['DatabaseName']	=	$config['database'];
 	
 	return $config;
 }
@@ -46,6 +50,7 @@ function getDBConfig($config = ''){
 	
 */
 function DBMgr_Handle($config	=	'') {
+	global $perform_Database_Operation;
 	
 	$className	=	'DBMgr';
 	if(is_array($config)){
@@ -58,7 +63,6 @@ function DBMgr_Handle($config	=	'') {
 		return $perform_Database_Operation;
 	}
 	
-	global $perform_Database_Operation;
 	if(isset($perform_Database_Operation))
 		return $perform_Database_Operation;
 	
@@ -93,11 +97,11 @@ function DBMgr_Handle($config	=	'') {
 * @param  string $DataType.	Value can only be 'JSON' else ''. Use this to get data set returned as json.
 * @param  string $keyField_Output. This can be a field name so that indexes of assoc array can be defined with value of the field passed.
 *
-* @return false, else 0(zero- for no corresponding entry), else output in described format. If mysql error is to be accessed, it is available with a aglobal variable $DB_OperationError
+* @return false, else 0(zero- for no corresponding entry), else output in described format. 
+* If mysql error is to be accessed, it is available with a aglobal variable $DB_OperationError
  
 */
 function DB_Read($readInput, $outputFormat	=	"ASSOC", $DataType	=	"", $keyField_Output = '') {
-	global	$perform_Database_Operation;
 	$perform_Database_Operation	=	DBMgr_Handle();
 	return	$perform_Database_Operation->Read($readInput, $outputFormat, $DataType, $keyField_Output);
 }
@@ -118,7 +122,6 @@ function DB_Read($readInput, $outputFormat	=	"ASSOC", $DataType	=	"", $keyField_
 * @return  Inserted Id on success, else false on failure. If mysql error is to be accessed, it is available with a aglobal variable $DB_OperationError
 */
 function DB_Insert($insertInput) {
-	global	$perform_Database_Operation;
 	$perform_Database_Operation	=	DBMgr_Handle();
 	return	$perform_Database_Operation->Insert($insertInput);
 }
@@ -140,7 +143,6 @@ function DB_Insert($insertInput) {
 * @return  true on success, else false. If mysql error is to be accessed, it is available with a aglobal variable $DB_OperationError
 */
 function DB_Update($updateInput) {
-	global	$perform_Database_Operation;
 	$perform_Database_Operation	=	DBMgr_Handle();
 	return	$perform_Database_Operation->Update($updateInput);
 }
@@ -157,7 +159,6 @@ function DB_Update($updateInput) {
 * @return  true on success, else false on failure. If mysql error is to be accessed, it is available with a aglobal variable $DB_OperationError
 */
 function DB_Delete($deleteInput) {
-	global	$perform_Database_Operation;
 	$perform_Database_Operation	=	DBMgr_Handle();
 	return	$perform_Database_Operation->Delete($deleteInput);
 }
@@ -174,7 +175,6 @@ function DB_Delete($deleteInput) {
 * @return false, else 0(zero- for no corresponding entry), else output in described format. If mysql error is to be accessed, it is available with a aglobal variable $DB_OperationError
 */
 function DB_Query($query, $outputFormat	=	"ASSOC", $DataType	=	"", $keyField_Output = '') {
-	global	$perform_Database_Operation;
 	$perform_Database_Operation	=	DBMgr_Handle();
 	return	$perform_Database_Operation->Query($query, $outputFormat, $DataType, $keyField_Output);
 }
@@ -194,7 +194,6 @@ function DB_Query($query, $outputFormat	=	"ASSOC", $DataType	=	"", $keyField_Out
  */
 
 function DB_ExportTable($ExportDBArray) {
-	global $perform_Database_Operation;
 	$perform_Database_Operation	=	DBMgr_Handle();
 	return $perform_Database_Operation->Export($ExportDBArray);
 }
@@ -208,7 +207,6 @@ function DB_ExportTable($ExportDBArray) {
 		);
  */
 function DB_ImportTable($ImportDBArray) {
-	global $perform_Database_Operation;
 	$perform_Database_Operation	=	DBMgr_Handle();
 	return $perform_Database_Operation->Import($ImportDBArray);
 }
@@ -229,7 +227,6 @@ function DB_ImportTable($ImportDBArray) {
  * @return array containing the insert_id
  */
 function DB_InsertMultipleRows($multipleFieldsArray) {
-	global $perform_Database_Operation;
 	$perform_Database_Operation	=	DBMgr_Handle();
 	return $perform_Database_Operation->InsertMR($multipleFieldsArray);
 }
@@ -254,7 +251,6 @@ function DB_InsertMultipleRows($multipleFieldsArray) {
  * Possible Values - ASSOC, NUM_ARR, NUM_ROWS
  */
 function DB_SSRV_Transact($fieldValueArray, $operationType, $outputFormat) {
-	global $perform_Database_Operation;
 	$perform_Database_Operation	=	SSRV_Handle();
 	$perform_Database_Operation->transact($fieldValueArray, $operation, $outputFormat);
 }
@@ -265,8 +261,10 @@ function DB_SSRV_Transact($fieldValueArray, $operationType, $outputFormat) {
 */
 function DB_Close()
 {
-	global	$perform_Database_Operation;
-	unset($perform_Database_Operation);
+	$perform_Database_Operation = DBMgr_Handle();
+	$perform_Database_Operation->closeConnection();
+	global $perform_Database_Operation;
+	$perform_Database_Operation = null;
 	return;
 }
 ?>

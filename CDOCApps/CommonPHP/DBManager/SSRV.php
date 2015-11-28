@@ -7,6 +7,9 @@
  * Required : WAMPP 32 Bit
  * .DLL Files : 32 Bit : https://msdn.microsoft.com/en-us/sqlserver/ff657782.aspx
  * ODBC Driver : https://www.microsoft.com/en-us/download/details.aspx?id=36434
+ * PHP-SQLServer driver details : https://msdn.microsoft.com/en-us/library/cc296170(v=sql.105).aspx
+ * php_sqlsrv_55_ts.dll : PHP5.5
+ * php_sqlsrv_56_ts.dll : PHP5.6 
  */
 
 class SSRV {
@@ -44,7 +47,6 @@ class SSRV {
 		$this->username = $config['userName'];
 		
 		$connection_state = $this->connect();
-		echo $connection_state;
 	}
 	
 	function __destruct() {
@@ -55,11 +57,11 @@ class SSRV {
 	private function getDBConfig() {
 		
 		$config = array (
-				'servername'	=>	'LENOVOWIH\SQLEXPRESS',
+				'servername'	=>	'UFO-CLIENT',
 				'Port'			=>	'default', // default value is 1433
 				'userName'		=>	'sa',
 				'passWord'		=>	'admin123',
-				'DatabaseName'		=>	'ddb'
+				'DatabaseName'		=>	'CineManager'
 		);
 		
 		return $config;
@@ -68,12 +70,13 @@ class SSRV {
 	
 	private function connect() {
 		$connection_info = array('Database' => $this->database, 'UID' => $this->username, 'PWD' => $this->password);
+		$connection_info_wa = array('Database' => $this->database);
 // 		if(! (strcmp($this->port, 'default') == 0) ) 
 // 			$this->servername = "$this->servername" . ", ". $this->port;
 		
 		try {
-			$this->dbconnection = sqlsrv_connect('LENOVOWIH\SQLEXPRESS', $connection_info);
-		}catch(Exception $e) { echo 'catch'; return false;}
+			$this->dbconnection = sqlsrv_connect('UFO-CLIENT', $connection_info_wa);
+		}catch(Exception $e) {return false;}
 		
 		return true;
 	}
@@ -258,11 +261,11 @@ class SSRV {
 	}
 
 	public function Read($fieldValueArray = '', $DataType	=	'', $outputFormat = '') {
-		$this->transact($fieldValueArray, 'READ', $outputFormat);
+		return $this->transact($fieldValueArray, 'READ', $outputFormat);
 	}
 	
 	public function Insert($fieldValueArray = '', $outputFormat = '') {
-		$this->transact($fieldValueArray, 'INSERT', $outputFormat);
+		return $this->transact($fieldValueArray, 'INSERT', $outputFormat);
 	}
 	
 	public function Update($fieldValueArray = '', $outputFormat = '') {
@@ -277,6 +280,15 @@ class SSRV {
 		$this->transact($multipleFieldsArray, 'INSERT_MR', $outputFormat);
 	}
 	
+	public function getNumberOfRows($query) {
+		$params = array();
+		$options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+		//If a forward cursor (the default) or dynamic cursor is used, FALSE is returned.
+		$result = sqlsrv_query( $this->dbconnection, $query, $params, $options );
+		$rowCount = sqlsrv_num_rows( $result );
+		return $rowCount;
+	}
+
 	/**
 	 * Call this function to perform any of the following operation - INSERT, UPDATE, DELETE, READ
 	 * @param unknown $fieldValueArray - Associative Array
@@ -312,6 +324,7 @@ class SSRV {
 				$Query = $this->Prepare_Query($fieldValueArray, 'READ');
 				$s = sqlsrv_query($this->dbconnection, $Query);
 				$output = $this->Prepare_Output($s, $outputFormat);
+				$transactReturnCode = $output;
 				sqlsrv_free_stmt( $s);
 				$read = true;
 				break;

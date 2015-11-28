@@ -1,8 +1,6 @@
 <?php
-//include_once '../Debuglog.php';
-include_once __DIR__.'./../Debuglog.php';
 class DBMgr{
-	public $mysql_Host	=	'', $Port	=	'', $userName	=	'', $passWord	=	'', $DatabaseName	=	'', $connection, $dbType;
+	private $mysql_Host, $Port, $userName, $passWord, $DatabaseName, $connection, $dbType;
 	
 	//Constructor function to connect and select database.
 	/*
@@ -26,27 +24,52 @@ class DBMgr{
 	 *  );
 	 * 
 	 */
-	public function DBMgr($config)
+	/*
+	function __construct($config)
 	{
 		$this->dbType		=	$config['dbType'];
-		$this->mysql_Host	=	$config['mysql_Host'];
-		$this->Port			=	$config['Port'];
-		$this->userName		=	$config['userName'];
-		$this->passWord		=	$config['passWord'];
-		$this->DatabaseName	=	$config['DatabaseName'];
+		$this->mysql_Host	=	$config['host'];
+		$this->Port			=	$config['port'];
+		$this->userName		=	$config['username'];
+		$this->passWord		=	$config['password'];
+		$this->DatabaseName	=	$config['database'];
 
 		$this->connect_SpecificDatabase();			
-	}
+	}*/
 	
-	
-	
-	private function connect_SpecificDatabase(){
+	function __construct(){
 		
+	}
+	public  function Initialize($config){
+		$this->dbType		=	$config['dbType'];
+		$this->mysql_Host	=	$config['host'];
+		$this->Port			=	$config['port'];
+		$this->userName		=	$config['username'];
+		$this->passWord		=	$config['password'];
+		$this->DatabaseName	=	$config['database'];
+		$this->LastError = ''; 		
+		return  $this->connect_SpecificDatabase();
+	}
+	/*
+	function __destruct() {
+		$this->connection = null;
+	}*/ 	
+	private function connect_SpecificDatabase(){
+		$db = 0; 
 		if(!isset($this->connection)) {
 			switch ($this->dbType) {
 				case 'mysql':
-					$db	= new mysqli($this->mysql_Host, $this->userName, $this->passWord, $this->DatabaseName, $this->Port); // Make a connection my MySQL
-					$this->connection = $db;
+					//$db	= new mysqli('p:'.$this->mysql_Host, $this->userName, $this->passWord, $this->DatabaseName, $this->Port); // Make a connection my MySQL					
+					$db = mysqli_connect('p:'.$this->mysql_Host, $this->userName, $this->passWord, $this->DatabaseName, $this->Port);
+					if($db == false){						
+						if (mysqli_connect_error()) {
+							$DBError = '';	
+							$this->LastError = mysqli_connect_error(); 
+							$this->set_dbError('ConnectionFailure',$DBError);							
+							return NULL; 
+						}
+					}										
+					$this->connection = $db;						
 					break;
 				case 'postgresql':
 					// Make a connection to PostgreSQL
@@ -58,21 +81,29 @@ class DBMgr{
 		} 
 		else {
 			 $db = $this->connection;
-		}
+		}		
+		return $db;  
+			//"Error: Connection failed '".$this->set_dbError()."'";
 		
-		if (!$db)
-			return "Error: Connection failed '".$this->set_dbError()."'";
+			//return "Error: Connection failed '".$this->set_dbError()."'";
 		
 	}
 	
 	private function set_dbError($Query, &$DB_OperationError = '')
 	{
+		include_once __DIR__.'./../ErrorHandling.php';
 		
 		$DB_OperationError	=	"";
-		
+		global $error_code;
 		switch ($this->dbType) {
 			case 'mysql':
-				$DB_OperationError	=	mysqli_error($this->connection);
+				if($Query == 'ConnectionFailure'){					
+					ErrorLogging('Connect Error (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());					
+				}else{
+					$DB_OperationError	=	mysqli_error($this->connection);
+					$error_code = mysqli_errno($this->connection);
+				}
+				
 				break;
 			case 'mssql':
 				$DB_OperationError	=	mssql_get_last_message();
@@ -81,9 +112,7 @@ class DBMgr{
 				$DB_OperationError	=	 pg_last_error($this->connection);
 				break;		
 		}
-		//LogString('Error');
-		LogString('query: --'.$Query.' -- '.'Error: --'.$DB_OperationError);
-		//ErrorLogging('query: --'.$Query.' -- '.'Error: --'.$DB_OperationError);
+		ErrorLogging('query:'.$Query.' -- '.'Error:'.$DB_OperationError);
 	}
 	
 	
@@ -120,9 +149,12 @@ class DBMgr{
 	public function Prepare_Output($output, $output_Format, $keyField_Output = '')
 	{
 		$output_Format = strtolower($output_Format); // Convert output_Format to lowercase
-		if($output->num_rows == 0)
-			return 0;	
-			
+		
+		if(!is_object($output))
+			return $output;
+		elseif($output->num_rows == 0){
+			return 0;
+		}			
 		switch($output_Format)
 		{
 			case 'result':
@@ -321,7 +353,7 @@ class DBMgr{
 			$output=	'INVALID';
 		else
 		{
-			$result 	= $this->connection->query($Query);
+			$result 	= $this->connection->query($Query);			
 			if (!$result)
 			{
 				$this->set_dbError($Query);
@@ -329,7 +361,13 @@ class DBMgr{
 			}
 			else
 			{
-				$output	=	true;	
+				$nrows = $this->connection->affected_rows;
+				if($nrows == -1){
+					$this->set_dbError($Query);
+					$output = false;
+				}
+				else 
+					$output	=	true;	
 			}
 		}
 		return $output;
@@ -351,7 +389,12 @@ class DBMgr{
 			}	
 			else
 			{
-				$output	=	true;	
+				$nrows = $this->connection->affected_rows;
+				if($nrows == -1){
+					$this->set_dbError($Query);
+					$output = false;
+				}else
+					$output	=	true;	
 			}
 		}
 		return $output;
@@ -419,6 +462,16 @@ class DBMgr{
 			  
 			  return $output;
 	   } 
+	   
+	   public function closeConnection() {
+	   	
+	   		if(isset($this->connection)) {
+	   			mysqli_close($this->connection);
+	   		}	   		
+	   }
+	   public function getLastError(){
+	   	return $this->LastError; 
+	   }
    
 };
 ?>
