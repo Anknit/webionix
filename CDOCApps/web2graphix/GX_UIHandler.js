@@ -118,7 +118,7 @@ var gttHeight = 30;
 var gTooltipOffset = new sPoint(-5, -30 ); 
 var gCurrTooltipPos = new sPoint(); 
 var gTooltipTheme = 'black'; 
-var gSVGContainerbordercol = 'blue';
+var gSVGContainerbordercol = '#222222';
 var gUsername = ''; 
 var gShowTooltip =  true; 
 var gOrigPointerPos = new sPoint();
@@ -1020,23 +1020,29 @@ function GX_Initialize()
     WAL_createListBox('svgfileopenlistbox', '270', '250', "GX_LBItemsSelectHandler");
  	 	
     WAL_createWindow(gSVGFileOpenDlg,"Asset List", true, '282', '350', false,	true, false, false, false, "", 'SVGFO_LB_okbtn', 'SVGFO_LB_cancelbtn');
-    WAL_createModalWindow(gSVGFileNameDlgID, '250', '150', 'pageOK', 'pageCancel');
-    WAL_createModalWindow(gSVGExportDlgID, '320', '180', 'exportOK', 'exportCancel');
-    
+    WAL_createModalWindow(gSVGFileNameDlgID, '250', '150', 'pageOK', 'pageCancel', false);
+    WAL_createModalWindow(gSVGExportDlgID, '320', '180', 'exportOK', 'exportCancel', false);
+   
+    WAL_createModalWindow(gSVGImportListDlgID, '430', '580', 'importOK', 'importCancel', true);    
     var imagerenderer = function (row, datafield, value) {
-        return '<img style="margin-left: 5px; margin-top:5px; margin-bottom:5px" height="50" width="50" src="http://localhost/CDOCApps/USER_DATA/shared/shapes/' + value + '"/>';
+        return '<img style="margin-left: 5px; margin-top:5px; margin-bottom:5px" height="40" width="40" src="http://localhost/CDOCApps/USER_DATA/shared/shapes/' + value + '"/>';
     }
+   /* var colArray = [
+					{ text: 'Image', datafield: 'filename', width: 70, cellsrenderer: imagerenderer, groupable: false },
+					{text: 'Çategory', datafield:'category', width:120, groupable: true}
+           		   ];*/ 
     var colArray = [
-					{ text: 'Image', datafield: 'filename', width: 70, cellsrenderer: imagerenderer },
-					{text: 'Çategory', datafield:'category', width:120}
+					{ text: 'Image', datafield: 'filename', width: 70, cellsrenderer: imagerenderer, groupable:false},
+					{text: 'Çategory', datafield:'category', width:120, groupable:true},
+					{text: 'Description', datafield:'title', groupable:false}
            		]; 
-    WAL_createGrid('importlistgrid', 250, 400, 'OnGridRowSelection', 50, true, 5, colArray, 'category'); 
+    WAL_createGrid('importlistgrid', 420, 500, 'OnGridRowSelection', 50, true, 10, colArray, 'category'); 
     //WAL_createGrid(ID, Width, Height, handlerFnName, rowHeight, bPageable, pageSize, colArray, Group)
-    WAL_createModalWindow(gSVGImportListDlgID, '320', '500', 'importOK', 'importCancel');
+   
     
     
     //create group name dialogcolArray
-    WAL_createModalWindow(gSVGGroupNameDlgID, '250', '150', 'groupOK', 'groupCancel');
+    WAL_createModalWindow(gSVGGroupNameDlgID, '250', '150', 'groupOK', 'groupCancel', false);
     
     
     WAL_createListBox('svgfiledeletelistbox', '270', '250', "GX_LBItemsSelectHandler");
@@ -1050,11 +1056,11 @@ function GX_Initialize()
     
     WAL_createNumberInput("svgwidthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1000, 0,1);
     WAL_createNumberInput("svgheightIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1000, 0,1);
-    WAL_createModalWindow(gSVGDimensionDlg, '250', '150', 'svgDimOK', 'svgDimCancel');
+    WAL_createModalWindow(gSVGDimensionDlg, '250', '150', 'svgDimOK', 'svgDimCancel', false);
     
     WAL_createNumberInput("polynSidesIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 20, 3,1);
     WAL_createNumberInput("polyLengthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 500, 10,10);
-    WAL_createModalWindow(gPolyInputDlg, '250', '150', 'polynSidesOK', 'polyLengthCancel');
+    WAL_createModalWindow(gPolyInputDlg, '250', '150', 'polynSidesOK', 'polyLengthCancel', false);
     WAL_setNumberInputValue("polynSidesIP", '3', false);
     WAL_setNumberInputValue("polyLengthIP", '50', false);
     //fill color interface
@@ -1063,8 +1069,8 @@ function GX_Initialize()
     WAL_createCheckBox('animateFillColor', 'GX_FillColorAnimCheckValueChange', '50', gWidgetHeight, '13', false, false);
     WAL_createModelessWindow('fillcolorDlg', '250', '150', 'fillcolOK', 'fillcolCancel');
     
-    WAL_createModalWindow(gImageDlg, '250', '150', 'imageOK', 'imageCancel');
-    WAL_createModalWindow('deleteConfirmDlg', '250', '150', 'deleteOK', 'deleteCancel');
+    WAL_createModalWindow(gImageDlg, '250', '150', 'imageOK', 'imageCancel', false);
+    WAL_createModalWindow('deleteConfirmDlg', '250', '150', 'deleteOK', 'deleteCancel', false);
     
     GX_MenuDisable(true);
     /*
@@ -1218,7 +1224,7 @@ function GX_InitializeDocument(svgFileName)
 	var rectBorderNode =  document.getElementById('svgborder'); 
 	if(!rectBorderNode)
 	{
-		var rectBorder = '<rect id="svgborder" x="0" y="0" width="100%" height="100%" stroke="' + gSVGContainerbordercol + '" stroke-width="3" fill="none" visibility="visible"/>';
+		var rectBorder = '<rect id="svgborder" x="0" y="0" width="100%" height="100%" stroke="' + gSVGContainerbordercol + '" stroke-width="5" fill="none" visibility="visible"/>';
 		GX_AddNewNodeFromXMLString('objectcontainer', rectBorder);		
 	}
 	WAL_SetItemInDropDownList('zoomDDL', 0, true);
@@ -1347,13 +1353,15 @@ function GX_MenuItemShow(menuid, itemText)
 		         datafields: [
 		             { name: 'id', type: 'string' },
 		             { name: 'category', type: 'string' },
-		             { name: 'filename', type: 'string' }             
+		             { name: 'filename', type: 'string' },
+		             { name: 'title', type: 'string'}
 		         ],
 		         id: 'id',
 		         localdata : gSVGImportList	         
 		     };		      
 		     WAL_setSourceColumn('importlistgrid', source);
 		}//if(!gSVGImportList)
+		 WAL_ClearGridSelection('importlistgrid'); 
 	     WAL_showModalWindow(gSVGImportListDlgID, "GX_ImportShapedlgOK", "" );	
 		 break; 	
 	 case 'export':
@@ -4167,7 +4175,7 @@ function GX_InitializeToolbar()
     
     var groupList = ['group1', 'group2', 'group3']; 
     WAL_createDropdownList('grouptoDDL', '140', '24', false, groupList, "GX_DDLHandler", '80');
-    WAL_createModalWindow('movetoGroupDlg', '250', '150', 'grouptoOK', 'grouptoCancel');
+    WAL_createModalWindow('movetoGroupDlg', '250', '150', 'grouptoOK', 'grouptoCancel', false);
     
      //create the new filwdiget interface
     //GX_CreateFillWidget(); 
@@ -9024,14 +9032,13 @@ function GX_ExportObject(){
 
 function OnGridRowSelection(obj){
 	if(obj){
-		gImportShapeFileName = obj.filename; 
-		alert('Object selected: ' +gImportShapeFileName ); 
+		gImportShapeFileName = obj.filename; 		
 	}	
 }
 
 function GX_ImportShapedlgOK(){
-	var rowindex = $('#importlistgrid').jqxGrid('getselectedrowindex');
-	var data = $('#importlistgrid').jqxGrid('getrowdata', rowindex);
+	var rowindex = WAL_getCurrentGridRowSelection('importlistgrid');
+	var data = WAL_getGridRowData('importlistgrid', rowindex);
 	gImportShapeFileName = data.filename; 
 	if(gImportShapeFileName)
 		GX_ImportObject(gImportShapeFileName); 

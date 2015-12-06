@@ -1,8 +1,5 @@
 <?php
 Include_once "GX_DBInit.php";
-
-
-
 function GX_ExportMetaData($filename, $title, $category){
 	$dbhandle = GX_DBInitialize();
 	//$query = "INSERT INTO exportedassetinfo (id, filename, title, category) VALUES(NULL, $filename, $title, $category)";
@@ -24,7 +21,7 @@ function GX_ExportMetaData($filename, $title, $category){
 function GX_ImportMetaData(){
 	$dbhandle = GX_DBInitialize();	
 	$ReadArray	=	array(
-			'Fields'=> 'filename, title, category',
+			'Fields'=> 'filename, category, title',
 			'Table'=> 'exportedassetinfo',			
 			'order'	=> 'category DESC'
 	);	
