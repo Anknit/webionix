@@ -149,6 +149,123 @@
 
 </head>
 <body>
+<nav class="navbar navbar-default navbar-fixed-top" style='background-color:black'>
+  <div class="container" style='margin-top:5px'>
+    <div class="navbar-header" style='margin-left:-60px'>
+      <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>-->
+      <a class="navbar-brand" href="#myPage" style='margin-top:-15px'><img class="img-responsive" src="http://localhost/CDOCApps/CommonCSS/icons/Version1/SiteIcons/wnxnotextlogo.png" width='50px' height='50px'></a>
+      <p class="navbar-brand logotext" style='color:#f4511e;'>Noxta</p>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-left" style='padding-left:45px'>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#application">Application</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li class='dropdown'><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">Help<span class="caret"></span></a>
+          <ul id='helpmenu' class="dropdown-menu dropdown-menu-center" >
+    		<li><a href="#">FAQs</a></li>
+    		<li><a href="#">Tutorials</a></li>    			
+  		  </ul>
+        </li>
+        
+        <li><a href="#forums">Forums</a></li>
+      </ul>
+      <ul class='nav navbar-nav navbar-right'>        	    	
+      	<p  id="dropdownMenu1" class="navbar-text dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      	Hi Guest kumar 
+    	<span class="caret"></span>
+    	</p>
+    	<ul id='accountinfomenu' class="dropdown-menu dropdown-menu-center" aria-labelledby="dropdownMenu1" >
+    		<li><a href="#">My Account</a></li>
+    		<li><a href="#">My Workspace</a></li>
+    		<li><a href="#">Log-Out</a></li>    		
+  		</ul>
+      </ul>
+      <ul class='nav navbar-nav navbar-right' style='padding-left:50px'>
+      	<button type="button" class="btn btn-default navbar-btn btn-info"><span class="glyphicon glyphicon-log-in" aria-hidden="true" style='padding-right:5px'></span>Sign in</button>
+      </ul> 
+    </div>
+  </div>
+</nav>
 
+<div class="jumbotron text-center">
+<div id="bannerCarousel" class="carousel slide" data-ride="carousel" data-interval='3000'>
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#bannerCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#bannerCarousel" data-slide-to="1"></li>
+      <li data-target="#bannerCarousel" data-slide-to="2"></li>      
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner text-center" role="listbox">
+      <div class="item active center" >
+        <img src="http://localhost/CDOCApps/CommonCSS/icons/Version1/SiteIcons/designer1.png"  width="auto" height="100" >    
+        <div class="carousel-caption">
+          <h3>Discover the Artiste inside you </h3>           
+        </div>
+      </div>
+
+      <div class="item center">
+        <img src="http://localhost/CDOCApps/CommonCSS/icons/Version1/SiteIcons/cloud1.jpg" width="auto" height="100">
+        <div class="carousel-caption">
+          <h3>Work on the Cloud from anywhere anytime, No Installation required</h3>           
+        </div>
+      </div>
+    
+      <div class="item center">
+        <img src="http://localhost/CDOCApps/CommonCSS/icons/Version1/SiteIcons/Editor1.png"  width="auto" height="100">
+        <div class="carousel-caption">
+          <h3>No need to understand HTML,SVG , Just get going!</h3>           
+        </div>
+      </div>     
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#bannerCarousel" role="button" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#bannerCarousel" role="button" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+ </div>
+</div>
+
+<!-- Home section -->
+<div id='home' class='container-fluid'>
+	<div class='rows'>
+		<div class='col-sm-8' style='border-right:2px inset #eee; padding-right:20px'>
+			 <p>
+			   <strong>Noxta</strong> is a web based application, to allow designers create graphics and animations assets for usage on Web. Allows one to create Web 2.0 based assets in the form of SVG(Scalar Vector Graphics) which takes only a fraction of disk space compared to equivalent assets in form of JPG/PNG and .swf files.  SVG is now supported in almost all the popular browsers as well as mobile phones.  The Noxta UI allows any new user to ramp up the application in few minutes.  All your work is stored on the cloud and you can access them from anywhere, anytime.             
+			 </p>
+			 <div class="panel panel-default">
+				  <div class="panel-heading text-center"><strong>Features</strong></div>
+				  <div class="panel-body">
+				  <ul type='square'>
+				  	<li>Requires no Installation. Just Sign-up and Start.</li>
+				  	<li>Storing all your work on the Cloud means work from anywhere, anytime. </li>
+				  	<li>Support all Basic shapes of SVG specification</li>
+				  	<li>Supports Text and Images</li>
+				  	<li>Allows Freehand drawing</li>
+				  	<li>Import additional shapes and other SVG objects</li>
+				  	<li>Download or  Share in One click</li>
+				  	<li>Create Powerful Animations in few clicks</li>
+				  </ul>
+				  </div>
+			 </div>
+		</div>
+		<div class='col-sm-4'>
+		Testimonials
+		</div>
+	</div> 
+</div>
+
+</div>
 </body>
 </html>
