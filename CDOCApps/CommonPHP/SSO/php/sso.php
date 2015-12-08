@@ -1,15 +1,41 @@
 <?php
 require_once __DIR__.'./verify-sign-up.php';
-
+require_once __DIR__.'./../../../web2graphix/GX_SessionMgr.php';
+//require_once __DIR__.'./../../DBManager/DbMgrInterface.php';
 /*
  * 1.it checks the signin of user 
  * 2. @param email (through POST)
  * 3. @param password (through POST)
  * 4. 
  */
+
+function InitializeSession($ott){
+	
+	//get the username, user id, workspace name 
+	$retval = sso_getuserinfo($ott); 	
+	
+	//NOW create a JSON and send it back and also apply a validation logic here
+		
+	//start the session here 
+	$retarray = json_decode($retval, true );	
+	$retval = CDOC_Session_Init($retarray[0]['username'], $retarray[0]['userid'], $retarray[0]['workspacename']); 
+}
+if(isset($_POST['type'])	&&	$_POST['type']	==	'redirect_url'	){
+	header("Location:GX_Editor.html");
+	exit;
+}
 if(isset($_POST['type'])	&&	$_POST['type']	==	'signin_verify'	)
 {
-	sso_signin_verify($_POST['email'],$_POST['password']);
+	
+	$retval = sso_signin_verify($_POST['email'],$_POST['password']);	
+	//now the code for 
+	$retarray = json_decode($retval, true ); 
+	//echo $retval;
+	if($retarray['success'] == 'true'){
+		InitializeSession($retarray['ott']); 
+		echo $retval; 
+	}
+	//
 }
 
 /*
@@ -20,7 +46,10 @@ else if(isset($_POST['type'])	&&	$_POST['type']	==	'signup'	)
 {
 	sso_signup($_POST['email']);
 }
-
+else if(isset($_POST['type']) &&	$_POST['type']	==	'userinfo'	)
+{
+	sso_getuserinfo($_POST['ott']);
+}
 /*
  * 1. It verifies the link for signup
  * 2. @param sign_up_pass (through GET)
@@ -52,3 +81,5 @@ else if(isset($_POST['type'])	&&	$_POST['type']	==	'google_signin')
 {
 	sso_google($_POST['idtoken']);
 }
+
+exit; 
