@@ -297,7 +297,7 @@ class DBMgr{
 	return $Query;
 }
 	
-	public function Read($input_array, $outputFormat, $DataType = "", $keyField_Output = '')
+	public function Read($input_array, $outputFormat="ASSOC", $DataType = "", $keyField_Output = '')
 	{
 		$Query	=	$this->Prepare_Query($input_array, 'READ');
 		$output	=	"";

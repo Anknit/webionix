@@ -79,11 +79,11 @@ $sso_c_encryption_key	=	"09334c83bf0d34e2029f7a477cb767f4ed437c175f165e9a752a392
 $sso_mail_verify_setting	=	array(
 					'smtpHostName'	=>	'mail.veneratech.com',
 					'smtpPort'		=>	'25',
-					'smtpUsername'	=>	'vaibhav.singhal@veneratech.com',
-					'smtpPassword'	=>	'vasi12*',
+					'smtpUsername'	=>	'rajarshi@veneratech.com',
+					'smtpPassword'	=>	'#Roger',
 					'sender'		=>	'',
 			);
-
+/*
 if(!function_exists('get_DbConfig')){
 	function get_DbConfig(){
 		$config = array (
@@ -92,8 +92,22 @@ if(!function_exists('get_DbConfig')){
 				'port'	=>	'3306',
 				'username'	=>	'root',
 				'password'	=>	'',
-				'database'	=>	'corona'
-		);
-		return $config;
+				'database'	=>	'corona',
+				'dbType'    => 'mysql'
+		);	
+		
 	}	
 }
+*/
+
+$sso_db_source = ''; 
+$sso_db_database = 'cdocapptestdb';
+$sso_db_dbType = 'mysql';
+$sso_db_host = 'localhost'; 
+$sso_db_port = '3306'; 
+$sso_db_username = 'cdocuser'; 
+$sso_db_password = '';
+
+
+
+?>

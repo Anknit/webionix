@@ -10,12 +10,12 @@ function ErrorLogging($message) {
 		//$filename	=	$_SESSION['HTTP_ROOT'].'/widget_factory/temp/Errors.txt';
 	//}
 	//else {
-		$filename	=	__DIR__.'./../../widget_factory/temp/Errors.txt';
+		$filename	=	__DIR__.'\log\Errors.txt';		
 	//}
 	
 	if(!file_exists($filename))
 		file_put_contents($filename, "\n");
 		
-	file_put_contents($filename, date("M-j-Y/H:i:s").' --- '." -- ".' Client IP: '.$_SERVER['REMOTE_ADDR'].' -- Error: '.$message."\r\n" , FILE_APPEND);
+	file_put_contents($filename, date("M-j-Y/H:i:s").':'.' Client IP: '.$_SERVER['REMOTE_ADDR'].' :Error: '.$message."\r\n" , FILE_APPEND);
 }
 ?>

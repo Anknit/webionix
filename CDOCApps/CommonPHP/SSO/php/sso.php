@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__.'./verify-sign-up.php';
 require_once __DIR__.'./../../../web2graphix/GX_SessionMgr.php';
+require_once __DIR__.'./../../../web2graphix/GX_WKSMgrModule.php';
+
 //require_once __DIR__.'./../../DBManager/DbMgrInterface.php';
 /*
  * 1.it checks the signin of user 
@@ -18,7 +20,18 @@ function InitializeSession($ott){
 		
 	//start the session here 
 	$retarray = json_decode($retval, true );	
-	$retval = CDOC_Session_Init($retarray[0]['username'], $retarray[0]['userid'], $retarray[0]['workspacename']); 
+	$retval = CDOC_Session_Init($retarray[0]['username'], $retarray[0]['userid'], $retarray[0]['workspacename']);
+	if($retval == False)
+	{
+		LogString("GX_Session Init: Failed");
+		return $retval;
+	}
+	$retval = 	GX_WKS_Initialize($_SESSION['workspacename']);
+	if($retval == False)
+	{
+		LogString("GX_WKS_Initialize: Failed");
+		return $retval;
+	} 
 }
 if(isset($_POST['type'])	&&	$_POST['type']	==	'redirect_url'	){
 	header("Location:GX_Editor.html");

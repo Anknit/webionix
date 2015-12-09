@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__.'./../../DBManager/DbMgrInterface.php';
+require_once __DIR__.'./../../DBManager/DbMgr.php';
 require_once __DIR__.'./../../MailMgr.php';
-require_once __DIR__.'./session_manager.php';
-require_once __DIR__.'./ErrorHandling.php';
+//require_once __DIR__.'./session_manager.php';
+require_once __DIR__.'./../../ErrorHandling.php';
 require_once __DIR__.'./sso_config.php';
 require_once __DIR__.'./encryption.php';
 require_once __DIR__.'./validations.php';
@@ -10,9 +10,24 @@ require_once __DIR__.'./validations.php';
 /*
  * 1. For verifying the verification link sent to the mail
  */
+$mysqlObj = new DBMgr(); 
+$config = array('database' =>$GLOBALS['sso_db_database'],
+				'host'=>$GLOBALS['sso_db_host'],
+				'port' => $GLOBALS['sso_db_port'], 
+				'username' => $GLOBALS['sso_db_username'],  
+				'password' => $GLOBALS['sso_db_password'], 
+				'dbType'=>	$GLOBALS['sso_db_dbType']
+		); 
+$retval = $mysqlObj->Initialize($config);
+if(!$retval){
+	echo $mysqlObj->getLastError();
+	return ;
+}
+
 function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 {
 	$cipher    =   rawurldecode($user_cipher);
+	global $mysqlObj; 
 	if(!check_cipher($cipher))	//see validations.php
 	{
 		echo json_encode(array("success"=>"false","reason"=>"Invalid request"));
@@ -27,8 +42,7 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 	$text    =    outer_decrypt($cipher);
 	
 	$query    =    array('Fields'=>'emailid,verify_key','Table'=>'verify_link','clause'=>'id = '.$text[1]);
-	$d_data    =    DB_Read($query);
-	
+	$d_data    =    $mysqlObj->Read($query);	
 	if(is_array($d_data))
 	{
 		$inner_key    =    $d_data[0]['verify_key'];
@@ -43,7 +57,7 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 	$text    =    inner_decrypt($text[0],$inner_key);
 	$redirect_url	=	$GLOBALS['sso_http_root'].$GLOBALS['sso_redirectlink_on_success_signup'];
 	$query    =    array('Fields'=>'userid,username,status','Table'=>'userinfo','clause'=>"emailid='". "$text"."'");
-	$d_data    =    DB_Read($query);
+	$d_data    =    $mysqlObj->Read($query);
 	if(!is_array($d_data))
 	{
 		echo json_encode(array("success"=>"false","reason"=>"An error has occured"));
@@ -96,7 +110,7 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 				$d_data['Fields'][$key]	=	$value;
 			}		
 		}
-		if(!DB_Update($d_data))
+		if(!$mysqlObj->Update($d_data))
 		{
 			//error log update error
 			exit();
@@ -104,10 +118,16 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 		
 		$ott	=	sha1(uniqid("",true));
 		$ott_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott),'clause'=>"emailid='".$text."'");
-		DB_Update($ott_data);
+		
+		if(!$mysqlObj->Update($ott_data))
+		{
+			//update failed
+			echo json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
+			exit();
+		}
 		
 		$d_data	=	"delete from verify_link where emailid='".$text."'";
-		$d_id     =     DB_Query($d_data,"result","");
+		$d_id     =     $mysqlObj->Query($d_data,"result","");
 		echo json_encode(array("success"=>"true","ott"=>$ott));
 		//header("Location:".$redirect_url);
 		exit();
@@ -127,6 +147,7 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 function sso_reset_verify($user_cipher)//if(isset($_GET['reset']))
 {
 	$cipher    =    $user_cipher;
+	global $mysqlObj;
 	if(!check_cipher($cipher))	//see validations.php
 	{
 		echo json_encode(array("success"=>"false","reason"=>"Invalid request"));
@@ -140,7 +161,7 @@ function sso_reset_verify($user_cipher)//if(isset($_GET['reset']))
 	}
 	$text    =    outer_decrypt($cipher);
 	$query    =    array('Fields'=>'emailid,reset_key','Table'=>'reset_link','clause'=>"id=". "$text[1]");
-	$d_data    =    DB_Read($query);
+	$d_data    =    $mysqlObj->Read($query);
 	if(is_array($d_data))
 	{
 		$inner_key    =    $d_data[0]['reset_key'];
@@ -156,7 +177,7 @@ function sso_reset_verify($user_cipher)//if(isset($_GET['reset']))
 	
 	$redirect_url	=	$GLOBALS['sso_http_root'].$GLOBALS['sso_redirectlink_on_success_reset'];
 	$query    =    array('Fields'=>'userid,username,status','Table'=>'userinfo','clause'=>"emailid='". "$text"."'");
-	$d_data	=	DB_Read($query);
+	$d_data	=	$mysqlObj->Read($query);
 	if(!is_array($d_data))
 	{
 		echo json_encode(array("success"=>"false","reason"=>"An error has occured"));
@@ -175,13 +196,13 @@ function sso_reset_verify($user_cipher)//if(isset($_GET['reset']))
 		$ott	=	sha1(uniqid("",true));
 		$_POST['password']	=	md5($_POST['password']);
 		$d_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott,'password'=>$_POST['password']),'clause'=>"emailid='"."$text"."'");
-		if(!DB_Update($d_data))
+		if(!$mysqlObj->Update($d_data))
 		{
 			//update errorr
 			exit();
 		}
 		$d_data	=	"delete from reset_link where emailid='".$text."'";
-		$d_id     =     DB_Query($d_data,"result","");
+		$d_id     =     $mysqlObj->Query($d_data,"result","");
 		echo json_encode(array("success"=>"true"));
 		//header("Location:".$redirect_url);
 		exit();
@@ -196,7 +217,7 @@ function sso_reset_verify($user_cipher)//if(isset($_GET['reset']))
 function sso_google($token)//if(isset($_POST['idtoken']))
 {
 	$g_request    =    "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=".$token;
-	
+	global $mysqlObj;
 	$ch     =     curl_init();
 	curl_setopt($ch, CURLOPT_URL, $g_request);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -214,7 +235,7 @@ function sso_google($token)//if(isset($_POST['idtoken']))
 	}
 	if(isset($response->{'error_description'}))
 	{
-		ErrorLogging("Login credentials is not obtained from youtube"."at line no. ".__LINE__." at file ".__FILE__." content: id_token:".$_POST['id_token']." response:".$response->{'error_description'});
+		ErrorLogging("Login credentials is not obtained from gmail"."at line no. ".__LINE__." at file ".__FILE__." content: id_token:".$_POST['id_token']." response:".$response->{'error_description'});
 		echo json_encode(array("success"=>"false","reason"=>"An error has occured"));
 		exit();
 	}
@@ -224,25 +245,38 @@ function sso_google($token)//if(isset($_POST['idtoken']))
 		$name    =    $response->{'name'};
 	}
 	$query    =    array('Fields'=>'*','Table'=>'userinfo','clause'=>"emailid='". "$email"."'");
-	$d_data	=	DB_Read($query);
+	$d_data	=	$mysqlObj->Read($query);
 	if(!is_array($d_data))
 	{
 		$ott	=	sha1(uniqid("",true));
 		$d_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott,'regAuthorityId'=>0,'usertype'=>'normal','username'=>$name,'emailid'=>$email,'status'=>"verified"));
-		if(!DB_Insert($d_data))
+		if(!$mysqlObj->Insert($d_data))
 		{
 			//insert failed error
 			exit();
 		}
-		//$d_data    =    DB_Read($query);
+		//$d_data    =    $mysqlObj->Read($query);
 		
-	}
-	
+	}	
 	else
 	{
 		$ott	=	sha1(uniqid("",true));
-		$query	  =	   array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott),'clause'=>"emailid='". "$email"."'");
-		DB_Update($query);
+		$foldername = $d_data[0]['workspacename'];
+		$length = strlen($foldername);
+		if($length == 0){
+			$foldername = 'folder_' . $d_data[0]['userid']; 
+			$query	  =	   array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott, 'workspacename'=>$foldername),'clause'=>"emailid='". "$email"."'");
+		}			
+		else 
+			$query	  =	   array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott),'clause'=>"emailid='". "$email"."'");
+		
+		//$mysqlObj->Update($query);
+		if(!$mysqlObj->Update($query))
+		{
+			//update failed
+			echo json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
+			exit();
+		}
 		echo json_encode(array("success"=>"true","ott"=>$ott));
 		exit();
 	}	
@@ -257,14 +291,15 @@ function sso_google($token)//if(isset($_POST['idtoken']))
  */
 function sso_signin_verify($user_email,$user_password)//else if(isset($_POST['sign']) && $_POST['sign'] == 0)
 {
+	global $mysqlObj;
  	$email    =    $user_email;
 	$password    =    $user_password;
 	if(check_email($email) && $password != NULL && $password!="" && check_password($password))
 	{
 		ErrorLogging("WARNING SIGNIN matching allowed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: email:".$email." password:".$password);
 		$password	=	md5($password);
-		$query    =    array('Fields'=>'userid,username,usertype','Table'=>'userinfo','clause'=>"emailid='". "$email"."' && password='"."$password"."' && status='verified'");
-		$d_data    =    DB_Read($query);		
+		$query    =    array('Fields'=>'userid,username,usertype,workspacename','Table'=>'userinfo','clause'=>"emailid='". "$email"."' && password='"."$password"."' && status='verified'");
+		$d_data    =    $mysqlObj->Read($query);		
 	}
 	else
 	{
@@ -281,13 +316,29 @@ function sso_signin_verify($user_email,$user_password)//else if(isset($_POST['si
 	{
 		//$s_data    =    array('uid'=>$d_data[0]['userid'],'usertype'=>$d_data[0]['usertype'],'is_login'=>1,'anonymous'=>0,'username'=>$d_data[0]['username'],'emailid'=>$email);
 		//set_session_data($s_data);
-		$ott	=	sha1(uniqid("",true));	
-		$ott_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott),'clause'=>"emailid='".$email."'");
-		DB_Update($ott_data);
-		echo json_encode(array("success"=>"true","ott"=>$ott));
-		exit();
-	}
+		$foldername = $d_data[0]['workspacename']; 
+		$length = strlen($foldername); 
 		
+		$ott	=	sha1(uniqid("",true));	
+		
+		if($length == 0 ){
+			$foldername = 'folder_' . $d_data[0]['userid']; 
+			$ott_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott, 'workspacename'=>$foldername),'clause'=>"emailid='".$email."'");
+		}
+		else 
+			$ott_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott),'clause'=>"emailid='".$email."'");
+		
+		
+		if(!$mysqlObj->Update($ott_data))
+		{
+			//update failed
+			echo json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
+			exit();
+		}
+		//echo json_encode(array("success"=>"true","ott"=>$ott));
+		//exit();
+		return json_encode(array("success"=>"true","ott"=>$ott));
+	}		
 }
 
 /*
@@ -295,12 +346,13 @@ function sso_signin_verify($user_email,$user_password)//else if(isset($_POST['si
  */
 function sso_signup($e)//else if(isset($_POST['sign']) && $_POST['sign']==1)
 {
+	global $mysqlObj;
 	$email    =    $e;
 	if(check_email($email))
 	{
 		ErrorLogging("WARNING SIGNUP matching allowed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: email=".$email);
 		$query    =    array('Fields'=>'userid,username,status','Table'=>'userinfo','clause'=>"emailid='". "$email"."'");
-		$d_data	=	 DB_Read($query);
+		$d_data	=	 $mysqlObj->Read($query, 'assoc');
 	}
 		
 	else
@@ -320,33 +372,50 @@ function sso_signup($e)//else if(isset($_POST['sign']) && $_POST['sign']==1)
 	{
 		$config	=	$GLOBALS['sso_mail_verify_setting'];
 		$query    =    array('Fields'=>'id','Table'=>'verify_link','clause'=>"emailid='". "$email"."'");
-		$d_data    =    DB_Read($query);
+		$d_data    =    $mysqlObj->Read($query);
 		$cipher	=	inner_encrypt($email,$d_data[0]['id']);
 		$d_data    =    array('Table'=>'verify_link','Fields'=>array('verify_key'=>$cipher[1]),'clause'=>"emailid='". "$email"."'");
 	}
 	else 
 	{
+		
 		$d_data    =    array('Table'=>'userinfo','Fields'=>array('emailid'=>$email,'status'=>"unverified",'usertype'=>'normal'));
-		if(!DB_Insert($d_data))
+		$retval = $mysqlObj->Insert($d_data); 
+		if($retval == false)
 		{
 			//insert failed
+			echo json_encode(array("success"=>"false","reason"=>"Data Insert Failed"));
 			exit();
 		}
+		/*$foldername = 'folder_';// . $retval; 
+		$d_data	  =	   array('Table'=>'userinfo','Fields'=>array('workspacename'=>$foldername),'clause'=>"id='". "$retval"."'");
+		if(!$mysqlObj->Update($d_data))
+		{
+			//update failed
+			echo json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
+			exit();
+		}*/
+		
+		
 		$d_data    =    array('Table'=>'verify_link','Fields'=>array('emailid'=>$email));
-		$d_id     =     DB_Insert($d_data);
-		$cipher    =    inner_encrypt($email,$d_id);
+		$d_id     =     $mysqlObj->Insert($d_data);
+		$cipher    =    inner_encrypt($email,$d_id);		
 		$d_data	  =	   array('Table'=>'verify_link','Fields'=>array('verify_key'=>$cipher[1]),'clause'=>"id='". "$d_id"."'");
+		
+		
 	}
-	if(!DB_Update($d_data))
+	if(!$mysqlObj->Update($d_data))
 	{
 		//update failed
+		echo json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
 		exit();
 	}
 	$cipher    =    outer_encrypt($cipher[0]);
 	$config		=	$GLOBALS['sso_mail_verify_setting'];
 	$mailSubject	=	$GLOBALS['sso_signup_mail_subject'];
 	$MailBody    =    $GLOBALS['sso_http_root'].$GLOBALS['sso_signup_form_link']."?sign_up_pass=".rawurlencode($cipher);
-	require_once "./../user_files/sign-up-mail.php";
+	
+	require_once __DIR__.'./../user_files/sign-up-mail.php';
     if(!send_Email($email, $mailSubject, $mailString, '','', $config))
 	{
 		ErrorLogging("mail sending failed during signup "."at line no. ".__LINE__." at file ".__FILE__." content: email:".$email);//mail sending failed
@@ -361,12 +430,13 @@ function sso_signup($e)//else if(isset($_POST['sign']) && $_POST['sign']==1)
  */
 function sso_reset($user_email) //if(isset($_POST['sign']) && $_POST['sign']==2)
 {
+	global $mysqlObj;
 	$email    =   $user_email;
 	if(check_email($email))
 	{
 		ErrorLogging("WARNING RESET matching allowed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: email=".$email);
 		$query    =    array('Fields'=>'userid,username,status','Table'=>'userinfo','clause'=>"emailid='". "$email"."'");
-		$d_data	=	DB_Read($query);
+		$d_data	=	$mysqlObj->Read($query);
 	}
 	
 	else
@@ -389,13 +459,13 @@ function sso_reset($user_email) //if(isset($_POST['sign']) && $_POST['sign']==2)
 			die();	//first verify yourself;
 		}
 		$query    =    array('Fields'=>'id','Table'=>'reset_link','clause'=>"emailid='". "$email"."'");
-		$d_data    =    DB_Read($query);
+		$d_data    =    $mysqlObj->Read($query);
 		
 		if(is_array($d_data))
 		{
 			$cipher    =    inner_encrypt($email,$d_data[0]['id']);//update
 			$d_data    =    array('Table'=>'reset_link','Fields'=>array('reset_key'=>$cipher[1]),'clause'=>"emailid='". "$email"."'");
-			if(!DB_Update($d_data))
+			if(!$mysqlObj->Update($d_data))
 			{
 				//update failed
 				exit();
@@ -405,10 +475,10 @@ function sso_reset($user_email) //if(isset($_POST['sign']) && $_POST['sign']==2)
 		else
 		{
 			$d_data    =    array('Table'=>'reset_link','Fields'=>array('emailid'=>$email));
-			$d_id     =     DB_Insert($d_data);
+			$d_id     =     $mysqlObj->Insert($d_data);
 			$cipher    =    inner_encrypt($email,$d_id);
 			$d_data    =    array('Table'=>'reset_link','Fields'=>array('reset_key'=>$cipher[1]),'clause'=>"id='". "$d_id"."'");
-			if(!DB_Update($d_data))
+			if(!$mysqlObj->Update($d_data))
 			{
 				//update failed
 				exit();
@@ -418,8 +488,8 @@ function sso_reset($user_email) //if(isset($_POST['sign']) && $_POST['sign']==2)
 		
 		$mailSubject    =    $GLOBALS['sso_mail_reset_subject'];
 		$reset    =    rawurlencode($cipher);
-		$MailBody    =	$GLOBALS['sso_http_root'].$GLOBALS['sso_reset_form_link']."?reset_pass=".$reset; 
-		require_once "./../user_files/reset-mail.php";
+		$MailBody    =	$GLOBALS['sso_http_root'].$GLOBALS['sso_reset_form_link']."?reset_pass=".$reset;		
+		require_once __DIR__.'./../user_files/reset-mail.php'; 
 		$config		=	$GLOBALS['sso_mail_verify_setting'];
 		if(!send_Email($email, $mailSubject, $mailString,'','', $config))
 		{
@@ -429,4 +499,20 @@ function sso_reset($user_email) //if(isset($_POST['sign']) && $_POST['sign']==2)
 		echo json_encode(array("success"=>"true"));
 		exit();
 	}
+}
+//3c246269be6201c0740d6e4ce14b6fe125169b2f
+function sso_getuserinfo($ott){
+	global $mysqlObj;
+	//look up the database for the ott and get the user mail id, user name etc.
+	$query    =    array('Fields'=>'userid,username,workspacename','Table'=>'userinfo','clause'=>'sso_ott="'. $ott . '"');
+	//array('Fields'=>'userid,username,status','Table'=>'userinfo','clause'=>"emailid='". "$email"."'");
+	$d_data    =    $mysqlObj->Read($query,'assoc', 'as_json');	
+	if(!$d_data){
+		//update failed
+		return 0;  
+		//exit();
+	}
+	//echo $d_data;
+	//exit();
+	return $d_data; 
 }
