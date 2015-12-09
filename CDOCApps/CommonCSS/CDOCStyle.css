@@ -85,3 +85,7 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; style:font-weight:bold;}
     		 height: 15px;
     		 
   }
+   .jqx-grid-cell
+	{
+	    border: none;
+	}
