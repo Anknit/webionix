@@ -704,14 +704,16 @@ function TE_getSelection()
 	node = gTextSelectionObject.anchorNode.parentNode;
 	while(!gRootNode)
 	{		
-		var className = node.getAttribute('class');
-		className = className.toUpperCase(); 
-		
-		if(className == 'ROOTCONTAINER')
-		{
-			gRootNode =  node; 
-			break; 
-		}
+		//var className = node.getAttribute('class');		
+		//className = className.toUpperCase(); 
+		if(node.classList.length > 0){
+			var className = node.classList[0].toUpperCase(); 
+			if(className == 'ROOTCONTAINER')
+			{
+				gRootNode =  node; 
+				break; 
+			}
+		}	
 		//node = gTextSelectionObject.anchorNode.parentNode;
 		node = node.parentNode; 
 	}
