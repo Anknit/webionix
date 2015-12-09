@@ -1743,7 +1743,7 @@ function WAL_createModelessWindow(ID, myWidth, myHeight, myOKID, myCANCELID) {
 
 
 
-function WAL_createModalWindow(ID, myWidth, myHeight, myOKID, myCANCELID) {
+function WAL_createModalWindow(ID, myWidth, myHeight, myOKID, myCANCELID, bClose) {
     if (gInitialized != true)
         return false;
 
@@ -1771,10 +1771,11 @@ function WAL_createModalWindow(ID, myWidth, myHeight, myOKID, myCANCELID) {
     
 
     var OKID = "#" + myOKID; 
-    var CANCELID = "#"+ myCANCELID; 
+    var CANCELID = "#"+ myCANCELID;
     
- $(JQSel).jqxWindow({ width: myWidth, height: myHeight, theme: gTheme, showCollapseButton: false, isModal: true, autoOpen: false, draggable: true, 
-	 resizable: false, closeButtonAction: 'hide', showCloseButton: false , okButton: $(OKID), cancelButton: $(CANCELID), position:'center'});  
+    	
+    $(JQSel).jqxWindow({ width: myWidth, height: myHeight, theme: gTheme, showCollapseButton: false, isModal: true, autoOpen: false, draggable: true, 
+	 resizable: false, closeButtonAction: 'hide', showCloseButton: bClose , okButton: $(OKID), cancelButton: $(CANCELID), position:'center'});  
 
     $(JQSel).attr(widgetType, "true");
     $(JQSel).attr('data-okID', myOKID);
@@ -3281,7 +3282,7 @@ function isRightClick(event) {
     return rightclick;
 }
 
-function WAL_createGrid(ID, Width, Height, handlerFnName, rowHeight, bPageable, pageSize, DataSource, colArray, Group){
+function WAL_createGrid(ID, Width, Height, handlerFnName, rowHeight, bPageable, pageSize, colArray, Group){
 	
 	var JQSel = '#'+ID; 
 	var bGroupable = false; 
@@ -3290,13 +3291,19 @@ function WAL_createGrid(ID, Width, Height, handlerFnName, rowHeight, bPageable, 
 		 bGroupable = true; 
 		 groupname = [ '' +  Group + '' ]  ;//[ "category" ] 
 	 }
-	var dataAdapter = new $.jqx.dataAdapter(DataSource);
-	$(JQSel).jqxGrid(
+	//var dataAdapter = new $.jqx.dataAdapter(DataSource);
+	/*$(JQSel).jqxGrid(
 		{
-			width : Width, height: Height, columnsresize: true, enabletooltips:true,pageable : bPageable, pagesize : pageSize, rowsheight : rowHeight, groupable: bGroupable, groups: groupname,
-			source: dataAdapter, columnsmenu: true, columns: colArray
+			width: Width, height: Height, theme: gTheme, columnsresize: true, enabletooltips:true, pageable: bPageable, pagesize: pageSize, rowsheight: rowHeight, groupable: bGroupable, groups: groupname,
+			columnsmenu: true, columns: colArray
 		}); 
-	
+	*/
+	$(JQSel).jqxGrid(
+			{
+				width: Width, height: Height, theme: gTheme, columnsresize: true, enabletooltips:true, pageable: bPageable, pagesize: pageSize, rowsheight: rowHeight, groupable: bGroupable, groups: groupname,
+				columnsmenu: true, columns: colArray
+			}); 
+		
 	$(JQSel).on('rowselect', function (event) 
 	{
 			    var args = event.args; 
@@ -3316,6 +3323,28 @@ function WAL_setSourceColumn(ID, source){
 	$(JQSel).jqxGrid({
 		source: dataAdapter				
 	}); 
+}
+
+function WAL_ClearGridSelection(ID){
+	var JQSel = '#'+ID; 
+	$(JQSel).jqxGrid('clearselection');
+}
+
+function WAL_getCurrentGridRowSelection(ID){
+	var JQSel = '#'+ID; 
+	var rowindex = $(JQSel).jqxGrid('getselectedrowindex');
+	return rowindex; 
+}
+
+function WAL_setCurrentGridRowSelection(ID, rowIndex){
+	var JQSel = '#'+ID; 
+	$(JQSel).jqxGrid('selectrow', rowIndex);
+}
+
+function WAL_getGridRowData(ID, index){
+	var JQSel = '#'+ID; 
+	var data = $(JQSel).jqxGrid('getrowdata', index);
+	return data; 
 }
 /*
 $("#jqxgrid").jqxGrid(
