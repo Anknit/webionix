@@ -11,9 +11,9 @@
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <!-- SSO Related logic here  -->
 <script>
-sso.u="http://localhost/CDOCApps/CommonPHP/SSO/php/sso.php";
+sso.u="http://localhost/CDOCApps/web2graphix/GX_sso.php";
 $(document).ready(function(){
-	sso.u="http://localhost/CDOCApps/CommonPHP/SSO/php/sso.php";
+	sso.u="http://localhost/CDOCApps/web2graphix/GX_sso.php";
 $("#signup").on("click",function(){
 	email	=	$("#sign-up-email").val();
 	sso.signup(email, 'MySSOCallback');
@@ -22,8 +22,7 @@ $("#signup").on("click",function(){
 $("#signin").on("click",function(){
 	email	=	$("#s_email").val();
 	pass	=	$("#s_pass").val();
-	var retval = sso.signin(email,pass, 'MySignInCallback');
-	
+	var retval = sso.signin(email,pass, 'MySignInCallback');	
 });
 
 $("#reset").on("click",function(){
@@ -70,6 +69,15 @@ function MySSOCallback(optype, status){
 	case 'signin':
 		if(obj['success'] == 'true'){
 			$('#loginModal').modal("hide");
+			var URLstr = 'http://localhost/CDOCApps/web2graphix/GX_Editor.html';
+			if(!URLstr)
+					return;			
+				    //open a new window with page title
+			var myWindow = window.open(URLstr, '_self', '');
+			myWindow.resizeTo(screen.width, screen.height);
+			myWindow.moveTo(50, 50);
+			myWindow.focus(); 	
+		
 		}
 		else{
 			$('#signinErrorMessage').show(); 			

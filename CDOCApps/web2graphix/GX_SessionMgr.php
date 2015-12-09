@@ -6,7 +6,9 @@ function CDOC_Session_Init(&$name, &$id, $workspacename)
 	//call the session_start function
 	//session_name($session_name);
 	//open the configuration file and read the string
-	$fp = fopen("Config.txt", "r");
+	//__DIR__.'./verify-sign-up.php'
+	$path = __DIR__ .'/Config.txt' ; 
+	$fp = fopen($path, "r");
 	if($fp == False)return False; 	
 	$buffsize = 2000; 
 	$configstr = fread($fp, $buffsize)	;	

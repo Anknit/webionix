@@ -112,16 +112,13 @@ if($nrow > 0)
 					LogString("GX_WKS_Initialize: Failed");
 					return $retval;
 				}
-					
 				
 				
 				//$retval = setcookie($_SESSION['session_name'], time()-45); 
 				
 				//header("Location:Application.htm");
 				header("Location:GX_Editor.html");
-			}     		    
-		   
-					
+			}     		    				
 		}
 		else
 		{

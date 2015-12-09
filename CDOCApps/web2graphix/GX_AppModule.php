@@ -32,14 +32,12 @@ include_once "Debuglog.php";
 //send back only status 
     
 	$reqstr = "Req Info: ". " modid=".$modid ." reqid= ".$reqid. " datatype=".$dataType. " requestbody=".$respdata;	
-	
-    
+	   
     $retval = True;  
  
    	if($modid == 'WKSM')
    	{
-   	
-   		$retval = GX_WKS_ProcessRequest($reqid, $respdata );		
+   	 	$retval = GX_WKS_ProcessRequest($reqid, $respdata );		
    			
    	}
    	elseif($modid == 'PRJM')

@@ -1,6 +1,7 @@
 <?php
-include_once "GX_CommonAPI.php"; 
-include_once "../CommonPHP/fileexplorer.php";
+require_once "GX_CommonAPI.php"; 
+require_once __DIR__.'./../CommonPHP/fileexplorer.php';
+
 function GX_WKS_ProcessRequest($ReqID, &$responseData)
 {
 
