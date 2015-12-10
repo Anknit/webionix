@@ -83,6 +83,23 @@ function MySSOCallback(optype, status){
 			$('#signinErrorMessage').show(); 			
 		}
 		break; 
+	case 'googleverify':
+		if(obj['success'] == 'true'){
+			$('#loginModal').modal("hide");
+			var URLstr = 'http://localhost/CDOCApps/web2graphix/GX_Editor.html';
+			if(!URLstr)
+					return;			
+				    //open a new window with page title
+			var myWindow = window.open(URLstr, '_self', '');
+			myWindow.resizeTo(screen.width, screen.height);
+			myWindow.moveTo(50, 50);
+			myWindow.focus(); 	
+		}
+		else{
+			$('#signinErrorMessage').show(); 			
+		}
+		
+		break; 
 	case 'reset':
 		if(obj['success'] == 'true'){
 			$('#reset_success_message').show();
