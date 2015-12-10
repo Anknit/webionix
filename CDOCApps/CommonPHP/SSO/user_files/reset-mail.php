@@ -13,7 +13,7 @@ $mailString	=	'<html>
               <tr>
                 <td style="width:300px; padding:8px 0 0 0; text-align:center; ">
                   <a href="" target="_blank" style="text-decoration:none; color:#010101;">
-                    <img src="http://wisdomtalkies.com/beta/widget_factory/framework/image/corona-logo.jpg" alt="WisdomTalkies" style="margin:0 auto;" height="37" border="0" width="128" />
+                    <img src="http://wisdomtalkies.com/beta/widget_factory/framework/image/corona-logo.jpg" alt="Webionix" style="margin:0 auto;" height="37" border="0" width="128" />
                   </a>
                 </td>
               </tr>
@@ -24,7 +24,7 @@ $mailString	=	'<html>
                   <table cellpadding="0" cellspacing="0" style="width:600px;  margin:0; padding:15px 10px; float:left; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#565656;">
                     <tr>
                       <td colspan="2">
-										click the link below to reset your password
+										Click on the link below to Reset your password !
 										</td>
                     </tr>
                     <tr>
@@ -33,7 +33,7 @@ $mailString	=	'<html>
                     <tr>
                       <td>
                         <a id="sign-up-link" href="'.$MailBody.'" style="font-size:14px; text-decoration:none; color:#60ABE4;">
-                    						  Click to reset password
+                    						  Click to Reset your password
 											</a>
                       </td>
                     </tr>
@@ -45,7 +45,7 @@ $mailString	=	'<html>
                       <td colspan="2" height="10" />
                     </tr>
                     <tr>
-                      <td>NOT YOU ?? Report Us :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;admin@veneratech.com</td>
+                      <td>NOT YOU ?? Report Us :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rajarshi@veneratech.com</td>
 		
                     </tr>
                     <tr>
@@ -55,7 +55,7 @@ $mailString	=	'<html>
                       <td colspan="2" height="10" />
                     </tr>
                     <tr>
-                      <td colspan="2"><strong style="color:#000000;">Team WisdomTalkies</strong></td>
+                      <td colspan="2"><strong style="color:#000000;">Webionix Team</strong></td>
                     </tr>
                   </table>
                 </td>

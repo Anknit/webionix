@@ -98,13 +98,14 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 		}
 		$password	=	md5($password);
 		
+		$wksname = 'Folder_' . getTimeBasedString(); 
 		if($user_info	==	""	||	$user_info	==	false)
 		{
-			$d_data    =    array('Table'=>'userinfo','Fields'=>array('regAuthorityId'=>0,'username'=>$username,'status'=>"verified",'password'=>$password),'clause'=>"emailid='"."$text"."'");
+			$d_data    =    array('Table'=>'userinfo','Fields'=>array('regAuthorityId'=>0,'username'=>$username, 'firstname'=>$first_name, 'lastname'=>$last_name, 'workspacename'=>$wksname, 'status'=>"verified",'password'=>$password),'clause'=>"emailid='"."$text"."'");
 		}
 		else
 		{
-			$d_data    =    array('Table'=>'userinfo','Fields'=>array('regAuthorityId'=>0,'username'=>$username,'status'=>"verified",'password'=>$password),'clause'=>"emailid='"."$text"."'");
+			$d_data    =    array('Table'=>'userinfo','Fields'=>array('regAuthorityId'=>0,'username'=>$username,'firstname'=>$first_name, 'lastname'=>$last_name,'workspacename'=>$wksname, 'status'=>"verified",'password'=>$password),'clause'=>"emailid='"."$text"."'");
 			foreach($user_meta_info	as $key	=>	$value)
 			{
 				$d_data['Fields'][$key]	=	$value;
@@ -243,13 +244,16 @@ function sso_google($token)//if(isset($_POST['idtoken']))
 	{
 		$email    =    $response->{'email'};
 		$name    =    $response->{'name'};
+		$firstname = $response->{'given_name'};
+		$lastname = $response->{'family_name'};
 	}
 	$query    =    array('Fields'=>'*','Table'=>'userinfo','clause'=>"emailid='". "$email"."'");
 	$d_data	=	$mysqlObj->Read($query);
 	if(!is_array($d_data))
 	{
 		$ott	=	sha1(uniqid("",true));
-		$d_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott,'regAuthorityId'=>0,'usertype'=>'normal','username'=>$name,'emailid'=>$email,'status'=>"verified"));
+		$wksname = 'Folder_' . getTimeBasedString();
+		$d_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott,'regAuthorityId'=>0,'usertype'=>'normal','username'=>$name,'firstname'=>$firstname, 'lastname'=>$lastname, 'emailid'=>$email,'status'=>"verified", 'workspacename'=>$wksname));
 		if(!$mysqlObj->Insert($d_data))
 		{
 			//insert failed error
@@ -261,14 +265,7 @@ function sso_google($token)//if(isset($_POST['idtoken']))
 	else
 	{
 		$ott	=	sha1(uniqid("",true));
-		$foldername = $d_data[0]['workspacename'];
-		$length = strlen($foldername);
-		if($length == 0){
-			$foldername = 'folder_' . $d_data[0]['userid']; 
-			$query	  =	   array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott, 'workspacename'=>$foldername),'clause'=>"emailid='". "$email"."'");
-		}			
-		else 
-			$query	  =	   array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott),'clause'=>"emailid='". "$email"."'");
+		$query	  =	   array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott),'clause'=>"emailid='". "$email"."'");
 		
 		//$mysqlObj->Update($query);
 		if(!$mysqlObj->Update($query))
@@ -277,8 +274,9 @@ function sso_google($token)//if(isset($_POST['idtoken']))
 			echo json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
 			exit();
 		}
-		echo json_encode(array("success"=>"true","ott"=>$ott));
-		exit();
+		return json_encode(array("success"=>"true","ott"=>$ott));
+		//echo json_encode(array("success"=>"true","ott"=>$ott));
+		//exit();
 	}	
 }
 /*
@@ -316,17 +314,10 @@ function sso_signin_verify($user_email,$user_password)//else if(isset($_POST['si
 	{
 		//$s_data    =    array('uid'=>$d_data[0]['userid'],'usertype'=>$d_data[0]['usertype'],'is_login'=>1,'anonymous'=>0,'username'=>$d_data[0]['username'],'emailid'=>$email);
 		//set_session_data($s_data);
-		$foldername = $d_data[0]['workspacename']; 
-		$length = strlen($foldername); 
-		
-		$ott	=	sha1(uniqid("",true));	
-		
-		if($length == 0 ){
-			$foldername = 'folder_' . $d_data[0]['userid']; 
-			$ott_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott, 'workspacename'=>$foldername),'clause'=>"emailid='".$email."'");
-		}
-		else 
-			$ott_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott),'clause'=>"emailid='".$email."'");
+		//$foldername = $d_data[0]['workspacename']; 
+		//$length = strlen($foldername); 		
+		$ott	=	sha1(uniqid("",true));		
+		$ott_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott),'clause'=>"emailid='".$email."'");
 		
 		
 		if(!$mysqlObj->Update($ott_data))
@@ -394,9 +385,7 @@ function sso_signup($e)//else if(isset($_POST['sign']) && $_POST['sign']==1)
 			//update failed
 			echo json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
 			exit();
-		}*/
-		
-		
+		}*/		
 		$d_data    =    array('Table'=>'verify_link','Fields'=>array('emailid'=>$email));
 		$d_id     =     $mysqlObj->Insert($d_data);
 		$cipher    =    inner_encrypt($email,$d_id);		
@@ -504,7 +493,7 @@ function sso_reset($user_email) //if(isset($_POST['sign']) && $_POST['sign']==2)
 function sso_getuserinfo($ott){
 	global $mysqlObj;
 	//look up the database for the ott and get the user mail id, user name etc.
-	$query    =    array('Fields'=>'userid,username,workspacename','Table'=>'userinfo','clause'=>'sso_ott="'. $ott . '"');
+	$query    =    array('Fields'=>'userid,firstname,workspacename','Table'=>'userinfo','clause'=>'sso_ott="'. $ott . '"');
 	//array('Fields'=>'userid,username,status','Table'=>'userinfo','clause'=>"emailid='". "$email"."'");
 	$d_data    =    $mysqlObj->Read($query,'assoc', 'as_json');	
 	if(!$d_data){
@@ -515,4 +504,11 @@ function sso_getuserinfo($ott){
 	//echo $d_data;
 	//exit();
 	return $d_data; 
+}
+
+function getTimeBasedString(){
+	$retTime = localtime(time(), true);
+	$year = $retTime['tm_year'] + 1900;	
+	$timestr = $year . $retTime['tm_yday'] . $retTime['tm_hour'] . $retTime['tm_min'] . $retTime['tm_sec'] ;
+	return $timestr; 
 }

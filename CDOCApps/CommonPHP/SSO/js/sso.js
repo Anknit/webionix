@@ -24,8 +24,7 @@ sso.signin	=	function(e,p, callbackfn)
 		data:{'type':'signin_verify','email':e,'password':p},
 		async:true,		
 		success:function(data)
-		{
-			
+		{			
 			var fnstr = callbackfn + '(optype,data)'; 
 			eval(fnstr);			
 		}
@@ -78,7 +77,7 @@ sso.reset_verify	=	function(p, callbackfn)
 	});
 }
 
-function onSignIn(googleUser, callbackfn)
+function onSignIn(googleUser)
 {
 	var optype = 'googleverify'; 
 	var id_token	=	googleUser.getAuthResponse().id_token;
@@ -86,10 +85,10 @@ function onSignIn(googleUser, callbackfn)
 	$.post(sso.u,{'type':'google_signin','idtoken':id_token,'user_image':user_image})
 		.done(function(data)
 			{
-				var fnstr = callbackfn + '(optype,data)'; 
-				eval(fnstr);
-			});
-	
+				//var fnstr = callbackfn + '(optype,data)'; 
+				//eval(fnstr);
+				MySSOCallback(optype, data); 
+			});	
 }
 
 sso.getuserinfo	=	function(ott,callbackfn)
