@@ -273,11 +273,9 @@ function sso_google($token)//if(isset($_POST['idtoken']))
 			//update failed
 			echo json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
 			exit();
-		}
-		return json_encode(array("success"=>"true","ott"=>$ott));
-		//echo json_encode(array("success"=>"true","ott"=>$ott));
-		//exit();
+		}		
 	}	
+	return json_encode(array("success"=>"true","ott"=>$ott));
 }
 /*
  * 1. Initial check for session 
@@ -355,7 +353,7 @@ function sso_signup($e)//else if(isset($_POST['sign']) && $_POST['sign']==1)
 	
 	if(is_array($d_data)&&$d_data[0]['status']=="verified")
 	{
-		echo json_encode(array("success"=>"false","reason"=>"user already exists"));
+		echo json_encode(array("success"=>"false","reason"=>"This email ID is already registered on our site"));
 		exit ();
 				
 	}
