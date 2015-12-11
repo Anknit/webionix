@@ -63,6 +63,7 @@ function MySSOCallback(optype, status){
 		}
 		else{
 			$('#result_success').hide(); 
+			var node =  $('#SU_Err_Msg')[0].innerHTML = obj['reason']; 
 			$('#result_error').show(); 
 		}
 		break;
@@ -490,10 +491,7 @@ function GetUserInfo(ott){
         <h4 class="modal-title">Sign-Up</h4>
       </div>
       <div class="modal-body">
-      	<div class='form-group'>	     		
-	       	    <div id='googleBtn1' class="g-signin2" data-onsuccess="onSignIn" '></div>         		
-      	</div> 	 
-      	 
+      	 	 
       	<div class='form-group'>
 	      	<div class='text-center' style='position:relative:50px'>
 	      		<span class='help-block'>OR</span>
@@ -505,7 +503,7 @@ function GetUserInfo(ott){
          <div class='text-center'>
          	<button id='signupBtn' type="button" class="btn btn-success" onclick='OnClickSSOButtons(event)'>Sign-Up</button>
          	 <div id='result_error' class="alert alert-danger" style='display:none'>
-    			<strong>Sign-Up Error!</strong>Problem with the EMail Id you entered! Try again. 
+    			<strong>Sign-Up Error!</strong><span id='SU_Err_Msg'>Problem with the EMail Id you entered! Try again.</span> 
   			</div>
   			 <div id='result_success' class="alert alert-success" style='display:none'>
     			<strong>Sign-Up Success!</strong>An EMail has been sent to your Email Id for verification.  
