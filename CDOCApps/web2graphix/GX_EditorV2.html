@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Noxta Editor</title>
+<!-- Bootstrap core CSS -->
+<link href="http://localhost/CDOCApps/CommonJS/jqwidget_3.9.1/styles/bootstrap.min.css" rel="stylesheet">
+<link href="http://localhost/CDOCApps/CommonJS/jqwidget_3.9.1/styles/bootstrap-theme.min.css" rel="stylesheet" />
+<!-- jQWidgets CSS -->
+<link href="http://localhost/CDOCApps/CommonJS/jqwidget_3.9.1/jqwidgets/styles/jqx.base.css" rel="stylesheet">
+<link href="http://localhost/CDOCApps/CommonJS/jqwidget_3.9.1/jqwidgets/styles/jqx.bootstrap.css" rel="stylesheet">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top" style='background-color:black'>
+  <div class="container" style='margin-top:5px'>
+    <div class="navbar-header" style='margin-left:-60px'>
+      <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>-->
+      <a class="navbar-brand" href="#myPage" style='margin-top:-15px'><img class="img-responsive" src="http://localhost/CDOCApps/CommonCSS/icons/Version1/SiteIcons/wnxnotextlogo.png" width='50px' height='50px'></a>
+      <p class="navbar-brand logotext" style='color:#f4511e;'>Noxta</p>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-left" style='padding-left:45px'>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#application">Application</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li class='dropdown'><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">Help<span class="caret"></span></a>
+          <ul id='helpmenu' class="dropdown-menu dropdown-menu-center" >
+    		<li><a href="#">FAQs</a></li>
+    		<li><a href="#">Tutorials</a></li>    			
+  		  </ul>
+        </li>
+        
+        <li><a href="#forums">Forums</a></li>
+      </ul>
+      <ul id='userMsg' class='nav navbar-nav navbar-right' style='display:none'>        	    	
+      	<p  id="userInfoMenu" class="navbar-text dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      	<span id='welcomeMsg'>Hi Guest kumar</span>
+    	<span class="caret"></span>
+    	</p>
+    	<ul id='accountinfomenu' class="dropdown-menu dropdown-menu-center" aria-labelledby="dropdownMenu1" >
+    		<li><a href="#">My Account</a></li>
+    		<li><a href="#">My Workspace</a></li>
+    		<li><a href="#">Log-Out</a></li>    		
+  		</ul>
+      </ul>
+      <ul class='nav navbar-nav navbar-right' style='padding-left:50px'>
+      	<button id='signinBtn' type="button" onclick='OnBtnclick(event)' class="btn btn-default navbar-btn btn-warning" data-toggle="modal"><span class="glyphicon glyphicon-log-in" aria-hidden="true" style='padding-right:5px'></span>Sign-in</button>
+      	<button id='signoutBtn' type="button" onclick='OnBtnclick(event)' class="btn btn-default navbar-btn btn-success" style='display:none'><span class="glyphicon glyphicon-log-out" aria-hidden="true" style='padding-right:5px;'></span>Sign-Out</button>
+      </ul> 
+    </div>
+  </div>
+</nav>
+
+<script type="text/javascript" src="http://localhost/CDOCApps/CommonJS/jqwidget_3.9.1/scripts/jquery-1.11.1.min.js"></script>
+<script src="http://localhost/CDOCApps/CommonJS/jqwidget_3.9.1/scripts/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://localhost/CDOCApps/CommonJS/jqwidget_3.9.1/jqwidgets/jqxcore.js"></script>
+
+<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.core.js"></script>
+<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.widget.js"></script>
+<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.mouse.js"></script>
+<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.draggable.js"></script>
+<script src="http://localhost/CDOCApps/CommonJS/jquery.ui.resizable.js"></script>
+</body>
+</html>
