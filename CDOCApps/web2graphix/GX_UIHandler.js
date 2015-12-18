@@ -1025,7 +1025,7 @@ function GX_Initialize()
    
     WAL_createModalWindow(gSVGImportListDlgID, '430', '580', 'importOK', 'importCancel', true);    
     var imagerenderer = function (row, datafield, value) {
-        return '<img style="margin-left: 5px; margin-top:5px; margin-bottom:5px" height="40" width="40" src="http://localhost/CDOCApps/USER_DATA/shared/shapes/' + value + '"/>';
+        return '<img style="margin-left: 5px; margin-top:5px; margin-bottom:5px" height="40" width="40" src="../USER_DATA/shared/shapes/' + value + '"/>';
     }
    /* var colArray = [
 					{ text: 'Image', datafield: 'filename', width: 70, cellsrenderer: imagerenderer, groupable: false },

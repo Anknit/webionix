@@ -47,7 +47,7 @@ function CDOC_Session_Init(&$name, &$id, $workspacename)
 	$_SESSION['ProjectName']=0; 
 	$_SESSION['projXMLDOM'] = 0;
 	$_SESSION['projXMLfilename']=0; 
-	$_SESSION['baseWKSURI']=$BASE_WKSURI ; //"http://localhost//USER_DATA";
+	$_SESSION['baseWKSURI']=$BASE_WKSURI ; 
 	$_SESSION['projectServerPath'] = rtrim($_SESSION['baseWKSURI'], 'USER_DATA'); //rtrim($_SESSION['baseWKSURI'], 'USER_DATA'); 
 	$_SESSION['projDataPath'] = 0; 
 	$_SESSION['projHTMLDOM'] = 0;
