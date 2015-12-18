@@ -20,7 +20,7 @@ $config = array('database' =>$GLOBALS['sso_db_database'],
 		); 
 $retval = $mysqlObj->Initialize($config);
 if(!$retval){
-	echo $mysqlObj->getLastError();
+	return $mysqlObj->getLastError();
 	return ;
 }
 
@@ -30,14 +30,14 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 	global $mysqlObj; 
 	if(!check_cipher($cipher))	//see validations.php
 	{
-		echo json_encode(array("success"=>"false","reason"=>"Invalid request"));
+		return json_encode(array("success"=>"false","reason"=>"Invalid request"));
 		//header("Location:". $GLOBALS['sso_http_root'].$GLOBALS['sso_redirectlink_on_fail_signup']);
-		ErrorLogging("SIGNUP cipher matching failed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: cipher=".$cipher);
+	//	ErrorLogging("SIGNUP cipher matching failed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: cipher=".$cipher);
 		exit();
 	}
 	else
 	{
-		ErrorLogging("WARNING SIGNUP matching allowed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: cipher=".$cipher);
+		//ErrorLogging("WARNING SIGNUP matching allowed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: cipher=".$cipher);
 	}
 	$text    =    outer_decrypt($cipher);
 	
@@ -49,10 +49,10 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 	}
 	else
 	{
-		echo json_encode(array("success"=>"false","reason"=>"Link has expired"));
+		return json_encode(array("success"=>"false","reason"=>"Link has expired"));
 		//header("Location:". $GLOBALS['sso_http_root'].$GLOBALS['sso_redirectlink_on_fail_signup']);
-		ErrorLogging("WARNING "."Either fake or link Expired in signup "."at line no. ".__LINE__." at file ".__FILE__);
-		exit();
+		//ErrorLogging("WARNING "."Either fake or link Expired in signup "."at line no. ".__LINE__." at file ".__FILE__);
+		//exit();
 	}
 	$text    =    inner_decrypt($text[0],$inner_key);
 	$redirect_url	=	$GLOBALS['sso_http_root'].$GLOBALS['sso_redirectlink_on_success_signup'];
@@ -60,10 +60,10 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 	$d_data    =    $mysqlObj->Read($query);
 	if(!is_array($d_data))
 	{
-		echo json_encode(array("success"=>"false","reason"=>"An error has occured"));
+		return json_encode(array("success"=>"false","reason"=>"An error has occured"));
 		//header("Location:". $GLOBALS['sso_http_root'].$GLOBALS['sso_redirectlink_on_fail_signup']);
-		ErrorLogging("Error in finding email id using inner key "."at line no. ".__LINE__." at file ".__FILE__." content: cipher=".$cipher." inner_key:".$inner_key." Decrypted text:".$text);
-		exit();
+		//ErrorLogging("Error in finding email id using inner key "."at line no. ".__LINE__." at file ".__FILE__." content: cipher=".$cipher." inner_key:".$inner_key." Decrypted text:".$text);
+		//exit();
 	}
 	 else if(is_array($d_data) && $d_data[0]['status']	==	"unverified")
 	{
@@ -91,10 +91,10 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 				
 		if($first_name	==	"" ||	$password	==	""	||	strlen($password) < 6)
 		{
-			echo json_encode(array("success"=>"false","reason"=>"First name or password is either empty or < 6"));
+			return json_encode(array("success"=>"false","reason"=>"First name or password is either empty or < 6"));
 			//header("Location:". $GLOBALS['sso_http_root'].$GLOBALS['sso_redirectlink_on_fail_signup']);
-			ErrorLogging("first name or password received is null or length of passsword is < 6 "."at line no. ".__LINE__." at file ".__FILE__." Content: first_name".$first_name."password".$password);
-			die();
+			//ErrorLogging("first name or password received is null or length of passsword is < 6 "."at line no. ".__LINE__." at file ".__FILE__." Content: first_name".$first_name."password".$password);
+			//die();
 		}
 		$password	=	md5($password);
 		
@@ -123,22 +123,22 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 		if(!$mysqlObj->Update($ott_data))
 		{
 			//update failed
-			echo json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
-			exit();
+			return  json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
+			//exit();
 		}
 		
 		$d_data	=	"delete from verify_link where emailid='".$text."'";
 		$d_id     =     $mysqlObj->Query($d_data,"result","");
-		echo json_encode(array("success"=>"true","ott"=>$ott));
+		return json_encode(array("success"=>"true","ott"=>$ott));
 		//header("Location:".$redirect_url);
-		exit();
+		//exit();
 	}
 	
 	else if(is_array($d_data) && $d_data['status']  == "verified")
 	{
-		echo json_encode(array("success"=>"false","reason"=>"Already a verified user"));
+		return json_encode(array("success"=>"false","reason"=>"Already a verified user"));
 		//header("Location:". $GLOBALS['sso_http_root'].$GLOBALS['sso_redirectlink_on_fail_signup']);
-		exit();
+		//exit();
 	}
 }
 
@@ -151,14 +151,14 @@ function sso_reset_verify($user_cipher)//if(isset($_GET['reset']))
 	global $mysqlObj;
 	if(!check_cipher($cipher))	//see validations.php
 	{
-		echo json_encode(array("success"=>"false","reason"=>"Invalid request"));
+		return json_encode(array("success"=>"false","reason"=>"Invalid request"));
 		//header("Location:". $GLOBALS['sso_http_root'].$GLOBALS['sso_redirectlink_on_fail_reset']);
-		ErrorLogging("reset cipher matching failed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: cipher=".$cipher);
-		exit();
+		//ErrorLogging("reset cipher matching failed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: cipher=".$cipher);
+		//exit();
 	}
 	else
 	{
-		ErrorLogging("WARNING RESET matching allowed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: cipher=".$cipher);
+		//ErrorLogging("WARNING RESET matching allowed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: cipher=".$cipher);
 	}
 	$text    =    outer_decrypt($cipher);
 	$query    =    array('Fields'=>'emailid,reset_key','Table'=>'reset_link','clause'=>"id=". "$text[1]");
@@ -169,10 +169,10 @@ function sso_reset_verify($user_cipher)//if(isset($_GET['reset']))
 	}
 	else
 	{
-		echo json_encode(array("success"=>"false","reason"=>"Link has expired"));
+		return json_encode(array("success"=>"false","reason"=>"Link has expired"));
 		//header("Location:". $GLOBALS['sso_http_root'].$GLOBALS['sso_redirectlink_on_fail_reset']);
-		ErrorLogging("WARNING "."Either fake or link Expired for reset "."at line no. ".__LINE__." at file ".__FILE__);
-		exit();
+		//ErrorLogging("WARNING "."Either fake or link Expired for reset "."at line no. ".__LINE__." at file ".__FILE__);
+		//exit();
 	}
 	$text    =    inner_decrypt($text[0],$inner_key);
 	
@@ -181,16 +181,16 @@ function sso_reset_verify($user_cipher)//if(isset($_GET['reset']))
 	$d_data	=	$mysqlObj->Read($query);
 	if(!is_array($d_data))
 	{
-		echo json_encode(array("success"=>"false","reason"=>"An error has occured"));
+		return json_encode(array("success"=>"false","reason"=>"An error has occured"));
 		//header("Location:". $GLOBALS['sso_http_root'].$GLOBALS['sso_redirectlink_on_fail_reset']);
-		ErrorLogging("Error in finding email id using inner key in reset "."at line no. ".__LINE__." at file ".__FILE__." content: cipher=".$cipher." inner_key:".$inner_key." Decrypted text:".$text);
-		exit();
+		//ErrorLogging("Error in finding email id using inner key in reset "."at line no. ".__LINE__." at file ".__FILE__." content: cipher=".$cipher." inner_key:".$inner_key." Decrypted text:".$text);
+		//exit();
 	}
 	else if(is_array($d_data) && $d_data[0]['status']	==	"unverified")
 	{
-		echo json_encode(array("success"=>"false","reason"=>"Unverified user"));	
+		return json_encode(array("success"=>"false","reason"=>"Unverified user"));	
 		//header("Location:". $GLOBALS['sso_http_root'].$GLOBALS['sso_redirectlink_on_fail_reset']);
-		exit();
+		//exit();
 	}
 	 else if(is_array($d_data) && $d_data[0]['status']	==	"verified")
 	{
@@ -204,7 +204,7 @@ function sso_reset_verify($user_cipher)//if(isset($_GET['reset']))
 		}
 		$d_data	=	"delete from reset_link where emailid='".$text."'";
 		$d_id     =     $mysqlObj->Query($d_data,"result","");
-		echo json_encode(array("success"=>"true"));
+		return json_encode(array("success"=>"true"));
 		//header("Location:".$redirect_url);
 		exit();
 	} 
@@ -230,14 +230,14 @@ function sso_google($token)//if(isset($_POST['idtoken']))
 	
 	if($response	==	NULL || $response	==	"")
 	{
-		ErrorLogging("curl failed may be due to network "."at line no. ".__LINE__." at file ".__FILE__." content: idtoken=".$_POST['idtoken']);	//error logging curl failed
-		echo json_encode(array("success"=>"false","reason"=>"An error has occured"));
+		//ErrorLogging("curl failed may be due to network "."at line no. ".__LINE__." at file ".__FILE__." content: idtoken=".$_POST['idtoken']);	//error logging curl failed
+		return json_encode(array("success"=>"false","reason"=>"An error has occured"));
 		exit();
 	}
 	if(isset($response->{'error_description'}))
 	{
-		ErrorLogging("Login credentials is not obtained from gmail"."at line no. ".__LINE__." at file ".__FILE__." content: id_token:".$_POST['id_token']." response:".$response->{'error_description'});
-		echo json_encode(array("success"=>"false","reason"=>"An error has occured"));
+		//ErrorLogging("Login credentials is not obtained from gmail"."at line no. ".__LINE__." at file ".__FILE__." content: id_token:".$_POST['id_token']." response:".$response->{'error_description'});
+		return json_encode(array("success"=>"false","reason"=>"An error has occured"));
 		exit();
 	}
 	else
@@ -271,8 +271,8 @@ function sso_google($token)//if(isset($_POST['idtoken']))
 		if(!$mysqlObj->Update($query))
 		{
 			//update failed
-			echo json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
-			exit();
+			return json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
+			//exit();
 		}		
 	}	
 	return json_encode(array("success"=>"true","ott"=>$ott));
@@ -299,13 +299,13 @@ function sso_signin_verify($user_email,$user_password)//else if(isset($_POST['si
 	}
 	else
 	{
-		ErrorLogging("signin email matching or password matching failed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: email:".$email." password:".$password);
-		echo json_encode(array("success"=>"false","reason"=>"invalid email or password"));
+		//ErrorLogging("signin email matching or password matching failed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: email:".$email." password:".$password);
+		return json_encode(array("success"=>"false","reason"=>"invalid email or password"));
 		exit();	
 	}
 	if(!is_array($d_data))
 	{
-		echo json_encode(array("success"=>"false","reason"=>"invalid email or password"));
+		return json_encode(array("success"=>"false","reason"=>"invalid email or password"));
 		exit();
 	}
 	else
@@ -321,7 +321,7 @@ function sso_signin_verify($user_email,$user_password)//else if(isset($_POST['si
 		if(!$mysqlObj->Update($ott_data))
 		{
 			//update failed
-			echo json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
+			return json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
 			exit();
 		}
 		//echo json_encode(array("success"=>"true","ott"=>$ott));
@@ -346,14 +346,14 @@ function sso_signup($e)//else if(isset($_POST['sign']) && $_POST['sign']==1)
 		
 	else
 	{
-		ErrorLogging("signup email matching failed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: email:".$email);
-		echo json_encode(array("success"=>"false","reason"=>"invalid email"));
+		//ErrorLogging("signup email matching failed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: email:".$email);
+		return json_encode(array("success"=>"false","reason"=>"invalid email"));
 		exit();	
 	}
 	
 	if(is_array($d_data)&&$d_data[0]['status']=="verified")
 	{
-		echo json_encode(array("success"=>"false","reason"=>"This email ID is already registered on our site"));
+		return json_encode(array("success"=>"false","reason"=>"This email ID is already registered on our site"));
 		exit ();
 				
 	}
@@ -373,7 +373,7 @@ function sso_signup($e)//else if(isset($_POST['sign']) && $_POST['sign']==1)
 		if($retval == false)
 		{
 			//insert failed
-			echo json_encode(array("success"=>"false","reason"=>"Data Insert Failed"));
+			return json_encode(array("success"=>"false","reason"=>"Data Insert Failed"));
 			exit();
 		}
 		/*$foldername = 'folder_';// . $retval; 
@@ -394,7 +394,7 @@ function sso_signup($e)//else if(isset($_POST['sign']) && $_POST['sign']==1)
 	if(!$mysqlObj->Update($d_data))
 	{
 		//update failed
-		echo json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
+		return json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
 		exit();
 	}
 	$cipher    =    outer_encrypt($cipher[0]);
@@ -408,7 +408,7 @@ function sso_signup($e)//else if(isset($_POST['sign']) && $_POST['sign']==1)
 		ErrorLogging("mail sending failed during signup "."at line no. ".__LINE__." at file ".__FILE__." content: email:".$email);//mail sending failed
 		exit();
 	}
-	echo json_encode(array("success"=>"true"));
+	return json_encode(array("success"=>"true"));
 	exit();
 }
 
@@ -428,21 +428,21 @@ function sso_reset($user_email) //if(isset($_POST['sign']) && $_POST['sign']==2)
 	
 	else
 	{
-		ErrorLogging("reset email matching failed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: email:".$email);
-		echo json_encode(array("success"=>"false","reason"=>"invalid email"));
+		//ErrorLogging("reset email matching failed with regular expression "."at line no. ".__LINE__." at file ".__FILE__." content: email:".$email);
+		return json_encode(array("success"=>"false","reason"=>"invalid email"));
 		exit();
 	}
 	
 	if(!is_array($d_data))
 	{
-		echo json_encode(array("success"=>"false","reason"=>"email doesnot exists"));
+		return json_encode(array("success"=>"false","reason"=>"email doesnot exists"));
 		exit ();
 	}
 	else
 	{
 		if($d_data[0]['status']	==	"unverified")
 		{
-			echo json_encode(array("success"=>"false","reason"=>"unverified email"));
+			return json_encode(array("success"=>"false","reason"=>"unverified email"));
 			die();	//first verify yourself;
 		}
 		$query    =    array('Fields'=>'id','Table'=>'reset_link','clause'=>"emailid='". "$email"."'");
@@ -483,7 +483,7 @@ function sso_reset($user_email) //if(isset($_POST['sign']) && $_POST['sign']==2)
 			ErrorLogging("mail sending failed during signup "."at line no. ".__LINE__." at file ".__FILE__." content: email:".$email);//mail sending failed
 			exit();			
 		}
-		echo json_encode(array("success"=>"true"));
+		return json_encode(array("success"=>"true"));
 		exit();
 	}
 }
@@ -493,15 +493,15 @@ function sso_getuserinfo($ott){
 	//look up the database for the ott and get the user mail id, user name etc.
 	$query    =    array('Fields'=>'userid,firstname,workspacename','Table'=>'userinfo','clause'=>'sso_ott="'. $ott . '"');
 	//array('Fields'=>'userid,username,status','Table'=>'userinfo','clause'=>"emailid='". "$email"."'");
-	$d_data    =    $mysqlObj->Read($query,'assoc', 'as_json');	
+	$d_data    =    $mysqlObj->Read($query,'assoc');		
 	if(!$d_data){
 		//update failed
-		return 0;  
-		//exit();
-	}
-	//echo $d_data;
+		return json_encode(array("success"=>"false")); 		
+	}	
 	//exit();
-	return $d_data; 
+	//$d_data = json_decode($d_data); 
+	return json_encode(array("success"=>"true","userid"=>$d_data[0]['userid'], 'firstname'=>$d_data[0]['firstname'], 'workspacename'=>$d_data[0]['workspacename']));
+	//return $d_data; 
 }
 
 function getTimeBasedString(){

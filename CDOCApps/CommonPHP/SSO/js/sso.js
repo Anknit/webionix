@@ -85,9 +85,9 @@ function onSignIn(googleUser)
 	$.post(sso.u,{'type':'google_signin','idtoken':id_token,'user_image':user_image})
 		.done(function(data)
 			{
-				//var fnstr = callbackfn + '(optype,data)'; 
-				//eval(fnstr);
-				MySSOCallback(optype, data); 
+				var fnstr = gcallbackFn + '(optype,data)'; 
+				eval(fnstr);
+				//MySSOCallback(optype, data); 
 			});	
 }
 

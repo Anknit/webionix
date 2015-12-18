@@ -15,7 +15,7 @@ $sso_session_name	=	"MAS";
  * 1.  $signup_form_link contains the link for sign up form.
  * 2. Path should be with respect to sso_setup_root  
  */
-$sso_signup_form_link	=	"/signupform.php";
+$sso_signup_form_link	=	"/GX_SignupVerifyForm.php" ;   ///signupform.php"; ///GX_SignupVerifyForm.php";
 
 /*
  * $sso_signup_mail_subject contains the mail subject for verificaiton link
@@ -27,7 +27,7 @@ $sso_signup_body_path	=	"/sign-up-mail.php";
 /*
  * 1. $redirectlink_on_success_signup contains the redirect link where client will be redirected after successful signup
  */
-$sso_redirectlink_on_success_signup	=	"/home.php";
+$sso_redirectlink_on_success_signup	=	"/WNX_Home.php";
 
 /*
  * 1. $redirectlink_on_fail_signup contains the redirect link where client will be redirected after signup fails
@@ -37,12 +37,12 @@ $sso_redirectlink_on_fail_signup	=	"";
 /*
  * 1. It contains the link for reset form
  */
-$sso_reset_form_link	=	"/resetform.php";
+$sso_reset_form_link	=	"/GX_ResetForm.php";
 
 /*
  * 1. $redirectlink_on_success_reest contains the redirect link where client will be redirected after successful reset password
  */
-$sso_redirectlink_on_success_reset	=	"/home.php";
+$sso_redirectlink_on_success_reset	=	"/WNX_Home.php";
 
 /*
  * $sso_mail_reset_subject contains the mail subject for reseting the password
