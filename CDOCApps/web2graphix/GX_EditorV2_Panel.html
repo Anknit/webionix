@@ -210,9 +210,17 @@
 var gWidgetTooltipID = 'widgettooltip' ; 
   $(document).ready(function() { 	
 	  WAL_Initialize();
-	  WAL_createCustomButton('group_icon', 'GX_ToolbarHandler', 'widgettooltip');
+	  WAL_createCustomButton('object_icon', 'GX_ToolbarHandler', 'widgettooltip');
 	  WAL_createCustomButton('text_icon', 'GX_ToolbarHandler', 'widgettooltip');
 	  WAL_createCustomButton('image_icon', 'GX_ToolbarHandler', 'widgettooltip');
+	  WAL_createCustomButton('group_icon', 'GX_ToolbarHandler', 'widgettooltip');
+	  WAL_createCustomButton('circle_icon', 'GX_ToolbarHandler', 'widgettooltip');
+	  WAL_createCustomButton('ellipse_icon', 'GX_ToolbarHandler', 'widgettooltip');
+	  WAL_createCustomButton('square_icon', 'GX_ToolbarHandler', 'widgettooltip');
+	  WAL_createCustomButton('line_icon', 'GX_ToolbarHandler', 'widgettooltip');
+	  WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler', 'widgettooltip');
+	  WAL_createCustomButton('freehand_icon', 'GX_ToolbarHandler', 'widgettooltip');
+	  WAL_createCustomButton('curve_icon', 'GX_ToolbarHandler', 'widgettooltip'); 
 	  
 	 var topheight = $('#topcontainer').height(); 
 	 
@@ -235,9 +243,28 @@ var gWidgetTooltipID = 'widgettooltip' ;
 		  canvTop = 0; 
 	  $('#canvas')[0].style.left = canvLeft +'px'; 
 	  $('#canvas')[0].style.top = canvTop + 'px'; 
+	  
+	  //popover 	 
+      $('#popover').jqxPopover({
+    	  theme: gTheme,
+           width: 100,
+           height: 'auto',
+           showArrow: true,
+           showCloseButton: true,
+           arrowOffsetValue: 0,
+           selector: $("#object_icon") , 
+           title:'Objects',
+           isModal: false, 
+           animationType: 'fade'
+       });
      // $('#settings div').css('margin-top', '10px');      
   }); 
   
+  function GX_ToolbarHandler(Node){
+	  var btnID =  Node.id; 
+	  alert(btnID); 
+	  
+  }
 </script> 
 
 </head>
@@ -292,16 +319,16 @@ var gWidgetTooltipID = 'widgettooltip' ;
 		<div class="panel panel-default toolbar" style='background-color:#62B2BD;color:#000000;letter-spacing:0px;font-weight:bold;font-size:12px;height:80px;'>
      		<div class="panel-body">
      		 <div style="display:inline-block;">
-     			<div class='BTN_CONTAINER' title="My New shapes">      				
-    				<input class='modifygroup'  type = "image" id='group_icon' value=''  src='../CommonCSS/icons/Version1/group.png'  />    				
+     			<div class='BTN_CONTAINER1' title="My New shapes">		
+    				<input class='modifygroup'  type = "image" id='object_icon' value=''  src='../CommonCSS/icons/Version1/group.png' width='32px' height='32px' />    				
     				<span class='TB_TEXT'>Shapes</span>
     			</div>
     			
-    			<div class="BTN_CONTAINER"  style='display:inline-block' title="My New text"> 
+    			<div class="BTN_CONTAINER1"  style='display:inline-block' title="My New text"> 
     				<input class='modifygroup'  type = "image" id='text_icon' value=''  src='../CommonCSS/icons/Version1/textobject.png'  />
     				<span class='TB_TEXT'>Text</span>
     			</div>
-    			<div class="BTN_CONTAINER"  style='display:inline-block' title="My New Image"> 
+    			<div class="BTN_CONTAINER1"  style='display:inline-block' title="My New Image"> 
 	    			<input class='modifygroup'  type = "image" id='image_icon' value=''  src='../CommonCSS/icons/Version1/imageload.png'  />
 	    			<span class='TB_TEXT'>Image</span>
 	    		</div>
@@ -324,7 +351,7 @@ var gWidgetTooltipID = 'widgettooltip' ;
                 <li>Preview</li>               
             </ul>           
             <div id='editor_div' style='height:inherit; border:none; background-color:#eee'>
-            	<div id='canvas' style='position:relative; width:600px; height:400px; left:0px; top:0px; background-color:#fff; border:3px solid blue'>
+            	<div id='canvas' style='position:relative; width:600px; height:400px; left:0px; top:0px; background-color:#fff; border:3px solid grey; box-shadow:#aaa 1px 1px 10px 4px;'>
             		
             	</div>
             	
@@ -393,6 +420,19 @@ var gWidgetTooltipID = 'widgettooltip' ;
 	
  </div>
  <div id='widgettooltip' style='display:none'></div>
-
+ <div id="popover" style='margin-top:20px;'>
+    <div style="display:inline-block";>
+         	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='group_icon' value=''  src='../CommonCSS/icons/Version1/group.png'  data-tooltiptext='Group' data-helptext='Add a new Group'/></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='circle_icon' value=''  src='../CommonCSS/icons/Version1/circle.png'  data-tooltiptext='Circle' data-helptext='Using this draw a Circle'/></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='ellipse_icon' value=''  src='../CommonCSS/icons/Version1/ellipse.png'  data-tooltiptext='Ellipse' data-helptext='Using this draw an Ellipse'/></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='square_icon' value=''  src='../CommonCSS/icons/Version1/square.png' data-tooltiptext='Rectangle' data-helptext='Use this to draw a rectangle or a circle' /></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='polygon_icon' value=''  src='../CommonCSS/icons/Version1/polygon.png' data-tooltiptext='Polygon' data-helptext='Draws a polygon'/></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='line_icon' value=''  src='../CommonCSS/icons/Version1/line.png' data-tooltiptext='Line' data-helptext='Use this to Select Lines'/></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='freehand_icon' value=''  src='../CommonCSS/icons/Version1/freehand.png' data-tooltiptext='Free Hand' data-helptext='Draw with our mouse to draw a'/></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='curve_icon' value=''  src='../CommonCSS/icons/Version1/path.png' data-tooltiptext='Curve' data-helptext='Use this to draw different types of Curves'/></div>
+	    	
+    </div>	  
+ </div>
+ 
 </body>
 </html>
