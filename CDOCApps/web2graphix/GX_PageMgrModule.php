@@ -181,7 +181,7 @@ function CDOC_PRJ_CreateHTMLPage($pageName, $pageTitle)
 	//WRITE INITIAL JS PROLOG DATA INTO THE FILE
 	$prologstr = "/*".$pageName.".js File created at run time dont' modify!!*/";
 	
-	//<html><head><title>New Page</title><script type=\"text/javascript\" src=\"http://localhost/ECLIPSE_WORKSPACE/PROTO/Login/init.js\"></script></head><body><div id=\"para1\" onmouseover=\"OnParaMouseOver()\">This is Para1</div></body></html>";
+	
 	$retval = fwrite($fh, $prologstr);
 	if($retval == false){
 		return false;
