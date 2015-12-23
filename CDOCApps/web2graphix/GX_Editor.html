@@ -337,8 +337,97 @@
             </ul>           
             <div id='editor_div' style='height:inherit; border:none; background-color:#eee'>
             	<div id='canvas' style='position:relative; width:600px; height:400px; left:0px; top:0px; background-color:#fff; border:3px solid grey; box-shadow:#aaa 1px 1px 10px 4px;'>
+            		<div id='texteditableDiv' style='position:absolute; left:0px; display:none' contenteditable='false'>
+          			<textarea id='texteditor' value='Hello world' onblur='OnTextEditFocusOut(event)' onkeypress='OnTextEditKeyPress(event)'></textarea>
+          			</div>
+          	       
+		    		<svg id="SVGContainer" x="0px" y="0px" width="100%" height="100%" version="1.1"  viewBox="0% 0% 100% 100%" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" 
+		     				xmlns="http://www.w3.org/2000/svg"  cursor="auto">
+		
+					<svg id="background" width="100%" height="100%" visibility="visible" >
+						<defs>
+						 <pattern id="gridpattern" patternUnits="userSpaceOnUse"  x="0" y="0" width="10" height="10"  viewBox="0 0 10 10" >
+						  <rect x="0" y="0" width="10" height="10" stroke="grey" stroke-opacity='0.5' stroke-width="0.3" fill="none"/>
+						 </pattern>
+						 <pattern id="bigrectpattern" patternUnits="userSpaceOnUse"  x="0" y="0" width="100" height="100"  viewBox="0 0 100 100" >
+						     <rect x="0" y="0" width="100" height="100" stroke="black" stroke-width="1" fill="url(#gridpattern)"/>
+						  </pattern>      
+						  <marker id="circmarker"  viewBox="0 0 10 10" refX="5" refY="5"  markerUnits="strokeWidth"  markerWidth="4" markerHeight="3" orient="auto">
+						       <circle cx="5" cy="5" r="5" fill="black" />
+						   </marker>  				    
+						 </defs>   
+					<rect id="gridpattern" x="0" y="0" width="100%" height="100%" fill="url(#bigrectpattern)" onclick="OnSVGParentClick(evt)" pointer-events="fill" />
+				<!-- <rect id="svgborder" x="0" y="0" width="800" height="800" stroke="red" stroke-width="6" fill="none" visibility="visible"/>-->
+				  </svg>
+					<svg id="objectcontainer" width="100%" height="100%"  visibility="visible">
+					 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="SVGOBJECTCONTAINER" x="0px" y="0px" width="400px" height="200px" viewBox="0 0 400 200" version="1.1">
+		      <title>New SVG File</title><defs id="SVGDEFINITION"> </defs>
+		       <script type="application/ecmascript">
+			          <![CDATA[
+			                   
+			                   function GX_ChangeAnimateMotionSettings(node)
+			                   {    	
+				               	    var motionanimNode = node.nextElementSibling;       
+				               	    var fromval = motionanimNode.getAttribute("from");
+				               	    fromval = fromval.split(",");    
+				               	    var objRef =  node.getAttribute("xlink:href"); 
+				               	    objRef = objRef.substring(1,objRef.length); 				               	       
+				               	    var objNode = document.getElementById(objRef); 
+				               	    var objType = objNode.classList[1]; 
+				               	    if( (objType == "ELLIPSE") || (objType == "CIRCLE") )
+				               	    {
+				               	  	  objNode.setAttribute("cx", fromval[0]); 
+				               	      objNode.setAttribute("cy", fromval[1]);   	  
+				               	    }
+				               	    else if(objType == "RECTANGLE")
+				               	    {
+				               	  	  objNode.setAttribute("x", fromval[0]); 
+				               	      objNode.setAttribute("y", fromval[1]);   	  
+				               	    }
+				               	    else if(objType == "TEXT")
+				               	    {
+				               	  	  objNode.setAttribute("x", fromval[0]); 
+				               	      objNode.setAttribute("y", fromval[1]);   	  
+				               	    }
+				               	    
+				               	    			
+			                   }                 
+							
+					  ]]>
+	          </script>
+	    <defs id="MARKER_GROUP"/> 
+	    <g id="ANIMATION_GROUP" class="ANIMATION_LIST_GROUP"/>
+		<g id="BASEGROUP" class="GROUP BaseGroup" transform="translate(0,0) scale(1,1) rotate(0 0,0)"><rect id="SVG_1012" class="SVG_SHAPE_OBJECT RECTANGLE ROTATE,0" x="57" y="56" width="173" height="90" transform="translate(0,0) scale(1,1) rotate(0 0,0)" fill="#C2EA48" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="1.0" fill-opacity="1.0" pointer-events="visible"/><ellipse id="SVG_228" class="SVG_SHAPE_OBJECT ELLIPSE ROTATE,0" cx="146.5" cy="104.5" rx="76.5" ry="31.5" transform="translate(0,0) scale(1,1) rotate(0 0,0)" fill="#A84343" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="1.0" pointer-events="visible"/></g></svg>
+					 
+	</svg>
+	<svg id="editingassets_orig" width="100%" height="100%" visibility="visible">
+					    <circle id="pathmarker" cx="0" cy="0" r="5" stroke="black" stroke-width="1"  fill="blue" fill-opacity="1.0" pointer-events="visible"  visibility="hidden" data-index="" 
+			             onclick="OnPathMarkerMouseDown(evt)" onmousemove='OnPathMarkerMouseMove(evt)' onmouseout='OnPathMarkerMouseOut(evt)' />
+			        	<path id="indicatorpath" visibility="hidden" class='INDICATOR_PATH LINE_PATH' stroke="grey" stroke-width="2" stroke-opacity="1" stroke-dasharray="4 2" fill="none" d="M50 130 L200 100 L300 150" />   	  
+			        	<path id="erasepath" visibility="hidden" class='ERASE_PATH' stroke="white" stroke-width="4" fill="none" d="" />
+			        	<rect id='eraser1_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
+			        	<rect id='eraser2_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
+						<rect id="gripper_orig" x="10" y="10" width="50" height="50" stroke="indigo" stroke-width="1" fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible"  onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)"></rect>
+						
+						<circle id="markerTL_orig" class="CUSTOM_MARKER_ORIG" cx="0" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="nw-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+				        <circle id="markerTM_orig" class="CUSTOM_MARKER_ORIG" cx="25" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="n-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+				        <circle id="markerTR_orig" class="CUSTOM_MARKER_ORIG" cx="50" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="ne-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+				        <circle id="markerMR_orig" class="CUSTOM_MARKER_ORIG" cx="75" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="e-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+				        <circle id="markerBR_orig" class="CUSTOM_MARKER_ORIG" cx="100" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="se-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+				        <circle id="markerBM_orig" class="CUSTOM_MARKER_ORIG" cx="125" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="s-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+				        <circle id="markerBL_orig" class="CUSTOM_MARKER_ORIG" cx="150" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="sw-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+				        <circle id="markerML_orig" class="CUSTOM_MARKER_ORIG" cx="170" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="w-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>	       
+				        <rect id="freedraw_orig" x="10" y="10" width="250" height="150" stroke="green" stroke-width="1" stroke-opacity='0.9' fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible" onmousedown="OnFreeDrawClick(evt)" onmousemove='OnFreeDrawMouseMove(evt)' ></rect>
+			       </svg>
+		        
+	</svg> <!-- SVGContainer -->
             		
-            	</div>
+            		
+            		
+            		
+            		
+            		
+            	</div> <!-- Canvas -->
             	
                 
             </div>
@@ -404,7 +493,7 @@
 	
  </div>
  <div id='widgettooltip' style='display:none'></div>
- <div id="popover" style='margin-top:20px;'>
+ <div id="popover" style='margin-top:20px; display:none'>
     <div style="display:inline-block">
          	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='group_icon' value=''  src='../CommonCSS/icons/Version1/group.png'  data-tooltiptext='Group' data-helptext='Add a new Group'/></div>
 	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='circle_icon' value=''  src='../CommonCSS/icons/Version1/circle.png'  data-tooltiptext='Circle' data-helptext='Using this draw a Circle'/></div>
