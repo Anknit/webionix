@@ -201,7 +201,7 @@
 <script   type="text/javascript" src="../CommonJS/Utilities.js"></script>
 <script   type="text/javascript" src="../CommonJS/CDOCWAL_V2.js"></script> 
 <script   type="text/javascript" src="GX_AnimationWdgt.js"></script>
-<script   type="text/javascript" src="GX_UIHandlerV2.js"></script>
+<script   type="text/javascript" src="GX_UIHandlerV5.js"></script>
 <script   type="text/javascript" src="GX_RemoteDataExchange.js"></script>
 <script   type="text/javascript" src="Editlistmanager.js"></script>
 
@@ -209,11 +209,8 @@
  <script type="text/javascript">
   $(document).ready(function() { 	
 	  WAL_Initialize();
-	  GX_InitializeToolbar();	  
- });
-  
-  
-  
+	  GX_Initialize();	  
+ }); 
   
   </script> 
   
@@ -230,19 +227,19 @@
         
 	    <li class='dropdown'><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">File<span class="caret"></span></a>
 	       <ul id='filemenu' class="dropdown-menu dropdown-menu-center" >
-	    	  <li><a href="#">New</a></li>
-	    	  <li><a href="#">Open</a></li>  
-	    	  <li><a href="#">Close</a></li>   			
+	    	  <li><a id='new'  href="#" onclick='GX_MenuItemHandler(event)'>New</a></li>
+	    	  <li><a id='open' href="#" onclick='GX_MenuItemHandler(event)'>Open</a></li>  
+	    	  <li><a id='cose'  href="#" onclick='GX_MenuItemHandler(event)'>Close</a></li>   			
 	  	  </ul>
 	    </li>  
 	     <li class='dropdown'><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">Edit<span class="caret"></span></a>
           <ul id='editmenu' class="dropdown-menu dropdown-menu-center" >
-    		<li><a href="#">Copy</a></li>
-    		<li><a href="#">Paste</a></li>  
-    		<li><a href="#">Delete</a></li>  			
+    		<li><a id='copy'  href="#" onclick='GX_MenuItemHandler(event)'>Copy</a></li>
+    		<li><a id='paste' href="#" onclick='GX_MenuItemHandler(event)'>Paste</a></li>  
+    		<li><a id='delete' href="#" onclick='GX_MenuItemHandler(event)'>Delete</a></li>  			
   		  </ul>
         </li>      
-        <li><a href="#animate">Animate</a></li>       
+        <li><a id='animate' href="#animate" onclick='GX_MenuItemHandler(event)'>Animate</a></li>       
       </ul>
       <ul id='userMsg' class='nav navbar-nav navbar-right' style='display:block'>        	    	
       	<p  id="userInfoMenu" class="navbar-text dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -360,44 +357,6 @@
 				<!-- <rect id="svgborder" x="0" y="0" width="800" height="800" stroke="red" stroke-width="6" fill="none" visibility="visible"/>-->
 				  </svg>
 					<svg id="objectcontainer" width="100%" height="100%"  visibility="visible">
-					 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="SVGOBJECTCONTAINER" x="0px" y="0px" width="400px" height="200px" viewBox="0 0 400 200" version="1.1">
-		      <title>New SVG File</title><defs id="SVGDEFINITION"> </defs>
-		       <script type="application/ecmascript">
-			          <![CDATA[
-			                   
-			                   function GX_ChangeAnimateMotionSettings(node)
-			                   {    	
-				               	    var motionanimNode = node.nextElementSibling;       
-				               	    var fromval = motionanimNode.getAttribute("from");
-				               	    fromval = fromval.split(",");    
-				               	    var objRef =  node.getAttribute("xlink:href"); 
-				               	    objRef = objRef.substring(1,objRef.length); 				               	       
-				               	    var objNode = document.getElementById(objRef); 
-				               	    var objType = objNode.classList[1]; 
-				               	    if( (objType == "ELLIPSE") || (objType == "CIRCLE") )
-				               	    {
-				               	  	  objNode.setAttribute("cx", fromval[0]); 
-				               	      objNode.setAttribute("cy", fromval[1]);   	  
-				               	    }
-				               	    else if(objType == "RECTANGLE")
-				               	    {
-				               	  	  objNode.setAttribute("x", fromval[0]); 
-				               	      objNode.setAttribute("y", fromval[1]);   	  
-				               	    }
-				               	    else if(objType == "TEXT")
-				               	    {
-				               	  	  objNode.setAttribute("x", fromval[0]); 
-				               	      objNode.setAttribute("y", fromval[1]);   	  
-				               	    }
-				               	    
-				               	    			
-			                   }                 
-							
-					  ]]>
-	          </script>
-	    <defs id="MARKER_GROUP"/> 
-	    <g id="ANIMATION_GROUP" class="ANIMATION_LIST_GROUP"/>
-		<g id="BASEGROUP" class="GROUP BaseGroup" transform="translate(0,0) scale(1,1) rotate(0 0,0)"><rect id="SVG_1012" class="SVG_SHAPE_OBJECT RECTANGLE ROTATE,0" x="57" y="56" width="173" height="90" transform="translate(0,0) scale(1,1) rotate(0 0,0)" fill="#C2EA48" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="1.0" fill-opacity="1.0" pointer-events="visible"/><ellipse id="SVG_228" class="SVG_SHAPE_OBJECT ELLIPSE ROTATE,0" cx="146.5" cy="104.5" rx="76.5" ry="31.5" transform="translate(0,0) scale(1,1) rotate(0 0,0)" fill="#A84343" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="1.0" pointer-events="visible"/></g></svg>
 					 
 	</svg>
 	<svg id="editingassets_orig" width="100%" height="100%" visibility="visible">
@@ -427,7 +386,7 @@
             		
             		
             		
-            	</div> <!-- Canvas -->
+     </div> <!-- Canvas -->
             	
                 
             </div>
@@ -453,17 +412,10 @@
 		                <li>Properties</li>
 		                <li>Animation</li>                
 		            </ul>		            
-		            <div>
-		                JavaServer Pages (JSP) is a Java technology that helps software developers serve
-		                dynamically generated web pages based on HTML, XML, or other document types. Released
-		                in 1999 as Sun's answer to ASP and PHP,[citation needed] JSP was designed to address
-		                the perception that the Java programming environment didn't provide developers with
-		                enough support for the Web. To deploy and run, a compatible web server with servlet
-		                container is required. The Java Servlet and the JavaServer Pages (JSP) specifications
-		                from Sun Microsystems and the JCP (Java Community Process) must both be met by the
-		                container.
+		            <div id='groupTab'>
+		                <div id="node_panel" >Node Panel</div>
 		            </div>
-		            <div>
+		            <div id='propertyTab'>
 		                ASP.NET is a web application framework developed and marketed by Microsoft to allow
 		                programmers to build dynamic web sites, web applications and web services. It was
 		                first released in January 2002 with version 1.0 of the .NET Framework, and is the
@@ -472,7 +424,7 @@
 		                using any supported .NET language. The ASP.NET SOAP extension framework allows ASP.NET
 		                components to process SOAP messages.
 		            </div>
-		            <div>
+		            <div id='animationTab'>
 		                Python is a general-purpose, high-level programming language[5] whose design philosophy
 		                emphasizes code readability. Python claims to "[combine] remarkable power with very
 		                clear syntax",[7] and its standard library is large and comprehensive. Its use of
@@ -507,7 +459,339 @@
     </div>	  
  </div>
  
+<div id="svgfileopendlg" style='display:none;z-index:1'><div id="svglisttitle">Open SVG Files from my Workspace</div>
+		<div id="svgfileopendlgcontent" style="overflow:hidden">
+			<div id="svgfileopenlistbox"></div> 		
+      		
+      		<input type="button" id='SVGFO_LB_okbtn' value="OK" onclick="GX_LBOKHandler()"  style="margin-top:20px"/>
+      		<input type="button" id='SVGFO_LB_cancelbtn' value="Cancel" onclick=""  style="margin-top:20px"/>
+		</div>
+</div>
+  
+  <div id="newSVGFileNameDlg" style="display:none"><div id="Div2">Enter File Name</div>
+        <div id='Div3' style="overflow: hidden"> 
+            <input  id='pageNameIP' type=text value="" />
+            <div> 
+                <input type="button" id ='pageOK'     value="OK" />
+                <input type="button" id ='pageCancel' value="Cancel"  />
+            </div>
+       </div>          
+  </div>
+  
+  <div id="svgfiledeletedlg" style='display:none'><div id="svglisttitle">Delete SVG Files from my Workspace</div>
+		<div id="svgfiledeletedlgcontent" style="overflow:hidden">
+			<div id="svgfiledeletelistbox"></div>   
+			<input type="button" id='SVGFO_LB_deletebtn' value="Delete" onclick="GX_LBDeleteItem()"  style="margin-top:20px"/>    		
+      		<input type="button" id='SVGFD_LB_cancelbtn' value="Close" onclick=""  style="margin-top:20px"/>
+		</div>
+  </div>
+  <div id="svgdimensiondlg" style='display:none'><div id="svgdimtitle">Dimension of SVG Image</div>
+    <div id="svgfiledeletedlgcontent" style="overflow:hidden">
+		 <div id='svgWidthEdit' style='display:inline-block; margin-left:5px;'>Width<div id='svgwidthIP' class='EDIT_BOX' type='DIMENSION' ></div></div>
+		 <div id='svgHeightEdit' style='display:inline-block; margin-left:5px;'>Height<div id='svgheightIP' class='EDIT_BOX' type='DIMENSION' ></div></div>		
+            <div> 
+                <input type="button" id ='svgDimOK'     value="OK" />
+                <input type="button" id ='svgDimCancel' value="Cancel"  />
+           </div>
+     </div>
+  </div>
+  <div id="polygonipdlg" style='display:none'><div id="svgdimtitle">Inputs for Polygon</div>
+    <div id="svgfiledeletedlgcontent" style="overflow:hidden">
+		 <div id='polynSidesedit' style='display:inline-block; margin-left:5px;'>Number of Sides<div id='polynSidesIP' class='EDIT_BOX' type='POLY_DIMENSION' ></div></div>
+		 <div id='polyLengthEdit' style='display:inline-block; margin-left:5px;'>Length<div id='polyLengthIP' class='EDIT_BOX' type='POLY_DIMENSION' ></div></div>		
+            <div> 
+                <input type="button" id ='polynSidesOK'     value="OK" />
+                <input type="button" id ='polyLengthCancel' value="Cancel" />
+           </div>
+     </div>
+  </div>
+  
+  <div id='colorpickwidget' style='display:none'>
+            <div id='colorhdr'>Choose Color</div>
+            <div id='colorcontent' style="overflow: hidden">
+                <div id="colorpicker"></div> 
+                	<input type="button" id='okbtn' value="Ok" onclick="GX_ColorWidgetOK(event)"/>  
+                	<input type="button" id='cancelbtn'  value="Cancel" onclick="GX_ColorWidgetCANCEL(event)"/>                	
+            </div>        
+  </div>  
+  
+  <div id='marker_colorpickwidget' style='display:none'>
+            <div id='marker_colorhdr'>Choose Color</div>
+            <div id='marker_colorcontent' style="overflow: hidden">
+                <div id="marker_colorpicker"></div> 
+                	<input type="button" id='marker_okbtn' value="Ok" onclick="GX_Marker_ColorWidgetOK(event)"/>  
+                	<input type="button" id='marker_cancelbtn'  value="Cancel" onclick="GX_Marker_ColorWidgetCANCEL(event)"/>                	
+            </div>        
+  </div>       
+   
  
+ <div id='gradientDlg'style="overflow: hidden; display:none"><div id="LGtitle">Linear Gradient Settings</div>
+ 	     
+       <div id="linearcontent" style="overflow:hidden;">
+        
+              <div style= 'margin-left:2px; margin-top:10px;'>Title of Gradient<input  id='gradTitleIP' style= 'margin-left:4px;' type=text value="Default" onblur='OnEditBoxFocusOut(event)'/>
+              	
+              </div>
+                 <div id='linSpreaddiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Spread-Method<div id='gradSpreadDDL' class='EDIT_BOX' type='Spread Method to Apply' style='margin-top:8px' ></div></div>
+                 
+         <div id='LGSpecific' style='display:block;margin-left:55px;''>
+         		<div id='END_POINT'  class='LG_MARKER_POINTS' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1'></div>
+         		<div id='START_POINT'  class='LG_MARKER_POINTS' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1'></div>       
+                <div id='LinearGradpreview' style='position:relative; left:0px; '>
+                    <?xml version="1.0"?><!DOCTYPE svg SYSTEM "svg11.dtd">
+                    <svg xmlns="http://www.w3.org/2000/svg" id="GRAD_PREVIEW_SVG" x="0px" y="0px" width="150px" height="150px" viewBox="0 0 150 150" version="1.1">
+			            <title>New SVG File</title>
+	                    <defs>    
+	                    </defs>
+	                    <rect id="LINEAR_GRAD_PREVIEW_RECTANGLE" x="0" y="0" width="150" height="150" fill="green" stroke="black" stroke-width="0" opacity="1.0"/>
+	                    <line id="LG_INDICATOR_LINE" class="LG_MARKERS" x1='1' y1='1' x2='149' y='149' stroke="black" stroke-width="1" stroke-dasharray="4,2" stroke-linejoin="miter" stroke-opacity="1" fill="none"/>
+	                   <!-- 
+	                    <circle id='START_POINT' class="LG_MARKERS" cx='7' cy='7' r='14' stroke='black'  stroke-width='2' fill='none' fill-opacity='0.5' pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
+	                    <circle id='END_POINT' class="LG_MARKERS" cx='122' cy='122' r='14' stroke='black' stroke-width='2' fill='none' fill-opacity='0.5'pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
+	                    -->
+                 
+                    </svg>
+                    <div id='END_POINT'  class='LG_MARKER_POINTS' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1; display:none'></div>
+         		    <div id='START_POINT'  class='LG_MARKER_POINTS' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1; display:none'></div>
+                  </div> 
+                 
+        </div>
+        
+        <div id='RGSpecific' style='display:block;margin-left:65px;'> 
+         <div id='RG_FOCUS_POINT'  class='RG_MARKER_POINTS' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1; display:none'>F</div>
+         <div id='RadialGradPreview' style='position:relative; left:5px;'>
+          <?xml version="1.0"?><!DOCTYPE svg SYSTEM "svg11.dtd">
+          <svg xmlns="http://www.w3.org/2000/svg" id="GRAD_PREVIEW_SVG" x="0px" y="0px" width="150px" height="150px" viewBox="0 0 150 150" version="1.1">
+         	<circle id='RG_CIRCLE' class= 'RG_MARKERS' cx='75' cy='75' r='75' fill='none' stroke="black" stroke-width="0" stroke-dasharray="4,2"  pointer-events='visible'/>
+           
+           <!-- <circle id='RG_FOCUS_POINT' class="RG_MARKERS" cx='38' cy='38' r='10' stroke='black' stroke-width='2' fill='black' fill-opacity='0.5' pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>-->
+           </svg>
+         </div>
+        	       		
+       </div>    
+      	<div style='margin-left:65px;'>  
+	        <div id='color1offset' style='margin-left:-10px;'>
+				<div style='display:inline-block; vertical-align:middle;'><button id='stop0_color' onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div> 
+				<div id='stop0_offset_slider' style='display:inline-block;margin-left:3px;vertical-align:middle;'></div>
+			</div>  
+			<div id='color2offset' style='margin-left:-10px;'>
+				<div style='display:inline-block; vertical-align:middle;'><button id='stop1_color' onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+				<div id='stop1_offset_slider' style='display:inline-block;margin-left:3px;vertical-align:middle;'></div>
+			</div>	  
+		</div>   
+		<!--        
+                 <div style='border:ridge 2px #f0f0f0;border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:10px;  margin-right:5px; width: auto; '>   
+                   <div id='animateStop_col' style="position:relative; top:-13px; margin-left:10px; margin-top: 5px;margin-right:10px;z-index:1;background-color:white;">Animate</div>
+                    <div style='display:inline-block; position:relative; top:-10px;'>	                    	
+                      	<div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:0px;'>Duration(s)<div id='durStopColIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	               
+	                	<input type="button" id ='apply_Stop_Col' style='display:inline-block; margin-left:12px; position:relative; top:-10px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                	<input type="button" id ='animPreviewStop' style='display:inline-block; margin-left:1px; position:relative; top:-10px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
+	                </div> 
+                  </div>
+               -->  
+                    <div style='margin-top:3px'> 
+                        <input type="button" id ='myOK'     value="OK"  onclick='GX_GradDlgOK()'/>
+                        <input type="button" id ='myCancel' value="Cancel" onclick='GX_GradDlgCancel()' />
+                    </div>
+                 </div>
+                 
+    </div>        	
+                  
+                   
+                 
+         	
+    <div id='gradcolorpickwidget' style='display:none'>
+                <div id='gradcolorhdr'>Choose Color</div>
+                <div id='gradcolorcontent' style="overflow: hidden">
+                    <div id="gradcolorpicker"></div> 
+                	    <input type="button" id='gradokbtn' value="Ok" onclick="GX_GradColorWidgetOK(event)"/>  
+                	    <input type="button" id='gradcancelbtn'  value="Cancel" onclick="GX_GradColorWidgetCANCEL(event)"/>                	
+                </div>        
+     </div> 
+     
+      <div id='animcolorpickwidget' style='display:none'>
+            <div id='animcolorhdr'>Animate Color</div>
+            <div id='animcolorcontent' style="overflow: hidden">
+                <div id="animcolorpicker"></div> 
+                	<input type="button" id='animokbtn' value="Ok" onclick="GX_AnimColorWidgetOK(event)"/>  
+                	<input type="button" id='animcancelbtn'  value="Cancel" onclick="GX_AnimColorWidgetCANCEL(event)"/>                	
+            </div>        
+      </div>  
+   <div id='animationwidget' style="overflow: hidden; display:none">
+    <div id='animhdr' style='font-weight:bold; font-size:medium'>Animation Settings</div>
+    <div id='animcontent' style="overflow: hidden">
+       
+    	<div>
+	    	<div style= 'display:inline-block;margin-left:2px; margin-top:10px;'>Animation ID<input  id='animIDIP' style= 'margin-left:4px;' type='text' /></div>
+	    	<div style= 'display:inline-block; margin-left:2px; margin-top:10px;'>Object ID<input  id='objectIDIP' style= 'margin-left:4px;' type='text' /></div>
+	  	
+    	</div>
+    	<div id='animTabContent' style='margin-top:8px'>
+           <ul>
+              <li id='animparamTab' style="margin-left: 15px;">Animation Parameters</li>
+              <li id='animtimeTab'>Timing Parameters</li>               
+           </ul>
+           <div id="animparamcontent">
+           <div id='attrvalbtn' style='position:relative; top:10px; left:20px; z-index:1;background-color:white; margin-bottom:1px;margin-top:1px;'>Animate Attribute</div>
+             	
+           	 <div id='motionvalbtn' style='position:relative; top:1px; left:20px; z-index:1;background-color:white; margin-bottom:5px;margin-top:1px;'>Animate Motion</div>
+           	 
+          </div> <!-- id="animparamcontent" -->
+          <div id="animtimecontent">
+             <div id='starttext' style='position:relative; top:10px; left:20px; z-index:1; width:42px; background-color:white; margin-bottom:1px;margin-top:1px;'>Starts</div>
+             <div id='timingparamrgroup' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:2px; margin-bottom:20px; margin-right:5px; width: 352px; height: 218px'>
+             	<div id='timeRB' style='display:inline-block; margin-bottom:5px;margin-top:5px;margin-left:8px;'>At Time(sec)</div>
+             	<div id='startimeEdit' style='display:inline-block; margin-left:1px; margin-top:5px'><div id='startTimeIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                         
+             	<div id='uieventRB' style='position:relative; top:14px; left:1px; z-index:1;background-color:white; margin-bottom:5px;margin-top:1px;margin-left:8px;'>On Mouse Click</div>
+             	<div id='uieventgroup' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:2px; margin-bottom:20px; margin-right:5px; width: 340px; height: 46px'>
+             		<!-- <div id='uieventlist' style= 'display:inline-block; margin-left:8px; '>Event<div id='uieventlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>-->
+             		<div id='objectlist' style= 'display:inline-block; margin-left:8px; '>On Object<div id='objectlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+             	</div>
+             	
+             	<div id='animeventRB' style='position:relative; top:16px; left:1px; z-index:1;background-color:white; margin-bottom:5px;margin-top:1px;margin-left:8px;'>On Animation Event</div>
+             	<div id='animeventgroup' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:2px; margin-bottom:20px; margin-right:5px; width: 340px; height: 46px'>
+             		<div id='animeventlist' style= 'display:inline-block; margin-left:8px;'>Event<div id='animeventlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+             		
+             	</div>
+             	
+             	
+             
+             </div> <!--timingparamrgroup  -->
+           
+           
+           </div> <!-- animtimecontent -->
+           </div>                    	
+    </div> 
+           
+  </div>
+ 
+ 
+     <div id="fillcolorDlg" style='display:none'><div id="fillcoldlg">Fill Solid Color</div>
+	    <div id="fillcolcontent" style="overflow:hidden">
+			 	<label>Choose Color<button id='fill_colorbtn' type='BACKGROUND_COLOR'   onclick="GX_FillColorHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></label>
+			 	
+			 	<div id='animateFillColor' style="display:inline-block;margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
+			 	<input type="button" id ='fillcolAnimAddBtn'  value="Apply"  onclick='GX_FillBtnHandler(event)'/>
+			 	<input type="button" id ='fillcolAnimPreviewBtn'  value="Preview"  onclick='GX_FillBtnHandler(event)'/>	
+	            <div style='position:relative; top: 10px'> 
+	                <input type="button" id ='fillcolOK'     value="OK" />
+	                <input type="button" id ='fillcolCancel' value="Cancel" />
+	           </div>
+	     </div>
+ 	 </div>  
+ 	 
+ 
+  <div id="newGroupNameDlg" style="display:none"><div id="Div2">Enter Name of Group</div>
+        <div id='div1123' style="overflow: hidden"> 
+            <input  id='groupNameIP' type=text value="" />
+            <div> 
+                <input type="button" id ='groupOK'     value="OK" />
+                <input type="button" id ='groupCancel' value="Cancel"  />
+            </div>
+       </div>          
+  </div>
+  
+  <div id='dummyNode' style='display:none'></div>
+  <div id='widgettooltip' style='display:none'></div>
+   <div id='selectortooltip' style='display:none'>Hello World</div>
+	
+      
+	<div id='jqxContextMenuWidget' style='vertical-align: middle; text-align: center; background: #eee;
+            height: 400px; width: 400px;'>
+            <div id='objectContextmenu'>
+                <ul>
+			       <li id="groupmenu"> <a href="#Group">Group</a></li>			       	
+			       <li id="move_fwd"> <a href="#forwrad">Bring Forward</a></li>
+			       <li id="move_top"> <a href="#Front">Bring To Top</a></li>
+			       <li id="move_bwd"> <a href="#forwrad">Send Backward</a></li>
+			       <li id="move_bottom"> <a href="#Front">Send To Bottom</a></li>
+			       <li id="deletemenu"> <a href="#Delete">Delete</a></li>
+	     		</ul>
+              </div>
+     </div>
+      <div id="movetoGroupDlg" style="display:none"><div id="Div2">Select Group</div>
+        <div id='hfad' style="overflow: hidden"> 
+            <div>Move To<div id='grouptoDDL' class='EDIT_BOX' ></div></div>
+            <div> 
+                <input type="button" id ='grouptoOK'     value="OK" />
+                <input type="button" id ='grouptoCancel' value="Cancel"  />
+            </div>
+       </div>          
+  	</div>
+  	
+  	<div id="newAnimationDlg" style="display:none"><div id="Div2">Enter Animation Title</div>
+        <div id='Div3' style="overflow: hidden"> 
+        	<div class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-top:14px;'>Title<input  id='newAnimtitleIP' style= 'margin-left:4px;' type='text' value=""/></div>
+        	<div id='newanimattrDivlist' class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Animate<div id='newAnimTypeDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+        	           
+            <div> 
+                <input type="button" id ='newAnimOK'     value="OK" onclick='GX_NewAnimDlgOK()'/>
+                <input type="button" id ='newAnimCancel' value="Cancel"  />
+            </div>
+       </div>          
+   </div>
+   
+   
+   <div id="imageLoadDlg" style="display:none"><div id="Div2">Please Select Image file</div>
+        <div id='Div4' style="overflow: hidden">           
+            <form enctype="multipart/form-data" action="GX_FileUploaded.php" id="imgForm" method="post" name="frmImageLoad">
+                <input id="imgFile" name="file4Upload" type="file" accept="image/*" onchange="GX_updateImageFilename(this.value)" />     			
+     			<input id="resID" name="resIDvalue" type="hidden" value="unknown"/>
+     			<input id="resType" name="resTypevalue" type="hidden" value="unknown"/>
+     			<input id="imgFname" name="imgFnamevalue" type="hidden" value="unknown"/>
+     			
+             </form> 
+              <div> 
+                <input type="button" id ='imageOK'     value="OK" />
+                <input type="button" id ='imageCancel' value="Cancel"  />
+            </div>          
+       </div>          
+     </div>
+     
+     <div id="waitwindow" ><div id="windowtitle">Wait......</div> 
+       <div id='mycontent'style="overflow: hidden">                     
+       </div>        
+    </div>
+    <div id="drawingpen" class="ui-widget-content" style='border:2px solid black; position:absolute; width:4px;height:4px;left:50px; top:50px; visibility:hidden'></div>
+    <div id="sel_gripper" class="ui-widget-content " style='border:2px dotted blue; position:absolute'></div>
+    <!-- <div id="sel_gripper" class="ui-widget-content " style='border:2px dotted blue; position:absolute'><span style='position:relative; top:-15px; left:-10px; width:100px; background-color:yellow; border:1px solid black;border-radius:2px; font-weight:bold;overflow:visible'>X-Pos: 0, Y-Pos: 0</span></div>-->
+    <div id='DivPathMarker' class="ui-widget-content" style='border:2px dotted blue; position:absolute'></div>
+    
+    <div id='markerPoint'  class='CUSTOM_MARKER' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1;'></div>
+    
+    <div id="deleteConfirmDlg" style="display:none"><div ">Confirm</div>
+        <div  style="overflow: hidden"> 
+        	<div  style= 'display:inline-block; margin-left:2px; margin-top:14px;'>Are You Sure You Want to Delete the Object ?</div>         	           
+            <div> 
+                <input type="button" id ='deleteOK'     value="Yes" onclick='GX_DeleteConfirmDlgOK()'/>
+                <input type="button" id ='deleteCancel' value="No"  />
+            </div>
+       </div>          
+   </div>
+    
+    <div id="exportDlg" style="display:none"><div>Export Parameters</div>
+        <div style="overflow: hidden"> 
+            <div style='margin-bottom:10px'>Object Name<input  id='objectNameIP' type=text value=""  style='margin-left:5px'/></div>
+            <div style='margin-top:5px; margin-bottom:10px'>Title<input  id='objecttitleIP' type=text value="" style='margin-left:5px; width:250px'/></div>
+            <div style='margin-top:5px; margin-bottom:10px'>Category<input  id='categoryIP' type=text value="" style='margin-left:5px; width:250px'/></div>
+            <div> 
+                <input type="button" id ='exportOK'     value="OK" />
+                <input type="button" id ='exportCancel' value="Cancel"  />
+            </div>
+       </div>          
+   </div>
+   
+   <div id="importListDlg" style="display:none"><div>List of Shapes</div>
+        <div style="overflow: hidden"> 
+        <div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left; margin-bottom:10px"><div id="importlistgrid"></div></div>                 
+	        <div style='margin-top:10px'> 
+	                <input type="button" id ='importOK'     value="OK" />
+	                <input type="button" id ='importCancel' value="Cancel"  />
+	        </div>
+       </div>          
+   </div>
+  
  
 </body>
 </html>
