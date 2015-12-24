@@ -1208,12 +1208,13 @@ function GX_InitializeDocument(svgFileName)
 	attrvalue = svgdatanode.getAttribute('viewBox'); 
 	//svgcontainer.setAttribute('viewBox',attrvalue ); 
 	
-	var rectBorderNode =  document.getElementById('svgborder'); 
+	/*var rectBorderNode =  document.getElementById('svgborder'); 
 	if(!rectBorderNode)
 	{
 		var rectBorder = '<rect id="svgborder" x="0" y="0" width="100%" height="100%" stroke="' + gSVGContainerbordercol + '" stroke-width="5" fill="none" visibility="visible"/>';
 		GX_AddNewNodeFromXMLString('objectcontainer', rectBorder);		
-	}
+	}*/ 
+	
 	WAL_SetItemInDropDownList('zoomDDL', 0, true);
 	//set the file name to title etc. 
 	if(svgFileName)
@@ -1446,7 +1447,8 @@ function GX_menu_open_svgfrom_remote()
 {
 	 var newsource = GXRDE_getAssetListFromServer('SVG');  
 	 WAL_ListBoxUpdateData('svgfileopenlistbox', newsource);
-	 WAL_showWindow(gSVGFileOpenDlg, true, 'topcontainer');
+	 WAL_showWindow(gSVGFileOpenDlg, true, 'open');
+	// WAL_showWindow(gSVGFileOpenDlg, true, 'topcontainer');
 }
 
 function GX_menu_delete_svgfrom_remote()
@@ -3958,6 +3960,10 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('multiselect_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('align_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('zoom_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('file_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('edit_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    
+    
 	
     WAL_createCustomButton('group_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('circle_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
