@@ -15,7 +15,9 @@
 <link rel="stylesheet" href="../CommonCSS/CDOCStyle.css"> 
  <!-- jQWidgets CSS -->
 <link href="../CommonJS/jqwidget_3.9.1/jqwidgets/styles/jqx.base.css" rel="stylesheet">
-<link href="../CommonJS/jqwidget_3.9.1/jqwidgets/styles/jqx.bootstrap.css" rel="stylesheet">
+<link href="../CommonJS/jqwidget_3.9.1/jqwidgets/styles/jqx.mygrey.css" rel="stylesheet">
+<!-- <link href="../CommonJS/jqwidget_3.9.1/jqwidgets/styles/jqx.bootstrap.css" rel="stylesheet"> -->
+
 <link rel="stylesheet" href="../CommonCSS/CDOCStyle.css">   
  <style>
 /* Bootstrap based styles */ 
@@ -49,6 +51,7 @@
       color: #818181;
       text-align: justify;
       text-justify: inter-word;
+      background-color:#444444; 
   }
   h2 {
       font-size: 24px;
@@ -81,14 +84,16 @@
 	.nav{
 		background-color:ddd;
 		color: #fff;
-	}.navbar {
+		
+	}
+	.navbar {
     margin-bottom: 0;
     background-color: #f4511e;
     z-index: 9999;
     border: 0;
     font-size: 12px !important;
     line-height: 1.42857143 !important;
-    letter-spacing: 4px;
+    letter-spacing: 0px;
     border-radius: 0;
 }
 /*SSO Widget related */
@@ -169,16 +174,14 @@
   	left:30px; 
   	color:#565052;  
   }
-/*
+
 .panel{
-	background-color:#62B2BD; 
+	background-color:#e8e8e8; 
 	color:#000000;
 	letter-spacing:0px;
-	font-weight:bold; 
-	font-size:12px;
-	height:80px; 
+	padding:0px; 	
 }
-*/
+
 .TB_TEXT{	
 	font-family: "Times New Roman", Georgia, Serif"; 
 	letter-spacing:0px;
@@ -216,63 +219,22 @@
   
 </head>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top" style='background-color:#222; color:blue'>
+<div>
+<nav class="navbar navbar-default navbar-fixed-top" style='background-color:#111;>
   <div id='topcontainer' class="container" style='margin-top:5px'>
-    <div class="navbar-header" style='margin-left:-100px'>      
+    <div class="navbar-header col-sm-2" style='margin-top:10px'>      
       <a class="navbar-brand" href="#myPage" style='margin-top:-15px'><img class="img-responsive" src="../CommonCSS/icons/Version1/SiteIcons/wnxnotextlogo.png" width='50px' height='50px'></a>
-      <p class="navbar-brand logotext" style='color:#f4511e;'>Noxta</p>
+      <p class="navbar-brand logotext" style='color:#f4511e; margin-left:-25px'>Noxta</p>
     </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav navbar-left" style='padding-left:45px; color:red'>
-        
-	    <li class='dropdown'><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">File<span class="caret"></span></a>
-	       <ul id='filemenu' class="dropdown-menu dropdown-menu-center" >
-	    	  <li><a id='new'  href="#" onclick='GX_MenuItemHandler(event)'>New</a></li>
-	    	  <li><a id='open' href="#" onclick='GX_MenuItemHandler(event)'>Open</a></li>  
-	    	  <li><a id='cose'  href="#" onclick='GX_MenuItemHandler(event)'>Close</a></li>   			
-	  	  </ul>
-	    </li>  
-	     <li class='dropdown'><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">Edit<span class="caret"></span></a>
-          <ul id='editmenu' class="dropdown-menu dropdown-menu-center" >
-    		<li><a id='copy'  href="#" onclick='GX_MenuItemHandler(event)'>Copy</a></li>
-    		<li><a id='paste' href="#" onclick='GX_MenuItemHandler(event)'>Paste</a></li>  
-    		<li><a id='delete' href="#" onclick='GX_MenuItemHandler(event)'>Delete</a></li>  			
-  		  </ul>
-        </li>      
-        <li><a id='animate' href="#animate" onclick='GX_MenuItemHandler(event)'>Animate</a></li>       
-      </ul>
-      <ul id='userMsg' class='nav navbar-nav navbar-right' style='display:block'>        	    	
-      	<p  id="userInfoMenu" class="navbar-text dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-      	<span id='welcomeMsg'>Hi Guest kumar</span>
-    	<span class="caret"></span>
-    	</p>
-    	<ul id='accountinfomenu' class="dropdown-menu dropdown-menu-center" aria-labelledby="dropdownMenu1" >
-    		<li><a href="#">My Account</a></li>
-    		<li><a href="#">My Workspace</a></li>
-    		<li><a href="#">Log-Out</a></li>    		
-  		</ul>
-      </ul>
-      <ul class='nav navbar-nav navbar-right' style='padding-left:50px'>
-      	<!-- 
-      	<button id='signinBtn' type="button" onclick='OnBtnclick(event)' class="btn btn-default navbar-btn btn-warning" data-toggle="modal"><span class="glyphicon glyphicon-log-in" aria-hidden="true" style='padding-right:5px'></span>Sign-in</button>
-      	<button id='signoutBtn' type="button" onclick='OnBtnclick(event)' class="btn btn-default navbar-btn btn-success" style='display:none'><span class="glyphicon glyphicon-log-out" aria-hidden="true" style='padding-right:5px;'></span>Sign-Out</button>
-      	-->
-      	<button id='signinBtn' type="button" onclick='OnBtnclick(event)' class="btn btn-default navbar-btn btn-warning" data-toggle="modal">Sign-in</button>
-      	<button id='signoutBtn' type="button" onclick='OnBtnclick(event)' class="btn btn-default navbar-btn btn-success" style='display:none'>Sign-Out</button>
-      </ul> 
-    </div>  
-    
-     <!-- Toolbar panel  -->
-		<div class="panel panel-default toolbar" style='background-color:#62B2BD;color:#000000;letter-spacing:0px;font-weight:bold;font-size:12px;height:80px;'>
-     		<div class="panel-body">
-     		 <div style="display:inline-block;">
+    <div class="collapse navbar-collapse col-sm-10" id="myNavbar" style='margin-top:10px'>
+    	  <div  style="display:inline-block;">
      			<div class='BTN_CONTAINER' title="My New shapes">		
     				<input class='IMAGE_BUTTON'  type = "image" id='object_icon' value=''  src='../CommonCSS/icons/Version1/group.png'  />    				
     				<span class='TB_TEXT'>Shapes</span>
     			</div>
     			
     			<div class="BTN_CONTAINER"  style='display:inline-block' title="My New text"> 
-    				<input class='IMAGE_BUTTON'  type = "image" id='text_icon' value=''  src='../CommonCSS/icons/Version1/textobject.png'  />
+    				<input class='IMAGE_BUTTON'  type = "image" id='text_icon' value=''  src='../CommonCSS/icons/Version1/text.png'  />
     				<span class='TB_TEXT'>Text</span>
     			</div>
     			<div class="BTN_CONTAINER"  style='display:inline-block' title="My New Image"> 
@@ -313,19 +275,58 @@
 	    		<div class="BTN_CONTAINER"  style='display:inline-block' title="Zoom In/Out"> 
 	    			<input class='IMAGE_BUTTON'  type = "image" id='zoom_icon' value=''  src='../CommonCSS/icons/Version1/zoom.png'  />
 	    			<span class='TB_TEXT'>Zoom</span>
-	    		</div>
-	    		
-    		 </div>  		
-     		</div>
-      </div>    
+	    		</div>	    		
+    		 </div>  
+     <!-- 
+      <ul class="nav navbar-nav navbar-left" style='padding-left:45px; color:red'>  
+     
+	    <li class='dropdown'><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">File<span class="caret"></span></a>
+	       <ul id='filemenu' class="dropdown-menu dropdown-menu-center" >
+	    	  <li><a id='new'  href="#" onclick='GX_MenuItemHandler(event)'>New</a></li>
+	    	  <li><a id='open' href="#" onclick='GX_MenuItemHandler(event)'>Open</a></li>  
+	    	  <li><a id='cose'  href="#" onclick='GX_MenuItemHandler(event)'>Close</a></li>   			
+	  	  </ul>
+	    </li>  
+	    <li class='dropdown'><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">Edit<span class="caret"></span></a>
+          <ul id='editmenu' class="dropdown-menu dropdown-menu-center" >
+    		<li><a id='copy'  href="#" onclick='GX_MenuItemHandler(event)'>Copy</a></li>
+    		<li><a id='paste' href="#" onclick='GX_MenuItemHandler(event)'>Paste</a></li>  
+    		<li><a id='delete' href="#" onclick='GX_MenuItemHandler(event)'>Delete</a></li>  			
+  		  </ul>
+        </li>      
+        <li><a id='animate' href="#animate" onclick='GX_MenuItemHandler(event)'>Animate</a></li>       
+      </ul>
+      --> 
+    </div>	
+    
+       <div style='margin-top:10px; position:relative; left:-60px'> 
+		      <ul id='userMsg' class='nav navbar-nav navbar-right' style='display:block'>        	    	
+		      	<p  id="userInfoMenu" class="navbar-text dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+		      	<span id='welcomeMsg'>Hi Guest kumar</span>
+		    	<span class="caret"></span>
+		    	</p>
+		    	<ul id='accountinfomenu' class="dropdown-menu dropdown-menu-center" aria-labelledby="dropdownMenu1" >
+		    		<li><a href="#">My Account</a></li>
+		    		<li><a href="#">My Workspace</a></li>
+		    		<li><a href="#">Log-Out</a></li>    		
+		  		</ul>
+		      </ul>
+		      <ul class='nav navbar-nav navbar-right' style='padding-left:50px'>
+		      	<!-- 
+		      	<button id='signinBtn' type="button" onclick='OnBtnclick(event)' class="btn btn-default navbar-btn btn-warning" data-toggle="modal"><span class="glyphicon glyphicon-log-in" aria-hidden="true" style='padding-right:5px'></span>Sign-in</button>
+		      	<button id='signoutBtn' type="button" onclick='OnBtnclick(event)' class="btn btn-default navbar-btn btn-success" style='display:none'><span class="glyphicon glyphicon-log-out" aria-hidden="true" style='padding-right:5px;'></span>Sign-Out</button>
+		      	-->
+		      	<button id='signinBtn' type="button" onclick='OnBtnclick(event)' class="btn btn-default navbar-btn btn-warning" data-toggle="modal">Sign-in</button>
+		      	<button id='signoutBtn' type="button" onclick='OnBtnclick(event)' class="btn btn-default navbar-btn btn-success" style='display:none'>Sign-Out</button>
+		      </ul> 
+     </div>
+       
   </div>
 </nav>
-<div class='container-fluid'>
-  Middle Panel 
-</div>
+</div>   
   <div id='home' class='container-fluid' style='padding-top:40px; padding-left:2px;'>  
-  	<div class='row'>
-  		<div class="panel panel-default col-sm-8" style='position:relative;top:-20px; border:none;'>    	
+  	<div class='row' style='margin-top:35px'>
+  		<div class="panel panel-default col-sm-8" style='position:relative;top:0px; border:none;'>    	
     	<div class="panel-body" style='padding:0px'>
     	  <div id='editorTabs'>
             <ul>               
@@ -356,9 +357,7 @@
 					<rect id="gridpattern" x="0" y="0" width="100%" height="100%" fill="url(#bigrectpattern)" onclick="OnSVGParentClick(evt)" pointer-events="fill" />
 				<!-- <rect id="svgborder" x="0" y="0" width="800" height="800" stroke="red" stroke-width="6" fill="none" visibility="visible"/>-->
 				  </svg>
-					<svg id="objectcontainer" width="100%" height="100%"  visibility="visible">
-					 
-	</svg>
+					<svg id="objectcontainer" width="100%" height="100%"  visibility="visible"></svg>
 	<svg id="editingassets_orig" width="100%" height="100%" visibility="visible">
 					    <circle id="pathmarker" cx="0" cy="0" r="5" stroke="black" stroke-width="1"  fill="blue" fill-opacity="1.0" pointer-events="visible"  visibility="hidden" data-index="" 
 			             onclick="OnPathMarkerMouseDown(evt)" onmousemove='OnPathMarkerMouseMove(evt)' onmouseout='OnPathMarkerMouseOut(evt)' />
@@ -404,7 +403,7 @@
     		
     		</div>    	
   		</div>
-  		<div class="panel panel-default col-sm-4" style='position:relative;top:-20px;border:none;'>    	
+  		<div class="panel panel-default col-sm-4" style='position:relative;top:0px;border:none;'>    	
     		<div class="panel-body" style='padding:0px;position:relative; left:-12px'>
 		    	<div id='rightTabs'>
 		            <ul>                
@@ -459,7 +458,7 @@
     </div>	  
  </div>
  
-<div id="svgfileopendlg" style='display:none;z-index:1'><div id="svglisttitle">Open SVG Files from my Workspace</div>
+<div id="svgfileopendlg" style='display:none;z-index:18000'><div id="svglisttitle">Open SVG Files from my Workspace</div>
 		<div id="svgfileopendlgcontent" style="overflow:hidden">
 			<div id="svgfileopenlistbox"></div> 		
       		
@@ -791,7 +790,9 @@
 	        </div>
        </div>          
    </div>
+
   
+</div>
  
 </body>
 </html>
