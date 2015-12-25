@@ -50,6 +50,7 @@ var gFileNameTitleNode = 0;
 var gInitTitle = "Web2.0 Graphics Editor: "; 
 var gSVGContainerNode = 0; 
 var gFileNameHolder = 0; 
+var gSVGDimInfoHolder=0; 
 var gResizeDirection = ['NONE', 'E-RESIZE', 'NE-RESIZE', 'NW-RESIZE', 'N-RESIZE', 'SE-RESIZE', 'SW-RESIZE', 'S-RESIZE', 'W-RESIZE'];
 var gpathSegIndex = -1;
 var gZoomFactor = new Number(1.0); 
@@ -1035,6 +1036,7 @@ function GX_Initialize()
     
     gFileNameTitleNode = document.getElementById('filename'); 
     gFileNameHolder = document.getElementById('fname');
+    gSVGDimInfoHolder = document.getElementById('diminfo'); 
     
     GX_InitializeToolbar(); 
     
@@ -1194,6 +1196,7 @@ function GX_InitializeDocument(svgFileName)
 	if(!svgdatanode)
 		return ; 	
 	var canvasNode = document.getElementById('canvas'); 
+	
 	var attrvalue; 
 	attrvalue = svgdatanode.getAttribute('width'); 
 	attrvalue = attrvalue.substring(0, attrvalue.length-2); 	
@@ -1205,25 +1208,19 @@ function GX_InitializeDocument(svgFileName)
 	//svgcontainer.setAttribute('height',attrvalue ); 
 	var canvasHeight = attrvalue;
 	GX_SetCanvasSize(canvasWidth, canvasHeight); 
-	attrvalue = svgdatanode.getAttribute('viewBox'); 
-	//svgcontainer.setAttribute('viewBox',attrvalue ); 
-	
-	/*var rectBorderNode =  document.getElementById('svgborder'); 
-	if(!rectBorderNode)
-	{
-		var rectBorder = '<rect id="svgborder" x="0" y="0" width="100%" height="100%" stroke="' + gSVGContainerbordercol + '" stroke-width="5" fill="none" visibility="visible"/>';
-		GX_AddNewNodeFromXMLString('objectcontainer', rectBorder);		
-	}*/ 
-	
-	WAL_SetItemInDropDownList('zoomDDL', 0, true);
-	//set the file name to title etc. 
+	attrvalue = svgdatanode.getAttribute('viewBox'); 	
 	if(svgFileName)
 	{
 		gFileNameTitleNode.innerHTML = gInitTitle + svgFileName; 
 		var spanNode = document.getElementById('fname'); 
 		gFileNameHolder.innerHTML = svgFileName;
-		gSVGFilename = svgFileName; 
+		gSVGFilename = svgFileName; 		
 	}
+	gSVGDimInfoHolder.innerHTML = canvasWidth + ' x ' + canvasHeight; 
+	
+	WAL_SetItemInDropDownList('zoomDDL', 0, true);
+	//set the file name to title etc. 
+	
 	
 	GX_updateEditAttributes(); 
 	
@@ -1447,7 +1444,7 @@ function GX_menu_open_svgfrom_remote()
 {
 	 var newsource = GXRDE_getAssetListFromServer('SVG');  
 	 WAL_ListBoxUpdateData('svgfileopenlistbox', newsource);
-	 WAL_showWindow(gSVGFileOpenDlg, true, 'open');
+	 WAL_showWindow(gSVGFileOpenDlg, true, 'open_icon');
 	// WAL_showWindow(gSVGFileOpenDlg, true, 'topcontainer');
 }
 
@@ -1844,6 +1841,7 @@ function GX_CloseSVGFile()
 	gObjectList = 0; 	
 	gFileNameTitleNode.innerHTML = gInitTitle + ""; 
 	gFileNameHolder.innerHTML = "";
+	gSVGDimInfoHolder.innerHTML =""; 
 	gSVGFilename = "";
 	$(gCurrGripperSel).css({visibility: "hidden"});
 	GX_UpdateMarkers(0, false, false); 
@@ -3974,7 +3972,9 @@ function GX_InitializeToolbar()
     WAL_CreatePopOver('shapes_popup', 'object_icon', 'Objects', false, 'auto', 'auto');
     
     WAL_createCustomButton('new_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('open_icon', 'GX_ToolbarHandler', gWidgetTooltipID);   
+    WAL_createCustomButton('open_icon', 'GX_ToolbarHandler', gWidgetTooltipID);  
+    WAL_createCustomButton('close_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
+    
     WAL_CreatePopOver('project_popup', 'file_icon','Projects', false, 'auto', 'auto');
     
     
@@ -4085,14 +4085,9 @@ function GX_EditBoxValueChange(value, widgetnode)
 			}
 			else{
 				GX_SetObjectAttribute(gCurrentObjectSelected, 'fill-opacity', opacity, true, false);
-			}
-			
+			}			
 			return; 
-		} 
-		
-		
-		
-		
+		} 			
 		if(objType == 'FREEDRAW_PATH')
 		{
 			Debug_Message("not Supported for Free Hand Drawing"); 
@@ -4159,6 +4154,28 @@ function GX_ToolbarHandler(Node)
 	
 	switch(btnID)
 	{
+	case 'new_icon':		 
+		 var JQSel = "#" + "pageNameIP";	
+		 $(JQSel).val("");				
+		 WAL_showModalWindow(gSVGFileNameDlgID,"GX_SVGFileDlgNameOK", "" );				
+		 break; 
+	 case 'open_icon':	
+		 GX_CloseSVGFile();
+		 GX_menu_open_svgfrom_remote();		 
+		 break; 	
+	 case 'close_icon':
+		 GX_CloseSVGFile(); 
+		 break; 
+	 case 'diminfo':
+		 
+		 var svgdatanode = document.getElementById('SVGOBJECTCONTAINER'); 
+		 var width = svgdatanode.getAttribute('width'); 
+		 WAL_setNumberInputValue("svgwidthIP", width, false);		
+		 var height = svgdatanode.getAttribute('height');	
+		 WAL_setNumberInputValue("svgheightIP", height, false);		
+		 WAL_showModalWindow(gSVGDimensionDlg,"GX_SVGDimensionDlgOK", "" );
+		 
+		 break; 
 	case 'alignwidth_icon':
 		GX_AlignDimension('WIDTH'); 
 		break;
@@ -4213,11 +4230,9 @@ function GX_ToolbarHandler(Node)
 	case 'svgdim_icon':
 		var svgdatanode = document.getElementById('SVGOBJECTCONTAINER'); 
 		var width = svgdatanode.getAttribute('width'); 
-		WAL_setNumberInputValue("svgwidthIP", width, false);
-		
+		WAL_setNumberInputValue("svgwidthIP", width, false);		
 		var height = svgdatanode.getAttribute('height');	
-		WAL_setNumberInputValue("svgheightIP", height, false);
-		
+		WAL_setNumberInputValue("svgheightIP", height, false);		
 		WAL_showModalWindow(gSVGDimensionDlg,"GX_SVGDimensionDlgOK", "" );
 		break; 
 	case 'erase_icon':
@@ -4394,34 +4409,7 @@ function GX_ToolbarHandler(Node)
 		 var animInfo = GX_GetAnimInfoByTitle(animTitle);
 		 if(animInfo)
 			 GX_RemoveAnimationObject(animInfo[0]); 		 
-		 break; 
-	 //case 'anim_copy_icon':
-	//	 break; 
-		 
-	/* case 'fill_color_icon':
-		 /*
-		 if(!gCurrentObjectSelected)
-				return ; 
-		 gInitFillValue = gCurrentObjectSelected.getAttribute('fill');
-		 if(gInitFillValue == 'none')
-			 gInitFillValue = '#aaaaaa';
-		 
-		 var str = gInitFillValue.substring(0,3); 
-		 if(str != 'url')
-		 {
-			 gInitFillColor = gInitFillValue;			 
-		 }
-		 else
-		 {
-			 gInitFillColor = '#aaaaaa'; 
-		 }
-		 GX_ShowFillColorWidget();
-		 
-		 
-		 WAL_showModalWindow('fillwidget'); 
-		 
-		 break; */  
-		 
+		 break; 	 
 	 case 'bold_icon':
 		 var Prop = gCurrentObjectSelected.getAttribute('font-weight'); 
 		 if(Prop == 'bold')
@@ -4476,11 +4464,9 @@ function GX_ToolbarHandler(Node)
 				gridNode.setAttribute('visibility', 'hidden'); 
 			}
 		 
-		 break; 
-		 
+		 break; 		 
 	 default:
-		break; 
-		
+		break; 		
 	}
 }
 
@@ -8801,13 +8787,13 @@ function GX_SetCanvasSize(width, height){
 	  var editorHeight = $('#editor_div').height();
 	  var canvasWidth = $('#canvas').width(); 
 	  var canvasHeight = $('#canvas').height(); 
-	  var canvLeft = (editorWidth - canvasWidth)/2; 
+	  var canvLeft = (editorWidth - canvasWidth)/2 + 15; 
 	  if(canvLeft < 0)
-		  canvLeft = 0; 
+		  canvLeft = 15; 
 	  
-	  var canvTop = (editorHeight - canvasHeight)/2;
+	  var canvTop = (editorHeight - canvasHeight)/2 +15 ;
 	  if(canvTop < 0)
-		  canvTop = 0; 
+		  canvTop = 15; 
 	  $('#canvas')[0].style.left = canvLeft +'px'; 
 	  $('#canvas')[0].style.top = canvTop + 'px'; 
 }
