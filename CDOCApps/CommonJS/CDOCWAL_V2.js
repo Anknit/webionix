@@ -56,7 +56,7 @@ var gbContextMenuShow = false;
 function WAL_Initialize() {
     if(!gTheme)
       gTheme = getTheme();   
-    gTheme = 'bootstrap';     
+    gTheme = 'mygrey' ;//'bootstrap';     
     gInitialized = true;
 }
 
@@ -1626,13 +1626,13 @@ function WAL_createWindow(ID,titleID, bTitleBar, Width, Height, Resizable, Dragg
     
 
     var myWidth = Width + 'px'; 
-    var myHeight = Height + 'px'; 
-   
+    var myHeight = Height + 'px';    
     
     $(JQSel).jqxWindow({width :myWidth, height:myHeight, maxWidth: MaxWidth,  minWidth: MinWidth, maxHeight: MaxHeight,
     minHeight: MinHeight, theme: gTheme, showCollapseButton: Collapsable, isModal: Modal, autoOpen: false, draggable: Draggable, resizable: resizable, closeButtonAction: 'hide', okButton: $(OKBtnID), cancelButton: $(CancelBtnID), showCloseButton: showClose,
-    position: { x: '10', y: '10'} });
-
+    position: { x: '10', y: '10'}
+    });
+    $(JQSel)[0].style.zIndex = 18000; 
     $(JQSel).attr(widgetType, "true");
 
     if (bTitleBar == false) {
@@ -1919,8 +1919,13 @@ function WAL_showWindow(windowID, bFlag, refID)
 	JQSel = "#"+windowID;
 	
 	$(JQSel).jqxWindow({ position: { x: CPWdgtPosLeft, y: CPWdgtPosTop }}); 	 
-	//$(JQSel).slideDown(); //_rm buggy the close btn is offset because of this 
+	//$(JQSel).slideDown(); //_rm buggy the close btn is offset because of this 	
+	//$(JQSel)[0].style.zIndex = 18000; 
+	//$(JQSel).jqxWindow({ modalZIndex: 18000}); 
 	$(JQSel).jqxWindow('open'); 
+	
+	
+	
 }
 
 function WAL_showWindowAtPos(windowID, bFlag, left, top)
@@ -2853,29 +2858,31 @@ function WAL_createCustomButton(buttonID, clickHandler, tooltipID)
     {
     	 $(JQSel).attr('data-tooltipID', tooltipID);
     	
-    }*/
-     
-    	 
-     
+    }*/     
      $(JQSel).on('click', function(event) { 	 
          if (clickHandler) {
          	var node = event.target; 
+         	
              var expr = clickHandler + "(node)";
              gLastClickedButtonNode = node; 
              if(gLastClickedButtonNodeID)
             	 $('#'+gLastClickedButtonNodeID).removeAttr('style'); 
-             gLastClickedButtonNodeID = node.id; 
-             var toolSel = '#'+gCurrTooltipID; 
-             $(toolSel).jqxTooltip('close'); 
-           //  $('.IMAGE_BUTTON').removeAttr('style'); 
-             node.style.border = 'ridge 2px #e0e9f5';      
-             node.style.bordeRadius = '5px'; 
-             node.style.boxShadow = '5px 8px 7px #888888';            
+             gLastClickedButtonNodeID = node.id;              
              eval(expr);
+             if(gCurrTooltipID){
+            	 var toolSel = '#'+gCurrTooltipID; 
+                 $(toolSel).jqxTooltip('close'); 
+             }
+             
+           //  $('.IMAGE_BUTTON').removeAttr('style'); 
+             //node.style.border = 'ridge 2px #e0e9f5';      
+            // node.style.bordeRadius = '5px'; 
+            // node.style.boxShadow = '5px 8px 7px #888888';            
+             
          }
      });
      
-     WAL_createWidgetTooltip(buttonID, tooltipID); 
+    // WAL_createWidgetTooltip(buttonID, tooltipID); 
   /*   
      $(JQSel).on('mousemove', function(event){
     	var node = event.target; 
@@ -3366,3 +3373,21 @@ $("#jqxgrid").jqxGrid(
          rowsheight : 50
 });
 */
+
+function WAL_CreatePopOver(ID, refID, title, bModal, Width, Height){
+	
+	//popover 
+	var JQSel = '#' + ID; 	
+    $(JQSel).jqxPopover({
+  	     theme: gTheme,
+         width: Width,
+         height: Height,
+         showArrow: true,
+         showCloseButton: true,
+         arrowOffsetValue: 0,
+         selector: $('#'+refID) , 
+         title:title,
+         isModal: bModal, 
+         animationType: 'fade'
+     });	
+}
