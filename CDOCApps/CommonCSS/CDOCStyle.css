@@ -23,21 +23,88 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; style:font-weight:bold;}
 	font-weight:normal; 
 }
 
- .IMAGE_BUTTON:hover{width:30px; height:30px; 
+ /*.IMAGE_BUTTON:hover{ 		
          border:inset 1px grey;  
          border-radius:3px;  box-shadow: 5px 8px 7px #888888; 
- 		 transition-property:width,height;
-         transition-duration:200ms;                          
+ 		                    
                            } 
- .IMAGE_BUTTON{width:24px; height:24px;}       
- .IMG_BTN_ACTIVE:active {width:26px; height:26px; border:outset 1px grey;}
+                           */
+ .BTN_CONTAINER_SMALL:hover, .BTN_CONTAINER:hover{       
+        
+       /*  box-shadow:-1px -1px 10px 10px #e0e0e0;*/         
+         border: 1px solid #666;
+         -webkit-animation: haloanim 1s; /* Chrome, Safari, Opera */
+    	 animation: haloanim 1s;   
+    	 animation-fill-mode: forwards; 
+    	 -webkit-animation-fill-mode: forwards; 
+    	 cursor:pointer; 		              
+   }   
+   
   div.BTN_CONTAINER
   {
         /*	box-sizing:border-box;*/
-          
-            width:32px;          
-            float:left;
+          /* border: 1px solid #666;*/
+           border-radius:3px;  
+           width: 45px; 
+           height: 45px;       
+           float:left;
+           display:inline-block;
+           text-align:center;  
+           margin-left:15px;          
   }
+ 
+  .BTN_CONTAINER_SMALL {
+  	border-radius:3px;  
+    width: 36px; 
+    height: 40px;       
+    float:left;
+    display:inline-block;
+    text-align:center;  
+    margin-left:8px;  
+  }
+  /* Chrome, Safari, Opera */
+@-webkit-keyframes haloanim {
+	from {box-shadow:none;}
+    to {box-shadow:-1px -1px 10px 10px #e0e0e0;}
+}
+
+/* Standard syntax */
+@keyframes haloanim {
+    from {box-shadow:none;}
+    to {box-shadow:-1px -1px 10px 10px #e0e0e0;}
+}
+
+
+.TB_TEXT{
+   		position:relative;
+   		top:6px;
+   		left: 2px;
+   } 
+   
+  .SMALL_TB_TEXT{
+  	position:relative;
+   	top:-5px;
+   	left: 2px;
+   	font-size:10px; 
+   	margin-bottom:10px; 
+  }
+ .IMAGE_BUTTON{
+ width:32px; 
+ height:32px;
+ position: relative;
+ top: 3px; 
+ }   
+ 
+ .small_icon{
+ width:24px; 
+ height:24px;
+ position: relative;
+ top: 1px; 
+ }    
+ 
+  
+ /*.IMG_BTN_ACTIVE:active {width:26px; height:26px; border:outset 1px grey;}*/
+ 
   
   .KEY_PAD:hover{   
   				   width:24px; height:24px; 
@@ -89,3 +156,5 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; style:font-weight:bold;}
 	{
 	    border: none;
 	}
+
+  
