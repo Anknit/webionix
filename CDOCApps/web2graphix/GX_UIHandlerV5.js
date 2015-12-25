@@ -3971,6 +3971,13 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('square_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('freehand_icon', 'GX_ToolbarHandler', gWidgetTooltipID);    
+    WAL_CreatePopOver('shapes_popup', 'object_icon', 'Objects', false, 'auto', 'auto');
+    
+    WAL_createCustomButton('new_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('open_icon', 'GX_ToolbarHandler', gWidgetTooltipID);   
+    WAL_CreatePopOver('project_popup', 'file_icon','Projects', false, 'auto', 'auto');
+    
+    
 }
 
 function GX_EditBoxValueChange(value, widgetnode)
