@@ -336,13 +336,16 @@
   	<div class='row' style='margin-top:35px'>
   		<div class="panel panel-default col-sm-8" style='position:relative;top:0px; border:none;'>    	
     	<div class="panel-body" style='padding:0px'>
+    	<div id='statusinfo'><span style='margin-left:100px'>Project Name:</span><span id='fname' style='margin-left:5px; font-weight:bold' ></span>
+    	<span style='margin-left:30px'>Dimension:</span><a id='diminfo' href='#' style='margin-left:5px; font-weight:bold' onclick='GX_ToolbarHandler(event.target);' title='Click here to change Dimension' ></a>
+    	</div>
     	  <div id='editorTabs'>
             <ul>               
                 <li>Editor</li>
                 <li>Preview</li>               
             </ul>           
             <div id='editor_div' style='height:inherit; border:none; background-color:#eee'>
-            	<div id='canvas' style='position:relative; width:600px; height:400px; left:0px; top:0px; background-color:#fff; border:3px solid grey; box-shadow:#aaa 1px 1px 10px 4px;'>
+            	<div id='canvas' style='position:relative; width:600px; height:400px; left:10px; top:0px; background-color:#fff; border:3px solid grey; box-shadow:#aaa 1px 1px 10px 4px;'>
             		<div id='texteditableDiv' style='position:absolute; left:0px; display:none' contenteditable='false'>
           			<textarea id='texteditor' value='Hello world' onblur='OnTextEditFocusOut(event)' onkeypress='OnTextEditKeyPress(event)'></textarea>
           			</div>
@@ -470,6 +473,7 @@
     <div style="display:inline-block">
          	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;' title='New SVG Project'><input class='small_icon'  type = "image" id='new_icon' value=''  src='../CommonCSS/icons/Version1/projectnew.png'  data-tooltiptext='New SVG file' data-helptext='New SVG file'/><span class='SMALL_TB_TEXT'>New</span></div>
          	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;' title='Open SVG Project'><input class='small_icon'  type = "image" id='open_icon' value=''  src='../CommonCSS/icons/Version1/projectopen.png'  data-tooltiptext='Open a SVG file' data-helptext='open SVG file'/><span class='SMALL_TB_TEXT'>Open</span></div>
+         	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;' title='Close Project'><input class='small_icon'  type = "image" id='close_icon' value=''  src='../CommonCSS/icons/Version1/projectclose.png'  data-tooltiptext='Close a SVG file' data-helptext='close SVG file'/><span class='SMALL_TB_TEXT'>Close</span></div>
 	    	
     </div>	  
  </div>
