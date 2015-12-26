@@ -280,10 +280,14 @@
 	    			<span class='TB_TEXT'>Align</span>
 	    		</div>
 	    		
-	    		<div class="BTN_CONTAINER"  style='display:inline-block' title="Zoom In/Out"> 
-	    			<input class='IMAGE_BUTTON'  type = "image" id='zoom_icon' value=''  src='../CommonCSS/icons/Version1/zoom.png'  />
-	    			<span class='TB_TEXT'>Zoom</span>
-	    		</div>	    		
+	    		<div id='zoomgroup' style="display:inline-block; height:32px; vertical-align: top; border-right: ridge 2px #f0f0f0;">
+    		   		<div id='zoomp' style= 'display:inline-block; margin-left:2px; margin-right:3px'><div id='zoomDDL' class='EDIT_BOX' type='Zoom' style='position:relative; top:30px' ></div></div>
+	    			<div class="BTN_CONTAINER"  style='display:inline-block' title="Zoom In/Out"> 
+	    				<input class='IMAGE_BUTTON'  type = "image" id='zoom_icon' value=''  src='../CommonCSS/icons/Version1/zoom.png'  />
+	    				<span class='TB_TEXT'>Zoom</span>
+	    			</div>	
+	    		</div>
+	    		    		
     		 </div>  
      <!-- 
       <ul class="nav navbar-nav navbar-left" style='padding-left:45px; color:red'>  
@@ -350,7 +354,7 @@
           			<textarea id='texteditor' value='Hello world' onblur='OnTextEditFocusOut(event)' onkeypress='OnTextEditKeyPress(event)'></textarea>
           			</div>
           	       
-		    		<svg id="SVGContainer" x="0px" y="0px" width="100%" height="100%" version="1.1"  viewBox="0% 0% 100% 100%" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" 
+		    		<svg id="SVGContainer" x="0px" y="0px" width="100%" height="100%" version="1.1"  viewBox="0 0 600 400" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" 
 		     				xmlns="http://www.w3.org/2000/svg"  cursor="auto">
 		
 					<svg id="background" width="100%" height="100%" visibility="visible" >
@@ -366,7 +370,7 @@
 						   </marker>  				    
 						 </defs>   
 					<rect id="gridpattern" x="0" y="0" width="100%" height="100%" fill="url(#bigrectpattern)" onclick="OnSVGParentClick(evt)" pointer-events="fill" />
-				<!-- <rect id="svgborder" x="0" y="0" width="800" height="800" stroke="red" stroke-width="6" fill="none" visibility="visible"/>-->
+				
 				  </svg>
 					<svg id="objectcontainer" width="100%" height="100%"  visibility="visible"></svg>
 	<svg id="editingassets_orig" width="100%" height="100%" visibility="visible">
@@ -389,15 +393,8 @@
 				        <rect id="freedraw_orig" x="10" y="10" width="250" height="150" stroke="green" stroke-width="1" stroke-opacity='0.9' fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible" onmousedown="OnFreeDrawClick(evt)" onmousemove='OnFreeDrawMouseMove(evt)' ></rect>
 			       </svg>
 		        
-	</svg> <!-- SVGContainer -->
-            		
-            		
-            		
-            		
-            		
-            		
-     </div> <!-- Canvas -->
-            	
+	</svg> <!-- SVGContainer -->            		
+     </div> <!-- Canvas -->       	
                 
             </div>
             <div id='preview_div' style='height:inherit; border:2px solid red'>
@@ -422,7 +419,7 @@
 		                <li>Properties</li>
 		                <li>Animation</li>                
 		            </ul>		            
-		            <div id='groupTab'>
+		            <div id='groupTab' style='background-color:#e8e8e8'>
 		                <div id="node_panel" >Node Panel</div>
 		            </div>
 		            <div id='propertyTab'>
@@ -434,19 +431,65 @@
 		                using any supported .NET language. The ASP.NET SOAP extension framework allows ASP.NET
 		                components to process SOAP messages.
 		            </div>
-		            <div id='animationTab'>
-		                Python is a general-purpose, high-level programming language[5] whose design philosophy
-		                emphasizes code readability. Python claims to "[combine] remarkable power with very
-		                clear syntax",[7] and its standard library is large and comprehensive. Its use of
-		                indentation for block delimiters is unique among popular programming languages.
-		                Python supports multiple programming paradigms, primarily but not limited to object-oriented,
-		                imperative and, to a lesser extent, functional programming styles. It features a
-		                fully dynamic type system and automatic memory management, similar to that of Scheme,
-		                Ruby, Perl, and Tcl. Like other dynamic languages, Python is often used as a scripting
-		                language, but is also used in a wide range of non-scripting contexts.
-		            </div>
+		       <div id='animationTab'>
+		          <div id="animationListWidget" style='display:none'>
+		 			<div id="animhdr1" style="font-weight:bold; font-size:medium;text-align:center">Animation List</div>
+		 		   <div id="animcontent1" style="overflow: hidden">    
+    				<div id="animationlist" style="margin-left:5px"></div>    
+   					<div id="animattrgroup" style="position:relative; margin-left:5px; margin-top:2px;  margin-right:5px; width: 352px; height: auto">
+    					<div id="animattrDivlist" class="ANIMATTR" style="display:none; margin-left:2px; margin-right:3px">Animate<div id="animAttrDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>     
+		          	   <div id="OPACITY_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">
+		                	<div id="startfracEdit" style="margin-left:2px; margin-top:10px">Initial Opacity<div id="startOpacityValueIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>	                	                	
+		                </div>
+	                 <div id="STROKE_WIDTH_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">
+	                	<div style="margin-left:2px; margin-top:10px">End Stroke Width<div id="startStrokeWidthValueIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>                	                	
+	                 </div>       
+                
+	                <div id="MOTION_PATH_GROUP" class="ATTR_UI_GROUP" style="display:none">	            	    
+		           	    <div  class="ANIMATTR" style="display:inline-block; margin-left:2px;">Current Path<div id="pathModifyDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
+		           	    <div id="pathvisibilityCB" style="display:inline-block;margin-left:5px; margin-top:2px">Path Visible</div>
+		           	    <div style='display:none; margin-left:2px; margin-top:0px'>PathOffset-X<div id='offsetFromPathX' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+	           	   		<div style='display:none; margin-left:2px; margin-top:5px'>Motion Offset From Path-Y<div id='offsetFromPathY' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+	           	   		<div  class="ANIMATTR" style="display:inline-block; margin-left:2px;">Touching<div id="offsetParamDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
+	           	   		<div id="rollingmotionCB" style="display:inline-block;margin-left:5px; margin-top:2px">Roll</div>
+	           	 	</div>
+           	 	
+	           	 	<div id="MOVE_GROUP" class="ATTR_UI_GROUP" style="display:none">	 
+	           	 		<div id="autoReverseCB" style="display:inline-block;margin-left:5px; margin-top:2px">Auto Reverse</div>
+	           	 		<div  class="ANIMATTR" style="display:inline-block; margin-left:80px;">Pace<div id="paceValueDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>	           	 		
+	           	 	</div>
+           	 	
+                	<div  class="ANIMATTR" style="display:none; margin-left:2px; margin-right:3px"><div id="animAttrDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
+	                <div id="ANGLE_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">                	
+	                	<div style="margin-left:2px; margin-top:10px;display:inline-block;">Final Angle(deg)<div id="endAngleValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:11px;"></div></div>                	
+	                </div>  
+	                <div id="ROTATE_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">    
+	                	<div id="autoRotateReverseCB" style="display:block;margin-left:5px; margin-top:2px">Auto Reverse</div>            	
+	                	<div style="margin-left:2px; margin-top:4px;display:inline-block;">Initial Angle(deg)<div id="initRotationValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:11px;"></div></div>
+	                	<div style="margin-left:2px; margin-top:4px;display:inline-block;">Final Angle(deg)<div id="endRotationValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:11px;"></div></div>                	
+	                </div>                 
+	                <div id="FROM_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">                	
+	                	<div style="margin-left:2px; margin-top:10px;display:inline-block;">Initial Value(%)<div id="startValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:11px;"></div></div>                	
+	                </div>
+                                           	
+      </div> 
+				    <div>      
+				    	<div style="margin-left:2px; margin-top:10px;display:inline-block;">Start<div id="startParamDDL" class="EDIT_BOX group6" type="DIMENSION"></div></div>
+				    	<div id="animlist" style="display:inline-block; margin-left:8px;">Animation<div id="animlistDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
+				    </div>
+				    <div id="durEdit" style="display:block; margin-left:2px; margin-top:10px">Duration(sec)<div id="durationIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>
+				     <div id="repeatcountEdit" style="display:inline-block; margin-left:1px; margin-top:5px">Repeat Count<div id="repeatcountIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>
+				     <div id="endstatelist" style="display:inline-block; margin-left:8px;">End State<div id="endstatelistDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
+				    <div style="margin-top:20px;">
+				   		 	 <input type="button" id="applybtn" value="Apply">
+					   		 <input type="button" id="playbtn" value="Play">
+					   		 <input type="button" id="animdeletebtn" value="Delete" style='margin-left:15px'>	   	  	
+					 </div> 
+    			</div>
+			</div><!-- animatiolistwidget -->
+		  </div> <!-- animation tab -->
 		                 
-		        </div>   <!-- jqtabs-2 -->
+		 </div>   <!-- jqtabs-2 -->
         
     		
     		</div>    	
