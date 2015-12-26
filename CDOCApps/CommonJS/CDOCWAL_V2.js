@@ -686,9 +686,9 @@ function WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource, 
 	    WAL_createCustomButton(buttonID, "", tooltipID); 
 	    $(btnJQSel).on('click', function(){
 	    	
-	    	var toolSel = '#'+gCurrTooltipID; 
+	    	/*var toolSel = '#'+gCurrTooltipID; 
             $(toolSel).jqxTooltip('close');
-            
+            */ 
 	    	var node =  document.getElementById(ID); 
 	    	node = node.parentNode; 
 	    	var pos = $(btnJQSel).position(); 
