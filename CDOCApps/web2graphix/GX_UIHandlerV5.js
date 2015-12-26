@@ -55,6 +55,7 @@ var gResizeDirection = ['NONE', 'E-RESIZE', 'NE-RESIZE', 'NW-RESIZE', 'N-RESIZE'
 var gpathSegIndex = -1;
 var gZoomFactor = new Number(1.0); 
 var gInvZoomFactor = new Number(1.0); 
+var gOriginalCanvasDim =  new sDimension(); 
 var gPanX = new Number(0); 
 var gPanY = new Number(0); 
 var gPanDelta = new Number(20); 
@@ -1205,8 +1206,15 @@ function GX_InitializeDocument(svgFileName)
 	
 	attrvalue = svgdatanode.getAttribute('height'); 
 	attrvalue = attrvalue.substring(0, attrvalue.length-2); 
-	//svgcontainer.setAttribute('height',attrvalue ); 
-	var canvasHeight = attrvalue;
+	var canvasHeight = attrvalue; 
+	//svgcontainer.setAttribute('height',attrvalue ); 	
+	
+	var svgcontainerNode =  document.getElementById('SVGContainer'); 
+	var viewboxStr = '0 0 ' + canvasWidth + ' ' + canvasHeight; 
+	svgcontainerNode.setAttribute('viewBox', viewboxStr); 
+	gOriginalCanvasDim = new sDimension(); 
+	gOriginalCanvasDim.width = canvasWidth; 
+	gOriginalCanvasDim.height = canvasHeight; 
 	GX_SetCanvasSize(canvasWidth, canvasHeight); 
 	attrvalue = svgdatanode.getAttribute('viewBox'); 	
 	if(svgFileName)
@@ -1255,12 +1263,10 @@ function GX_InitializeDocument(svgFileName)
 		 }		 
 		 WAL_ListBoxUpdateData('animationlist', animlist);
 		 
-	 }
-	 
-	
-	 GX_MenuDisable(false);
-//	WAL_setCheckBoxValue('snaptogrid', false); 
-	GX_showEditorInterface('OBJECT_MODE'); 
+	 }	
+//	WAL_setCheckBoxValue('snaptogrid', false);
+	 //_rm temp code to be brought back later
+	//GX_showEditorInterface('OBJECT_MODE'); 
 	gIndicatorPathNode = document.getElementById('indicatorpath'); 
 	// reset all variables to default state 
 }
@@ -3185,7 +3191,9 @@ function GX_updateTreeWidget(string)
 	var JQSel;	
 	JQSel = "#"+gTreeNodeID; 
 	//$(JQSel).css('background-image', ' -moz-linear-gradient(top, #fcd95f, #fef2cb)');
-	$(JQSel).css('background-image', 'linear-gradient(0deg, #eeeeee , #efefef )');
+	//$(JQSel).css('background-image', 'linear-gradient(0deg, #eeeeee , #efefef )');
+	$(JQSel).css('background-image', 'linear-gradient(0deg, #e8e8e8 , #e8e8e8)');
+	//$(JQSel).css('background-color', '#e8e8e8');
 	//background-image: linear-gradient(0deg, #eeeeee 80%,  #efefef 100%)
 	//$(JQSel).css('font-size','small'); 
 	
@@ -3957,7 +3965,10 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('snap2grid_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('multiselect_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('align_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('zoom_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    //zoompan interface 
+    var zoomeValueDisplay = ['1','1.25','1.5','2.0', '2.25', '2.5', '3.0']; 
+    WAL_createDropdownListwithButton("zoomDDL", '0','0',zoomeValueDisplay, "GX_DDLHandler", '80', '80','zoom_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID)
+    //WAL_createCustomButton('zoom_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('file_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('edit_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     
@@ -4176,6 +4187,12 @@ function GX_ToolbarHandler(Node)
 		 WAL_showModalWindow(gSVGDimensionDlg,"GX_SVGDimensionDlgOK", "" );
 		 
 		 break; 
+	/* case 'zoom_icon':
+		 var currZoomFactor = new Number(gZoomFactor); 
+		 gZoomFactor += 0.25; 
+		 GX_ApplyZoom(gZoomFactor); 
+		 break; 
+		 */
 	case 'alignwidth_icon':
 		GX_AlignDimension('WIDTH'); 
 		break;
@@ -5323,7 +5340,17 @@ function GX_PasteObject()
 }
 
 function GX_ApplyZoom(zoomFactor)
-{
+{	
+	//new code _rm can be removed later 
+	var canvasNode =  document.getElementById('canvas'); 
+	var canWidth = gOriginalCanvasDim.width;// = canvasWidth;  canvasNode.style.width;	
+	var canHeight = gOriginalCanvasDim.height ;//= canvasWidth; //canvasNode.style.height;
+	canWidth = canWidth * zoomFactor; 
+	canHeight = canHeight * zoomFactor; 
+	//canvasNode.style.width = canWidth +'px'; 
+	//canvasNode.style.height = canHeight +'px'; 
+	GX_SetCanvasSize(canWidth, canHeight);
+	return ; 
 		
 	//get the root SVg node and change the view Box
 	if(!gsvgRootNode)
@@ -5359,8 +5386,9 @@ function GX_DDLHandler(Node, value)
 
 	if(wdgtId == 'zoomDDL')
 	{
+		//_rm temo code return for now	
 		var zoomval = new Number(value); 
-		gZoomFactor = 1.0/zoomval; 
+		gZoomFactor = zoomval; 
 		gInvZoomFactor =  zoomval; 
 		GX_ApplyZoom(gZoomFactor); 		
 	}
