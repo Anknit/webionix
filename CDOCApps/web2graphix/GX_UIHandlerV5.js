@@ -3889,14 +3889,11 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('multiselect_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('align_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     //zoompan interface 
-    var zoomeValueDisplay = ['1','1.25','1.5','2.0', '2.25', '2.5', '3.0']; 
-    WAL_createDropdownListwithButton("zoomDDL", '0','0',zoomeValueDisplay, "GX_DDLHandler", '80', '80','zoom_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID)
-    //WAL_createCustomButton('zoom_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    var zoomeValueDisplay = ['1x','1.25x','1.5x','2.0x', '2.25x', '2.5x', '3.0x'];    
+    WAL_createDropdownList('zoomDDL', '100', '24', false, zoomeValueDisplay, "GX_DDLHandler", '80');
+   
     WAL_createCustomButton('file_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('edit_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    
-    
-	
+    WAL_createCustomButton('edit_icon', 'GX_ToolbarHandler', gWidgetTooltipID);	
     WAL_createCustomButton('group_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('circle_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('ellipse_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -4110,12 +4107,7 @@ function GX_ToolbarHandler(Node)
 		 WAL_showModalWindow(gSVGDimensionDlg,"GX_SVGDimensionDlgOK", "" );
 		 
 		 break; 
-	/* case 'zoom_icon':
-		 var currZoomFactor = new Number(gZoomFactor); 
-		 gZoomFactor += 0.25; 
-		 GX_ApplyZoom(gZoomFactor); 
-		 break; 
-		 */
+	
 	case 'alignwidth_icon':
 		GX_AlignDimension('WIDTH'); 
 		break;
@@ -5311,6 +5303,7 @@ function GX_DDLHandler(Node, value)
 	if(wdgtId == 'zoomDDL')
 	{
 		//_rm temo code return for now	
+		value = value.substring(0, value.length-1); 
 		var zoomval = new Number(value); 
 		//_rm dont use the zoomfactor value now 
 		gZoomFactor = zoomval; 
