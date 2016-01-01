@@ -1088,6 +1088,7 @@ function GX_Initialize()
 	//create the selection gripper here 
 	$(gCurrGripperSel).draggable({ cursor: "move" });	
 	$(gCurrGripperSel).resizable();
+	
 	$(gCurrGripperSel).on( "resizestop", function( event, ui ) {
 		OnObjectResizeStop(event, ui); 		
 	});
@@ -3890,7 +3891,7 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('multiselect_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('align_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     //zoompan interface 
-    var zoomeValueDisplay = ['1x','1.25x','1.5x','2.0x', '2.25x', '2.5x', '3.0x'];    
+    var zoomeValueDisplay = ['Normal','1.25x','1.5x','2.0x', '2.25x', '2.5x', '3.0x'];    
     WAL_createDropdownList('zoomDDL', '100', '24', false, zoomeValueDisplay, "GX_DDLHandler", '80');
    
     WAL_createCustomButton('file_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -5304,7 +5305,9 @@ function GX_DDLHandler(Node, value)
 	if(wdgtId == 'zoomDDL')
 	{
 		//_rm temo code return for now	
-		value = value.substring(0, value.length-1); 
+		if(value == 'Normal')
+			value = '1x'; 
+		value = value.substring(0, value.length-1); 		
 		var zoomval = new Number(value); 
 		//_rm dont use the zoomfactor value now 
 		gZoomFactor = zoomval; 
