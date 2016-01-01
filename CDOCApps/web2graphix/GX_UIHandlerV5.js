@@ -1092,6 +1092,7 @@ function GX_Initialize()
 		OnObjectResizeStop(event, ui); 		
 	});
 	
+	
 	//gGripperTextSpanNode = $(gCurrGripperSel)[0].firstElementChild; 
 	
 	$(gCurrGripperSel).on( "dragstart", function( event, ui ) {
