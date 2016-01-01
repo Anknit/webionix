@@ -44,6 +44,7 @@ var gSVGImportList = 0;
 var gSVGGroupNameDlgID ='newGroupNameDlg'; 
 var gSVGFileDeleteDlg = "svgfiledeletedlg"; 
 var gSVGDimensionDlg = 'svgdimensiondlg'; 
+var gCanvasNode = 0; 
 var gImportShapeFileName = ""; 
 var gPolyInputDlg = 'polygonipdlg';
 var gFileNameTitleNode = 0;
@@ -56,6 +57,7 @@ var gpathSegIndex = -1;
 var gZoomFactor = new Number(1.0); 
 var gInvZoomFactor = new Number(1.0); 
 var gOriginalCanvasDim =  new sDimension(); 
+var gCurrentCanvasDim = 0; 
 var gPanX = new Number(0); 
 var gPanY = new Number(0); 
 var gPanDelta = new Number(20); 
@@ -1011,7 +1013,7 @@ function GX_Initialize()
 	var width = window.outerWidth ;
 	WAL_createTab('rightTabs',  height, ''); 
 	WAL_createTab('editorTabs',  height, ''); 
-	GX_SetCanvasSize(600,400);  
+	GX_SetCanvasDimension(600,400);  
     
     WAL_createListBox('svgfileopenlistbox', '270', '250', "GX_LBItemsSelectHandler");
  	 	
@@ -1117,18 +1119,8 @@ function GX_Initialize()
 	});
 	
 	var JQSel = '#markerPoint'; 
-	$(JQSel).draggable({ cursor: "move" });
-	/*$(JQSel).on( "dragstop", function( event, ui ) {
-		OnDivPathMarkerDragStop(event, ui); 
-	});
-	$(gDivPathMarkerSel).on( "drag", function( event, ui ) {
-		OnDivPathMarkerDrag(event, ui); 		
-	});
-	*/
-	
-	
-	//gClientXOffset = $('#toolbar').width(); 
-	 
+	$(JQSel).draggable({ cursor: "move" });	
+	gClientYOffset = $('#topcontainer').height();//- 40; 
    
 }
 
@@ -1215,7 +1207,7 @@ function GX_InitializeDocument(svgFileName)
 	gOriginalCanvasDim = new sDimension(); 
 	gOriginalCanvasDim.width = canvasWidth; 
 	gOriginalCanvasDim.height = canvasHeight; 
-	GX_SetCanvasSize(canvasWidth, canvasHeight); 
+	GX_SetCanvasDimension(canvasWidth, canvasHeight); 
 	attrvalue = svgdatanode.getAttribute('viewBox'); 	
 	if(svgFileName)
 	{
@@ -1899,29 +1891,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     }
     if (!gsvgRootNode)
     {
-    	 gsvgRootNode = document.getElementById('SVGContainer');
-    	 var freedrawNode = document.getElementById('freedraw'); 
-    	 num = gsvgRootNode.getAttribute('x'); 
-    	 num = num.substring(0, num.length-2); 
-    	 gMaxLeft = new Number(num); 
-    	 
-    	 num = gsvgRootNode.getAttribute('y'); 
-    	 num = num.substring(0, num.length-2); 
-    	 gMaxTop = new Number(num);             	 
-    	 
-    	 num = gsvgRootNode.getAttribute('width'); 
-    	 num = num.substring(0, num.length-2);    	 
-    	 gMaxRight = new Number(num);
-    	 gMaxRight = gMaxLeft + gMaxRight;    
-    	 freedrawNode.setAttribute('width', num); 
-    	 
-    	 num = gsvgRootNode.getAttribute('height'); 
-    	 num = num.substring(0, num.length-2); 
-    	 gMaxBottom = new Number(num);
-    	 gMaxBottom = gMaxBottom + gMaxTop;
-    	 freedrawNode.setAttribute('height', num);	
-    		
-    	 //gMaxLeft, gMaxTop, gMaxRight, gMaxBottom; 
+    	 gsvgRootNode = document.getElementById('SVGContainer');  
     }
     if ((!gCurrentObjectSelected) || (gCurrentObjectSelected != node)) {  
 	   	if(gCurrentObjectSelected)
@@ -2034,26 +2004,32 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
 	}    
     if(gCurrentObjectSelected != node)   	
     	gPrevAttributeList = EL_getObjectAttributes(node);
-    
+   
     gCurrentObjectSelected = node;   
     gGrabberDim = new sDimension(); 
-    gGrabberDim.x = gCurrSelectedObjectDim.x; 
-    gGrabberDim.y = gCurrSelectedObjectDim.y; 
+    gGrabberDim.x = gCurrSelectedObjectDim.x;// - Math.round(scrollLeft/gZoomFactor); 
+    gGrabberDim.y = gCurrSelectedObjectDim.y;// - Math.round(scrollTop/gZoomFactor); 
     gGrabberDim.width = gCurrSelectedObjectDim.width; 
     gGrabberDim.height = gCurrSelectedObjectDim.height; 
     GX_SetRectObjectDim(gCurrGrabber, gGrabberDim);
     //gGripperTextSpanNode.innerHTML = 'X-Pos: '+ gCurrSelectedObjectDim.x + 'px Y-Pos: ' + gCurrSelectedObjectDim.y + 'px'; 
    
-        
+   
+     
     //now restrict the region of containtment 
     var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
     var svgDim = GX_GetRectObjectDim(svgNode);
     var x1, y1, x2, y2;
     with(Math){
-    	x1 = round((svgDim.x + 5 - gPanX)*gInvZoomFactor); 
+    	/*x1 = round((svgDim.x + 5 - gPanX)*gInvZoomFactor); 
         y1 = round((svgDim.y + 5 - gPanY)*gInvZoomFactor + gClientYOffset);
         x2 = round( (x1 + svgDim.width -5 - gGrabberDim.width)*gInvZoomFactor); 
         y2 = round((y1 + svgDim.height - 5 - gGrabberDim.height)*gInvZoomFactor);
+        */
+    	x1 = round(gCurrentCanvasDim.x - 10); 
+    	y1 = round(gCurrentCanvasDim.y + gClientYOffset -7); 
+    	x2 = round(x1 + gCurrentCanvasDim.width - gGrabberDim.width) ; 
+    	y2 = round(y1 + gCurrentCanvasDim.height - gGrabberDim.height); 
         
         //x2 = round((svgDim.x + svgDim.width -5 - gGrabberDim.width)*gInvZoomFactor); 
         //y2 = round((y1 + svgDim.height - 5 - gGrabberDim.height)*gInvZoomFactor); 	
@@ -2887,8 +2863,8 @@ function OnObjectDrag(evt, ui){
 	        
 	        relX = new Number(ui.position.left - ui.originalPosition.left);
 	        relY = new Number(ui.position.top - ui.originalPosition.top);	
-	        relX *= gZoomFactor; 
-	        relY *= gZoomFactor;
+	        relX = Math.round(relX / gZoomFactor); 
+	        relY = Math.round(relY / gZoomFactor);
 	        if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
 	        {
 	        	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
@@ -2941,81 +2917,18 @@ function OnObjectDrag(evt, ui){
 	        } 
 	       
 }
-
-
-
 function OnObjectDragStop(evt,ui){	 
 	   
     var retVal=true;
     if (!gCurrentObjectSelected)
-        return;
-   
+        return;   
    if(gbContextMenuShow == true){
-	   bMove = false;
-   }
-   
-         
+	   bMove = false;   }        
     relX = new Number(ui.position.left - ui.originalPosition.left);
     relY = new Number(ui.position.top - ui.originalPosition.top);
-    relX *= gZoomFactor; 
-    relY *= gZoomFactor; 
-    GX_MoveSelectedObject(relX, relY); 
-    /*
-    var objectType =  gCurrentObjectSelected.classList[0];
-    var newObjDim = new sDimension();   
-    if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
-    {
-    	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
-        newObjDim.y = gCurrSelectedObjectDim.y + relY; 
-        if(gSnapToGrid == true){
-        	newObjDim.x = GX_ConvertToMultipleOf(newObjDim.x, 10); 
-        	newObjDim.y = GX_ConvertToMultipleOf(newObjDim.y, 10); 
-        }
-        newObjDim.width = gCurrSelectedObjectDim.width; 
-        newObjDim.height =  gCurrSelectedObjectDim.height; 
-        newObjDim.rotate = gCurrSelectedObjectDim.rotate;          
-        newObjDim.rotCentreX = Math.round(newObjDim.x + newObjDim.width/2);
-        newObjDim.rotCentreY = Math.round(newObjDim.y + newObjDim.height/2);
-        if(gCurrentObjectSelected.classList[1]== 'ELLIPSE')
-        {
-        	newObjDim.x = newObjDim.rotCentreX;
-            newObjDim.y = newObjDim.rotCentreY; 
-        } 
-        else if(gCurrentObjectSelected.classList[1]== 'CIRCLE')
-        {
-        	newObjDim.x = newObjDim.rotCentreX;
-            newObjDim.y = newObjDim.rotCentreY; 
-        }  
-        retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
-                  
-    }        	
-	else if(objectType == 'GROUP')
-	{    		
-		newObjDim.x = gCurrSelectedObjectDim.x+relX; 
-        newObjDim.y = gCurrSelectedObjectDim.y+relY;  
-        if(gSnapToGrid == true){
-        	newObjDim.x = GX_ConvertToMultipleOf(newObjDim.x, 10); 
-        	newObjDim.y = GX_ConvertToMultipleOf(newObjDim.y, 10); 
-        }
-       // Debug_Message("NewX="+newObjDim.x + "NewY="+ newObjDim.y +"gCurrSelectedObjectDim.x=" + gCurrSelectedObjectDim.x + "relX=" + relX);
-		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
-		//GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
-		
-	}   
-	else if(objectType == 'SVG_PATH_OBJECT')
-	{
-		GX_UpdatePathData(gCurrentObjectSelected); 
-		GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
-	}
-    if(objectType == 'SVG_SHAPE_OBJECT')
-    	GX_UpdatePropertyOnUI('DIMENSION', newObjDim); 
-    //positiong the editor accoridng to new text position 
-    if(objectType == 'SVG_TEXT_OBJECT')
-    	GX_MakeTextEditable(gCurrentObjectSelected); 
-
-    gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected); 
-    gGrabberDim = GX_GetRectObjectDim(gCurrGrabber);	
-    */ 
+    relX = Math.round(relX / gZoomFactor); 
+    relY = Math.round(relY /gZoomFactor);
+    GX_MoveSelectedObject(relX, relY);     
 }
 
 function OnObjectResizeStop(event, ui){
@@ -3023,8 +2936,10 @@ function OnObjectResizeStop(event, ui){
 	var objectType = gCurrentObjectSelected.classList[0]; 
 	var newObjDim = new sDimension(); 
 	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
-		relW = new Number(ui.size.width - ui.originalSize.width ); 
-		relH = new Number(ui.size.height - ui.originalSize.height ); 
+		relW = new Number(ui.size.width - ui.originalSize.width -10 ); 
+		relH = new Number(ui.size.height - ui.originalSize.height - 10); 
+		relW = Math.round(relW / gZoomFactor); 
+		relH = Math.round(relH /gZoomFactor);
 		newObjDim.x = gCurrSelectedObjectDim.x ; 
 	    newObjDim.y = gCurrSelectedObjectDim.y ; 
 	    newObjDim.width = gCurrSelectedObjectDim.width + relW; 
@@ -3756,6 +3671,7 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     var myheight = modDim.height + 0; 
     rightLimit = modDim.x + modDim.width; 
     bottomLimit = modDim.y + modDim.height;
+    /*
     if(modDim.x < gMaxLeft )
     {
     	//gCurrSelectedObjectDim.x
@@ -3779,6 +3695,7 @@ function GX_SetRectObjectDim(ObjNode, newDim)
    	 //alert("Bottom Boundary"); 
    	 return false ;
     }
+    */
     var nodename = ObjNode.nodeName.toLowerCase(); 
     if((nodename == 'rect') || (nodename == 'image') ) {
             ObjNode.setAttribute('x', modDim.x);
@@ -3825,24 +3742,30 @@ function GX_SetRectObjectDim(ObjNode, newDim)
        ObjNode.setAttribute('r', r);       
    }    
     else if(nodename == 'div'){    
-    	with (Math) {    	
-    		var tolerance = round(10 * gInvZoomFactor); 
-    		modDim.x = round((modDim.x - gPanX) * gInvZoomFactor); 
-    		modDim.y = round( (modDim.y - gPanY) * gInvZoomFactor);
+    	with (Math) {    
+    		var YOffset =  round(gCurrentCanvasDim.y +  gClientYOffset) ;//gCanvround(gClientYOffset);// * gInvZoomFactor);     		
+    		var XOffset = round(gCurrentCanvasDim.x - 10); 
+    		var scrollLeft = $('#editor_div').scrollLeft(); 
+    		var scrollTop = $('#editor_div').scrollTop(); 
+    		modDim.x = round(modDim.x - (scrollLeft/gZoomFactor)); 
+    		modDim.y = round(modDim.y - (scrollTop/gZoomFactor));   
+    		var tolerance = new Number(5);//round(10 * gInvZoomFactor); 
+    		modDim.x = round((modDim.x - gPanX) * gInvZoomFactor + XOffset); 
+    		modDim.y = round( (modDim.y - gPanY) * gInvZoomFactor + YOffset);
+    		  	    
     		modDim.width = round(modDim.width * gInvZoomFactor);
-    		modDim.height = round(modDim.height * gInvZoomFactor);
-    		var YOffset = round(gClientYOffset);// * gInvZoomFactor); 
+    		modDim.height = round(modDim.height * gInvZoomFactor);   		
     		if(ObjNode.id == 'sel_gripper'){
     		if( (currObjectType == 'SVG_SHAPE_OBJECT') || (currObjectType == 'SVG_TEXT_OBJECT')|| (currObjectType == 'GROUP') ){
-        		modDim.x = modDim.x ; 
-        	    modDim.y = modDim.y + YOffset ;   
-        	    modDim.width += tolerance; 
-        	    modDim.height += tolerance; 
+        		modDim.x = modDim.x -tolerance; 
+        	    modDim.y = modDim.y- tolerance;   
+        	    modDim.width += (tolerance); 
+        	    modDim.height += (tolerance); 
         	}
         	else if(currObjectType == 'SVG_PATH_OBJECT'){
         		with (Math){        			
             		modDim.x = modDim.x  + tolerance; 
-            	    modDim.y = modDim.y + YOffset + tolerance;   
+            	    modDim.y = modDim.y + tolerance;   
             	    modDim.width -= (tolerance); 
             	    modDim.height -= (tolerance);
         		}    		
@@ -3850,7 +3773,7 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     	}
     	else{
     		modDim.x = modDim.x + round(tolerance/2); 
-    	    modDim.y = new Number(modDim.y + YOffset + round(tolerance/2) );   	    
+    	    modDim.y = new Number(modDim.y + round(tolerance/2) );   	    
     	}  
     }//Math
     	var JQSel = '#' + ObjNode.id;
@@ -5068,7 +4991,8 @@ function GX_GetPathStartPoint(pathNode)
 }
 function GX_UpdatePropertyOnUI(AttrName, AttrVal)
 {
-
+//_rm temporary code to be be done later properly 
+	return ; 
 	switch(AttrName)
 	{
 	case 'POSITION':
@@ -5349,7 +5273,7 @@ function GX_ApplyZoom(zoomFactor)
 	canHeight = canHeight * zoomFactor; 
 	//canvasNode.style.width = canWidth +'px'; 
 	//canvasNode.style.height = canHeight +'px'; 
-	GX_SetCanvasSize(canWidth, canHeight);
+	GX_SetCanvasDimension(canWidth, canHeight);
 	return ; 
 		
 	//get the root SVg node and change the view Box
@@ -5388,6 +5312,7 @@ function GX_DDLHandler(Node, value)
 	{
 		//_rm temo code return for now	
 		var zoomval = new Number(value); 
+		//_rm dont use the zoomfactor value now 
 		gZoomFactor = zoomval; 
 		gInvZoomFactor =  zoomval; 
 		GX_ApplyZoom(gZoomFactor); 		
@@ -8806,7 +8731,7 @@ function GX_ImportShapedlgOK(){
 		GX_ImportObject(gImportShapeFileName); 
 }
 
-function GX_SetCanvasSize(width, height){
+function GX_SetCanvasDimension(width, height){
 	  
 	  //setting the new dimension
 	  $('#canvas').width(width); 
@@ -8815,13 +8740,41 @@ function GX_SetCanvasSize(width, height){
 	  var editorHeight = $('#editor_div').height();
 	  var canvasWidth = $('#canvas').width(); 
 	  var canvasHeight = $('#canvas').height(); 
-	  var canvLeft = (editorWidth - canvasWidth)/2 + 15; 
+	  var canvLeft = Math.round((editorWidth - canvasWidth)/2 + 15); 
 	  if(canvLeft < 0)
 		  canvLeft = 15; 
 	  
-	  var canvTop = (editorHeight - canvasHeight)/2 +15 ;
+	  var canvTop = Math.round((editorHeight - canvasHeight)/2 +15) ;
 	  if(canvTop < 0)
 		  canvTop = 15; 
 	  $('#canvas')[0].style.left = canvLeft +'px'; 
 	  $('#canvas')[0].style.top = canvTop + 'px'; 
+	  gCurrentCanvasDim = GX_GetCanvasDimension(); 
+	  GX_UpdateCanvasLimits(gCurrentCanvasDim); 
+}
+
+function GX_GetCanvasDimension(){
+	gCanvasNode = document.getElementById('canvas');
+	var JQSel = '#canvas'; 
+	var canvasPos = $(JQSel).position();
+	var canvasWidth = $(JQSel).width(); 
+	var canvasHeight = $(JQSel).height(); 
+	CanvasDim = new sDimension(); 
+	CanvasDim.x  = canvasPos.left; 
+	CanvasDim.y   = canvasPos.top;
+	CanvasDim.width = canvasWidth;
+	CanvasDim.height = canvasHeight;
+	return CanvasDim; 
+}
+function GX_UpdateCanvasLimits(canvDim){	
+	 var freedrawNode = document.getElementById('freedraw'); 
+	 
+	 gMaxLeft = new Number(canvDim.x);
+	 gMaxTop = new Number(canvDim.y); 
+	 gMaxRight = gMaxLeft + canvDim.width;   
+	 gMaxBottom = gMaxTop + canvDim.height; 
+	 if(freedrawNode){
+		 freedrawNode.setAttribute('width', canvDim.width); 
+		 freedrawNode.setAttribute('height', canvDim.height);	
+	 }	 	 
 }
