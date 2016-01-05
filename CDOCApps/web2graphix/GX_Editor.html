@@ -22,6 +22,7 @@
  <style>
 /* Bootstrap based styles */ 
   /* latin */
+  /*
 @font-face {
 		  font-family: 'Montserrat';
 		  font-style: normal;
@@ -29,7 +30,9 @@
 		  src: local('Montserrat-Regular'), url(http://fonts.gstatic.com/s/montserrat/v6/zhcz-_WihjSQC0oHJ9TCYPk_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
 		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
 		}
+		*/ 
 		/* latin-ext */
+		/*
 @font-face {
   font-family: 'Lato';
   font-style: normal;
@@ -37,7 +40,9 @@
   src: local('Lato Regular'), local('Lato-Regular'), url(http://fonts.gstatic.com/s/lato/v11/UyBMtLsHKBKXelqf4x7VRQ.woff2) format('woff2');
   unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
 }
+*/
 /* latin */
+/*
 @font-face {
   font-family: 'Lato';
   font-style: normal;
@@ -45,6 +50,7 @@
   src: local('Lato Regular'), local('Lato-Regular'), url(http://fonts.gstatic.com/s/lato/v11/1YwB1sO8YE1Lyjf12WNiUA.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
 }
+*/ 
   body {
       font: 400 15px Lato, sans-serif;
       line-height: 1.8;
@@ -368,23 +374,14 @@
 				
 				  </svg>
 					<svg id="objectcontainer" width="100%" height="100%"  visibility="visible"></svg>
-	<svg id="editingassets_orig" width="100%" height="100%" visibility="visible">
-					    <circle id="pathmarker" cx="0" cy="0" r="5" stroke="black" stroke-width="1"  fill="blue" fill-opacity="1.0" pointer-events="visible"  visibility="hidden" data-index="" 
+					<svg id="editingassets_orig" width="100%" height="100%" visibility="visible">
+					    <circle id="pathmarker_orig" cx="0" cy="0" r="5" stroke="black" stroke-width="1"  fill="blue" fill-opacity="1.0" pointer-events="visible"  visibility="hidden" data-index="" 
 			             onclick="OnPathMarkerMouseDown(evt)" onmousemove='OnPathMarkerMouseMove(evt)' onmouseout='OnPathMarkerMouseOut(evt)' />
-			        	<path id="indicatorpath" visibility="hidden" class='INDICATOR_PATH LINE_PATH' stroke="grey" stroke-width="2" stroke-opacity="1" stroke-dasharray="4 2" fill="none" d="M50 130 L200 100 L300 150" />   	  
-			        	<path id="erasepath" visibility="hidden" class='ERASE_PATH' stroke="white" stroke-width="4" fill="none" d="" />
+			        	<path id="indicatorpath_orig" visibility="hidden" class='INDICATOR_PATH LINE_PATH' stroke="grey" stroke-width="2" stroke-opacity="1" stroke-dasharray="4 2" fill="none" d="M50 130 L200 100 L300 150" />   	  
+			        	<path id="erasepath_orig" visibility="hidden" class='ERASE_PATH' stroke="white" stroke-width="4" fill="none" d="" />
 			        	<rect id='eraser1_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
 			        	<rect id='eraser2_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
-						<rect id="gripper_orig" x="10" y="10" width="50" height="50" stroke="indigo" stroke-width="1" fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible"  onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)"></rect>
-						
-						<circle id="markerTL_orig" class="CUSTOM_MARKER_ORIG" cx="0" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="nw-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
-				        <circle id="markerTM_orig" class="CUSTOM_MARKER_ORIG" cx="25" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="n-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
-				        <circle id="markerTR_orig" class="CUSTOM_MARKER_ORIG" cx="50" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="ne-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
-				        <circle id="markerMR_orig" class="CUSTOM_MARKER_ORIG" cx="75" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="e-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
-				        <circle id="markerBR_orig" class="CUSTOM_MARKER_ORIG" cx="100" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="se-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
-				        <circle id="markerBM_orig" class="CUSTOM_MARKER_ORIG" cx="125" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="s-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
-				        <circle id="markerBL_orig" class="CUSTOM_MARKER_ORIG" cx="150" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="sw-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
-				        <circle id="markerML_orig" class="CUSTOM_MARKER_ORIG" cx="170" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="w-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>	       
+						<rect id="gripper_orig" x="10" y="10" width="50" height="50" stroke="indigo" stroke-width="1" fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible"  onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)"></rect>				      
 				        <rect id="freedraw_orig" x="10" y="10" width="250" height="150" stroke="green" stroke-width="1" stroke-opacity='0.9' fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible" onmousedown="OnFreeDrawClick(evt)" onmousemove='OnFreeDrawMouseMove(evt)' ></rect>
 			       </svg>
 		        
@@ -418,13 +415,9 @@
 		                <div id="node_panel" >Node Panel</div>
 		            </div>
 		            <div id='propertyTab'>
-		                ASP.NET is a web application framework developed and marketed by Microsoft to allow
-		                programmers to build dynamic web sites, web applications and web services. It was
-		                first released in January 2002 with version 1.0 of the .NET Framework, and is the
-		                successor to Microsoft's Active Server Pages (ASP) technology. ASP.NET is built
-		                on the Common Language Runtime (CLR), allowing programmers to write ASP.NET code
-		                using any supported .NET language. The ASP.NET SOAP extension framework allows ASP.NET
-		                components to process SOAP messages.
+		                <div id='pathclosegroup'  class='FREEDRAW_PATH_PROPERTY ELLIPTIC_PROPERTY LINE_PATH_PROPERTY POLYGON_PROPERTY CUBIC_BEZIER_PROPERTY QUADRATIC_BEZIER_PROPERTY' style="display:none; padding-right:3px; border-right: ridge 2px #f0f0f0;">
+   		    				<div id='pathclose' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Closed/Open Path' data-helptext='Toggle between a Closed and Open path'>Close Path</div>
+   		   				</div> 
 		            </div>
 		       <div id='animationTab'>
 		          <div id="animationListWidget" style='display:none'>
