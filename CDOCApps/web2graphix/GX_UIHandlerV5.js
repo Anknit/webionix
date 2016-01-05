@@ -3908,6 +3908,10 @@ function GX_InitializeToolbar()
     WAL_CreatePopOver('shapes_popup', 'object_icon', 'Objects', false, 'auto', 'auto');
     var lineTypes = ['Horizontal','Vertical','Normal']; 
     WAL_createDropdownListwithButton("lineDDL", '0','0',lineTypes, "GX_DDLHandler", '140', '80','line_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
+    
+    var curveTypes = ['Cubic Bezier','Quadratic Bezier','Elliptic']; 
+    WAL_createDropdownListwithButton("curveDDL", '0','0',curveTypes, "GX_DDLHandler", '140', '80','curve_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
+    
     WAL_createCustomButton('new_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('open_icon', 'GX_ToolbarHandler', gWidgetTooltipID);  
     WAL_createCustomButton('close_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
@@ -8788,4 +8792,6 @@ function GX_UpdateCanvasLimits(canvDim){
 function GX_InitializePropertyTab(){
 	
 	 WAL_createCheckBox('pathclose', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
+	 WAL_createCheckBox('largearcCheckBox', 'GX_CheckValueChange', '90', '20' , '13', false, false, gWidgetTooltipID);
+	 WAL_createCheckBox('sweepCheckBox', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);   
 }
