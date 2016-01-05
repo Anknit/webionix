@@ -68,8 +68,8 @@ var gGrabberDim = new sDimension();
 var gRegionLimit = new sDimension(); 
 var gOrigMousePosX, gOrigMousePosY;
 var gsvgRootNode = 0;
-var gCursorXOffset = 8;
-var gCursorYOffset = 5;
+var gCursorXOffset = 0;//8;
+var gCursorYOffset = 0;// 5;
 var bMove = false;
 var bDraw = false;
 var gCurrGrabber = 0;
@@ -1042,6 +1042,7 @@ function GX_Initialize()
     gSVGDimInfoHolder = document.getElementById('diminfo'); 
     
     GX_InitializeToolbar(); 
+    GX_InitializePropertyTab(); 
     
     WAL_createNumberInput("svgwidthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1000, 0,1);
     WAL_createNumberInput("svgheightIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1000, 0,1);
@@ -1075,13 +1076,13 @@ function GX_Initialize()
 	$(JQSel).draggable({ cursor: "crosshair", cursorAt:{top: 2, left: 2} });	
 	$(JQSel).css({left:'100px', top:'200px', visibility:'visible' });	
 	$(JQSel).on( "drag", function( event, ui ) {
-		OnFreeDrawDrag(event); 
+		OnFreeDrawDrag(event, ui); 
 	});
 	$(JQSel).on( "dragstart", function( event, ui ) {
-		OnFreeDrawDragStart(event); 		
+		OnFreeDrawDragStart(event, ui); 		
 	});
 	$(JQSel).on( "dragstop", function( event, ui ) {
-		OnFreeDrawDragEnd(event); 		
+		OnFreeDrawDragEnd(event, ui); 		
 	});
 	
 	JQSel = '#sel_gripper'; 
@@ -2249,11 +2250,13 @@ function GX_UpdateMarkers(GrabberDim, bShow, bPointMarker)
 {
 	  var markX, markY; 
 	  var JQSel = ".CUSTOM_MARKER"; 
+	  if((GrabberDim.x == undefined)|| (GrabberDim.y == undefined) )
+	  	return ; 
 	  var origMarkX = new Number(GrabberDim.x); 
 	  var origMarkY = new Number(GrabberDim.y); 
 	  markX = origMarkX; 
-	  markY = origMarkY; 
-	  if( (bShow == false) && (bPointMarker == true) )
+	  markY = origMarkY; 	  
+	  if( (bShow == false) && (bPointMarker == true))
 	  {
 		  JQSel = '#markerPoint'; 
 		  $(JQSel).css({visibility: "hidden"});
@@ -2280,7 +2283,7 @@ function GX_UpdateMarkers(GrabberDim, bShow, bPointMarker)
 	  $(JQSel).attr("visibility", "hidden");
 	  
 	 //get the top left coordinate of grabber
-	
+	/*
 	 JQSel = "#markerTL";
 	 $(JQSel).attr("cx", markX); 
 	 $(JQSel).attr("cy", markY); 
@@ -2329,7 +2332,7 @@ function GX_UpdateMarkers(GrabberDim, bShow, bPointMarker)
 	 JQSel = "#markerML";
 	 $(JQSel).attr("cx", markX); 
 	 $(JQSel).attr("cy", markY);
-	 
+	 */ 
 	// $(JQSel).attr("visibility", "visible");
 }
 function OnMarkerMouseMove(evt)
@@ -3903,7 +3906,8 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('freehand_icon', 'GX_ToolbarHandler', gWidgetTooltipID);    
     WAL_CreatePopOver('shapes_popup', 'object_icon', 'Objects', false, 'auto', 'auto');
-    
+    var lineTypes = ['Horizontal','Vertical','Normal']; 
+    WAL_createDropdownListwithButton("lineDDL", '0','0',lineTypes, "GX_DDLHandler", '140', '80','line_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
     WAL_createCustomButton('new_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('open_icon', 'GX_ToolbarHandler', gWidgetTooltipID);  
     WAL_createCustomButton('close_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
@@ -4225,7 +4229,7 @@ function GX_ToolbarHandler(Node)
 		 WAL_showModalWindow(gSVGGroupNameDlgID,"GX_SVGGroupDlgNameOK", "" );	
 		break;
 	case 'circle_icon':
-		gNewObjectID = GX_AddNewSVGObject('circle',''); 
+		 gNewObjectID = GX_AddNewSVGObject('circle',''); 
 		 GX_StartFreeDraw();
 		break; 
 	case 'ellipse_icon':
@@ -6115,7 +6119,7 @@ function OnFreeDrawMouseMove(evt){
 	$(JQSel).css({left: evt.clientX +'px', top: evt.clientY + 'px'} ); 	
 }
 
-function OnFreeDrawDragStart(evt){
+function OnFreeDrawDragStart(evt, ui){
 	if(!gCurrentObjectSelected){
 		Debug_Message('Object not selected');
 		return ; 	
@@ -6123,21 +6127,22 @@ function OnFreeDrawDragStart(evt){
 	
 	var nodeid = evt.target.id; 
 	//alert("my nodeid =" +  nodeid); 
-	var node = evt.target;
-	 var ClientX = new Number(evt.clientX - gClientXOffset); 
- 	 var ClientY =  new Number(evt.clientY- gClientYOffset); 	
-     var X = new Number(ClientX);
+	var node = evt.target; 
+	var pathType = gCurrentObjectSelected.classList[1]; 
+	//if(pathType != 'FREEDRAW_PATH')
+		//return ; 
+    //var ClientX = new Number(evt.clientX - gClientXOffset); 
+	//var ClientY =  new Number(evt.clientY- gClientYOffset); 
+	var YOffset =  Math.round(gCurrentCanvasDim.y +  gClientYOffset) ;//gCanvround(gClientYOffset);// * gInvZoomFactor);     		
+	var XOffset = Math.round(gCurrentCanvasDim.x - 10); 
+	var ClientX = evt.clientX - XOffset; 
+	var ClientY = evt.clientY - YOffset; 
+	 var X = new Number(ClientX);
      var Y = new Number(ClientY);
      X = Math.round((X + window.pageXOffset - gCursorXOffset)*gZoomFactor); 
 	 Y = Math.round((Y + window.pageYOffset - gCursorYOffset)*gZoomFactor);	
 	 X += gPanX;
 	 Y += gPanY; 
-	 
-	var pathType = gCurrentObjectSelected.classList[1]; 
-	//if(pathType != 'FREEDRAW_PATH')
-		//return ; 
-    var ClientX = new Number(evt.clientX - gClientXOffset); 
-	var ClientY =  new Number(evt.clientY- gClientYOffset); 
 	var objectType = gCurrentObjectSelected.classList[1]; 
 	if(gEnableMultiSelection == true)
 		objectType = 'RECTANGLE'; 
@@ -6193,7 +6198,7 @@ function OnFreeDrawDragStart(evt){
 	}		
 }
 
-function OnFreeDrawDragEnd(evt){	
+function OnFreeDrawDragEnd(evt, ui){	
 	
 	var objectType = gCurrentObjectSelected.classList[1]; 
 	if(gEnableMultiSelection == true)
@@ -6233,7 +6238,7 @@ function OnFreeDrawDragEnd(evt){
 	// Debug_Message('Drag End'); 
 }
 
-function OnFreeDrawDrag(evt)
+function OnFreeDrawDrag(evt, ui)
 {
 	//now grab the points and add it to indicaotr path 
 	 if (bDraw != true)
@@ -6242,16 +6247,19 @@ function OnFreeDrawDrag(evt)
 	 if(gEnableMultiSelection == true)
 		 objType = 'RECTANGLE'; 
      var node = evt.target;
-     var ClientX = new Number(evt.clientX - gClientXOffset); 
- 	 var ClientY =  new Number(evt.clientY- gClientYOffset); 	
+     var YOffset =  Math.round(gCurrentCanvasDim.y +  gClientYOffset) ;//gCanvround(gClientYOffset);// * gInvZoomFactor);     		
+ 	 var XOffset = Math.round(gCurrentCanvasDim.x - 10); 
+     var ClientX = new Number(evt.clientX - XOffset); 
+ 	 var ClientY =  new Number(evt.clientY- YOffset); 	
+ 	 //_rm trial code 
+ 	 var newWidth = new Number(ui.position.left - ui.originalPosition.left);
+ 	 var newHeight = new Number(ui.position.top - ui.originalPosition.top);     
      var X = new Number(ClientX);
      var Y = new Number(ClientY);
      X = Math.round((X + window.pageXOffset - gCursorXOffset)*gZoomFactor); 
 	 Y = Math.round((Y + window.pageYOffset - gCursorYOffset)*gZoomFactor);	
 	 X += gPanX;
-	 Y += gPanY; 
-	 
-	
+	 Y += gPanY; 	
 	 if(gSnapToGrid == true)
 	 {
 			 X = X/10; 
@@ -6272,8 +6280,7 @@ function OnFreeDrawDrag(evt)
 			 gFreeDrawStarted = true;
 		}
 		else
-			gFreeDrawPathData += X + "," + Y + " ";
-		
+			gFreeDrawPathData += X + "," + Y + " ";		
 	     gCurrentObjectSelected.setAttribute("d", gFreeDrawPathData);
 	     gPrevX = X;
 	     gPrevY = Y; 
@@ -6282,8 +6289,10 @@ function OnFreeDrawDrag(evt)
 	else if((objType ==  'RECTANGLE') || (objType == 'IMAGE') || (objType ==  'ELLIPSE')|| (objType == 'CIRCLE') || (objType == 'LINE_PATH')||(objType == 'HOR_LINE_PATH') || (objType == 'VERT_LINE_PATH') || (objType == 'CUBIC_BEZIER')
 			|| (objType == 'QUADRATIC_BEZIER')|| (objType == 'ELLIPTIC'))
 	{
-		gCurrSelectedObjectDim.width = X - gCurrSelectedObjectDim.x; 
-		gCurrSelectedObjectDim.height = Y - gCurrSelectedObjectDim.y;
+		//gCurrSelectedObjectDim.width = X - gCurrSelectedObjectDim.x; 
+		//gCurrSelectedObjectDim.height = Y - gCurrSelectedObjectDim.y;
+		gCurrSelectedObjectDim.width = newWidth; 
+		gCurrSelectedObjectDim.height = newHeight;
 		GX_SetRectObjectDim(gCurrentObjectSelected, gCurrSelectedObjectDim); 
 		return ;		
 	}
@@ -8774,4 +8783,9 @@ function GX_UpdateCanvasLimits(canvDim){
 		 freedrawNode.setAttribute('width', canvDim.width); 
 		 freedrawNode.setAttribute('height', canvDim.height);	
 	 }	 	 
+}
+
+function GX_InitializePropertyTab(){
+	
+	 WAL_createCheckBox('pathclose', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
 }
