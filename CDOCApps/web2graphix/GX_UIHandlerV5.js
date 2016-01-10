@@ -165,7 +165,7 @@ var gCurrLayerNode=0;
 var gCurrLayerTranslateValues = 0;
 var gButtonWidth = '24'; 
 var gButtonHeight='24'; 
-var gDDLHeight = '24' ; //'26px'
+var gDDLHeight = '22' ; //'26px'
 
 var gEditWidth = "35";
 var gObjectEditMode = 'OBJECT_MODE';//'PROPERTIES_MODE';
@@ -794,7 +794,7 @@ function GX_CreateGradientWidget(wdgtID)
         //WAL_createButton('animTotalPreviewBtn', '', '60', 25, true);
         WAL_CreateTextInput('gradTitleIP', '100', gInputHeight,false, '');
    	    var spreadValueDisplay = ['pad', 'reflect', 'repeat'];
-        WAL_createDropdownList('gradSpreadDDL', '110', '24', false, spreadValueDisplay, "GX_SpreadDDLHandler", '50');
+        WAL_createDropdownList('gradSpreadDDL', '110', '24', false, spreadValueDisplay, "GX_SpreadDDLHandler", '50', 0);
        
        // WAL_createNumberInput("stop0_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);       
         
@@ -3895,7 +3895,7 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('align_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     //zoompan interface 
     var zoomeValueDisplay = ['Normal','1.25x','1.5x','2.0x', '2.25x', '2.5x', '3.0x'];    
-    WAL_createDropdownList('zoomDDL', '100', '24', false, zoomeValueDisplay, "GX_DDLHandler", '80');
+    WAL_createDropdownList('zoomDDL', '100', '24', false, zoomeValueDisplay, "GX_DDLHandler", '80', 0);
    
     WAL_createCustomButton('file_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('edit_icon', 'GX_ToolbarHandler', gWidgetTooltipID);	
@@ -8791,7 +8791,85 @@ function GX_UpdateCanvasLimits(canvDim){
 
 function GX_InitializePropertyTab(){
 	
+	 WAL_createNumberInput("lposIP", '80px', gDDLHeight,  "GX_EditBoxValueChange", true, 1280, 0,1, gWidgetTooltipID);
+	 WAL_createNumberInput("tposIP", '80px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID);
+	 
+	 WAL_createNumberInput("widthIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 1280, 0,1, gWidgetTooltipID);
+	 WAL_createNumberInput("heightIP", '80px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID); 
+	    
+	 
+	 WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 360, 0,1, gWidgetTooltipID);
+	 //WAL_createSlider('rotateSlider', '150px','12px', true, 0, 360, 1,90, true, false ,'', false, '');
+	 
+	// WAL_createSlider(ID, Width, Height, bDiscrete, MinValue, MaxValue, Step,tickFreq, bShowTicks, bButtonShow ,HandlerSliderChange, bRangeSlider, HandlerForSlideEnd); 
+	   
+	 var fillValue = ['None', 'Solid','Linear Gradient', 'Radial Gradient'];	 
+	 WAL_createDropdownList("fillcolorDDL", '120','22',false, fillValue, "GX_DDLHandler", '80', '150');
+	 var gradList = ['none', 'item2', 'ítem3'];
+	 WAL_createDropdownList('gradlistDDL', '120', '22', false, gradList, "GX_DDLHandler", '80', '150');
+	 WAL_createCustomButton('edit_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
+	 WAL_createCustomButton('delete_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
+	 
+	 //stroke interface
+	 WAL_createCustomButton('stroke_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+	 WAL_createNumberInput("strokeWeightIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,0,1, gWidgetTooltipID);
+	 WAL_setNumberInputValue('strokeWeightIP', 1, false);
+	// var listBoxSrc = []; 
+	    var listBoxSrc = new Array();
+	    var image=""; 
+	    var dashValue; 
+	    for (i = 0; i < 9; i++) {
+	       image = 'dash' + i + '.svg';          
+	        var html = "<div style='padding: 0px; margin: 0px; height: 20px; float: left;'><img width='auto' style='float: left; margin-top: 1px; margin-right: 2px;' src='../USER_DATA/shared/Stroke_Dash/" + image + "'/></div>";
+	        switch(i)
+	        {
+	        case 0:
+	        	dashValue = ""; 
+	        	break; 
+	        case 1:
+	        	dashValue = "1,1"; 
+	        	break ; 
+	        case 2:
+	        	dashValue = "3,3"; 
+	        	break ; 
+	        case 3:
+	        	dashValue = "5,5"; 
+	        	break ; 
+	        case 4:
+	        	dashValue = "6,3"; 
+	        	break ; 
+	        case 5:
+	        	dashValue = "10,4"; 
+	        	break ;	
+	        case 6:
+	        	dashValue = "14,4"; 
+	        	break ;	
+	        case 7:
+	        	dashValue = "14,4,4,4"; 
+	        	break ;	
+	        case 8:
+	        	dashValue = "20,4,6,4"; 
+	        	break ;	       	
+	        default:
+	        	break;	        	
+	        }
+	        listBoxSrc[i] = { html: html, value:dashValue};
+	    }	        
+	    WAL_createDropdownList('strokedashDDL', '120', '22', false, listBoxSrc, "GX_DDLHandler", '80', '150');
+	 //GX_CreateGradientWidget('gradientDlg');
+	    
+	    //opacity 
+	    
+	 WAL_createSlider('opacitySlider', '130px','12px', true, 0, 100, 1,25, true, false ,'', false, '');
+	 WAL_createNumberInput("opacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,0,1, gWidgetTooltipID);
+	 WAL_setNumberInputValue('opacityIP', 100, false);
+	    
+	// WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 360, 0,1, gWidgetTooltipID);
 	 WAL_createCheckBox('pathclose', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
+	 WAL_createNumberInput("radiusXIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true,300,0,1, gWidgetTooltipID);
+	 WAL_createNumberInput("radiusYIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 300,0, 1, gWidgetTooltipID);
 	 WAL_createCheckBox('largearcCheckBox', 'GX_CheckValueChange', '90', '20' , '13', false, false, gWidgetTooltipID);
-	 WAL_createCheckBox('sweepCheckBox', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);   
+	 WAL_createCheckBox('sweepCheckBox', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
+	 
+	 WAL_createNumberInput("lengthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 500,0,1, gWidgetTooltipID);
 }
