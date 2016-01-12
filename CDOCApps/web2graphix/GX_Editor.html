@@ -338,7 +338,7 @@
 </div>   
   <div id='home' class='container-fluid' style='padding-top:40px; padding-left:2px;'>  
   	<div class='row' style='margin-top:35px'>
-  		<div class="panel panel-default col-sm-8" style='position:relative;top:0px; border:none;'>    	
+  		<div id='leftpanel' class="panel panel-default col-sm-8" style='position:relative;top:0px; border:none;'>    	
     	<div class="panel-body" style='padding:0px'>
     	<div id='statusinfo' style='font-weight:bold; font-size:14px'><span style='margin-left:25px'>Project Name:</span><span id='fname' style='margin-left:5px; font-weight:bold; font-style:italic;' ></span>
     	<span style='margin-left:30px'>Dimension:</span><a id='diminfo' href='#' style='margin-left:5px; font-weight:bold' onclick='GX_ToolbarHandler(event.target);' title='Click here to change Dimension' ></a>
@@ -403,7 +403,7 @@
     		
     		</div>    	
   		</div>
-  		<div class="panel panel-default col-sm-4" style='position:relative;top:0px;border:none;'>    	
+  		<div id='rightpanel' class="panel panel-default col-sm-4" style='position:relative;top:0px;border:none;'>    	
     		<div class="panel-body" style='padding:0px;position:relative; left:-12px; top:35px'>
 		    	<div id='rightTabs'>
 		            <ul>                
@@ -445,9 +445,14 @@
 		              		<td style='width:270px'>
 		              			<div id='gradlistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><span class='myLabel' style='text-align:right;'>Use Gradient</span><div id='gradlistDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
 		    				</td>
-		    				<td style='width:60px'>
-		    					<div style= 'display:inline-block;margin-left:30px;'><div class="BTN_CONTAINER_SMALL"><input class='small_icon'  type = "image" id='edit_grad_icon' value=''  src='../CommonCSS/icons/Version1/linecolor.png' data-tooltiptext='Edit Gradient Properties' data-helptext='Edit Gradient Properties' style='width:22px; height:22px;margin-top:5px'/></div></div> 	
+		    				<td >
+		    				<div>
+		    					<button id='edit_grad_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_ToolbarHandler(event)'>Edit</button> 
+		    					<button id='delete_grad_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px'>Delete</button>
+		    				</div> 
+		    					<!-- <div style= 'display:inline-block;margin-left:30px;'><div class="BTN_CONTAINER_SMALL"><input class='small_icon'  type = "image" id='edit_grad_icon' value=''  src='../CommonCSS/icons/Version1/linecolor.png' data-tooltiptext='Edit Gradient Properties' data-helptext='Edit Gradient Properties' style='width:22px; height:22px;margin-top:5px'/></div></div> 	
 		    					<div style= 'display:inline-block;margin-left:-10px;'><div class="BTN_CONTAINER_SMALL"><input class='small_icon'   type = "image" id='delete_grad_icon' value=''  src='../CommonCSS/icons/Version1/delete.png' data-tooltiptext='Remove Gradient' data-helptext='Remove Gradient' style='width:22px; height:22px;margin-top:5px;' /></div></div>
+		    					-->
 		    				</td>
 		              	</tr>
 		              	<tr id='strokeProp' class='propertyRow'>
@@ -469,14 +474,14 @@
 		              			<div id='opacityEdit' style='display:inline-block; margin-left:-45px;' data-tooltiptext='Opacity' data-helptext='Opacity of the Object'><div id='opacityIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
 		              		</td>
 		              	</tr>
-		              	<tr id='pathcloseProp' class='propertyRow'>
+		              	<tr id='pathcloseProp' class='propertyRow pathProperty'>
 		              		<td class='propertyName'>Close Path</td>
 		              		<td class='propertyValues'>
 		              			<div id='pathclose' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Closed/Open Path' data-helptext='Toggle between a Closed and Open path'></div>
 		              		</td>
 		              		<td></td>
 		              	</tr>	
-		              	<tr id='editbtnProp' class='propertyRow'>
+		              	<tr id='editbtnProp' class='propertyRow pathProperty'>
 		              		<td class='propertyName'></td>
 		              		<td class='propertyValues'>
 		              			<button id='patheditBtn' type="button" class="btn btn-primary btn-block" style='margin-left:25%'>Edit Points</button>   		   						
@@ -484,21 +489,21 @@
 		              		<td class='propertyValues'>		              			
 		              		</td>
 		              	</tr>	              	
-		              	<tr id='largearcProp' class='propertyRow ellipticProp'>
+		              	<tr id='largearcProp' class='propertyRow ellipticProp pathProperty'>
 		              		<td class='propertyName'>Large Arc</td>
 		              		<td class='propertyValues'>
 		              			<div id='largearcCheckBox' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Large Arc' data-helptext='Check to Enable Large arc'></div>   		   						
 		              		</td>
 		              		<td class='propertyValues'></td>
 		              	</tr>
-		              	<tr id='sweepProp' class='propertyRow ellipticProp'>
+		              	<tr id='sweepProp' class='propertyRow ellipticProp pathProperty'>
 		              		<td class='propertyName'>Sweep</td>
 		              		<td class='propertyValues'>
 		              			<div id='sweepCheckBox' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Sweep' data-helptext='Check to Enable Sweep'></div>   		   						
 		              		</td>
 		              		<td class='propertyValues'></td>
 		              	</tr>
-		              	<tr id='radiusProp' class='propertyRow ellipticProp'>
+		              	<tr id='radiusProp' class='propertyRow ellipticProp pathProperty'>
 		              		<td class='propertyName'>Radius</td>
 		              		<td class='propertyValues'>
 		              			<div id='radiusXEdit' style='display:inline-block; margin-left:32px;' data-tooltiptext='Horizontal Radius' data-helptext='Modify the Horizontal Radius'><span class='myLabel' style='text-align:right;'>X</span><div id='radiusXIP' class='EDIT_BOX group6' type='RADIUSX' ></div></div>   		   						
@@ -507,23 +512,23 @@
 		              			<div id='radiusYEdit' style='display:inline-block; margin-left:36px;' data-tooltiptext='Vertical Radius' data-helptext='Modify the Vertical Radius'><span class='myLabel' style='text-align:right;'>Y</span><div id='radiusYIP' class='EDIT_BOX group6' type='RADIUSY'></div></div>
 		              		</td>
 		              	</tr>
-		              	<tr id='polygonProp' class='propertyRow polygonProp'>
+		              	<tr id='polygonProp' class='propertyRow polygonProp pathProperty'>
 		              		<td class='propertyName'>Length of Sides</td>
 		              		<td class='propertyValues'>
 		              			<div id='lengthIP' class='EDIT_BOX group6' type='LENGTH' ></div>  
 		              		</td>
 		              		<td class='propertyValues'>
-		              			<button id='addpointBtn' type="button" class="btn btn-success btn-xs">Add</button>
-		              			<button id='deletepointBtn' type="button" class="btn  btn-danger btn-xs" style='margin-left:5px'>Delete</button>
+		              			<button id='addpointBtn' type="button" class="btn btn-xs propertyBtn ">Add</button>
+		              			<button id='deletepointBtn' type="button" class="btn btn-xs propertyBtn" style='margin-left:5px'>Delete</button>
 		              		</td>		              		
 		              	</tr>
-		              	<tr id='freedrawProp' class='propertyRow freedrawProp'>
+		              	<tr id='freedrawProp' class='propertyRow freedrawProp pathProperty'>
 		              		<td class='propertyName' style='width:15%'></td>
 		              		<td class='propertyValues' style='width:80%'>
 		              			<div >
-		              				<button id='eraseBtn' type="button" class="btn btn-danger btn-xs" style='width:70px'>Erase</button> 
-		              				<button id='redrawBtn' type="button" class="btn btn-warning btn-xs" style='width:70px'>Redraw</button>
-		              				<button id='smoothBtn' type="button" class="btn btn-info btn-xs" style='width:70px'>Smoothen</button> 
+		              				<button id='eraseBtn' type="button" class="btn  btn-xs propertyBtn" style='width:70px'>Erase</button> 
+		              				<button id='redrawBtn' type="button" class="btn btn-xs propertyBtn" style='width:70px'>Redraw</button>
+		              				<button id='smoothBtn' type="button" class="btn btn-xs propertyBtn" style='width:70px'>Smoothen</button> 
 		              			</div>
 		              		</td>
 		              		<td class='propertyValues' style='width:5%'>
