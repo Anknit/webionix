@@ -950,6 +950,7 @@ function GX_GradDlgOK() {
        
         var fillurl = 'url(#' + currGradID + ')';
         GX_UpdatePropertyForMultipleObjects('fill',fillurl); 
+        WAL_hideWidget('gradcolorpickwidget', true); 
 }
 function GX_GradDlgCancel() {
     //alert("Cancel");
