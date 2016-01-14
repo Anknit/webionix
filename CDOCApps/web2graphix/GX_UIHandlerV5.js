@@ -1261,9 +1261,11 @@ function GX_InitializeDocument(svgFileName)
 			 var attr = gReverseAttrList[gAnimList[i][2]]; 
 			 animlist.push(gAnimList[i][5] + '-<b>' + attr + '</<b>'); 
 		 }		 
-		 WAL_ListBoxUpdateData('animationlist', animlist);
-		 
+		 WAL_ListBoxUpdateData('animationlist', animlist);		 
 	 }	
+	 //update the gradient list 
+	gGradientList = GX_GetGradientList(); 
+	GX_UpdateGradientList(gGradientList);
 //	WAL_setCheckBoxValue('snaptogrid', false);
 	 //_rm temp code to be brought back later
 	//GX_showEditorInterface('OBJECT_MODE'); 
@@ -5048,8 +5050,7 @@ function GX_UpdatePropertyOnUI(AttrName, AttrVal)
 	case 'GRADIENT':
 		//get the fill url 
 		if( !gCurrentObjectSelected)
-			return ; 
-		
+			return ; 		
 		var fillstr = gCurrentObjectSelected.getAttribute('fill'); 
 		if(!fillstr)
 			return ; 
@@ -8886,8 +8887,8 @@ function GX_InitializePropertyTab(){
 	    }	        
 	 WAL_createDropdownList('strokedashDDL', '120', '22', false, listBoxSrc, "GX_DDLHandler", '80', '150');    
 	 WAL_createSlider('opacitySlider', '130px','12px', true, 0, 100, 1,25, true, false ,'', false, '');
-	 WAL_createNumberInput("opacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,0,1, gWidgetTooltipID);
-	 WAL_setNumberInputValue('opacityIP', 100, false);
+	 WAL_createNumberInput("fillopacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,0,1, gWidgetTooltipID);
+	 WAL_setNumberInputValue('fillopacityIP', 100, false);
 	    
 	// WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 360, 0,1, gWidgetTooltipID);
 	 WAL_createCheckBox('pathclose', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
@@ -8914,9 +8915,9 @@ function GX_SetDefualtPropOnUI(){
 	WAL_setNumberInputValue("rotateIP", 0, false);
 	WAL_SetItemByValueInList('fillcolorDDL', 'None', 'true');	
 	WAL_setNumberInputValue('strokeWeightIP', 1, false);
-	WAL_setNumberInputValue('opacityIP', 100, false);
+	WAL_setNumberInputValue('fillopacityIP', 100, false);
 	WAL_setSliderValue('opacitySlider', 100); 	
-	var JQSel = $('.pathProperty').hide(); 	
+	//var JQSel = $('.pathProperty').hide(); 	
 }
 
 function GX_SetPropertyonUI(objNode){
@@ -8924,8 +8925,6 @@ function GX_SetPropertyonUI(objNode){
 	var objectType = objNode.classList[1]; 
 	var shapeType = objNode.classList[0]; 
 	//first extract the common properties and set the UI
-	
-
 	//first the dimension related properies 
 	var dim = GX_GetRectObjectDim(objNode);
 	WAL_setNumberInputValue("lposIP", dim.x, false);
@@ -8941,7 +8940,50 @@ function GX_SetPropertyonUI(objNode){
 		WAL_disableWidget('heightIP', 'data-jqxNumberInput', false, true); 
 	}	
 	WAL_setNumberInputValue('rotateIP', dim.rotate, false);
+	
+	//updating the gradient values 
+	
 	//now based on specific object type extract those property and set the UI. also show them as we proceed 
+	var strokewidth = objNode.getAttribute('stroke-width'); 
+	WAL_setNumberInputValue('strokeWeightIP', strokewidth, false);    
+	
+	var fillopacity = objNode.getAttribute('fill-opacity');
+	fillopacity = new Number(fillopacity);
+	fillopacity = Math.round(fillopacity*100); 
+	WAL_setNumberInputValue('fillopacityIP', fillopacity, false);	
+	//updating the gradient values 
+	var fillstr = objNode.getAttribute('fill'); 
+	//if(!fillstr)
+	//	return ; 
+	if( (fillstr == 'none') || (fillstr == ''))
+	{
+		WAL_SetItemByValueInList('gradlistDDL', 'none', 'true'); 
+		WAL_SetItemByValueInList('fillcolorDDL', 'None', 'true');
+		return ; 
+	}
+	else{
+		var index = fillstr.indexOf('url(#');
+		if(index >= 0){
+			fillstr = fillstr.substring(5, fillstr.length-1); 
+			var info = GX_GetGradInfoByID(fillstr);
+			if(info[0])
+				WAL_SetItemByValueInList('gradlistDDL', info[0], 'true'); 
+			if(info[2] == 'LINEAR_GRAD'){
+				WAL_SetItemByValueInList('fillcolorDDL', 'Linear Gradient', 'true');
+			}
+			else if(info[2] == 'RADIAL_GRAD'){
+				WAL_SetItemByValueInList('fillcolorDDL', 'Radial Gradient', 'true');
+			}
+		}
+		else{
+			WAL_SetItemByValueInList('fillcolorDDL', 'Solid', 'true');
+			WAL_SetItemByValueInList('gradlistDDL', 'none', 'true'); 
+		}
+			
+			
+	}
+	
+		 
 	
 	
 }
