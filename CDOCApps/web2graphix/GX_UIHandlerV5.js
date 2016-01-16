@@ -123,7 +123,7 @@ var gCurrTooltipPos = new sPoint();
 var gTooltipTheme = 'black'; 
 var gSVGContainerbordercol = '#222222';
 var gUsername = ''; 
-var gShowTooltip =  true; 
+var gShowTooltip =  false; 
 var gOrigPointerPos = new sPoint();
 var gShowGrid =  true; 
 var bPointerMove = false; 
@@ -296,8 +296,7 @@ sGradientWidget.prototype.OnGradEditBoxHdlr = function(value, wdgtNode) {
             	WAL_setSliderValue('stop0_offset_slider', minValue); 
             	Debug_Message('Color-2 offset should be more than Color-1 offset');
             	return ; 
-            }
-            
+            }            
             GX_SetObjectAttribute(stopnode, 'offset', value + '%', true, false);
             break;
         
@@ -955,6 +954,7 @@ function GX_GradDlgOK() {
 function GX_GradDlgCancel() {
     //alert("Cancel");
     gGradientObj.setGradientProperty(gGradientObj.GradParam); 
+    WAL_hideWidget('gradcolorpickwidget', true); 
     //GradParam
 }
 function OnEditBoxFocusOut(event) {
@@ -2135,7 +2135,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	
     	var fillopacity = gCurrentObjectSelected.getAttribute('fill-opacity'); 
     	//fillopacity = Math.round(fillopacity);
-    	WAL_setNumberInputValue('fillopacityIP', fillopacity, false);
+    	
     	
     	//var colorval = gCurrentObjectSelected.getAttribute('stroke-opacity'); 
     	//WAL_setColorPickerValue('colorpickwidget', colorval); 
@@ -2884,8 +2884,7 @@ function OnObjectDrag(evt, ui){
 	    	var objectType = gCurrentObjectSelected.classList[0];
 	   if(gbContextMenuShow == true){
 		   bMove = false;
-	   }
-	   
+	   }	   
 	    var newObjDim = new sDimension(); 	   
 	        
 	        relX = new Number(ui.position.left - ui.originalPosition.left);
@@ -2911,9 +2910,7 @@ function OnObjectDrag(evt, ui){
 	            {
 	            	newObjDim.x = newObjDim.rotCentreX;
 	                newObjDim.y = newObjDim.rotCentreY; 
-	            }  
-	            //retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
-	            
+	            }            
 	            GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
 	        }        	
 	    	else if(objectType == 'GROUP')
@@ -2956,6 +2953,7 @@ function OnObjectDragStop(evt,ui){
     relX = Math.round(relX / gZoomFactor); 
     relY = Math.round(relY /gZoomFactor);
     GX_MoveSelectedObject(relX, relY);     
+    GX_UpdatePropertyOnUI('POSITION', gCurrSelectedObjectDim);
 }
 
 function OnObjectResizeStop(event, ui){
@@ -2979,6 +2977,7 @@ function OnObjectResizeStop(event, ui){
 		gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected);		
 		GX_SetRectObjectDim(gCurrGrabber,gCurrSelectedObjectDim);
 		gGrabberDim = GX_GetRectObjectDim(gCurrGrabber); 
+		GX_UpdatePropertyOnUI('DIMENSION', gCurrSelectedObjectDim);
 	}
 	
 }
@@ -3645,7 +3644,7 @@ function GX_GetRectObjectDim(ObjNode)
 	    	var rotArr = rotParam.split(','); 
 	 	    if(rotArr[0] == 'ROTATE')
 	 	    {
-	 	    	mypoint.rotate = rotArr[1]; 
+	 	    	mypoint.rotate = new Number(rotArr[1]); 
 	 	    	mypoint.rotCentreX = Math.round(mypoint.x + mypoint.width/2); 
 	 	    	mypoint.rotCentreY = Math.round(mypoint.y + mypoint.height/2);
 	 	    }
@@ -3908,7 +3907,7 @@ function GX_InitializeToolbar()
 	//WAL_createTooltip('widgettooltip', 'div', 1000); 
 	WAL_createTooltip(gWidgetTooltipID, 'div', 1000,0); 	 
 	WAL_createTooltip(gSelectorTooltipID, 'div', 1000, 50);
-	gShowTooltip =  true; 
+	gShowTooltip =  false; 
 	WAL_createCustomButton('object_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
 	WAL_createCustomButton('text_icon', 'GX_ToolbarHandler',gWidgetTooltipID);   
     WAL_createCustomButton('image_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -3964,7 +3963,7 @@ function GX_EditBoxValueChange(value, widgetnode)
 	
 		var currnodeSel = gCurrentObjectSelected;	
 	}
-	nodeClass = 'MULTIOBJECTS'; 
+	//nodeClass = 'MULTIOBJECTS'; 
 	if(nodeClass == 'SVG_TEXT_OBJECT')
 	{
 		switch(widgetnode.id)
@@ -3977,38 +3976,42 @@ function GX_EditBoxValueChange(value, widgetnode)
 				break; 
 		}
 	}
-	if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT') )
+	if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT') || (nodeClass == 'SVG_PATH_OBJECT') )
 	{
 		if(wdgtType == 'DIMENSION')
 		{
+			var relX =  new Number(0);
+			var relY =  new Number(0); 
+			value = new Number(value);
 			switch(widgetnode.id)
 			{
-			case 'lposIP':		
-				DimValue.x = new Number(value);							
+				
+			case 'lposIP':					
+				var relX = Math.round(value - DimValue.x); 
+				GX_MoveSelectedObject(relX, relY); 
 				break; 
 			case 'tposIP':
-				DimValue.y = new Number(value);			
+				var relY = Math.round(value - DimValue.y); 
+				GX_MoveSelectedObject(relX, relY); 
 				break;
 			case 'widthIP':
-				DimValue.width = new Number(value);				
+				DimValue.width = new Number(value);		
+				if(nodeClass == 'SVG_SHAPE_OBJECT'){
+					retVal = GX_SetObjectAttribute(currnodeSel, "DIMENSION", DimValue, true, false);
+				}
 				break; 
 			case 'heightIP':
-				DimValue.height = new Number(value);				
+				DimValue.height = new Number(value);		
+				if(nodeClass == 'SVG_SHAPE_OBJECT'){
+					retVal = GX_SetObjectAttribute(currnodeSel, "DIMENSION", DimValue, true, false);
+				}
 				break;
 			default:
 				break; 
 			}
-			if(nodeClass == 'SVG_SHAPE_OBJECT')
-				retVal = GX_SetObjectAttribute(currnodeSel, "DIMENSION", DimValue, true, false);
-			else (nodeClass == 'SVG_TEXT_OBJECT')	
-		    {
-				//here we want to shift the text hence querying on the x,y attribute 
-				//var newValue = 
-				
-				retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", DimValue, true, false);
-				//retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "DIMENSION", DimValue, true, false);
-		    }
-				
+			//if(nodeClass == 'SVG_TEXT_OBJECT'){
+				//retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", DimValue, true, false);				
+		   // }				
 			return ; 			
 		}//if(wdgtType == 'DIMENSION')				
 	} //(nodeClass == 'SVG_SHAPE_OBJECT')
@@ -4036,24 +4039,7 @@ function GX_EditBoxValueChange(value, widgetnode)
 			}
 			return; 
 		}
-		/*else if(widgetnode.id == 'strokeOpacityIP')
-		{
-			var opacity = value/100; 
-			GX_SetObjectAttribute(gCurrentObjectSelected, 'stroke-opacity', opacity, true, false);
-			return; 
-		} */
-		else if(widgetnode.id == 'fillopacityIP')
-		{
-			var opacity = value; 
-			if(gbMultiSelection == true){
-				GX_ApplyPropertyToMultipleObjects('fill-opacity', opacity); 
-				GX_UpdatePropertyForMultipleObjects('fill-opacity', opacity); 
-			}
-			else{
-				GX_SetObjectAttribute(gCurrentObjectSelected, 'fill-opacity', opacity, true, false);
-			}			
-			return; 
-		} 			
+			
 		if(objType == 'FREEDRAW_PATH')
 		{
 			Debug_Message("not Supported for Free Hand Drawing"); 
@@ -4231,7 +4217,11 @@ function GX_ToolbarHandler(event)
 		if(!gCurrentObjectSelected)
 			return ; 
 		initColVal = gCurrentObjectSelected.getAttribute('stroke');		
-		WAL_showColorPickerWidget('colorpickwidget', '', 'stroke_color_icon','stroke', initColVal, gCurrentObjectSelected.id);
+		//WAL_showColorPickerWidget('colorpickwidget', '', 'stroke_color_icon','stroke', initColVal, gCurrentObjectSelected.id);
+		var pos = $('#rightpanel').position(); 
+		var fillpos = $('#stroke_color_icon').position(); 
+		pos.top = pos.top + fillpos.top; 		
+		WAL_showColorPickerWidgetAtPos('colorpickwidget', '','',  pos.left,pos.top, 'stroke', initColVal, gCurrentObjectSelected.id);
 		break; 
 	
 		
@@ -5020,7 +5010,7 @@ function GX_GetPathStartPoint(pathNode)
 function GX_UpdatePropertyOnUI(AttrName, AttrVal)
 {
 //_rm temporary code to be be done later properly 
-	return ; 
+	
 	switch(AttrName)
 	{
 	case 'POSITION':
@@ -5333,8 +5323,6 @@ function GX_DDLHandler(Node, value)
 	if(gCurrentObjectSelected)
 		var objectType =  gCurrentObjectSelected.classList[0];
 	//animation related 
-	
-
 	if(wdgtId == 'zoomDDL')
 	{
 		//_rm temo code return for now	
@@ -7571,7 +7559,8 @@ function GX_ShowFillColorWidget()
 	if(gbMultiSelection == true){
 		if(gMultiNodeArray.length < 1)
 			return ; 				
-		WAL_showColorPickerWidget('colorpickwidget', 'GX_ApplyPropertyToMultipleObjects', 'fill_color_icon','fill', initColVal, 0);
+		//WAL_showColorPickerWidget('colorpickwidget', 'GX_ApplyPropertyToMultipleObjects', 'fill_color_icon','fill', initColVal, 0);
+		WAL_showColorPickerWidgetAtPos('colorpickwidget', 'GX_ApplyPropertyToMultipleObjects','',  pos.left,pos.top, attrName, gInitFillColor, tgtNode.id);
 		return ; 
 	}
 	if(!gCurrentObjectSelected)
@@ -8411,6 +8400,7 @@ function OnKeyDown(event){
 		top = top + relY; 
 		$(gCurrGripperSel).css({left : left +'px', top : top + 'px'}); 
 		GX_MoveSelectedObject(relX, relY); 
+		 GX_UpdatePropertyOnUI('POSITION', gCurrSelectedObjectDim);
 	}
 	event.stopPropagation(); 
 }
@@ -8466,16 +8456,15 @@ function GX_MoveSelectedObject(relX, relY){
 		GX_UpdatePathData(gCurrentObjectSelected); 
 		GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
 	}
-    if(objectType == 'SVG_SHAPE_OBJECT')
-    	GX_UpdatePropertyOnUI('DIMENSION', newObjDim); 
+   // if(objectType == 'SVG_SHAPE_OBJECT')
+    //	GX_UpdatePropertyOnUI('DIMENSION', newObjDim); 
     //positiong the editor accoridng to new text position 
     if(objectType == 'SVG_TEXT_OBJECT')
     	GX_MakeTextEditable(gCurrentObjectSelected); 
 
     gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected); 
     gGrabberDim = GX_GetRectObjectDim(gCurrGrabber);
-    if(gShowTooltip == true)
-    {	    
+    if(gShowTooltip == true){	    
     	var tipText = 'X-Pos: '+ gCurrSelectedObjectDim.x + 'px Y-Pos: ' + gCurrSelectedObjectDim.y + 'px'; 
     	gCurrTooltipPos.x = gGrabberDim.x + gTooltipOffset.x; 
         gCurrTooltipPos.y = gGrabberDim.y + gTooltipOffset.y + gClientYOffset - gttHeight;	        	
@@ -8483,6 +8472,7 @@ function GX_MoveSelectedObject(relX, relY){
         	absolutePositionX:gCurrTooltipPos.x, absolutePositionY:gCurrTooltipPos.y, showDelay:gShowDelay, autoHide:5000});     	 
      	$(gCurrTooltipSel).jqxTooltip('open');
     } 
+   
 }
 
 function GX_DeleteConfirmDlgOK(){
@@ -8838,8 +8828,6 @@ function GX_InitializePropertyTab(){
 	 WAL_createDropdownList("fillcolorDDL", '120','22',false, fillValue, "GX_DDLHandler", '80', '150');
 	 var gradList = ['none', 'item2', 'ítem3'];
 	 WAL_createDropdownList('gradlistDDL', '120', '22', false, gradList, "GX_DDLHandler", '80', '150');
-	 WAL_createCustomButton('edit_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
-	 WAL_createCustomButton('delete_grad_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
 	 
 	 //stroke interface
 	 WAL_createCustomButton('stroke_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -8887,10 +8875,8 @@ function GX_InitializePropertyTab(){
 	        listBoxSrc[i] = { html: html, value:dashValue};
 	    }	        
 	 WAL_createDropdownList('strokedashDDL', '120', '22', false, listBoxSrc, "GX_DDLHandler", '80', '150');    
-	 WAL_createSlider('opacitySlider', '130px','12px', true, 0, 100, 1,25, true, false ,'', false, '');
-	 WAL_createNumberInput("fillopacityIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,0,1, gWidgetTooltipID);
-	 WAL_setNumberInputValue('fillopacityIP', 100, false);
-	    
+	 WAL_createSlider('opacitySlider', '130px','12px', true, 0, 100, 1,25, true, false ,'GX_OpacitySliderHandler', false, '');
+	 
 	// WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 360, 0,1, gWidgetTooltipID);
 	 WAL_createCheckBox('pathclose', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
 	 WAL_createNumberInput("radiusXIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true,300,0,1, gWidgetTooltipID);
@@ -8916,7 +8902,8 @@ function GX_SetDefualtPropOnUI(){
 	WAL_setNumberInputValue("rotateIP", 0, false);
 	WAL_SetItemByValueInList('fillcolorDDL', 'None', 'true');	
 	WAL_setNumberInputValue('strokeWeightIP', 1, false);
-	WAL_setNumberInputValue('fillopacityIP', 100, false);
+	$('#fillopacityValue')[0].innerHTML = '100'; 
+	
 	WAL_setSliderValue('opacitySlider', 100); 	
 	//var JQSel = $('.pathProperty').hide(); 	
 }
@@ -8949,43 +8936,46 @@ function GX_SetPropertyonUI(objNode){
 	WAL_setNumberInputValue('strokeWeightIP', strokewidth, false);    
 	
 	var fillopacity = objNode.getAttribute('fill-opacity');
+	if(!fillopacity)
+		fillopacity = 1.0; 
 	fillopacity = new Number(fillopacity);
-	fillopacity = Math.round(fillopacity*100); 
-	WAL_setNumberInputValue('fillopacityIP', fillopacity, false);	
+	fillopacity = Math.round(fillopacity*100); 	
+	$('#fillopacityValue')[0].innerHTML = fillopacity; 
+	WAL_setSliderValue('opacitySlider', fillopacity); 
 	//updating the gradient values 
-	var fillstr = objNode.getAttribute('fill'); 
-	//if(!fillstr)
-	//	return ; 
-	if( (fillstr == 'none') || (fillstr == ''))
-	{
-		WAL_SetItemByValueInList('gradlistDDL', 'none', 'true'); 
-		WAL_SetItemByValueInList('fillcolorDDL', 'None', 'true');
-		return ; 
-	}
-	else{
-		var index = fillstr.indexOf('url(#');
-		if(index >= 0){
-			fillstr = fillstr.substring(5, fillstr.length-1); 
-			var info = GX_GetGradInfoByID(fillstr);
-			if(info[0])
-				WAL_SetItemByValueInList('gradlistDDL', info[0], 'true'); 
-			if(info[2] == 'LINEAR_GRAD'){
-				WAL_SetItemByValueInList('fillcolorDDL', 'Linear Gradient', 'true');
-			}
-			else if(info[2] == 'RADIAL_GRAD'){
-				WAL_SetItemByValueInList('fillcolorDDL', 'Radial Gradient', 'true');
-			}
+	var fillstr = objNode.getAttribute('fill');	
+	if(fillstr){
+		if( (fillstr == 'none') || (fillstr == ''))
+		{
+			WAL_SetItemByValueInList('gradlistDDL', 'none', 'true'); 
+			WAL_SetItemByValueInList('fillcolorDDL', 'None', 'true');		
 		}
 		else{
-			WAL_SetItemByValueInList('fillcolorDDL', 'Solid', 'true');
-			WAL_SetItemByValueInList('gradlistDDL', 'none', 'true'); 
+			var index = fillstr.indexOf('url(#');
+			
+			if(index >= 0){
+				fillstr = fillstr.substring(5, fillstr.length-1); 
+				var info = GX_GetGradInfoByID(fillstr);
+				if(info[0])
+					WAL_SetItemByValueInList('gradlistDDL', info[0], 'true'); 
+				if(info[2] == 'LINEAR_GRAD'){
+					WAL_SetItemByValueInList('fillcolorDDL', 'Linear Gradient', 'true');
+				}
+				else if(info[2] == 'RADIAL_GRAD'){
+					WAL_SetItemByValueInList('fillcolorDDL', 'Radial Gradient', 'true');
+				}
+			}
+			else{
+				WAL_SetItemByValueInList('fillcolorDDL', 'Solid', 'true');
+				WAL_SetItemByValueInList('gradlistDDL', 'none', 'true'); 
+			}		
 		}
-			
-			
 	}
 	
-		 
-	
+	var strokedashvalue = objNode.getAttribute('stroke-dasharray');
+	if(strokedashvalue == 'none')
+		strokedashvalue = ""; 
+	WAL_SetItemByValueInList('strokedashDDL', strokedashvalue, false);
 	
 }
 
@@ -9000,4 +8990,20 @@ function GX_RightTabHandler(tabIndex){
 
 function GX_EditorTabHandler(tabIndex){
 	
+}
+
+function GX_OpacitySliderHandler(value, widgtNode){
+	if(!gCurrentObjectSelected)
+		return ; 
+	var opacity = new Number(value);
+	opacity = opacity * .01; 
+	if(gbMultiSelection == true){
+		GX_ApplyPropertyToMultipleObjects('fill-opacity', opacity); 
+		GX_UpdatePropertyForMultipleObjects('fill-opacity', opacity); 
+	}
+	else{
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'fill-opacity', opacity, true, false);
+	}	
+	
+	$('#fillopacityValue')[0].innerHTML = value; 
 }
