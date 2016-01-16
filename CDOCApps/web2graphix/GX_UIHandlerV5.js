@@ -3922,7 +3922,7 @@ function GX_InitializeToolbar()
     WAL_createDropdownList('zoomDDL', '100', '24', false, zoomeValueDisplay, "GX_DDLHandler", '80', 0);
    
     WAL_createCustomButton('file_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('edit_icon', 'GX_ToolbarHandler', gWidgetTooltipID);	
+    WAL_createCustomButton('delete_icon', 'GX_ToolbarHandler', gWidgetTooltipID);	
     WAL_createCustomButton('group_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('circle_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('ellipse_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -4129,7 +4129,9 @@ function GX_ToolbarHandler(event)
 		 WAL_showModalWindow(gSVGDimensionDlg,"GX_SVGDimensionDlgOK", "" );
 		 
 		 break; 
-	
+	 case 'delete_icon':
+		 WAL_showModalWindow('deleteConfirmDlg','', ''); 
+	 	break; 
 	case 'alignwidth_icon':
 		GX_AlignDimension('WIDTH'); 
 		break;
@@ -6790,10 +6792,17 @@ function GX_DeletePoint()
 }
 
 
-function GX_UpdateEllipticParam(ObjNode)
+function GX_UpdatePathParamOnUI(ObjNode)
 {
 	var objType = ObjNode.classList[1]; 
 	gPathDataArray = GX_ConvertPathDataToArray(ObjNode); 	
+	if(!gPathDataArray)
+		return ; 
+	var bClosePath = false; 
+	if(gPathDataArray[gPathDataArray.length-1][0] == 'z'){
+		bClosePath = true; 
+	}
+	WAL_setCheckBoxValue('pathclose', bClosePath); 	
 	if(objType == 'ELLIPTIC')
 	{
 
@@ -8905,7 +8914,7 @@ function GX_SetDefualtPropOnUI(){
 	$('#fillopacityValue')[0].innerHTML = '100'; 
 	
 	WAL_setSliderValue('opacitySlider', 100); 	
-	//var JQSel = $('.pathProperty').hide(); 	
+	var JQSel = $('.pathProperty').hide(); 	
 }
 
 function GX_SetPropertyonUI(objNode){
@@ -8976,6 +8985,20 @@ function GX_SetPropertyonUI(objNode){
 	if(strokedashvalue == 'none')
 		strokedashvalue = ""; 
 	WAL_SetItemByValueInList('strokedashDDL', strokedashvalue, false);
+	
+	//now path type objects 
+	if(shapeType == 'SVG_PATH_OBJECT'){		
+		$('#pathcloseProp')[0].style.display = 'table-row'; 
+		$('#editbtnProp')[0].style.display = 'table-row'; 		
+		if(objectType == 'ELLIPTIC'){
+			$('.ellipticProp').show(); 
+		}
+		if(objectType == 'POLYGON'){
+			$('#polygonProp')[0].style.display = 'table-row';			
+		}
+		GX_UpdatePathParamOnUI(objNode); 
+		
+	}
 	
 }
 
