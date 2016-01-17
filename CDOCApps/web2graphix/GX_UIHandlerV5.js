@@ -160,7 +160,7 @@ var gPreviousTreeNode =0;
 var gCurrentTreeNode = 0;
 var gPrevTreeItemSel = 0;
 var gCurrentTreeItemSel=0; 
-var gOpacityUnSelect = '0.4';
+var gOpacityUnSelect = '1';
 var gCurrLayerID=0; 
 var gCurrLayerNode=0; 
 var gCurrLayerTranslateValues = 0;
@@ -1129,7 +1129,7 @@ function GX_Initialize()
 	
 	var JQSel = '#markerPoint'; 
 	$(JQSel).draggable({ cursor: "move" });	
-	gClientYOffset = $('#topcontainer').height();//- 40; 
+	gClientYOffset = $('#topcontainer').height() ;//- 40; 
    
 }
 
@@ -2109,8 +2109,11 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	GX_UpdateEllipticParam(gCurrentObjectSelected);
     	*/     	
     }
-    if( (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'GROUP') || (nodeClass == 'SVG_TEXT_OBJECT'))
-    		$(gCurrGripperSel).resizable( "disable" );
+    if( (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'GROUP') || (nodeClass == 'SVG_TEXT_OBJECT')){
+    	$(gCurrGripperSel).resizable( "disable" );
+    	$(gCurrGripperSel).css({opacity:'1'});
+    }
+    		
    /* 
     if(nodeClass == 'GROUP')
     {    	
@@ -3773,7 +3776,8 @@ function GX_SetRectObjectDim(ObjNode, newDim)
    }    
     else if(nodename == 'div'){    
     	with (Math) {    
-    		var YOffset =  round(gCurrentCanvasDim.y +  gClientYOffset) ;//gCanvround(gClientYOffset);// * gInvZoomFactor);     		
+    		var tolerance = 5; 
+    		var YOffset =  round(gCurrentCanvasDim.y +  gClientYOffset - tolerance) ;//gCanvround(gClientYOffset);// * gInvZoomFactor);     		
     		var XOffset = round(gCurrentCanvasDim.x - 10); 
     		var scrollLeft = $('#editor_div').scrollLeft(); 
     		var scrollTop = $('#editor_div').scrollTop(); 
@@ -3783,8 +3787,8 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     		modDim.x = round((modDim.x - gPanX) * gInvZoomFactor + XOffset); 
     		modDim.y = round( (modDim.y - gPanY) * gInvZoomFactor + YOffset);
     		  	    
-    		modDim.width = round(modDim.width * gInvZoomFactor);
-    		modDim.height = round(modDim.height * gInvZoomFactor);   		
+    		modDim.width = round(modDim.width * gInvZoomFactor );
+    		modDim.height = round(modDim.height * gInvZoomFactor + + tolerance);   		
     		if(ObjNode.id == 'sel_gripper'){
     		if( (currObjectType == 'SVG_SHAPE_OBJECT') || (currObjectType == 'SVG_TEXT_OBJECT')|| (currObjectType == 'GROUP') ){
         		modDim.x = modDim.x;// -tolerance; 
