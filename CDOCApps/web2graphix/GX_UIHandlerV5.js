@@ -3788,9 +3788,9 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     		modDim.y = round( (modDim.y - gPanY) * gInvZoomFactor + YOffset);
     		  	    
     		modDim.width = round(modDim.width * gInvZoomFactor );
-    		modDim.height = round(modDim.height * gInvZoomFactor + + tolerance);   		
+    		modDim.height = round(modDim.height * gInvZoomFactor);
     		if(ObjNode.id == 'sel_gripper'){
-    		if( (currObjectType == 'SVG_SHAPE_OBJECT') || (currObjectType == 'SVG_TEXT_OBJECT')|| (currObjectType == 'GROUP') ){
+    		/*if( (currObjectType == 'SVG_SHAPE_OBJECT') || (currObjectType == 'SVG_TEXT_OBJECT')|| (currObjectType == 'GROUP') ){
         		modDim.x = modDim.x;// -tolerance; 
         	    modDim.y = modDim.y;//- tolerance;   
         	   // modDim.width += (tolerance); 
@@ -3802,8 +3802,13 @@ function GX_SetRectObjectDim(ObjNode, newDim)
             	    modDim.y = modDim.y ;//+ tolerance;   
             	  //  modDim.width -= (tolerance); 
             	  // modDim.height -= (tolerance);
-        		}    		
-        	}
+        		} 
+        		*/ 
+    			
+        		modDim.x = modDim.x; // -tolerance; 
+        	    modDim.y = modDim.y;
+        		modDim.height += tolerance; 
+        	
     	}
     	else{
     		modDim.x = modDim.x + round(tolerance/2); 
