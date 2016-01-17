@@ -133,7 +133,7 @@ var gCurrentMarkerNode = 0;
 var gObjectList = 0; 
 var gObjectListInRoI = 0; 
 var gCurrentTabIndex = 0; 
-
+var gBaseMarkerNode = 0; 
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -1118,6 +1118,7 @@ function GX_Initialize()
 	$(gCurrGripperSel).css({visibility:'hidden'}); 
 	
 	//path marker related 
+	/*
 	gDivPathMarkerSel = '#DivPathMarker'; 
 	$(gDivPathMarkerSel).draggable({ cursor: "move" });
 	$(gDivPathMarkerSel).on( "dragstop", function( event, ui ) {
@@ -1126,7 +1127,7 @@ function GX_Initialize()
 	$(gDivPathMarkerSel).on( "drag", function( event, ui ) {
 		OnDivPathMarkerDrag(event, ui); 		
 	});
-	
+	*/ 
 	var JQSel = '#markerPoint'; 
 	$(JQSel).draggable({ cursor: "move" });	
 	gClientYOffset = $('#topcontainer').height() ;//- 40; 
@@ -1854,7 +1855,8 @@ function GX_CloseSVGFile()
 	gSVGDimInfoHolder.innerHTML =""; 
 	gSVGFilename = "";
 	$(gCurrGripperSel).css({visibility: "hidden"});
-	GX_UpdateMarkers(0, false, false); 
+	//GX_UpdateMarkers(0, false, false); 
+	GX_HidePathMarker(); 
 	WAL_ClearTreeItem(gTreeWidgetID); 
 	
 }
@@ -1929,7 +1931,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	if(objNode != gCurrentObjectSelected)
     		return ;      	 
          	    	
-    	GX_UpdateMarkers(0, false, true); 
+    	//GX_UpdateMarkers(0, false, true);
+    	GX_HidePathMarker(); 
     	if(nodeClass == 'SVG_PATH_OBJECT')
     	{
     		GX_UpdatePathMarker(node.id, gPathDataArray, false);
@@ -2271,95 +2274,9 @@ function GX_ResetAllSelections()
 	$(JQSel).removeAttr('opacity');		
 }
 //incase of pointmarker only the x,y corodinate of GrabberDim should be used 
-function GX_UpdateMarkers(GrabberDim, bShow, bPointMarker)
-{
-	  var markX, markY; 
-	  var JQSel = ".CUSTOM_MARKER"; 
-	  if((GrabberDim.x == undefined)|| (GrabberDim.y == undefined) )
-	  	return ; 
-	  var origMarkX = new Number(GrabberDim.x); 
-	  var origMarkY = new Number(GrabberDim.y); 
-	  markX = origMarkX; 
-	  markY = origMarkY; 	  
-	  if( (bShow == false) && (bPointMarker == true))
-	  {
-		  JQSel = '#markerPoint'; 
-		  $(JQSel).css({visibility: "hidden"});
-		  return ; 
-	  }    
-	  if(bPointMarker == true){
-		JQSel = "#markerPoint";
-		//var markerNode = document.getElementById('markerPoint');
-		//assuming that the co-ordinates passed are for the center 
-		var x =  new Number(markX); 
-		var y = new Number(markY + gClientYOffset); 
-		var width = new Number($(JQSel).width()); 
-		var height = new Number($(JQSel).height()); 
-		x = x - Math.round(width/2); 
-		y = y - Math.round(height/2);		
-		$(JQSel).css({visibility:'visible', left:x +'px', top:y+'px' });	
-		return ; 
-	  }
-	  if( (GrabberDim.width == 0) || (GrabberDim.height == 0))
-		  return; 
-	  
-	  $(JQSel).attr("visibility", "visible"); 
-	  JQSel = "#markerPoint";
-	  $(JQSel).attr("visibility", "hidden");
-	  
-	 //get the top left coordinate of grabber
-	/*
-	 JQSel = "#markerTL";
-	 $(JQSel).attr("cx", markX); 
-	 $(JQSel).attr("cy", markY); 
-	 
-	 if(bPointMarker == true)
-		 return ; 
-		 
-	 markX = origMarkX+(GrabberDim.width/2); 
-	 markY = origMarkY; 
-	 JQSel = "#markerTM";
-	 $(JQSel).attr("cx", markX); 
-	 $(JQSel).attr("cy", markY); 
-	 
-	 markX = origMarkX+(GrabberDim.width); 
-	 markY = origMarkY; 
-	 JQSel = "#markerTR";
-	 $(JQSel).attr("cx", markX); 
-	 $(JQSel).attr("cy", markY); 
-	 
-	 markX = origMarkX+(GrabberDim.width); 
-	 markY = origMarkY + (GrabberDim.height/2); 
-	 JQSel = "#markerMR";
-	 $(JQSel).attr("cx", markX); 
-	 $(JQSel).attr("cy", markY);
-	 
-	 markX = origMarkX+(GrabberDim.width); 
-	 markY = origMarkY + (GrabberDim.height); 
-	 JQSel = "#markerBR";
-	 $(JQSel).attr("cx", markX); 
-	 $(JQSel).attr("cy", markY);
-	 
-	 markX = origMarkX+(GrabberDim.width/2); 
-	 markY = origMarkY + (GrabberDim.height); 
-	 JQSel = "#markerBM";
-	 $(JQSel).attr("cx", markX); 
-	 $(JQSel).attr("cy", markY);
-	 
-	 markX = origMarkX; 
-	 markY = origMarkY + (GrabberDim.height); 
-	 JQSel = "#markerBL";
-	 $(JQSel).attr("cx", markX); 
-	 $(JQSel).attr("cy", markY);
-	 
-	 markX = origMarkX; 
-	 markY = origMarkY + (GrabberDim.height/2); 
-	 JQSel = "#markerML";
-	 $(JQSel).attr("cx", markX); 
-	 $(JQSel).attr("cy", markY);
-	 */ 
-	// $(JQSel).attr("visibility", "visible");
-}
+
+///*
+
 function OnMarkerMouseMove(evt)
 {
 	  var markerNode = evt.target; 	  
@@ -2804,7 +2721,7 @@ function OnObjectMove(evt,ui) {
 					
 					if(retVal == false)
 	                	return ; 
-                    GX_UpdateMarkers(newGrabberDim, true, false);           
+                   // GX_UpdateMarkers(newGrabberDim, true, false);           
                     retVal =GX_SetRectObjectDim(gCurrentObjectSelected,newObjDim);
                    // retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "DIMENSION", newObjDim, false, true);
                     if(retVal == false)
@@ -3810,13 +3727,16 @@ function GX_SetRectObjectDim(ObjNode, newDim)
         		modDim.height += tolerance; 
         	
     	}
+    		else if(nodeclass == 'PATH_MARKER'){
+    			modDim.x = modDim.x - modDim.width/2; 
+    			modDim.y = modDim.y - modDim.height/2;
+    		}
     	else{
     		modDim.x = modDim.x + round(tolerance/2); 
     	    modDim.y = new Number(modDim.y + round(tolerance/2) );   	    
     	}  
     }//Math
-    	var JQSel = '#' + ObjNode.id;
-    	
+    	var JQSel = '#' + ObjNode.id;    	
     	$(JQSel).css({left:modDim.x +'px', top:modDim.y + 'px', width: modDim.width + 'px', height:modDim.height + 'px'}); 
     }
     else if(nodeclass == 'SVG_PATH_OBJECT')
@@ -5641,68 +5561,171 @@ function GX_SVGDimensionDlgOK()
 	GX_InitializeDocument(""); 
 }
 
-function OnPathMarkerMouseMove(evt) {
+function OnDivPathMarkerMouseMove(event) {
     
     //now get the relative X, Y
     var relX, relY;
-    var markerNode = evt.target; 
-    var ClientX = new Number(evt.clientX - gClientXOffset); 
-	var ClientY =  new Number(evt.clientY- gClientYOffset); 
-	 if(gSnapToGrid == true)
-     {
-		 ClientX = ClientX/10; 
-		 ClientX = Math.round(ClientX); 
-		 ClientX *= 10; 
-		 
-		 ClientY = ClientY/10; 
-		 ClientY = Math.round(ClientY); 
-		 ClientY *= 10; 
-     }
+    var markerNode = event.target;
+    
+    var ClientX = new Number(event.clientX - gClientXOffset); 
+	var ClientY =  new Number(event.clientY- gClientYOffset); 
+	 
 	if(bMarkerMove == false)
 	{
-		markerNode.setAttribute('r', '10'); 	   
-	}
- 
-	 
-    if (bMarkerMove == true) {
-        //now also set the parameters corresponding to the marker index
-        relX = new Number(ClientX - gOrigMousePosX)*gZoomFactor;
-        relY = new Number(ClientY - gOrigMousePosY)*gZoomFactor;       
-        var newcX, newcY;
-        newcX = gCurrSelectedObjectDim.x;
-        newcY = gCurrSelectedObjectDim.y;
-        var num = new Number(newcX);
-        num += relX;
-        markerNode.setAttribute("cx", num);
-        newcX = num; 
-        
-        var num = new Number(newcY);
-        num += relY;
-        markerNode.setAttribute("cy", num);
-        newcY = num;              
-        
-        //_rm is this the cause of unpredicatble mousedown event  ?? 
-        if(gMouseMoveCounter >= 10)
-        {       
-        	gIndicatorPath[1][1] = newcX-gPanX;
-            gIndicatorPath[1][2] = newcY-gPanY;
-            gIndicatorPath[1][3] = 'POINT'; 
-        	GX_ConvertArrayToPathData('indicatorpath', gIndicatorPath);
-        	gMouseMoveCounter = 0; 
-        }
-        else
-        	gMouseMoveCounter++; 
-        
-     
-        //call the update path and add markers. could be a major overhead
-    }
+		$('#' + markerNode.id).css({width:'20px', height:'20px', borderRadius:'10px', cursor:'move'});			   
+	}       //call the update path and add markers. could be a major overhead
+    
 }
 
-function OnPathMarkerMouseDown(evt) {		
+function OnDivPathMarkerMouseOut(event) {
+	   
+    var markerNode = event.target; 
+    //if(bMarkerSelected == false)
+    //if(markerNode != gCurrentMarkerNode)
+    if(bMarkerMove == false)
+    {
+    	$('#' + markerNode.id).css({width:'10px', height:'10px', borderRadius:'5px', cursor:'auto'});
+    }   
+   // alert("Mouse Out"); 
+}
+function GX_SetIndicatorPath(markerNode){
+	var pathNode = document.getElementById("indicatorpath");    
+    var currentPos;   
+    var markerNode = markerNode;     
+    var index = markerNode.getAttribute("data-index");
+    if (!index)
+        return;
+    var arrLen = new Number(gPathDataArray.length); 
+    gpathSegIndex = new Number(index); 
+    
+    
+    //gOrigMousePosX = ClientX;
+   // gOrigMousePosY = ClientY;
+    var posStr = markerNode.getAttribute('data-position'); 
+    var arr = posStr.split(',');     
+    gCurrSelectedObjectDim.x = new Number(arr[0]);
+    gCurrSelectedObjectDim.y = new Number(arr[1]);
+    gIndicatorPath = []; 	
+    var indicaPathX,  indicaPathY;
+    var nextSegIndex; 
+    var bValidPoint = false ; 
+    
+    if ((gpathSegIndex > 0) && (gpathSegIndex < arrLen-1)) {
+    	nextSegIndex = gpathSegIndex - 1;
+    	bValidPoint = false ; 
+    	while(bValidPoint == false)
+    	{        		
+    		if( (nextSegIndex < 0) || (nextSegIndex > arrLen-1))
+    			return ; 
+    		if(! ((gPathDataArray[nextSegIndex][3] == 'POINT')||(gPathDataArray[nextSegIndex][3] == 'START_POINT') ||(gPathDataArray[nextSegIndex][3] == 'END_POINT')))
+    			nextSegIndex--; 
+    		else
+    			bValidPoint = true; 
+    	}       	
+    	 currentPos = ["M", gPathDataArray[nextSegIndex][1]-gPanX, gPathDataArray[nextSegIndex][2]-gPanY, 'POINT'];
+         gIndicatorPath.push(currentPos); 	
+        
+         currentPos = ["L", gPathDataArray[gpathSegIndex][1]-gPanX, gPathDataArray[gpathSegIndex][2]-gPanY, 'POINT'];
+         gIndicatorPath.push(currentPos); 	
+         
+         nextSegIndex = gpathSegIndex + 1;
+         bValidPoint = false ; 
+     	 while(bValidPoint == false)
+     	 {        		
+     		if( (nextSegIndex < 0) || (nextSegIndex > arrLen-1))
+     			return ; 
+     	if(! ((gPathDataArray[nextSegIndex][3] == 'POINT')||(gPathDataArray[nextSegIndex][3] == 'START_POINT') ||(gPathDataArray[nextSegIndex][3] == 'END_POINT')))
+     			nextSegIndex--; 
+     		else
+     			bValidPoint = true; 
+     	}       	
+         currentPos = ["L", gPathDataArray[nextSegIndex][1]-gPanX, gPathDataArray[nextSegIndex][2]-gPanY, 'POINT'];
+         gIndicatorPath.push(currentPos);          
+    }
+    else if (gpathSegIndex == 0){
+        //this isstored in such a way that in mouse move only Index=1 is updated no matter which vertex user chooses
+    	nextSegIndex = gpathSegIndex+1;
+    	bValidPoint = false ; 
+    	while(bValidPoint == false)
+    	{        		
+    		if( (nextSegIndex < 0) || (nextSegIndex > arrLen-1))
+    			return ; 
+    		//if(gPathDataArray[nextSegIndex][3] != 'POINT')
+    		if(! ((gPathDataArray[nextSegIndex][3] == 'POINT')||(gPathDataArray[nextSegIndex][3] == 'START_POINT') ||(gPathDataArray[nextSegIndex][3] == 'END_POINT')))
+    			nextSegIndex++; 
+    		else
+    			bValidPoint = true; 
+    	}       	
+        currentPos = ["M", gPathDataArray[nextSegIndex][1]-gPanX, gPathDataArray[nextSegIndex][2]-gPanY, 'POINT'];
+        gIndicatorPath.push(currentPos);
+        currentPos = ["L", gPathDataArray[gpathSegIndex][1]-gPanX, gPathDataArray[gpathSegIndex][2]-gPanY, 'POINT'];
+        gIndicatorPath.push(currentPos);            
+    }
+    else if (gpathSegIndex == arrLen-1) {
+    	nextSegIndex = gpathSegIndex - 1;
+    	bValidPoint = false ; 
+    	while(bValidPoint == false)
+    	{        		
+    		if( (nextSegIndex < 0) || (nextSegIndex > arrLen-1))
+    			return ; 
+    		if(! ((gPathDataArray[nextSegIndex][3] == 'POINT')||(gPathDataArray[nextSegIndex][3] == 'START_POINT') ||(gPathDataArray[nextSegIndex][3] == 'END_POINT')))
+    			nextSegIndex--; 
+    		else
+    			bValidPoint = true; 
+    	}       	
+    	currentPos = ["M", gPathDataArray[nextSegIndex][1]-gPanX, gPathDataArray[nextSegIndex][2]-gPanY, 'POINT'];
+        gIndicatorPath.push(currentPos);
+        currentPos = ["L", gPathDataArray[gpathSegIndex][1]-gPanY, gPathDataArray[gpathSegIndex][2]-gPanY, 'POINT'];
+        gIndicatorPath.push(currentPos);                  
+    }
+        
+    GX_ConvertArrayToPathData('indicatorpath', gIndicatorPath);        
+    pathNode.setAttribute("visibility", "visible");
+   
+}
+/*
+else {
+    var relX = new Number(ClientX - gOrigMousePosX)*gZoomFactor;            
+    var relY = new Number(ClientY - gOrigMousePosY)*gZoomFactor;
+    relX = Math.round(relX); 
+    relY = Math.round(relY); 
+    bMarkerMove = false;
+    gsvgRootNode.setAttribute("cursor", "auto");
+    //now set the new path here 
+    var newpathvalue = new Number(gPathDataArray[gpathSegIndex][1]); 
+    newpathvalue += relX; 
+    if(gSnapToGrid == true)
+    {
+    	newpathvalue = newpathvalue/10; 
+    	newpathvalue = Math.round(newpathvalue); 
+    	newpathvalue *= 10; 
+    }
+    gPathDataArray[gpathSegIndex][1] = newpathvalue;
+    
+    newpathvalue = new Number(gPathDataArray[gpathSegIndex][2]);
+    newpathvalue += relY;
+    if(gSnapToGrid == true)
+    {
+    	newpathvalue = newpathvalue/10; 
+    	newpathvalue = Math.round(newpathvalue); 
+    	newpathvalue *= 10; 
+    }
+    gPathDataArray[gpathSegIndex][2] = newpathvalue; 	    
+    GX_UpdatePathData(gCurrentObjectSelected); 
+   // GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);       
+    pathNode.setAttribute("visibility", "hidden");
+    gIndicatorPath = []; 
+    GX_SetSelection(gCurrentObjectSelected, true, true); 
+    markerNode.setAttribute('r', '5'); 
+    markerNode.setAttribute('opacity', '0.5');         
+}     
+*/                 
+
+function OnPathMarkerMouseDown(node) {		
     var pathNode = document.getElementById("indicatorpath");    
     var currentPos;
     var arrLen = new Number(gPathDataArray.length); 
-    var markerNode = evt.target;     
+    var markerNode = node;     
     if(gCurrentMarkerNode != markerNode)
     {
     	//reset the current selected marker node       
@@ -5860,17 +5883,8 @@ function OnPathMarkerMouseDown(evt) {
     }                     
 }
 
-function OnPathMarkerMouseOut(evt) {
-   
-    var markerNode = evt.target; 
-    //if(bMarkerSelected == false)
-    if(markerNode != gCurrentMarkerNode)
-    {
-  	   markerNode.setAttribute('r', '5');    	 
-       gsvgRootNode.setAttribute("cursor", "auto");
-    }
-   
-   // alert("Mouse Out"); 
+function GX_HidePathMarker(){
+	$('.PATH_MARKER').hide(); 
 }
 function GX_UpdatePathMarker(pathID, pathParam, bShow)
 {
@@ -5909,15 +5923,13 @@ function GX_UpdatePathMarker(pathID, pathParam, bShow)
         	}     
      }    
 }
-
+/*
 function GX_AddPathMarker(pathID, pathParam) {
     var pathNode = document.getElementById(pathID); 
     var pathType = pathNode.classList[1]; 
     //if(pathType == 'FREEDRAW_PATH')
     //	return ; 
-  /*  if(gObjectEditMode != 'PROPERTIES_MODE')
-		  return ;
-		  */ 
+
     if(pathParam.length < 1)
     	return ;
     var copynode;
@@ -5983,6 +5995,130 @@ function GX_AddPathMarker(pathID, pathParam) {
                 
                 svgcontentnode.appendChild(copynode);
     	}            
+     } 
+}
+*/
+var gBodyNode = 0; 
+function GX_SetPathMarkers(id, index, pos, type){
+	if(!gBaseMarkerNode)
+		gBaseMarkerNode = document.getElementById('DivPathMarker');
+	if(!gBodyNode){
+		gBodyNode = document.getElementsByTagName("body")[0];
+	}
+		
+	copynode = gBaseMarkerNode.cloneNode(true);
+    copynode.setAttribute("id", id);
+    copynode = gBodyNode.appendChild(copynode); 
+    var currDim = new sDimension();         		
+	currDim.x = pos.x; 
+	currDim.y = pos.y; 
+	currDim.width = 10; 
+	currDim.height = 10; 	 
+	copynode.setAttribute("class", "PATH_MARKER " +  type);
+	copynode.setAttribute("data-index", index);
+	copynode.setAttribute("data-position", pos.x + ',' +  pos.y);
+	GX_SetRectObjectDim(copynode, currDim); 
+	if(type == 'START_POINT')
+		color = '#4f4'; 
+	else  if(type == 'END_POINT')
+		color = '#f44'; 
+	else if(type == 'POINT')
+		color = '#444';
+    $('#'+ id).css({visibility:"visible", backgroundColor:color});     
+    //setting the draggbale option here 
+    gPathMarkerSel = '#' +  id; 
+	$(gPathMarkerSel).draggable({ cursor: "move" });
+	$(gPathMarkerSel).on( "dragstop", function( event, ui ) {
+		OnDivPathMarkerDragStop(event, ui); 
+	});
+	$(gPathMarkerSel).on( "drag", function( event, ui ) {
+		OnDivPathMarkerDrag(event, ui); 		
+	});
+	$(gPathMarkerSel).on( "dragstart", function( event, ui ) {
+		OnDivPathMarkerDragStart(event, ui); 	
+	});
+	
+}
+//Rm changing to the div path markers here 
+function GX_AddPathMarker(pathID, pathParam) {
+    var pathNode = document.getElementById(pathID); 
+    var pathType = pathNode.classList[1];     
+    if(pathParam.length < 1)
+    	return ;
+    var copynode;
+    var pos = new sPoint(); 
+    //remove the earlier pathmarkers
+    var JQSel = ".PATH_MARKER";       
+	$(JQSel).remove();
+	if(pathType == 'FREEDRAW_PATH')
+	{
+		if(pathParam[0][3] == 'START_POINT')
+    	{
+    			//copynode = usenode.cloneNode(true);
+                //copynode.setAttribute("id", 'marker_'+ 0);                    		
+                pos.x = new Number(pathParam[0][1]); 
+                pos.y = new Number(pathParam[0][2]); 
+                GX_SetPathMarkers('marker_'+ 0, 0, pos, 'START_POINT'); 
+        		//GX_SetRectObjectDim($(gDivPathMarkerSel)[0], currDim);
+               // copynode.setAttribute("cx", pathParam[0][1]);
+               // copynode.setAttribute("cy", pathParam[0][2]);
+        		//copynode.setAttribute("class", "PATH_MARKER START");
+        		//copynode.setAttribute("data-index", 0);
+                //copynode.css({visibility:"visible", background-color:'#4f4'});            
+                
+                //copynode.setAttribute("fill", "green");          
+                //copynode.setAttribute("pointer-events", "none");     
+               // svgcontentnode.appendChild(copynode);
+               
+    	}  	
+		if(pathParam[pathParam.length-1][3] == 'END_POINT')
+    	{
+    			/*copynode = usenode.cloneNode(true);
+                copynode.setAttribute("id", 'marker_'+ pathParam.length-1);
+                copynode.setAttribute("cx", pathParam[pathParam.length-1][1]);
+                copynode.setAttribute("cy", pathParam[pathParam.length-1][2]);
+                copynode.setAttribute("visibility", "visible");
+                copynode.setAttribute("data-index", pathParam.length-1);
+                copynode.setAttribute("class", "markerclass END");
+                copynode.setAttribute("fill", "red");          
+                copynode.setAttribute("pointer-events", "none");     
+                svgcontentnode.appendChild(copynode);
+                */ 
+                pos.x = new Number(pathParam[pathParam.length-1][1]); 
+                pos.y = new Number(pathParam[pathParam.length-1][2]);
+                GX_SetPathMarkers('marker_'+ pathParam.length-1, pathParam.length-1, pos, 'END_POINT');
+    	}		
+		return ; 		
+	}
+    
+    for (var k = 0; k < pathParam.length; k++) {
+    	if( (pathParam[k][3] == 'POINT') || (pathParam[k][3] == 'START_POINT') || (pathParam[k][3] == 'END_POINT') )
+    	{
+    			//copynode = usenode.cloneNode(true);
+              //  copynode.setAttribute("id", 'marker_'+ k);
+                //copynode.setAttribute("cx", pathParam[k][1]);
+               // copynode.setAttribute("cy", pathParam[k][2]);
+               // copynode.setAttribute("visibility", "visible");
+               /* copynode.setAttribute("data-index", k);
+                copynode.setAttribute("class", "markerclass MIDDLE");
+                if(pathParam[k][3] == 'START_POINT')
+                {
+                	copynode.setAttribute("fill", "green");
+                	copynode.setAttribute("class", "markerclass START");
+                }
+                	
+                
+                if(pathParam[k][3] == 'END_POINT')
+                {
+                	copynode.setAttribute("fill", "red");   
+                	copynode.setAttribute("class", "markerclass END");
+                }
+                	*/ 
+                pos.x = new Number(pathParam[k][1]); 
+                pos.y = new Number(pathParam[k][2]); 
+                GX_SetPathMarkers('marker_'+ k, k, pos, pathParam[k][3]);
+                
+    	}            
      }   
     /*
     //get the end point here 
@@ -6001,6 +6137,7 @@ function GX_AddPathMarker(pathID, pathParam) {
     
     	
 }
+
 
 function GX_PolyInputDlgOK()
 {
@@ -6209,7 +6346,8 @@ function OnFreeDrawDragStart(evt, ui){
 			if((objectType == 'CUBIC_BEZIER')|| (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC') )
 				gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected); 
 		}		
-		GX_UpdateMarkers(gCurrGrabber, false, false); 
+		//GX_UpdateMarkers(gCurrGrabber, false, false); 
+		GX_HidePathMarker(); 
 	}
 	else
 	{
@@ -6759,15 +6897,7 @@ function GX_SetMarkerNodeSelection(markerNode, bFlag)
 		var currDim = GX_GetRectObjectDim(markerNode); 
 		GX_SetRectObjectDim($(gDivPathMarkerSel)[0], currDim); 
 		markerNode.setAttribute('visibility', 'hidden'); 
-		$(gDivPathMarkerSel).css({visibility:'visible'}); 
-		//disable the pointer movements of path markers 
-		/*
-		var colorCode = "yellow";     	
-		markerNode.setAttribute('fill', colorCode); 
-		markerNode.setAttribute('r', '8');
-		markerNode.setAttribute('stroke-width', '4');
-		markerNode.setAttribute('stroke-dasharray', "1 1");  
-		*/
+		$(gDivPathMarkerSel).css({visibility:'visible'}); 		
 		bMarkerSelected = true; 
 	}	    
 }
@@ -8058,7 +8188,7 @@ function OnPointerMarkerMouseMove(evt)
       newObjDim.y = gOrigPointerPos.y + relY;   
       newObjDim.width = 10; 
       newObjDim.height = 10;  
-      GX_UpdateMarkers(newObjDim, true, true);
+     // GX_UpdateMarkers(newObjDim, true, true);
       if(gMoveIndicatorPath == true){
     	  gIndicatorPath[1][1] = newObjDim.x;
           gIndicatorPath[1][2] = newObjDim.y;
@@ -8245,7 +8375,10 @@ function GX_updateImageFilename(filename)
 	//Debug_Message("UIH_updateFilename:Filname = " + node.getAttribute('value')); 
 }
 
-
+function OnDivPathMarkerDragStart(event, ui){
+	bMarkerMove = true; 
+	GX_SetIndicatorPath(event.target); 
+}
 function OnDivPathMarkerDrag(event, ui){
 	
 	 if (bMarkerMove == true) {
@@ -8290,6 +8423,7 @@ function OnDivPathMarkerDragStop(event, ui){
     relY = new Number(ui.position.top - ui.originalPosition.top);
     relX = Math.round(relX * gZoomFactor); 
    
+    var markerNode = event.target; 
     relY = Math.round(relY * gZoomFactor); 
     bMarkerMove = false;
     gsvgRootNode.setAttribute("cursor", "auto");
@@ -8312,19 +8446,18 @@ function OnDivPathMarkerDragStop(event, ui){
     	newpathvalue = Math.round(newpathvalue); 
     	newpathvalue *= 10; 
     }
-    gPathDataArray[gpathSegIndex][2] = newpathvalue; 	  
+    gPathDataArray[gpathSegIndex][2] = newpathvalue; 
+    markerNode.setAttribute('data-position',gPathDataArray[gpathSegIndex][1] + ',' + gPathDataArray[gpathSegIndex][2] ); 
     GX_SetMarkerNodeSelection(gCurrentMarkerNode, false);
-    //GX_UpdatePathData(gCurrentObjectSelected); 
-    GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);       
+    GX_UpdatePathData(gCurrentObjectSelected); 
+    //GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);       
     pathNode.setAttribute("visibility", "hidden");
     gIndicatorPath = []; 
     //GX_SetSelection(gCurrentObjectSelected, true, true); 
    
 }
 
-function OnDivPathMarkerDragStart(event, ui){
-	gCurrentMarkerNode.setAttribute('visibility', 'hidden'); 
-}
+
 
 function GX_ConvertToMultipleOf(val, multiple){
 	var result; 
