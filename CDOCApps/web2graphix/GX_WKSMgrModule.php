@@ -282,7 +282,7 @@ function GX_WKS_CreateSVGFile(&$respData)
 		}
 		$prologstr = '<?xml version="1.0"?><!DOCTYPE svg SYSTEM "svg11.dtd">';
 		$prologstr = $prologstr . '
-		<svg id="SVGOBJECTCONTAINER"  x="0px" y="0px" width="800px" height="800px" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+		<svg id="SVGOBJECTCONTAINER"  x="0px" y="0px" width="600px" height="400px" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
 		      <title>New SVG File</title><defs id="SVGDEFINITION"> </defs>
 		       <script type="application/ecmascript">
 			          <![CDATA[
