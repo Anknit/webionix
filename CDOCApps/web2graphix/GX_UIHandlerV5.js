@@ -2091,9 +2091,9 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     if(nodeClass == 'SVG_PATH_OBJECT')
     {    	
     	var pathType = node.classList[1]; 
-    	if((bShowMarkers ==  true)  || (gObjectEditMode == 'PROPERTIES_MODE') )		  
+    	/*if((bShowMarkers ==  true)  || (gObjectEditMode == 'PROPERTIES_MODE') )		  
     		GX_AddPathMarker(node.id, gPathDataArray, true); 
-    	
+    	*/ 
     	if(gObjectEditMode == 'MARKER_MODE'){
     		if(node.classList[1] == 'POLYGON')
     			WAL_enableDropdownListItem('markerTypeListDDL', 1); 
@@ -2530,8 +2530,9 @@ function OnObjectMouseDown(evt,ui) {
         else {
             gsvgRootNode.setAttribute("cursor", "auto");
             bMove = false;     
-            if(objectType == 'SVG_PATH_OBJECT')
+          /*  if(objectType == 'SVG_PATH_OBJECT')
             	GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
+            	*/ 
             GX_SetSelection(gCurrentObjectSelected, true, true);
         }            
     }
@@ -3786,17 +3787,17 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     		modDim.height = round(modDim.height * gInvZoomFactor);   		
     		if(ObjNode.id == 'sel_gripper'){
     		if( (currObjectType == 'SVG_SHAPE_OBJECT') || (currObjectType == 'SVG_TEXT_OBJECT')|| (currObjectType == 'GROUP') ){
-        		modDim.x = modDim.x -tolerance; 
-        	    modDim.y = modDim.y- tolerance;   
-        	    modDim.width += (tolerance); 
-        	    modDim.height += (tolerance); 
+        		modDim.x = modDim.x;// -tolerance; 
+        	    modDim.y = modDim.y;//- tolerance;   
+        	   // modDim.width += (tolerance); 
+        	   // modDim.height += (tolerance); 
         	}
         	else if(currObjectType == 'SVG_PATH_OBJECT'){
         		with (Math){        			
-            		modDim.x = modDim.x  + tolerance; 
-            	    modDim.y = modDim.y + tolerance;   
-            	    modDim.width -= (tolerance); 
-            	    modDim.height -= (tolerance);
+            		modDim.x = modDim.x;//  + tolerance; 
+            	    modDim.y = modDim.y ;//+ tolerance;   
+            	  //  modDim.width -= (tolerance); 
+            	  // modDim.height -= (tolerance);
         		}    		
         	}
     	}
@@ -4119,15 +4120,13 @@ function GX_ToolbarHandler(event)
 	 case 'close_icon':
 		 GX_CloseSVGFile(); 
 		 break; 
-	 case 'diminfo':
-		 
+	 case 'diminfo':		 
 		 var svgdatanode = document.getElementById('SVGOBJECTCONTAINER'); 
 		 var width = svgdatanode.getAttribute('width'); 
 		 WAL_setNumberInputValue("svgwidthIP", width, false);		
 		 var height = svgdatanode.getAttribute('height');	
 		 WAL_setNumberInputValue("svgheightIP", height, false);		
-		 WAL_showModalWindow(gSVGDimensionDlg,"GX_SVGDimensionDlgOK", "" );
-		 
+		 WAL_showModalWindow(gSVGDimensionDlg,"GX_SVGDimensionDlgOK", "" );		 
 		 break; 
 	 case 'delete_icon':
 		 WAL_showModalWindow('deleteConfirmDlg','', ''); 
@@ -4205,6 +4204,15 @@ function GX_ToolbarHandler(event)
 		break; 
 	case 'smoothen_icon':
 		GX_Smoothen(); 
+		break; 
+	case 'patheditBtn':
+		//Debug_Message('Edit clicked');
+		if(objectType == 'SVG_PATH_OBJECT'){
+			 $(gCurrGripperSel).css({visibility:"hidden"});
+			gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
+			GX_AddPathMarker(gCurrentObjectSelected.id, gPathDataArray, true); 
+		}
+		
 		break; 
 	case 'stroke_color_icon':
 		WAL_hideWidget('colorpickwidget', true); 
@@ -4656,7 +4664,7 @@ function GX_SetObjectAttribute(ObjNode, AttrName, AttrValue, bListStore, bUpdate
 					classvalue = ObjNode.classList[0] +' ' +ObjNode.classList[1] +' '+rotatestr ;
 				
 				ObjNode.setAttribute('class', classvalue); 
-				GX_UpdatePathMarker(ObjNode.id, gPathDataArray, true);				
+				//GX_UpdatePathMarker(ObjNode.id, gPathDataArray, true);				
 			}
 			else if(objectType == 'SVG_SHAPE_OBJECT')
 			{
@@ -5834,7 +5842,7 @@ function OnPathMarkerMouseDown(evt) {
         }
         gPathDataArray[gpathSegIndex][2] = newpathvalue; 	    
         GX_UpdatePathData(gCurrentObjectSelected); 
-        GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);       
+       // GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);       
         pathNode.setAttribute("visibility", "hidden");
         gIndicatorPath = []; 
         GX_SetSelection(gCurrentObjectSelected, true, true); 
@@ -6732,7 +6740,7 @@ function GX_SetMarkerNodeSelection(markerNode, bFlag)
 		markerNode.setAttribute('r', '5');
 		markerNode.setAttribute('visibility', 'visible');	 
 		GX_UpdatePathData(gCurrentObjectSelected); 
-		GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
+		//GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
 		bMarkerSelected = false ; 
 	}
 	else
@@ -6827,6 +6835,7 @@ function GX_UpdatePathParamOnUI(ObjNode)
 		var centerPt = GX_GetPolygonParam(ObjNode); 
 		WAL_setNumberInputValue('lengthIP', ''+centerPt.width, false);		
 	}
+	
 }
 
 function GX_DrawPolygon(ObjNode, x, y, nSides, length) {
@@ -8297,7 +8306,7 @@ function OnDivPathMarkerDragStop(event, ui){
     gPathDataArray[gpathSegIndex][2] = newpathvalue; 	  
     GX_SetMarkerNodeSelection(gCurrentMarkerNode, false);
     //GX_UpdatePathData(gCurrentObjectSelected); 
-    //GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);       
+    GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);       
     pathNode.setAttribute("visibility", "hidden");
     gIndicatorPath = []; 
     //GX_SetSelection(gCurrentObjectSelected, true, true); 
@@ -8463,7 +8472,7 @@ function GX_MoveSelectedObject(relX, relY){
     	newObjDim.y = relY ;// gCurrSelectedObjectDim.y+relY;          
     	GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);    	
 		GX_UpdatePathData(gCurrentObjectSelected); 
-		GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
+		//GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
 	}
    // if(objectType == 'SVG_SHAPE_OBJECT')
     //	GX_UpdatePropertyOnUI('DIMENSION', newObjDim); 
@@ -8984,8 +8993,7 @@ function GX_SetPropertyonUI(objNode){
 	var strokedashvalue = objNode.getAttribute('stroke-dasharray');
 	if(strokedashvalue == 'none')
 		strokedashvalue = ""; 
-	WAL_SetItemByValueInList('strokedashDDL', strokedashvalue, false);
-	
+	WAL_SetItemByValueInList('strokedashDDL', strokedashvalue, false);	
 	//now path type objects 
 	if(shapeType == 'SVG_PATH_OBJECT'){		
 		$('#pathcloseProp')[0].style.display = 'table-row'; 
@@ -8996,10 +9004,9 @@ function GX_SetPropertyonUI(objNode){
 		if(objectType == 'POLYGON'){
 			$('#polygonProp')[0].style.display = 'table-row';			
 		}
-		GX_UpdatePathParamOnUI(objNode); 
+		GX_UpdatePathParamOnUI(objNode); 		
 		
-	}
-	
+	}	
 }
 
 function GX_RightTabHandler(tabIndex){
