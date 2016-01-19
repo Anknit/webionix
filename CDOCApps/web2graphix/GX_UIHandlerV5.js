@@ -4119,19 +4119,19 @@ function GX_ToolbarHandler(event)
 		WAL_setNumberInputValue("svgheightIP", height, false);		
 		WAL_showModalWindow(gSVGDimensionDlg,"GX_SVGDimensionDlgOK", "" );
 		break; 
-	case 'erase_icon':
+	case 'eraseBtn':
 		GX_StartErase(); 
 		break;
-	case 'modify_icon':
+	case 'redrawBtn':
 		GX_Modify();
 		break; 
-	case 'addpoint_icon':
+	case 'addpointBtn':
 		GX_AddPoint(); 
 		break;
-	case 'deletepoint_icon':
+	case 'deletepointBtn':
 		GX_DeletePoint(); 
 		break; 
-	case 'smoothen_icon':
+	case 'smoothBtn':
 		GX_Smoothen(); 
 		break; 
 	case 'patheditBtn':
@@ -4141,7 +4141,15 @@ function GX_ToolbarHandler(event)
 			gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
 			GX_AddPathMarker(gCurrentObjectSelected.id, gPathDataArray, true); 
 		}
-		
+		$('#addpointBtn').css({display:'none'}); 
+		$('#deletepointBtn').css({display:'none'}); 
+		if(gCurrentObjectSelected.classList[1] == 'POLYGON'){
+			$('#addpointBtn').css({display:'table-row'}); 
+			$('#deletepointBtn').css({display:'table-row'}); 
+		}
+		else{
+				
+		}
 		break; 
 	case 'stroke_color_icon':
 		WAL_hideWidget('colorpickwidget', true); 
@@ -5577,11 +5585,34 @@ function OnDivPathMarkerMouseMove(event) {
     
 }
 
+function OnDivPathMarkerMouseDown(event){
+	var markerNode = event.target;
+	if(gCurrentObjectSelected.classList[1] == 'POLYGON'){
+		GX_SetCurrentMarker(markerNode, true); 
+	}
+	else 
+		gCurrentMarkerNode = 0; 
+}
+function GX_SetCurrentMarker(markerNode, bFlag){
+	if(bFlag == true){
+		if(gCurrentMarkerNode)
+			GX_SetCurrentMarker(gCurrentMarkerNode, false);		
+		gCurrentMarkerNode = markerNode;
+		$('#' + markerNode.id).css({width:'20px', height:'20px', borderRadius:'10px'});
+	}
+	else{
+		gCurrentMarkerNode = 0;
+		$('#' + markerNode.id).css({width:'10px', height:'10px', borderRadius:'5px', cursor:'auto'});
+	}
+	
+}
 function OnDivPathMarkerMouseOut(event) {
 	   
     var markerNode = event.target; 
     //if(bMarkerSelected == false)
     //if(markerNode != gCurrentMarkerNode)
+    if(gCurrentMarkerNode)
+    	return ; 
     if(bMarkerMove == false)
     {
     	$('#' + markerNode.id).css({width:'10px', height:'10px', borderRadius:'5px', cursor:'auto'});
@@ -6197,8 +6228,10 @@ function OnEraseClick(evt)
 	var pathType = gCurrentObjectSelected.classList[1]; 
 	if(pathType != 'FREEDRAW_PATH')
 		return ; 
-    var ClientX = new Number(evt.clientX - gClientXOffset); 
-	var ClientY =  new Number(evt.clientY- gClientYOffset); 	
+	var YOffset = Math.round(gCurrentCanvasDim.y +  gClientYOffset) ;//gCanvround(gClientYOffset);// * gInvZoomFactor);     		
+ 	var XOffset = Math.round(gCurrentCanvasDim.x - 10);
+    var ClientX = new Number(evt.clientX - XOffset); 
+	var ClientY =  new Number(evt.clientY- YOffset); 	
     var X = new Number(ClientX);
     var Y = new Number(ClientY);
     X = Math.round((X + window.pageXOffset - gCursorXOffset)*gZoomFactor); 
@@ -6546,8 +6579,10 @@ function OnEraseMove(evt)
 //	Debug_Message("Erase mouse move ON"); 
 	if(bEraseMode != true)
 		return; 
-	var ClientX = new Number(evt.clientX - gClientXOffset); 
-	var ClientY =  new Number(evt.clientY- gClientYOffset); 	
+	var YOffset = Math.round(gCurrentCanvasDim.y +  gClientYOffset) ;//gCanvround(gClientYOffset);// * gInvZoomFactor);     		
+ 	var XOffset = Math.round(gCurrentCanvasDim.x - 10);
+	var ClientX = new Number(evt.clientX - XOffset); 
+	var ClientY =  new Number(evt.clientY- YOffset); 	
 	var X = new Number(ClientX);
 	var Y = new Number(ClientY);
 	X = Math.round((X + window.pageXOffset - gCursorXOffset)*gZoomFactor); 
@@ -6596,7 +6631,7 @@ function OnEraseMouseOut(evt)
 	
 	if(bEraseMode == true)
 	{
-		gEraseObject1.setAttribute('visibility', 'hidden'); 
+		//gEraseObject1.setAttribute('visibility', 'hidden'); 
 		
 		//gsvgRootNode.setAttribute('cursor', 'auto'); 
 	}
@@ -6669,9 +6704,9 @@ function GX_ErasePathSegment(pathNode, boundary, pointX, pointY)
 			break; 
 		}			
 	}
-	GX_SetEraseEditAttributes(pathNode, false); 
+	//GX_SetEraseEditAttributes(pathNode, false); 
 	GX_SetObjectAttribute(pathNode, 'PATH_DATA', gPathDataArray, true, false);
-	GX_SetEraseEditAttributes(pathNode, true);
+	//GX_SetEraseEditAttributes(pathNode, true);
 	//GX_ConvertArrayToPathData(pathNode.id, gPathDataArray); 
 	//index =  indexC + 1 and loop till distance is found to be greater than 2
 	//else remove the points from the array for which distance is less than 2 
@@ -6857,8 +6892,9 @@ function GX_AddPoint()
 	}
 	else
 		return ;
-	
-	GX_SetSelection(gCurrentObjectSelected, true, true); 
+	//gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
+	GX_AddPathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
+	//GX_SetSelection(gCurrentObjectSelected, true, true); 
 }
 
 function GX_SetMarkerNodeSelection(markerNode, bFlag)
@@ -6934,8 +6970,8 @@ function GX_DeletePoint()
 	}
 	else
 		return ;
-	
-	GX_SetSelection(gCurrentObjectSelected, true, true); 
+	GX_AddPathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
+	//GX_SetSelection(gCurrentObjectSelected, true, true); 
 }
 
 
@@ -6974,6 +7010,7 @@ function GX_UpdatePathParamOnUI(ObjNode)
 		var centerPt = GX_GetPolygonParam(ObjNode); 
 		WAL_setNumberInputValue('lengthIP', ''+centerPt.width, false);		
 	}
+	
 	
 }
 
@@ -8370,13 +8407,12 @@ function GX_updateImageFilename(filename)
 	}
 	else
 		node.setAttribute("value", filename); 
-			
+	//Debug_Message("UIH_updateFilename:Filname = " + node.getAttribute('value'));
 	
-	//Debug_Message("UIH_updateFilename:Filname = " + node.getAttribute('value')); 
 }
 
 function OnDivPathMarkerDragStart(event, ui){
-	bMarkerMove = true; 
+	bMarkerMove = true;	
 	GX_SetIndicatorPath(event.target); 
 }
 function OnDivPathMarkerDrag(event, ui){
@@ -9139,12 +9175,17 @@ function GX_SetPropertyonUI(objNode){
 	//now path type objects 
 	if(shapeType == 'SVG_PATH_OBJECT'){		
 		$('#pathcloseProp')[0].style.display = 'table-row'; 
-		$('#editbtnProp')[0].style.display = 'table-row'; 		
+		$('#editbtnProp')[0].style.display = 'table-row'; 	
+		$('#addpointBtn').css({display:'none'}); 
+		$('#deletepointBtn').css({display:'none'}); 
 		if(objectType == 'ELLIPTIC'){
 			$('.ellipticProp').show(); 
 		}
 		if(objectType == 'POLYGON'){
 			$('#polygonProp')[0].style.display = 'table-row';			
+		}
+		else if(objectType == 'FREEDRAW_PATH'){
+			$('#freedrawProp')[0].style.display = 'table-row';			
 		}
 		GX_UpdatePathParamOnUI(objNode); 		
 		
