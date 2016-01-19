@@ -512,25 +512,28 @@
 		              			<div id='lengthIP' class='EDIT_BOX group6' type='LENGTH' ></div>  
 		              		</td>
 		              		<td class='propertyValues'>
-		              			<button id='addpointBtn' type="button" class="btn btn-xs propertyBtn ">Add</button>
+		              			<!-- <button id='addpointBtn' type="button" class="btn btn-xs propertyBtn ">Add</button>
 		              			<button id='deletepointBtn' type="button" class="btn btn-xs propertyBtn" style='margin-left:5px'>Delete</button>
+		              			--> 
 		              		</td>		              		
 		              	</tr>
 		              	<tr id='editbtnProp' class='propertyRow pathProperty'>
 		              		<td class='propertyName'></td>
 		              		<td class='propertyValues'>
-		              			<button id='patheditBtn' type="button" class="btn btn-block btn-primary" onclick='GX_ToolbarHandler(event)' style='margin-left:25%'>Edit Points</button>   		   						
+		              			<button id='patheditBtn' type="button" class="btn btn-sm btn-primary" onclick='GX_ToolbarHandler(event)' style='margin-left:25%'>Edit Points</button>   		   						
 		              		</td>
-		              		<td class='propertyValues'>		              			
+		              		<td class='propertyValues addpointProperty' >		
+		              			<button id='addpointBtn' type="button" class="btn btn-sm propertyBtn " style='display:none' onclick='GX_ToolbarHandler(event)'>Add</button>
+		              			<button id='deletepointBtn' type="button" class="btn btn-sm propertyBtn" style='margin-left:5px;display:none' onclick='GX_ToolbarHandler(event)'>Delete</button>              			
 		              		</td>
 		              	</tr>
 		              	<tr id='freedrawProp' class='propertyRow freedrawProp pathProperty'>
 		              		<td class='propertyName' style='width:15%'></td>
 		              		<td class='propertyValues' style='width:80%'>
 		              			<div >
-		              				<button id='eraseBtn' type="button" class="btn  btn-xs propertyBtn" style='width:70px'>Erase</button> 
-		              				<button id='redrawBtn' type="button" class="btn btn-xs propertyBtn" style='width:70px'>Redraw</button>
-		              				<button id='smoothBtn' type="button" class="btn btn-xs propertyBtn" style='width:70px'>Smoothen</button> 
+		              				<button id='eraseBtn' type="button" class="btn  btn-xs propertyBtn" style='width:70px' onclick='GX_ToolbarHandler(event)'>Erase</button> 
+		              				<button id='redrawBtn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_ToolbarHandler(event)'>Redraw</button>
+		              				<button id='smoothBtn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_ToolbarHandler(event)'>Smoothen</button> 
 		              			</div>
 		              		</td>
 		              		<td class='propertyValues' style='width:5%'>
@@ -933,7 +936,8 @@
     <div id="drawingpen" class="ui-widget-content" style='border:2px solid black; position:absolute; width:4px;height:4px;left:50px; top:50px; visibility:hidden'></div>
     <div id="sel_gripper" class="ui-widget-content GRIPPER" style='border:3px dashed blue; position:absolute'></div>
     
-    <div id='DivPathMarker' class="ui-widget-content" style='border:2px solid black; position:absolute; width:10px; height:10px; border-radius:5px' onmousemove='OnDivPathMarkerMouseMove(event)' onmouseout='OnDivPathMarkerMouseOut(event)'></div>
+    <div id='DivPathMarker' class="ui-widget-content" style='border:2px solid black; position:absolute; width:10px; height:10px; border-radius:5px' onmousemove='OnDivPathMarkerMouseMove(event)' onmouseout='OnDivPathMarkerMouseOut(event)'
+     onmousedown='OnDivPathMarkerMouseDown(event)'></div>
     
     <div id='markerPoint'  class='CUSTOM_MARKER' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1;'></div>
     
