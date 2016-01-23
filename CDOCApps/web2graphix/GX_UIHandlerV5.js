@@ -134,6 +134,7 @@ var gObjectList = 0;
 var gObjectListInRoI = 0; 
 var gCurrentTabIndex = 0; 
 var gBaseMarkerNode = 0; 
+var gFreeDrawMode = 0; //DRAW_MODE,ERASE_MODE
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -2042,12 +2043,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
     var svgDim = GX_GetRectObjectDim(svgNode);
     var x1, y1, x2, y2;
-    with(Math){
-    	/*x1 = round((svgDim.x + 5 - gPanX)*gInvZoomFactor); 
-        y1 = round((svgDim.y + 5 - gPanY)*gInvZoomFactor + gClientYOffset);
-        x2 = round( (x1 + svgDim.width -5 - gGrabberDim.width)*gInvZoomFactor); 
-        y2 = round((y1 + svgDim.height - 5 - gGrabberDim.height)*gInvZoomFactor);
-        */
+    with(Math){    	
     	x1 = round(gCurrentCanvasDim.x - 10); 
     	y1 = round(gCurrentCanvasDim.y + gClientYOffset -7); 
     	x2 = round(x1 + gCurrentCanvasDim.width - gGrabberDim.width) ; 
@@ -3202,6 +3198,7 @@ function GX_ShowObjectInterface(objectID)
 	$(JQSel).removeAttr('opacity'); 
 	
 	//set the selection to current object 
+	GX_SetSelection(gCurrentObjectSelected,false, false); 
 	GX_SetSelection(currObjNode,true, true); 
 	
 }
@@ -4108,7 +4105,7 @@ function GX_ToolbarHandler(event)
 		gripperNode.setAttribute('visibility', 'visible'); 
 		GX_SetSelection(gCurrentObjectSelected, true, false); 
 		gNewObjectID = 'gripper'; 
-		GX_StartFreeDraw();		 
+		GX_StartFreeDraw('DRAW_MODE');		 
 		gEnableMultiSelection = true; 
 		break; 
 	case 'svgdim_icon':
@@ -4147,9 +4144,9 @@ function GX_ToolbarHandler(event)
 			$('#addpointBtn').css({display:'table-row'}); 
 			$('#deletepointBtn').css({display:'table-row'}); 
 		}
-		else{
-				
-		}
+		else if(gCurrentObjectSelected.classList[1] == 'FREEDRAW_PATH'){
+			$('#freedrawProp')[0].style.display = 'table-row';			
+		}		
 		break; 
 	case 'stroke_color_icon':
 		WAL_hideWidget('colorpickwidget', true); 
@@ -4197,21 +4194,16 @@ function GX_ToolbarHandler(event)
 		break;
 	case 'circle_icon':
 		 gNewObjectID = GX_AddNewSVGObject('circle',''); 
-		 GX_StartFreeDraw();
+		 GX_StartFreeDraw('DRAW_MODE');
 		break; 
 	case 'ellipse_icon':
 		gNewObjectID = GX_AddNewSVGObject('ellipse',''); 
-		 GX_StartFreeDraw();
+		 GX_StartFreeDraw('DRAW_MODE');
 		break; 
 	case 'square_icon':
 		gNewObjectID = GX_AddNewSVGObject('rectangle',''); 
-		 GX_StartFreeDraw();
-		break; 
-	/*case 'line_icon':
-		 GX_AddNewSVGObject('line_path',''); 
-		 GX_StartFreeDraw();
-		break;
-		*/
+		 GX_StartFreeDraw('DRAW_MODE');
+		break;	
 	case 'polygon_icon':
 		WAL_showModalWindow(gPolyInputDlg,"GX_PolyInputDlgOK", "" );
 		break; 
@@ -4219,8 +4211,8 @@ function GX_ToolbarHandler(event)
 		GX_AddNewSVGObject('text',''); 
 		break; 
 	case 'freehand_icon':
-		gNewObjectID = GX_AddNewSVGObject('freedraw_path',''); 
-		GX_StartFreeDraw();
+		gNewObjectID = GX_AddNewSVGObject('freedraw_path',''); 		 
+		GX_StartFreeDraw('DRAW_MODE');
 		break; 
 	case 'image_icon':
 		GX_AddNewImageSVG(); 
@@ -4655,7 +4647,7 @@ function GX_ConvertArrayToPathData(pathID, inputpathParam) {
     if( (pathType == 'LINE_PATH') || (pathType == 'POLYGON') || (pathType == 'FREEDRAW_PATH')||(pathType == 'CUBIC_BEZIER') 
     		|| (pathType == 'QUADRATIC_BEZIER'))
     {
-    	  	1
+    	  	
     	for (var k = 0; k < inputpathParam.length; k++) {
     		if( (inputpathParam[k][3] == 'POINT') || (inputpathParam[k][3] == 'START_POINT')||(inputpathParam[k][3] == 'END_POINT'))
     		{
@@ -5291,7 +5283,7 @@ function GX_DDLHandler(Node, value)
 		else if(value =='Elliptic' )
 			var drawType = 'ELLIPTIC_PATH';	
 		GX_AddNewSVGObject(drawType,''); 
-		GX_StartFreeDraw();
+		GX_StartFreeDraw('DRAW_MODE');
 		return; 		
 	}
 	else if(wdgtId == 'lineDDL')
@@ -5303,7 +5295,7 @@ function GX_DDLHandler(Node, value)
 		else if(value =='Normal' )
 			var drawType = 'LINE_PATH';	
 		GX_AddNewSVGObject(drawType,''); 
-		GX_StartFreeDraw();
+		GX_StartFreeDraw('DRAW_MODE');
 		return; 		
 	}
 	
@@ -6179,42 +6171,96 @@ function GX_PolyInputDlgOK()
 	GX_AddNewSVGObject('POLYGON',''); 
 }
 
-function GX_StartFreeDraw()
+function GX_StartFreeDraw(mode)
 {
 	//hide current grabber
 	//anything selected now should be unselected 
 	if(gCurrentObjectSelected)
 		GX_SetSelection(gCurrentObjectSelected, false, false); 
 	
+	gFreeDrawMode = mode; 
 	gCurrentObjectSelected =  document.getElementById(gNewObjectID); 	
 	var pathType = gCurrentObjectSelected.classList[1]; 	
-	GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, true); 	
+	GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, gFreeDrawMode, true); 	
 	gPrevAttributeList = EL_getObjectAttributes(gCurrentObjectSelected);
 	
 }
 
 
-function GX_SetFreeDrawEditAttributes(ObjNode, bFlag)
+function GX_SetFreeDrawEditAttributes(ObjNode, mode, bFlag)
 {
 
-	if(!gsvgRootNode)
-		gsvgRootNode = document.getElementById('SVGContainer');
-	
+	var SVGNode = document.getElementById('SVGOBJECTCONTAINER');	
 	if(bFlag == true)
 	{
 		var freedrawNode = document.getElementById('freedraw'); 
 		freedrawNode.setAttribute('visibility', 'visible'); 
 		freedrawNode.setAttribute('pointer-events', 'visible'); 
 		//gCurrGrabber.setAttribute('pointer-events', 'none'); 
-		bDraw = false; 
-		var JQSel = '#drawingpen'; 
-		$(JQSel).css('visibility', 'visible'); 
+		if( (mode == 'DRAW_MODE') || (mode == 'REDRAW_MODE')){
+			bDraw = false; 
+			
+			var SVGBdry = new sDimension(); //gsvgRootNode
+			var str = SVGNode.getAttribute('x');
+			str = str.substring(0, str.length-2); 
+			SVGBdry.x = new Number(str); 
+			
+			str = SVGNode.getAttribute('y');
+			str = str.substring(0, str.length-2); 
+			SVGBdry.y = new Number(str);
+			
+			str = SVGNode.getAttribute('width');
+			str = str.substring(0, str.length-2); 
+			SVGBdry.width = new Number(str);
+			
+			str = SVGNode.getAttribute('height');
+			str = str.substring(0, str.length-2);
+			SVGBdry.height = new Number(str);		
+			freedrawNode.setAttribute("x", SVGBdry.x+5); 
+			freedrawNode.setAttribute("width", SVGBdry.width - 10); 
+			freedrawNode.setAttribute("y", SVGBdry.y + 5); 
+			freedrawNode.setAttribute("height", SVGBdry.height - 10); 	
+			var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
+		    var svgDim = GX_GetRectObjectDim(svgNode);		    
+		   
+		    var x1, y1, x2, y2;
+		    with(Math){    	
+		    	x1 = round(gCurrentCanvasDim.x - 10); 
+		    	y1 = round(gCurrentCanvasDim.y + gClientYOffset -7); 
+		    	x2 = round(x1 + gCurrentCanvasDim.width - gGrabberDim.width) ; 
+		    	y2 = round(y1 + gCurrentCanvasDim.height - gGrabberDim.height); 		    
+		    }        
+		    var region = [x1, y1, x2, y2]; 
+		    var JQSel = '#drawingpen'; 			
+		    $(JQSel).draggable( "option", "containment", region );
+		    $(JQSel).css('visibility', 'visible'); 
+		}
+		else if(mode == 'ERASE_MODE'){
+			bErase = false; 
+			var JQSel = '#eraserpen'; 
+			$(JQSel).css('visibility', 'visible'); 
+			freedrawNode.setAttribute("x", gCurrSelectedObjectDim.x-20); 
+			freedrawNode.setAttribute("width", gCurrSelectedObjectDim.width + 40); 
+			freedrawNode.setAttribute("y", gCurrSelectedObjectDim.y-20); 
+			freedrawNode.setAttribute("height", gCurrSelectedObjectDim.height + 40); 
+		}		
 	}
 	else
 	{
 		var freedrawNode = document.getElementById('freedraw'); 
 		freedrawNode.setAttribute('visibility', 'hidden');	
-		$(JQSel).css('visibility', 'hidden'); 
+		if(mode == 'DRAW_MODE'){
+			var JQSel = '#drawingpen';
+			$(JQSel).css('visibility', 'hidden');
+		}
+		else if(mode == 'ERASE_MODE'){
+			var JQSel = '#eraserpen';
+			$(JQSel).css('visibility', 'hidden');
+		}
+		if(mode == 'REDRAW_MODE'){
+			$('#freedrawProp')[0].style.display = 'none';
+		}
+		gFreeDrawMode = 0; 
 		//gCurrGrabber.setAttribute('pointer-events', 'visible'); 
 		
 	}
@@ -6280,7 +6326,71 @@ function OnEraseClick(evt)
 		 
 	GX_ErasePathSegment(gCurrentObjectSelected, 100, X, Y); 
 	return ; 
+}
+
+function OnEraserPenClick(event){		
+	var nodeid = event.target.id; 
+	var node = event.target;
+	var pathType = gCurrentObjectSelected.classList[1]; 
+	if(pathType != 'FREEDRAW_PATH')
+		return ; 	
+	var YOffset = Math.round(gCurrentCanvasDim.y +  gClientYOffset) ;//gCanvround(gClientYOffset);// * gInvZoomFactor);     		
+ 	var XOffset = Math.round(gCurrentCanvasDim.x - 10);
+    var ClientX = new Number(event.clientX - XOffset); 
+	var ClientY =  new Number(event.clientY- YOffset); 	
+    var X = new Number(ClientX);
+    var Y = new Number(ClientY);
+    X = Math.round((X + window.pageXOffset - gCursorXOffset)*gZoomFactor); 
+	Y = Math.round((Y + window.pageYOffset - gCursorYOffset)*gZoomFactor);	
+	X += gPanX;
+	Y += gPanY; 
 	
+	X -= 1;
+	Y += 1; 
+	
+	if( (X < gCurrSelectedObjectDim.x-5) || (X > gCurrSelectedObjectDim.x + gCurrSelectedObjectDim.width +  10) || (Y < gCurrSelectedObjectDim.y - 5) || (Y > gCurrSelectedObjectDim.y + gCurrSelectedObjectDim.height + 10) ){
+		GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, 'ERASE_MODE', false); 
+		GX_SetSelection(gCurrentObjectSelected, false, false); 
+		//Debug_Message('Setting EraseMode False'); 
+	}
+	if(event.ctrlKey)
+	{
+		if(gEraseEndIndex != -1)
+			return ; 
+		if(bEraseMultiple == false)
+		{
+			bEraseMultiple = true;
+			gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected); 			
+		}
+		if(gEraseStartIndex == -1)
+		{
+			gEraseStartIndex = GX_FindAnchorPointIndex(gPathDataArray, 20, X, Y,0);		
+			gEraseObject1.setAttribute('stroke', 'brown'); 
+		}
+			
+		else if(gEraseEndIndex == -1)
+		{
+			gEraseEndIndex = GX_FindAnchorPointIndex(gPathDataArray, 20, X, Y,0);
+			gEraseObject2.setAttribute('stroke', 'brown'); 				
+			GX_EraseMultiplePathSegment(gCurrentObjectSelected, gEraseStartIndex, gEraseEndIndex); 
+		}
+				
+		return ; 
+			
+	}
+	if(bEraseMultiple == true)
+	{
+		gEraseStartIndex = -1; 
+		gEraseEndIndex = -1; 
+		bEraseMultiple = false; 
+		gEraseObject1.setAttribute("visibility",'hidden');
+		gEraseObject1.setAttribute('stroke', 'red'); 
+		gEraseObject2.setAttribute("visibility",'hidden'); 
+		gEraseObject2.setAttribute('stroke', 'red'); 
+		return ;
+	}		 
+	GX_ErasePathSegment(gCurrentObjectSelected, 100, X, Y); 
+	return ; 
 	
 	
 }
@@ -6299,7 +6409,7 @@ function OnFreeDrawClick(evt)
 	else{
 		var objectType = gCurrentObjectSelected.classList[1]; 
 		gsvgRootNode.setAttribute("cursor", "auto");		
-		GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, false);
+		GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, 'DRAW_MODE', false);
 		if(objectType == 'FREEDRAW_PATH')
 		{
 			gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
@@ -6318,9 +6428,16 @@ function OnFreeDrawClick(evt)
 }
 
 
-function OnFreeDrawMouseMove(evt){
-	var JQSel = '#drawingpen'; 
-	$(JQSel).css({left: evt.clientX +'px', top: evt.clientY + 'px'} ); 	
+function OnFreeDrawMouseMove(event){
+	if( (gFreeDrawMode == 'DRAW_MODE') || (gFreeDrawMode == 'REDRAW_MODE') ){
+		var JQSel = '#drawingpen'; 
+		$(JQSel).css({left: event.clientX +'px', top: event.clientY + 'px'} ); 
+	}
+	else if(gFreeDrawMode == 'ERASE_MODE'){
+		var JQSel = '#eraserpen'; 
+		$(JQSel).css({left: event.clientX +'px', top: event.clientY + 'px'} ); 
+	}
+		
 }
 
 function OnFreeDrawDragStart(evt, ui){
@@ -6385,7 +6502,7 @@ function OnFreeDrawDragStart(evt, ui){
 	else
 	{
 		gsvgRootNode.setAttribute("cursor", "auto");		
-		GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, false);
+		GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, 'DRAW_MODE', false);
 		if(objectType == 'FREEDRAW_PATH')
 		{
 			gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
@@ -6408,12 +6525,13 @@ function OnFreeDrawDragEnd(evt, ui){
 	var objectType = gCurrentObjectSelected.classList[1]; 
 	if(gEnableMultiSelection == true)
 		objectType = 'RECTANGLE'; 
-	gsvgRootNode.setAttribute("cursor", "auto");		
-	GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, false);
+	gsvgRootNode.setAttribute("cursor", "auto");	
+	
+	GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, gFreeDrawMode, false);
 	if(objectType == 'FREEDRAW_PATH')
 	{
 		gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
-		GX_SetObjectAttribute(gCurrentObjectSelected, 'PATH_DATA', gPathDataArray, true, false);
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'PATH_DATA', gPathDataArray, true, false);		
 	}
 	else if( (objectType == 'RECTANGLE')|| (objectType == 'IMAGE') || (objectType == 'ELLIPSE')|| (objectType == 'CIRCLE') || (objectType == 'LINE_PATH')|| (objectType == 'HOR_LINE_PATH')|| (objectType == 'VERT_LINE_PATH') || (objectType == 'CUBIC_BEZIER')
 			|| (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC'))
@@ -6438,8 +6556,9 @@ function OnFreeDrawDragEnd(evt, ui){
 		 $(gripperSel)[0].setAttribute('width',RoIDim.width); 
 		 $(gripperSel)[0].setAttribute('height',RoIDim.height); 
 		 return ; 
-	 }
+	 }	
 	 GX_SetSelection(gCurrentObjectSelected, true, true);
+	 	
 	// Debug_Message('Drag End'); 
 }
 
@@ -6513,7 +6632,8 @@ function GX_Modify()
 	var objectType = gCurrentObjectSelected.classList[1]; 
 	if(objectType == 'FREEDRAW_PATH')
 	{
-		GX_StartFreeDraw(); 
+		gNewObjectID = gCurrentObjectSelected.id; 		
+		GX_StartFreeDraw('REDRAW_MODE'); 
 	}	
 }
 
@@ -6525,7 +6645,9 @@ function GX_StartErase()
 		return;	
 	gEraseObject1 = 0; 
 	gEraseObject2 = 0; 
-	GX_SetEraseEditAttributes(gCurrentObjectSelected, true); 
+	gFreeDrawMode = 'ERASE_MODE'; 
+	GX_SetFreeDrawEditAttributes(gCurrentObjectSelected, gFreeDrawMode, true); 
+	//GX_SetEraseEditAttributes(gCurrentObjectSelected, true); 
 	//gCurrGrabber.setAttribute('pointer-events', 'none'); 
 	
 }
@@ -6541,12 +6663,16 @@ function GX_SetEraseEditAttributes(ObjNode, bFlag)
 	
 	if(!gEraseObject2)
 		gEraseObject2 = document.getElementById('eraser2'); 
-	
+	var svgNode =  document.getElementById('SVGOBJECTCONTAINER'); 
 	if(bFlag == true)
-	{			
-		ObjNode.setAttribute('onmousemove', 'OnEraseMove(evt)'); 
+	{	
+		
+		//ObjNode.setAttribute('onmousemove', 'OnEraseMove(evt)'); 
+		svgNode.setAttribute('onmousemove', 'OnEraseMove(evt)'); 
 		ObjNode.setAttribute('onclick', 'OnEraseClick(evt)');
-		ObjNode.setAttribute('onmouseout', 'OnEraseMouseOut(evt)');
+		//ObjNode.setAttribute('onmouseout', 'OnEraseMouseOut(evt)');
+		svgNode.setAttribute('onmouseout', 'OnEraseMouseOut(evt)');
+		gEraseObject1.setAttribute('visibility', 'visible');
 		var swidth = ObjNode.getAttribute('stroke-width');		
 		gOrigAttributeStruct.strokewidth = swidth;		
 		//ObjNode.setAttribute('stroke-width', "2"); 		
@@ -6560,8 +6686,11 @@ function GX_SetEraseEditAttributes(ObjNode, bFlag)
 	}
 	else
 	{
-		ObjNode.removeAttribute('onmousemove'); 	 
-		ObjNode.removeAttribute('onmouseout');
+		//ObjNode.removeAttribute('onmousemove'); 	 
+		//ObjNode.removeAttribute('onmouseout');
+		svgNode.removeAttribute('onmousemove'); 	 
+		svgNode.removeAttribute('onmouseout');
+		
 		ObjNode.setAttribute('onclick', 'OnShapeObjectSelection(evt)');
 		//set it to old values
 		//ObjNode.setAttribute('stroke-width', gOrigAttributeStruct.strokewidth); 		
@@ -8288,7 +8417,9 @@ function GX_Smoothen(){
 		{
 			gOrigFreedrawPathVal = gCurrentObjectSelected.getAttribute('d'); 
 		//smoothen the points
-			var dval = Smoothen(gOrigFreedrawPathVal);		
+			var dval = Smoothen(gOrigFreedrawPathVal);	
+			if(!dval)
+				return; 
 		//now set the path data point of the current object
 			GX_SetObjectAttribute(gCurrentObjectSelected, 'd', dval, true, false);
 		}
@@ -8331,6 +8462,12 @@ function Smoothen(Points){
 			if(i < srcArr.length - numPts){
 				for(var j = 0-numPts; j < numPts; j++){
 					srcPoint = srcArr[i + j].split(','); 
+					var checkM = srcArr[i + j].substring(0,1);
+					checkM =  checkM.toUpperCase(); 
+					if(checkM == 'M'){
+						Debug_Message("Smoothening cannot be applied as the Path seems to be broken"); 
+						return 0;  
+					}
 					avgX += new Number(srcPoint[0]); 
 					avgY += new Number(srcPoint[1]); 
 				}
@@ -9001,8 +9138,8 @@ function GX_UpdateCanvasLimits(canvDim){
 	 gMaxRight = gMaxLeft + canvDim.width;   
 	 gMaxBottom = gMaxTop + canvDim.height; 
 	 if(freedrawNode){
-		 freedrawNode.setAttribute('width', canvDim.width); 
-		 freedrawNode.setAttribute('height', canvDim.height);	
+		 freedrawNode.setAttribute('width', canvDim.width * 0.9); 
+		 freedrawNode.setAttribute('height', canvDim.height * 0.9);	
 	 }	 	 
 }
 
@@ -9184,9 +9321,7 @@ function GX_SetPropertyonUI(objNode){
 		if(objectType == 'POLYGON'){
 			$('#polygonProp')[0].style.display = 'table-row';			
 		}
-		else if(objectType == 'FREEDRAW_PATH'){
-			$('#freedrawProp')[0].style.display = 'table-row';			
-		}
+		
 		GX_UpdatePathParamOnUI(objNode); 		
 		
 	}	
