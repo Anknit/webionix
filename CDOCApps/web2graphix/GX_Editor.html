@@ -537,14 +537,58 @@
 		              				<button id='smoothBtn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_ToolbarHandler(event)'>Smoothen</button> 
 		              			</div>
 		              		</td>
-		              		<td class='propertyValues' style='width:5%'>
-		              			
-		              		</td>	
-		              	                  		
+		              		<td class='propertyValues' style='width:5%'>		              			
+		              		</td>			              	                  		
 		              	</tr>
 		              	
+		              	<tr id='fontProp1' class='fontnameProp'>
+		              		<td class='propertyName' style='width:15%'>Font</td>
+		              		<td class='propertyValues'>
+		              			<div id='fontname' style= 'display:inline-block; margin-left:29px; margin-right:3px'><span class='myLabel' style='text-align:right;'>Name</span><div id='fontNameDDL' class='EDIT_BOX' type='fontFamily' ></div></div>		              			          			
+		              		</td>
+		              		<td class='propertyValues'>
+		              			<div id='fontSizeEdit' style='display:inline-block; margin-left:15px; margin-right:5px;margin-top:6px' data-tooltiptext='Font Size' data-helptext='Select value to modify the Font Size'><span class='myLabel' style='text-align:right;'>Size</span><div id='fontSizeIP' class='EDIT_BOX group6' type='STROKE_WEIGHT' ></div></div>
+		              		</td>
+		              	</tr>	
+		              	
+		              	<tr class='propertyRow' >
+		              		<td></td>
+		              		<td class='propertyValues'>
+		              			<!-- <div class="BTN_CONTAINER_SMALL" style='width:26px; height:26px;'><input type = "image" id='bold_icon'   value=''  src='../CommonCSS/icons/Version1/bold.png' style='width:22px; height:22px;margin-top:5px; position:relative; top:-6px;'/></div> 			
+	    						<div class="BTN_CONTAINER_SMALL" style='width:26px; height:26px;'><input type = "image" id='italic_icon'   value=''  src='../CommonCSS/icons/Version1/italic.png' style='width:22px; height:22px;margin-top:5px;position:relative; top:-6px;'/></div>
+	    						<div class="BTN_CONTAINER_SMALL" style='width:26px; height:26px;'><input type = "image" id='underline_icon'  value=''  src='../CommonCSS/icons/Version1/underline.png' style='width:22px; height:22px;margin-top:5px;position:relative; top:-6px;'/></div>
+	    						<div class="BTN_CONTAINER_SMALL" style='width:26px; height:26px;' ><input type = "image" id='strikethrough_icon'  value=''  src='../CommonCSS/icons/Version1/strikethrough.png' style='width:22px; height:22px;margin-top:5px;position:relative; top:-6px;'/></div>
+	    						<div class="BTN_CONTAINER_SMALL" style='width:26px; height:26px;'><input type = "image" id='smallcaps_icon'  value=''  src='../CommonCSS/icons/Version1/uppercase.png' style='width:22px; height:22px;margin-top:5px;position:relative; top:-6px;'/></div>
+	    					-->
+	    						<button id='boldBtn' type="button" class="btn  btn-xs propertyBtn" style='width:70px; font-weight:bold' onclick='GX_ToolbarHandler(event)'>Bold</button> 
+	    						<button id='italicBtn' type="button" class="btn  btn-xs propertyBtn" style='width:70px; font-style:italic' onclick='GX_ToolbarHandler(event)'>Italic</button>
+	    						<button id='underlineBtn' type="button" class="btn  btn-xs propertyBtn" style='width:70px; text-decoration: underline;' onclick='GX_ToolbarHandler(event)'>Underline</button>
+	    						
+		              		</td>
+		              		<td>
+		              			<button id='strikethroughBtn' type="button" class="btn  btn-xs propertyBtn" style='width:80px; margin-left:-23px; text-decoration:line-through' onclick='GX_ToolbarHandler(event)'>Strike-Out</button>
+	    						<button id='smallcapsBtn' type="button" class="btn  btn-xs propertyBtn" style='width:80px; font-variant:small-caps;' onclick='GX_ToolbarHandler(event)' >Small-Caps</button>
+		              		</td>
+		              	</tr>	              	
 		              </table>
-		                
+		              
+	<!-- 
+	<div id='texteditinterface' class='TEXT_PROPERTY' style="display:none; padding-right:3px; border-right: ridge 2px #f0f0f0;">
+    		<div id='group10'  style="display:inline-block; width:205px; height:36px; vertical-align: top; padding-top:3px; padding-right:1px;">
+    		    <div id='fontname' style= 'display:inline-block; margin-left:2px; margin-right:0px' >Font<div id='fontNameDDL' class='EDIT_BOX' type='fontFamily' ></div></div>			
+			 </div> 				  
+			<div id='fontsizegroup'  style="display:inline-block;  height:36px; vertical-align: top; border:none; margin-top:2px; border-right: ridge 2px #f0f0f0;">			  
+			   <div id='fontSizeEdit' style='display:inline-block; margin-left:5px;'>Size<div id='fontSizeIP' class='EDIT_BOX group6' type='STROKE_OPACITY'></div></div>			 	
+			</div>				 	
+			<div id='fontstylegroup' style="display:inline-block; height:36px; width:auto" data-type='buttonGroup'>
+				<div class="BTN_CONTAINER"><input type = "image" id='bold_icon'   value=''  src='../CommonCSS/icons/Version1/bold.png' data-tooltiptext='Bold' data-helptext='Set the Text Object as Bold'/></div> 			
+	    		<div class="BTN_CONTAINER"><input type = "image" id='italic_icon'   value=''  src='../CommonCSS/icons/Version1/italic.png' data-tooltiptext='Italic' data-helptext='Set the Text Object as Italic'/></div>
+	    		<div class="BTN_CONTAINER"><input type = "image" id='underline_icon'  value=''  src='../CommonCSS/icons/Version1/underline.png' data-tooltiptext='Underline' data-helptext='Set the Text Object as Underline'/></div>
+	    		<div class="BTN_CONTAINER" style="display:inline-block;" ><input type = "image" id='strikethrough_icon'  value=''  src='../CommonCSS/icons/Version1/strikethrough.png' data-tooltiptext='Strikethrough' data-helptext='Set the Text Object as Strikethrough'/></div>
+	    		<div class="BTN_CONTAINER"><input type = "image" id='smallcaps_icon'  value=''  src='../CommonCSS/icons/Version1/uppercase.png' data-tooltiptext='Small-case' data-helptext='Set the Text Object as Small-case'/></div>    		
+	    	</div>	    	
+    	</div> 	
+	 -->	                
    		   				
 		            </div>
 		       <div id='animationTab' style='background-color:#e8e8e8'>
