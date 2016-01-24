@@ -640,12 +640,14 @@
     </div>	  
  </div>
  
-<div id="svgfileopendlg" style='display:none;z-index:18000'><div id="svglisttitle">Open SVG Files from my Workspace</div>
+<div id="svgfileopendlg" style='display:none;z-index:18000'><div id="svglisttitle">My Workspace</div>
 		<div id="svgfileopendlgcontent" style="overflow:hidden">
 			<div id="svgfileopenlistbox"></div> 		
       		
-      		<input type="button" id='SVGFO_LB_okbtn' value="OK" onclick="GX_LBOKHandler()"  style="margin-top:20px"/>
+      		<input type="button" id='SVGFO_LB_okbtn' value="Open" onclick="GX_LBOKHandler()"  style="margin-top:20px" title='Open a Project File'/>
       		<input type="button" id='SVGFO_LB_cancelbtn' value="Cancel" onclick=""  style="margin-top:20px"/>
+      		
+      		<input type="button" id='SVGFO_LB_deletebtn' value="Delete" onclick="GX_ToolbarHandler(event)"  style="margin-top:20px" title='Delete a Project File'/>
 		</div>
 </div>
   
@@ -659,13 +661,7 @@
        </div>          
   </div>
   
-  <div id="svgfiledeletedlg" style='display:none'><div id="svglisttitle">Delete SVG Files from my Workspace</div>
-		<div id="svgfiledeletedlgcontent" style="overflow:hidden">
-			<div id="svgfiledeletelistbox"></div>   
-			<input type="button" id='SVGFO_LB_deletebtn' value="Delete" onclick="GX_LBDeleteItem()"  style="margin-top:20px"/>    		
-      		<input type="button" id='SVGFD_LB_cancelbtn' value="Close" onclick=""  style="margin-top:20px"/>
-		</div>
-  </div>
+  
   <div id="svgdimensiondlg" style='display:none'><div id="svgdimtitle">Dimension of SVG Image</div>
     <div id="svgfiledeletedlgcontent" style="overflow:hidden">
 		 <div id='svgWidthEdit' style='display:inline-block; margin-left:5px;'>Width<div id='svgwidthIP' class='EDIT_BOX' type='DIMENSION' ></div></div>
