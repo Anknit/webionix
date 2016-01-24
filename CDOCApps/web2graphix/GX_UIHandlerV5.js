@@ -42,7 +42,7 @@ var gSVGExportDlgID = 'exportDlg';
 var gSVGImportListDlgID = 'importListDlg'; 
 var gSVGImportList = 0; 
 var gSVGGroupNameDlgID ='newGroupNameDlg'; 
-var gSVGFileDeleteDlg = "svgfiledeletedlg"; 
+//var gSVGFileDeleteDlg = "svgfiledeletedlg"; 
 var gSVGDimensionDlg = 'svgdimensiondlg'; 
 var gCanvasNode = 0; 
 var gImportShapeFileName = ""; 
@@ -1024,6 +1024,7 @@ function GX_Initialize()
     
     WAL_createListBox('svgfileopenlistbox', '270', '250', "GX_LBItemsSelectHandler");
  	 	
+    WAL_createButton('SVGFO_LB_deletebtn', '', '70', '24', false); 
     WAL_createWindow(gSVGFileOpenDlg,"Asset List", true, '282', '350', false,	true, false, false, false, "", 'SVGFO_LB_okbtn', 'SVGFO_LB_cancelbtn');
     WAL_createModalWindow(gSVGFileNameDlgID, '250', '150', 'pageOK', 'pageCancel', false);
     WAL_createModalWindow(gSVGExportDlgID, '320', '180', 'exportOK', 'exportCancel', false);
@@ -1039,10 +1040,9 @@ function GX_Initialize()
            		]; 
     WAL_createGrid('importlistgrid', 420, 500, 'OnGridRowSelection', 50, true, 10, colArray, 'category'); 
     //create group name dialogcolArray
-    WAL_createModalWindow(gSVGGroupNameDlgID, '250', '150', 'groupOK', 'groupCancel', false);
-    WAL_createListBox('svgfiledeletelistbox', '270', '250', "GX_LBItemsSelectHandler");
- 	WAL_createButton('SVGFO_LB_deletebtn', '', '60', '24', true); 	
-    WAL_createWindow(gSVGFileDeleteDlg,"Asset List", true, '282', '350', false,	true, false, false, false, "", '', 'SVGFD_LB_cancelbtn');
+    WAL_createModalWindow(gSVGGroupNameDlgID, '250', '150', 'groupOK', 'groupCancel', false);   
+ 	
+   
     
     gFileNameTitleNode = document.getElementById('filename'); 
     gFileNameHolder = document.getElementById('fname');
@@ -1460,28 +1460,29 @@ function GX_menu_open_svgfrom_remote()
 }
 
 function GX_menu_delete_svgfrom_remote()
-{
-	 var newsource = GXRDE_getAssetListFromServer('SVG');  
-	 WAL_ListBoxUpdateData('svgfiledeletelistbox', newsource);
-	 WAL_showWindow(gSVGFileDeleteDlg, true, 'open');
+{	
+	GX_LBDeleteItem();
 }
 
 function GX_LBDeleteItem()
-{    
-     var myitem = WAL_ListBoxGetSelectedItem('svgfiledeletelistbox'); 
-     if(!myitem)
+{  	
+     var myitem = WAL_ListBoxGetSelectedItem('svgfileopenlistbox'); 
+     if(!myitem){
+    	 Debug_Message("No File Selected"); 
     	 return ; 
+     }
+    	
      var fname = myitem.label; 
      var fnamearr = fname.split('('); 
-     fname = fnamearr[0];    
-     //Debug_Message("Fname=" +  fname);    
+     fname = fnamearr[0];
      GXRDE_deleteSVGFile(fname);
-     WAL_ListBoxDeleteItem('svgfiledeletelistbox', myitem.index);
+     WAL_ListBoxDeleteItem('svgfileopenlistbox', myitem.index);    
 }
 
 function GX_LBItemsSelectHandler(Index)
 {
 	//Debug_Message("Index=" + Index); 
+	
 }
 
 function GX_SVGFileDlgNameOK()
@@ -4054,7 +4055,11 @@ function GX_ToolbarHandler(event)
 		break;
 	case 'alignvertcenter_icon':
 		GX_AlignDimension('MIDDLE_VERT'); 
-		break;		
+		break;	
+	case 'SVGFO_LB_deletebtn':
+		//Debug_Message("File Delete called"); 
+		 GX_menu_delete_svgfrom_remote();
+		break; 
 	case 'panleft_icon':
 		GX_ApplyPan(true, 50); 
 		break;
