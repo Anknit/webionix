@@ -4158,6 +4158,9 @@ function GX_ToolbarHandler(event)
 			GX_ShowGradWindow(gradInfo[1], gradInfo[2]);			
 		}		
 		break; 
+	case 'text_icon':
+		GX_AddNewSVGObject('text',''); 
+		break; 
 	case 'group_icon':
 		//GX_AddNewSVGObject('GROUP'); 
 		var JQSel = "#" + "groupNameIP";	
@@ -4186,17 +4189,54 @@ function GX_ToolbarHandler(event)
 	case 'polygon_icon':
 		WAL_showModalWindow(gPolyInputDlg,"GX_PolyInputDlgOK", "" );
 		break; 
-	case 'text_icon':
-		GX_AddNewSVGObject('text',''); 
-		break; 
+	
 	case 'freehand_icon':
 		gNewObjectID = GX_AddNewSVGObject('freedraw_path',''); 		 
 		GX_StartFreeDraw('DRAW_MODE');
 		break; 
 	case 'image_icon':
-		GX_AddNewImageSVG(); 
-		
+		GX_AddNewImageSVG(); 		
 		break; 
+	case 'boldBtn':
+		 var Prop = gCurrentObjectSelected.getAttribute('font-weight'); 
+		 if(Prop == 'bold')
+			 Prop = 'normal'; 
+		 else
+			 Prop = 'bold'; 
+		GX_SetObjectAttribute(gCurrentObjectSelected, "font-weight", Prop, true, false);
+		 break;
+	 case 'italicBtn':
+		 var Prop = gCurrentObjectSelected.getAttribute('font-style'); 
+		 if(Prop == 'italic')
+			 Prop = 'normal'; 
+		 else
+			 Prop = 'italic'; 
+		 GX_SetObjectAttribute(gCurrentObjectSelected, "font-style", Prop, true, false);
+		 break;
+	 case 'underlineBtn':
+		 var Prop = gCurrentObjectSelected.getAttribute('text-decoration'); 
+		 if(Prop == 'underline')
+			 Prop = 'normal'; 
+		 else
+			 Prop = 'underline'; 
+		 GX_SetObjectAttribute(gCurrentObjectSelected, "text-decoration", Prop, true, false);
+		 break;
+	 case 'strikethroughBtn':
+		 var Prop = gCurrentObjectSelected.getAttribute('text-decoration'); 
+		 if(Prop == 'line-through')
+			 Prop = 'normal'; 
+		 else
+			 Prop = 'line-through'; 
+		 GX_SetObjectAttribute(gCurrentObjectSelected, "text-decoration", Prop, true, false);
+		 break;
+	 case 'smallcapsBtn':
+		 var Prop = gCurrentObjectSelected.getAttribute('font-variant'); 
+		 if(Prop == 'small-caps')
+			 Prop = 'normal'; 
+		 else
+			 Prop = 'small-caps'; 
+		 GX_SetObjectAttribute(gCurrentObjectSelected, "font-variant", Prop, true, false);
+		 break; 
 	case 'add_marker_icon':
 		var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
 		markerType = gMarkerType[markerType]; 		
@@ -4286,46 +4326,7 @@ function GX_ToolbarHandler(event)
 		 if(animInfo)
 			 GX_RemoveAnimationObject(animInfo[0]); 		 
 		 break; 	 
-	 case 'bold_icon':
-		 var Prop = gCurrentObjectSelected.getAttribute('font-weight'); 
-		 if(Prop == 'bold')
-			 Prop = 'normal'; 
-		 else
-			 Prop = 'bold'; 
-		GX_SetObjectAttribute(gCurrentObjectSelected, "font-weight", Prop, true, false);
-		 break;
-	 case 'italic_icon':
-		 var Prop = gCurrentObjectSelected.getAttribute('font-style'); 
-		 if(Prop == 'italic')
-			 Prop = 'normal'; 
-		 else
-			 Prop = 'italic'; 
-		 GX_SetObjectAttribute(gCurrentObjectSelected, "font-style", Prop, true, false);
-		 break;
-	 case 'underline_icon':
-		 var Prop = gCurrentObjectSelected.getAttribute('text-decoration'); 
-		 if(Prop == 'underline')
-			 Prop = 'normal'; 
-		 else
-			 Prop = 'underline'; 
-		 GX_SetObjectAttribute(gCurrentObjectSelected, "text-decoration", Prop, true, false);
-		 break;
-	 case 'strikethrough_icon':
-		 var Prop = gCurrentObjectSelected.getAttribute('text-decoration'); 
-		 if(Prop == 'line-through')
-			 Prop = 'normal'; 
-		 else
-			 Prop = 'line-through'; 
-		 GX_SetObjectAttribute(gCurrentObjectSelected, "text-decoration", Prop, true, false);
-		 break;
-	 case 'smallcaps_icon':
-		 var Prop = gCurrentObjectSelected.getAttribute('font-variant'); 
-		 if(Prop == 'small-caps')
-			 Prop = 'normal'; 
-		 else
-			 Prop = 'small-caps'; 
-		 GX_SetObjectAttribute(gCurrentObjectSelected, "font-variant", Prop, true, false);
-		 break; 
+	 
 	 case 'grid_icon':	
 		var gridNode = document.getElementById('gridpattern'); 	
 		var bigGridNode =  document.getElementById('bigrectpattern');
@@ -9129,11 +9130,7 @@ function GX_InitializePropertyTab(){
 	 WAL_createNumberInput("heightIP", '80px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID); 
 	    
 	 
-	 WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 180, -180,1, gWidgetTooltipID);
-	 //WAL_createSlider('rotateSlider', '150px','12px', true, 0, 360, 1,90, true, false ,'', false, '');
-	 
-	// WAL_createSlider(ID, Width, Height, bDiscrete, MinValue, MaxValue, Step,tickFreq, bShowTicks, bButtonShow ,HandlerSliderChange, bRangeSlider, HandlerForSlideEnd); 
-	   
+	 WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 180, -180,1, gWidgetTooltipID);	   
 	 var fillValue = ['None', 'Solid','Linear Gradient', 'Radial Gradient'];	 
 	 WAL_createDropdownList("fillcolorDDL", '120','22',false, fillValue, "GX_DDLHandler", '80', '150');
 	 var gradList = ['none', 'item2', 'ítem3'];
@@ -9193,10 +9190,46 @@ function GX_InitializePropertyTab(){
 	 WAL_createNumberInput("radiusYIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 300,0, 1, gWidgetTooltipID);
 	 WAL_createCheckBox('largearcCheckBox', 'GX_CheckValueChange', '90', '20' , '13', false, false, gWidgetTooltipID);
 	 WAL_createCheckBox('sweepCheckBox', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);	 
-	 WAL_createNumberInput("lengthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 500,0,1, gWidgetTooltipID);
+	 WAL_createNumberInput("lengthIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 500,0,1, gWidgetTooltipID);
 	 
 	 WAL_createColorPickerWindow("colorpickwidget", "colorpicker", '350', '250', "okbtn", "cancelbtn");
 	 GX_CreateGradientWidget('gradientDlg');
+	 
+	 //font element creation
+	 var fontFamilyValue = ['default','Georgia','Palatino Linotype','Book Antiqua','Palatino','Times New Roman','Times','Arial','Helvetica','Arial Black','Gadget','Comic Sans MS','Cursive','Impact','Charcoal', 'Lucida Sans Unicode','Lucida Grande','Tahoma','Geneva','Trebuchet MS','Verdana' ,'Courier New' ,'Lucida Console'];
+	 var fontFamilyDisplay =["Default", 
+	                            "<span style='font-family:Georgia'>Georgia</span>",
+	                            "<span style='font-family:\"Palatino Linotype\", serif'>Palatino Linotype</span>",
+	                            "<span style='font-family:\"Book Antiqua\", serif' >Book Antiqua</span>",
+	                            "<span style='font-family:Palatino, serif'>Palatino</span>",
+	                            "<span style='font-family:\"Times New Roman\",serif'>Times New Roman</span>",
+	                            "<span style='font-family:Times, serif'>Times</span>",
+	                            "<span style='font-family:Arial, sans-serif'>Arial</span>",
+	                            "<span style='font-family:Helvetica, sans-serif'>Helvetica</span>",
+	                            "<span style='font-family:\"Arial Black\", sans-serif'>Arial Black</span>",                              
+	                            "<span style='font-family:Gadget, sans-serif'>Gadget</span>",
+	                            "<span style='font-family:\"Comic Sans MS\", sans-serif'>Comic Sans MS</span>",
+	                            "<span style='font-family:cursive'>Cursive</span>",
+	                            "<span style='font-family:Impact'>Impact</span>",
+	                            "<span style='font-family:Charcoal, sans-serif'>Charcoal</span>",
+	                            "<span style='font-family:\"Lucida Sans Unicode\", sans-serif'>Lucida Sans Unicode</span>",
+	                            "<span style='font-family:\"Lucida Grande\", sans-serif'>Lucida Grande</span>",
+	                            "<span style='font-family:Tahoma, sans-serif'>Tahoma</span>",
+	                            "<span style='font-family:Geneva, sans-serif'>Geneva</span>",
+	                            "<span style='font-family:\"Trebuchet MS\", sans-serif'>Trebuchet MS</span>",
+	                            "<span style='font-family:Verdana, Geneva, sans-serif'>Verdana</span>",
+	                            "<span style='font-family:\"Courier New\", Courier, monospace'>Courier New</span>",
+	                            "<span style='font-family:\"Lucida Console\", Monaco, monospace'>Lucida Console</span>",
+	                            ]; 
+	 WAL_createDropdownListWithItemStyle("fontNameDDL", '170px', '22', false, "GX_DDLHandler", '200',fontFamilyValue, 'fontFamilyValue',fontFamilyDisplay, 'fontFamilyDisplay');
+	 
+	 WAL_createNumberInput("fontSizeIP", '80px', '24', "GX_EditBoxValueChange",true, 100,8,1, gWidgetTooltipID);
+	 WAL_setNumberInputValue('fontSizeIP', 18, false);
+	 WAL_createCustomButton('bold_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+	 WAL_createCustomButton('italic_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+	 WAL_createCustomButton('underline_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+	 WAL_createCustomButton('strikethrough_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+	 WAL_createCustomButton('smallcaps_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
 	 //sets the default values 
 	 GX_SetDefualtPropOnUI(); 
 }
