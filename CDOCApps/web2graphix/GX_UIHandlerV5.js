@@ -1095,7 +1095,7 @@ function GX_Initialize()
 	JQSel = '#sel_gripper'; 
 	//create the selection gripper here 
 	$(gCurrGripperSel).draggable({ cursor: "move" });	
-	$(gCurrGripperSel).resizable();
+	$(gCurrGripperSel).resizable();	
 	
 	$(gCurrGripperSel).on( "resizestop", function( event, ui ) {
 		OnObjectResizeStop(event, ui); 		
@@ -2053,7 +2053,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
         //y2 = round((y1 + svgDim.height - 5 - gGrabberDim.height)*gInvZoomFactor); 	
     }        
     var region = [x1, y1, x2, y2]; 
-    $(gCurrGripperSel).draggable( "option", "containment", region );
+    //$(gCurrGripperSel).draggable( "option", "containment", region );
+    $(gCurrGripperSel).draggable( "option", "containment", "parent" );
     
     
    // WAL_ShowTooltip(gSelectorTooltipID, false)f; 
@@ -2087,6 +2088,13 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	$(gCurrGripperSel).css({visibility:'hidden'});
     
     $(gCurrGripperSel).resizable( "enable" );
+    $(gCurrGripperSel).resizable( "option", "containment", "parent" );
+    if(nodeClass == 'SVG_SHAPE_OBJECT'){
+    	//set the maxDimension here 
+    	var maxdim = GX_GetObjectMaxDimensionToResize(gGrabberDim); 
+    	$(gCurrGripperSel).resizable( "option", "maxWidth", maxdim.width );
+    	$(gCurrGripperSel).resizable( "option", "maxHeight", maxdim.height );
+    }
     if(nodeClass == 'SVG_PATH_OBJECT')
     {    	
     	var pathType = node.classList[1]; 
@@ -2111,43 +2119,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     if( (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'GROUP') || (nodeClass == 'SVG_TEXT_OBJECT')){
     	$(gCurrGripperSel).resizable( "disable" );
     	$(gCurrGripperSel).css({opacity:'1'});
-    }
-    		
-   /* 
-    if(nodeClass == 'GROUP')
-    {    	
-    	GX_UpdatePropertyOnUI('DIMENSION',gCurrSelectedObjectDim );    	
-    }    	  
-    else if(nodeClass == 'SVG_SHAPE_OBJECT')
-    {    	
-    	GX_UpdatePropertyOnUI('DIMENSION',gCurrSelectedObjectDim);      	
-    }
-    */ 
-   //update the UI if valid 
-    /*
-    if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT'))
-    {
-    	var rotateparam = node.classList[2]; 
-    	var rotatearr = rotateparam.split(','); 
-    	gCurrSelectedObjectDim.rotate = new Number(rotatearr[1]); 
-    	WAL_setNumberInputValue('rotateIP', gCurrSelectedObjectDim.rotate+'', false); 
-    	
-    	var strokewidth = gCurrentObjectSelected.getAttribute('stroke-width'); 
-    	WAL_setNumberInputValue('strokeWeightIP', strokewidth, false);    
-    	
-    	var fillopacity = gCurrentObjectSelected.getAttribute('fill-opacity'); 
-    	//fillopacity = Math.round(fillopacity);
-    	
-    	
-    	//var colorval = gCurrentObjectSelected.getAttribute('stroke-opacity'); 
-    	//WAL_setColorPickerValue('colorpickwidget', colorval); 
-    	//update the Gradient Values 
-    	GX_UpdatePropertyOnUI('GRADIENT', ""); 
-    	var objectType = gCurrentObjectSelected.classList[1]; 
-    	if(gObjectEditMode == 'PROPERTIES_MODE')
-    		GX_ShowObjectPropertyInterface(objectType, true); 
-    }
-    */ 
+    } 		
+  
     gCurrentObjectSelected.setAttribute('pointer-events', 'none'); 
     GX_SetPropertyonUI(gCurrentObjectSelected); 
     //set the tooltip here 
@@ -3691,8 +3664,9 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     else if(nodename == 'div'){    
     	with (Math) {    
     		var tolerance = 5; 
-    		var YOffset =  round(gCurrentCanvasDim.y +  gClientYOffset - tolerance) ;//gCanvround(gClientYOffset);// * gInvZoomFactor);     		
-    		var XOffset = round(gCurrentCanvasDim.x - 10); 
+    		var YOffset =  0;// round(gCurrentCanvasDim.y +  gClientYOffset - tolerance) ;//gCanvround(gClientYOffset);// * gInvZoomFactor);     		
+    		var XOffset = 0 ; //round(gCurrentCanvasDim.x - 10); 
+    		
     		var scrollLeft = $('#editor_div').scrollLeft(); 
     		var scrollTop = $('#editor_div').scrollTop(); 
     		modDim.x = round(modDim.x - (scrollLeft/gZoomFactor)); 
@@ -5547,18 +5521,13 @@ function GX_SVGDimensionDlgOK()
 	GX_SetObjectAttribute(svgNode, 'width', width+'px', true, false); 
 	GX_SetObjectAttribute(svgNode, 'height', height+'px', true, false); 
 	var viewBoxval = '0 0 '+width + ' ' + height; 
-	GX_SetObjectAttribute(svgNode, 'viewBox', viewBoxval, true, false); 
-	
-	/*svgNode.setAttribute('width', width+'px'); 
-	svgNode.setAttribute('height', height+'px'); 
-	var viewBoxval = '0 0 '+width + ' ' + height; 
-	svgNode.setAttribute('viewBox', viewBoxval);
-	*/
-	
+	GX_SetObjectAttribute(svgNode, 'viewBox', viewBoxval, true, false);	
 	//post the request to server as well 
 	GX_SaveObjectProperties(svgNode, true);
 	//intialize the document 
-	GX_InitializeDocument(""); 
+	//GX_InitializeDocument("");
+	GX_ResetAllSelections(); 
+	GX_OpenFile(gSVGFilename); 
 }
 
 function OnDivPathMarkerMouseMove(event) {
@@ -6225,10 +6194,10 @@ function GX_SetFreeDrawEditAttributes(ObjNode, mode, bFlag)
 		   
 		    var x1, y1, x2, y2;
 		    with(Math){    	
-		    	x1 = round(gCurrentCanvasDim.x - 10); 
-		    	y1 = round(gCurrentCanvasDim.y + gClientYOffset -7); 
-		    	x2 = round(x1 + gCurrentCanvasDim.width - gGrabberDim.width) ; 
-		    	y2 = round(y1 + gCurrentCanvasDim.height - gGrabberDim.height); 		    
+		    	x1 = round(gCurrentCanvasDim.x + 5); 
+		    	y1 = round(gCurrentCanvasDim.y + gClientYOffset +5 ); 
+		    	x2 = round(x1 + gCurrentCanvasDim.width -30) ; 
+		    	y2 = round(y1 + gCurrentCanvasDim.height - 20); 		    
 		    }        
 		    var region = [x1, y1, x2, y2]; 
 		    var JQSel = '#drawingpen'; 			
@@ -6573,8 +6542,11 @@ function OnFreeDrawDrag(evt, ui)
      var node = evt.target;
      var YOffset =  Math.round(gCurrentCanvasDim.y +  gClientYOffset) ;//gCanvround(gClientYOffset);// * gInvZoomFactor);     		
  	 var XOffset = Math.round(gCurrentCanvasDim.x - 10); 
-     var ClientX = new Number(evt.clientX - XOffset); 
- 	 var ClientY =  new Number(evt.clientY- YOffset); 	
+     //var ClientX = new Number(evt.clientX - XOffset); 
+ 	 //var ClientY =  new Number(evt.clientY- YOffset); 
+ 	 
+ 	 var ClientX = new Number(ui.position.left - XOffset); 
+ 	 var ClientY =  new Number(ui.position.top - YOffset); 
  	 //_rm trial code 
  	 var newWidth = new Number(ui.position.left - ui.originalPosition.left);
  	 var newHeight = new Number(ui.position.top - ui.originalPosition.top);     
@@ -9354,4 +9326,21 @@ function GX_OpacitySliderHandler(value, widgtNode){
 	}	
 	
 	$('#fillopacityValue')[0].innerHTML = value; 
+}
+
+function GX_GetObjectMaxDimensionToResize(objDim){	
+	//get the canvas dimenson 		
+	//now max width 
+	with (Math){
+		var maxDim = new sDimension(); 
+		maxDim.width = gOriginalCanvasDim.width - objDim.width - objDim.x; 
+		maxDim.height = gOriginalCanvasDim.height - objDim.height - objDim.y; 
+		maxDim.width = max(0, maxDim.width); 
+		maxDim.height = max(0, maxDim.height); 
+		maxDim.width  += objDim.width; 
+		maxDim.height  += objDim.height;
+		
+	}
+	return maxDim; 
+	
 }
