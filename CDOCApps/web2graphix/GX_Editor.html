@@ -386,7 +386,8 @@
 				        <rect id="freedraw_orig" x="10" y="10" width="250" height="123" stroke="green" stroke-width="1" stroke-opacity='0.9' fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible" onmousedown="OnFreeDrawClick(evt)" onmousemove='OnFreeDrawMouseMove(evt)' ></rect>
 			       </svg>
 		        
-	</svg> <!-- SVGContainer -->            		
+	</svg> <!-- SVGContainer -->  
+	<div id="sel_gripper" class="ui-widget-content GRIPPER" style='border:3px dashed blue; position:absolute'></div>          		
      </div> <!-- Canvas -->       	
                 
             </div>
@@ -935,7 +936,7 @@
     </div>
     <div id="drawingpen" class="ui-widget-content" style='border:3px solid black; position:absolute; width:8px;height:8px;left:50px; top:50px; visibility:hidden'></div>
     <div id="eraserpen"  style='border:2px solid red; position:absolute; width:10px;height:10px;left:50px; top:50px; visibility:hidden' onclick='OnEraserPenClick(event)'></div>
-    <div id="sel_gripper" class="ui-widget-content GRIPPER" style='border:3px dashed blue; position:absolute'></div>
+    <!-- <div id="sel_gripper" class="ui-widget-content GRIPPER" style='border:3px dashed blue; position:absolute'></div>-->
     
     <div id='DivPathMarker' class="ui-widget-content" style='border:2px solid black; position:absolute; width:10px; height:10px; border-radius:5px' onmousemove='OnDivPathMarkerMouseMove(event)' onmouseout='OnDivPathMarkerMouseOut(event)'
      onmousedown='OnDivPathMarkerMouseDown(event)'></div>
