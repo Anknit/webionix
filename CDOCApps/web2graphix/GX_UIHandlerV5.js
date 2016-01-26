@@ -1073,8 +1073,8 @@ function GX_Initialize()
     //right menu 
     WAL_createContextMenu('objectContextmenu','mybody',  'GX_ContextMenuClick', 140, 'auto');    
     var groupList = ['group1', 'group2', 'group3']; 
-    WAL_createDropdownList('grouptoDDL', '140', '24', false, groupList, "GX_DDLHandler", '80', 0);
-    WAL_createModalWindow('movetoGroupDlg', '250', '150', 'grouptoOK', 'grouptoCancel', false);
+    WAL_createDropdownList('grouptoDDL', '140', '22', false, groupList, "GX_DDLHandler", '80', 0);
+    WAL_createModalWindow('movetoGroupDlg', '250', '170', 'grouptoOK', 'grouptoCancel', false);
     //GX_MenuDisable(true);
     /*
      * remove for the time being as it results into buggy behaviour
@@ -8176,6 +8176,7 @@ function GX_SVGGroupDlgNameOK()
     }
     else
     	GX_AddNewSVGObject('GROUP', svgGroupname); 
+    
    
   /*  GX_SetSelection(gCurrentObjectSelected, false);
    	retval = GXRDE_addNewSVGFile(svgfname);	
@@ -8210,6 +8211,7 @@ function GX_ContextMenuClick(menuID){
 			var mygrpList = GX_GetGroupList('NAME'); 
 			if(gGroupList.length > 0){
 				WAL_UpdateDropDownList('grouptoDDL', mygrpList);
+				$('#newgroupNameIP').val(''); 
 				WAL_showModalWindow('movetoGroupDlg',"GX_MovetoGroupDlgOK", "" );	
 			}			
 		}		
@@ -8229,18 +8231,24 @@ function GX_ContextMenuClick(menuID){
 	default:
 		break; 
 	}
-	
-	//Debug_Message('clicked= ' + menuItemID); 
 }
 
-function GX_MovetoGroupDlgOK(){
+function GX_MovetoGroupDlgOK(){	
 	
-	var groupName = WAL_getDropdownListSelection('grouptoDDL'); 
+	//if new group selected 
+	var groupName = $('#newgroupNameIP').val(); 
+	if(groupName.length > 0){
+		GX_AddNewSVGObject('GROUP', groupName); 
+		GX_UpdateGroupList(); 
+	}
+	else{
+		groupName = WAL_getDropdownListSelection('grouptoDDL'); 
+	}
 	var groupID = GX_GetGroupIDfromList(groupName); 
 	for(var i=0; i <gMultiNodeArray.length; i++)
 		 GX_MoveObjectToGroup(gMultiNodeArray[i], groupID);
 	GXRDE_MoveObjectToGroup(groupID,gMultiNodeArray);
-	GX_UpdateTreeWidget(); 
+	GX_UpdateTreeWidget();	
 }
 
 function GX_UpdateGroupList(){
