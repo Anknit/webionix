@@ -36,6 +36,7 @@ gWidgetType['jqxButtonGroup']  = 'data-jqxButtonGroup';
 gWidgetType['customButton']    = 'data-customButton';
 gWidgetType['jqxInput']        = 'data-jqxInput';
 
+var bTreeWidgetDisplay = true; 
 
 var gDummyNode = 0; 
 
@@ -570,7 +571,7 @@ function WAL_setCheckBoxValue(buttonID, value) {
 }
 
 
-function WAL_createDropdownList(ID, Width, Height, AutoOpen, DataSource, handlerFnName, DDLdropDownHeight) {
+function WAL_createDropdownList(ID, Width, Height, AutoOpen, DataSource, handlerFnName, DDLdropDownHeight, dropDownWidth) {
  if (gInitialized != true)
         return;
     var widgetType = gWidgetType['jqxDropDownList']; 
@@ -578,8 +579,12 @@ function WAL_createDropdownList(ID, Width, Height, AutoOpen, DataSource, handler
     var retval = WAL_IsWidgetCreated(ID, widgetType);
     if (retval == true)
         return;
+    if(dropDownWidth == 0)
+    	var DDLdropDownWidth = Width; 
+    else
+    	DDLdropDownWidth = dropDownWidth; 
     $(JQSel).jqxDropDownList({ width: Width, height: Height, theme: gTheme, autoOpen: AutoOpen, source: DataSource,  animationType: 'slide', openDelay:256, autoDropDownHeight:false,incrementalSearch : true, selectedIndex:1,
-    	  dropDownHeight: DDLdropDownHeight });
+    	  dropDownHeight: DDLdropDownHeight, dropDownWidth: DDLdropDownWidth });
     $(JQSel).attr(widgetType, "true");
     $(JQSel).attr('data-internalevent', 'false');
     $(JQSel).on('select', function(event) {
@@ -1051,6 +1056,8 @@ added . God knows why .
  
  function WAL_getTreeItemSelection(ID, bItem)
  {
+	 if(bTreeWidgetDisplay != true)
+		 return; 
     var JQSel = "#"+ID; 
     var item = $(JQSel).jqxTree('getSelectedItem'); 
     if(!item)
@@ -1063,6 +1070,8 @@ added . God knows why .
  
  function WAL_setTreeItemSelection(ID, itemID)
  {
+	 if(bTreeWidgetDisplay != true)
+		 return; 
 	 var JQSel = "#"+ID; 
 	// WAL_expandTreeItem(ID,itemID, true);
 	 var selNode = document.getElementById(itemID); 
@@ -1072,6 +1081,8 @@ added . God knows why .
  
  function WAL_getTreeItem(treeID, itemID)
  {
+	 if(bTreeWidgetDisplay != true)
+		 return; 
 	 var JQSel = "#"+treeID;	
 	 var tgtNode = document.getElementById(itemID);	 
 	 var item = $(JQSel).jqxTree('getItem', tgtNode);
@@ -1080,6 +1091,8 @@ added . God knows why .
  
  function WAL_setTreeItemText(treeID, ItemID, string)
  {
+	 if(bTreeWidgetDisplay != true)
+		 return; 
 	 var JQSel = "#"+treeID;	
 	 var tgtNode = document.getElementById(ItemID);	 
 	 var item = $(JQSel).jqxTree('getItem', tgtNode);	 
@@ -1111,6 +1124,8 @@ added . God knows why .
  
  function WAL_getTreeItemText(treeID, ItemID)
  {
+	 if(bTreeWidgetDisplay != true)
+		 return; 
 	 var JQSel = "#"+treeID;	
 	 var tgtNode = document.getElementById(ItemID);	 
 	 var item = $(JQSel).jqxTree('getItem', tgtNode);
@@ -1124,6 +1139,8 @@ added . God knows why .
  
  function WAL_setTreeItemStyle(treeID, ItemID, styleValue)
  {
+	 if(bTreeWidgetDisplay != true)
+		 return; 
 	 var JQSel = "#"+treeID;	
 	 var tgtNode = document.getElementById(ItemID);	 
 	 var item = $(JQSel).jqxTree('getItem', tgtNode);
@@ -1194,6 +1211,8 @@ function WAL_disableTreeItemForAttributes(ID, attributeName, attributeVal, bFlag
 }
  function WAL_getTreeNodeList(ID)
  {
+	 if(bTreeWidgetDisplay != true)
+		 return; 
 	 var nodeList = [] ; 
 	 var JQSel = "#"+ID; 
 	 $(JQSel).jqxTree('expandAll');
@@ -1211,6 +1230,8 @@ function WAL_disableTreeItemForAttributes(ID, attributeName, attributeVal, bFlag
  
  function WAL_expandAllTreeItems(ID, bFlag)
  {
+	 if(bTreeWidgetDisplay != true)
+		 return; 
 	 var JQSel = "#"+ID; 
 	 if(bFlag == true)
 	 {
@@ -1224,6 +1245,8 @@ function WAL_disableTreeItemForAttributes(ID, attributeName, attributeVal, bFlag
  
  function WAL_getItemFromTree(treeID, itemNode)
 {
+	 if(bTreeWidgetDisplay != true)
+		 return; 
 	 var JQSel = "#"+treeID; 	 
 	 var item = $(JQSel).jqxTree('getItem', itemNode);
 	 return item; 
@@ -1232,6 +1255,8 @@ function WAL_disableTreeItemForAttributes(ID, attributeName, attributeVal, bFlag
  
  function WAL_expandTreeItem(ID,itemID, bFlag)
  {
+	 if(bTreeWidgetDisplay != true)
+		 return; 
 	 var JQSel = "#"+ID; 
 	// $(JQSel).jqxTree('expandAll');
 //	 var itemarr = $(JQSel).jqxTree('getItems');	 
@@ -1326,6 +1351,8 @@ function WAL_createDragDropTree(ID, Width, Height, fnSelectionHandler, fnDragHan
 
 function WAL_updateTree(containerID,  Width, Height, HTMLdata, selFnHandler, bDragDrop, fnDragstart, fnDragStop) {
 
+	 if(bTreeWidgetDisplay != true)
+		 return; 
     var widgetType = gWidgetType['jqxTree'];
     var parentSel = "#" + containerID;
     var Node = document.getElementById(containerID);
@@ -1444,6 +1471,8 @@ function WAL_ListBoxMoveItem(ID, bUpFlag)
 }
 function WAL_updateDragDropTree(containerID,  Width, Height, HTMLdata, selFnHandler, dragStartFnHandle,dragEndFnHandle) {
 
+	 if(bTreeWidgetDisplay != true)
+		 return; 
 	var widgetType = gWidgetType['jqxTree'];
     var parentSel = "#" + containerID;
     var Node = document.getElementById(containerID);
@@ -1846,7 +1875,7 @@ function WAL_showModalWindow(windowID, handlerFnOK, handlerFnCancel)
 		$(JQSel).jqxWindow('close'); 
 		
 	});
-	
+	$(JQSel).slideDown();
 	$(JQSel).jqxWindow('open'); 
 }
 function WAL_createWaitPromptWindow(ID, wndWidth, wndHeight)
@@ -1928,6 +1957,14 @@ function WAL_showWindow(windowID, bFlag, refID)
 	
 }
 
+function WAL_setWindowAtPos(windowID, left, top){
+	var JQSel = "#"+windowID;
+	CPWdgtPosLeft = left; //left+ 5;
+	CPWdgtPosTop  = top;//top+ 24; 
+	
+	JQSel = "#"+windowID;	
+	$(JQSel).jqxWindow({ position: { x: CPWdgtPosLeft, y: CPWdgtPosTop }}); 
+}
 function WAL_showWindowAtPos(windowID, bFlag, left, top)
 {
 	var JQSel = "#"+windowID;
@@ -1947,8 +1984,8 @@ function WAL_showWindowAtPos(windowID, bFlag, left, top)
 	refHeight = $(JQSel).height(); 
 	var CPWdgtPosLeft, CPWdgtPosTop; 
 	
-	CPWdgtPosLeft = left+ 5;
-	CPWdgtPosTop  = top+ 24; 
+	CPWdgtPosLeft = left; //left+ 5;
+	CPWdgtPosTop  = top;//top+ 24; 
 	//alert("Top = " +refPos.top  + "Left= " + refPos.left ); 
 	JQSel = "#"+windowID;
 	
@@ -2146,10 +2183,7 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
 		  }
 		 	  
 		}
-	 );
-	 
-	
-	 
+	 ); 
 	 //show up the widget
 	var refnode = document.getElementById(refID); 
 	JQSel = "#" + refID; 
@@ -2170,6 +2204,79 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
 	//WAL_hideWidget(widgetID, false); 
 	 
  }
+ //this will display the widget at specified position from the caller 
+ function WAL_showColorPickerWidgetAtPos(widgetID, callbackFn,refID, left, top, attrName, initAttrVal, targetObjID)
+ {
+	 var JQSel = "#"+widgetID; 
+	 
+	 //first get the colorpicker ID 
+	 var CPID = $(JQSel).attr('data-colorpickerID'); 
+	 if(!CPID)
+		 return; 
+	 var refBtnID = refID; 
+	 var refNode = document.getElementById(refBtnID); 
+	 $(JQSel).attr('data-refID', refBtnID); 
+	 $(JQSel).attr('data-attrName', attrName);
+	 $(JQSel).attr('data-attrValue', initAttrVal);
+	 gTargetAttrname = attrName;  
+	 
+	 $(JQSel).attr('data-targetObjID', targetObjID);
+	 if(targetObjID)
+		 gTargetColorObj = document.getElementById(targetObjID); 
+	 else
+		 gTargetColorObj = 0; 
+	 
+	 //then remove any regsitered call back earlier. 
+	 JQSel = "#"+CPID; 
+	 $(JQSel).off('colorchange'); 
+	 var color; 
+	 var bConvertToHex; 
+	 var colstr = initAttrVal.substring(0, 3); 
+	 if(colstr == 'rgb')
+		 bConvertToHex =  true; 
+	 else
+		 bConvertToHex = false; 	
+	 if(bConvertToHex == false)
+		 $(JQSel).jqxColorPicker('setColor', initAttrVal);
+	 else
+	 {
+		 color = RGBToHex(initAttrVal); 
+		 $(JQSel).jqxColorPicker('setColor', color);
+	 }
+	 
+	 //now register the new callback 
+	 $(JQSel).on('colorchange',function(event)
+		{
+		  var value  = event.args.color.hex; 
+		  if(value != undefined)
+		  {
+			value = "#"+value; 
+			if(refNode)
+				refNode.style.backgroundColor = value; 
+			if(gTargetColorObj)
+			{				
+				gTargetColorObj.setAttribute(gTargetAttrname, value);				
+			}			
+			 if(callbackFn)
+			 {
+				  var expr = callbackFn + "(attrName, value)"; 
+				  eval(expr); 	 
+			 }
+			  
+		  }
+		 	  
+		}
+	 ); 
+	 
+	var CPWdgtPosLeft, CPWdgtPosTop; 	
+	CPWdgtPosLeft = left;
+	CPWdgtPosTop  = top; 	
+	JQSel = "#"+widgetID;	
+	$(JQSel).jqxWindow({ position: { x: CPWdgtPosLeft, y: CPWdgtPosTop }}); 	 
+	$(JQSel).slideDown(); 
+ }
+ 
+ 
  function WAL_getColorPickerAttributeName(widgetID)
  {
 	 var JQSel = "#"+widgetID;	 
@@ -2342,6 +2449,12 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
 
      $(JQSel).on('change', function(event) {
 
+    	 var flag = $(JQSel).attr('data-internalevent');
+         if(flag ==  true)
+         {
+        	 $(JQSel).attr('data-internalevent', false);
+        	 return ;  
+         }   	
          var value = $(this).jqxSlider('getValue');
          if(bRangeSlider != true)
         	 value = Math.floor(value);   
@@ -2352,6 +2465,7 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
          }
          if (HandlerSliderChange) {   
         	 var node =  event.target; 
+        	 
              var expr = HandlerSliderChange + "(value,node )";
              eval(expr);
          }
@@ -2403,7 +2517,7 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
     //$(JQSel).on('textchanged', function(event){
     $(JQSel).on('change', function(event)		 {
      var flag = $(JQSel).attr('data-internalevent');
-     if(flag ==  'true')
+     if(flag ==  true)
      {
     	 $(JQSel).attr('data-internalevent', false);
     	 return ;  
@@ -2411,10 +2525,9 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
     
      var value = event.args.value ;//$(this).jqxNumberInput('val'); 
      var node = event.target;    
-     if(HandlerFnForValueChange)     
+     if(HandlerFnForValueChange)   
      {
-    	 if(value >maxValue )
-    	{
+    	 if(value >maxValue ){
     		 Debug_Message('Exceeds Max Value'); 
     	}
          var expr = HandlerFnForValueChange + "(value, node)";         
@@ -2503,6 +2616,8 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
      else
     	 $(JQSel).attr('data-internalevent', false);
      //$(JQSel).jqxMaskedInput({'value': null});
+     //to ensure a string is passed to the function 
+     value = '' + value;
      $(JQSel).jqxNumberInput('val', value);
      
  }
@@ -2863,7 +2978,8 @@ function WAL_createCustomButton(buttonID, clickHandler, tooltipID)
          if (clickHandler) {
          	var node = event.target; 
          	
-             var expr = clickHandler + "(node)";
+         	//changed due to bootstrap buttons
+             var expr = clickHandler + "(event)";
              gLastClickedButtonNode = node; 
              if(gLastClickedButtonNodeID)
             	 $('#'+gLastClickedButtonNodeID).removeAttr('style'); 
@@ -2990,9 +3106,13 @@ function DisableCustomButton(btnID, bFlag) {
     }
 }
 
-function WAL_setSliderValue(ID, value)
+function WAL_setSliderValue(ID, value, bHandlerflag)
 {
 	 var JQSel = "#" + ID; 
+	 if(bHandlerflag == false)
+    	 $(JQSel).attr('data-internalevent', true); 
+     else
+    	 $(JQSel).attr('data-internalevent', false);
 	$(JQSel).jqxSlider('setValue', value);
 }
 
@@ -3241,10 +3361,10 @@ function WAL_SetMenuItem(menuID, itemID)
 	$(JQSel).jqxMenu('openItem', itemID);	
 }
 
-function WAL_createContextMenu(ID, containerID,  HandlerMenuItemClick)
+function WAL_createContextMenu(ID, containerID,  HandlerMenuItemClick, width, height)
 {
 	   var JQSel = '#'+ID; 
-	   var contextMenu = $(JQSel).jqxMenu({ width: '120px', height: '140px', autoOpenPopup: false, mode: 'popup',theme: gTheme});
+	   var contextMenu = $(JQSel).jqxMenu({ width: width, height:height, autoOpenPopup: false, mode: 'popup',theme: gTheme});
     // open the context menu when the user presses the mouse right button.
     var menuNode =  document.getElementById(ID); 
     //var parSel = '#' + menuNode.parentNode.parentNode.id; //'#' + menuNode.parentNode.previousElementSibling.id;            
