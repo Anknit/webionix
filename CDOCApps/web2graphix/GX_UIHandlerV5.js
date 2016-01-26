@@ -1068,7 +1068,13 @@ function GX_Initialize()
     
     WAL_createModalWindow(gImageDlg, '250', '150', 'imageOK', 'imageCancel', false);
     WAL_createModalWindow('deleteConfirmDlg', '250', '150', 'deleteOK', 'deleteCancel', false);
+
     
+    //right menu 
+    WAL_createContextMenu('objectContextmenu','mybody',  'GX_ContextMenuClick', 140, 'auto');    
+    var groupList = ['group1', 'group2', 'group3']; 
+    WAL_createDropdownList('grouptoDDL', '140', '24', false, groupList, "GX_DDLHandler", '80', 0);
+    WAL_createModalWindow('movetoGroupDlg', '250', '150', 'grouptoOK', 'grouptoCancel', false);
     //GX_MenuDisable(true);
     /*
      * remove for the time being as it results into buggy behaviour
@@ -1928,6 +1934,9 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     }
     if(bFlag == false)
     {
+    	if(nodeClass == 'GROUP'){
+    		GX_UpdateLayerChildElements(gCurrentObjectSelected);
+    	}
     	$(gCurrGripperSel).css({visibility:"hidden"});
     	objNode.setAttribute('pointer-events', 'visible');    	
     	if(objNode != gCurrentObjectSelected)
@@ -5996,17 +6005,17 @@ function GX_AddPathMarker(pathID, pathParam) {
      } 
 }
 */
-var gBodyNode = 0; 
+var gMarkerContainerNode = 0; 
 function GX_SetPathMarkers(id, index, pos, type){
 	if(!gBaseMarkerNode)
 		gBaseMarkerNode = document.getElementById('DivPathMarker');
-	if(!gBodyNode){
-		gBodyNode = document.getElementsByTagName("body")[0];
+	if(!gMarkerContainerNode){
+		gMarkerContainerNode = document.getElementById("canvas");
 	}
 		
 	copynode = gBaseMarkerNode.cloneNode(true);
     copynode.setAttribute("id", id);
-    copynode = gBodyNode.appendChild(copynode); 
+    copynode = gMarkerContainerNode.appendChild(copynode); 
     var currDim = new sDimension();         		
 	currDim.x = pos.x; 
 	currDim.y = pos.y; 
@@ -6026,6 +6035,7 @@ function GX_SetPathMarkers(id, index, pos, type){
     //setting the draggbale option here 
     gPathMarkerSel = '#' +  id; 
 	$(gPathMarkerSel).draggable({ cursor: "move" });
+	$(gPathMarkerSel).draggable("option", "containment", "parent");
 	$(gPathMarkerSel).on( "dragstop", function( event, ui ) {
 		OnDivPathMarkerDragStop(event, ui); 
 	});
@@ -9248,7 +9258,8 @@ function GX_SetDefualtPropOnUI(){
 	$('#fillopacityValue')[0].innerHTML = '100'; 
 	
 	WAL_setSliderValue('opacitySlider', 100); 	
-	var JQSel = $('.pathProperty').hide(); 	
+	$('.pathProperty').hide();
+	$('.fontProperty').hide(); 	
 }
 
 function GX_SetPropertyonUI(objNode){
@@ -9333,8 +9344,10 @@ function GX_SetPropertyonUI(objNode){
 		}
 		
 		GX_UpdatePathParamOnUI(objNode); 		
-		
 	}	
+	else if(shapeType == 'SVG_TEXT_OBJECT'){
+		$('.fontProperty').show(); 
+	}
 }
 
 function GX_RightTabHandler(tabIndex){
