@@ -3840,7 +3840,7 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('square_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('freehand_icon', 'GX_ToolbarHandler', gWidgetTooltipID);    
-    WAL_CreatePopOver('shapes_popup', 'object_icon', 'Objects', false, 'auto', 'auto');
+    WAL_CreatePopOver('shapes_popup', 'object_icon', 'Objects', false, 'auto', 'auto', true);
     var lineTypes = ['Horizontal','Vertical','Normal']; 
     WAL_createDropdownListwithButton("lineDDL", '0','0',lineTypes, "GX_DDLHandler", '140', '80','line_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
     
@@ -3851,7 +3851,22 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('open_icon', 'GX_ToolbarHandler', gWidgetTooltipID);  
     WAL_createCustomButton('close_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
     
-    WAL_CreatePopOver('project_popup', 'file_icon','Projects', false, 'auto', 'auto');
+    WAL_CreatePopOver('project_popup', 'file_icon','Projects', false, 'auto', 'auto', true);
+    
+    //create aloign pop-up 
+    
+    
+    
+    WAL_CreatePopOver('align_popup', 'align_icon','Alignment', false, '90', 'auto', false);
+    WAL_createCustomButton('alignwidth_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
+    WAL_createCustomButton('alignheight_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
+    WAL_createCustomButton('alignleft_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
+    WAL_createCustomButton('aligntop_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
+    WAL_createCustomButton('alignright_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
+    WAL_createCustomButton('alignbottom_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
+  
+    WAL_createCustomButton('alignhorcenter_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
+    WAL_createCustomButton('alignvertcenter_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID); 
     
     
 }
@@ -8206,7 +8221,8 @@ function GX_ContextMenuClick(menuID){
 	switch(menuItemID)
 	{
 	case 'groupmenu':
-		if(gbMultiSelection == true){			
+		if(gbMultiSelection == true){	
+			WAL_SetTabIndex('rightTabs', 0);
 			GX_UpdateGroupList();
 			var mygrpList = GX_GetGroupList('NAME'); 
 			if(gGroupList.length > 0){
