@@ -5102,21 +5102,24 @@ function GX_AlignDimension(alignType)
 	var gripperNode; 
 	var nextRightMargin, nextBottomMargin; 
 	var nextMidHor, nextMidVert; 
+	var offset = new sDimension(); 
 	//loop around remaining nodes 
 	for(var k=1 ; k < nodeArrLen; k++)
 	{
 		//get nextNode and nextNodedim
 		nextNode = document.getElementById(gMultiNodeArray[k]);
-		nextNodedim = GX_GetRectObjectDim(nextNode); 		
+		nextNodedim = GX_GetRectObjectDim(nextNode);		
+		// = new sDimension(); 
+		var objType = nextNode.classList[0]; 
 		//set the nextnodeDim to refdim
 		if(alignType == 'WIDTH')
 			nextNodedim.width = refNodedim.width; 	
 		else if(alignType == 'HEIGHT')
 			nextNodedim.height = refNodedim.height;
 		else if(alignType == 'LEFT')
-			nextNodedim.x = refNodedim.x;
+			offset.x = refNodedim.x - nextNodedim.x;
 		else if(alignType == 'TOP')
-			nextNodedim.y = refNodedim.y;
+			offset.y = new Number(refNodedim.y - nextNodedim.y);
 		else if(alignType == 'RIGHT')
 		{
 			nextRightMargin = nextNodedim.x + nextNodedim.width; 
@@ -5124,6 +5127,7 @@ function GX_AlignDimension(alignType)
 			nextNodedim.x = nextNodedim.x - deltaX; 	
 			if(nextNodedim.x < 0)
 				nextNodedim.x = 0; 
+			offset.x = refNodedim.x - nextNodedim.x;
 		}	
 		else if(alignType == 'BOTTOM')
 		{
@@ -5132,6 +5136,7 @@ function GX_AlignDimension(alignType)
 			nextNodedim.y = nextNodedim.y - deltaY; 	
 			if(nextNodedim.y < 0)
 				nextNodedim.y = 0; 
+			offset.y =  refNodedim.y - nextNodedim.y;
 		}	
 		else if(alignType == 'MIDDLE_HOR')
 		{
@@ -5140,6 +5145,7 @@ function GX_AlignDimension(alignType)
 			nextNodedim.x = nextNodedim.x - deltaX; 	
 			if(nextNodedim.x < 0)
 				nextNodedim.x = 0; 
+			offset.x = refNodedim.x - nextNodedim.x;
 		}
 		else if(alignType == 'MIDDLE_VERT')
 		{
@@ -5148,8 +5154,18 @@ function GX_AlignDimension(alignType)
 			nextNodedim.y = nextNodedim.y - deltaY; 	
 			if(nextNodedim.y < 0)
 				nextNodedim.y = 0; 
+			offset.y =  refNodedim.y - nextNodedim.y;
 		}
-		GX_SetObjectAttribute(nextNode, 'DIMENSION', nextNodedim, true, false); 
+		
+		if( (alignType == 'WIDTH') || (alignType == 'HEIGHT')){				
+				GX_SetObjectAttribute(nextNode, 'DIMENSION', nextNodedim, true, false); 
+		}
+		else {
+			GX_SetObjectAttribute(nextNode, 'TRANSLATE', offset, true, false); 
+			if(objType == 'SVG_PATH_OBJECT')
+				GX_UpdatePathData(nextNode); 
+		}
+		
 		gripperDim = nextNodedim; 
 		gripperDim.x -= 5; 
 		gripperDim.y -= 5;
