@@ -2870,11 +2870,11 @@ function OnObjectDragStop(evt,ui){
     relY = Math.round(relY /gZoomFactor);
     //GX_MoveSelectedObject(relX, relY);     
     GX_UpdatePosFromTranslation(gCurrentObjectSelected); 
+    gCurrSelectedObjectDim =  GX_GetRectObjectDim(gCurrentObjectSelected);
     GX_UpdatePropertyOnUI('POSITION', gCurrSelectedObjectDim);
     if(gCurrentObjectSelected.classList[0] == 'SVG_TEXT_OBJECT'){
-    	//set the bounading rectange 
-    	gGrabberDim =  GX_GetRectObjectDim(gCurrentObjectSelected);    	 
-    	GX_SetRectObjectDim(gCurrGrabber, gGrabberDim);
+    	//set the bounading rectange     	    	 
+    	GX_SetRectObjectDim(gCurrGrabber, gCurrSelectedObjectDim);
     	GX_MakeTextEditable(gCurrentObjectSelected);
     }
 }
