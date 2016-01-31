@@ -135,6 +135,7 @@ var gObjectListInRoI = 0;
 var gCurrentTabIndex = 0; 
 var gBaseMarkerNode = 0; 
 var gFreeDrawMode = 0; //DRAW_MODE,ERASE_MODE
+var gbAlignDimension = true; 
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -2251,6 +2252,14 @@ function GX_ResetAllSelections()
 	$(JQSel).removeAttr('opacity');   
 	JQSel = '.SVG_TEXT_OBJECT'; 
 	$(JQSel).removeAttr('opacity');		
+	
+	//resetting the alignbuttons 
+	gbAlignDimension =  true;
+	WAL_disableWidget('alignwidth_icon', 'data-customButton', false, false);
+	WAL_disableWidget('alignheight_icon', 'data-customButton', false, false);
+	
+	GX_HideandUpdateTextData(); 
+	
 }
 //incase of pointmarker only the x,y corodinate of GrabberDim should be used 
 
@@ -2787,10 +2796,15 @@ function OnObjectDrag(evt, ui){
 	   }	   
 	    var newObjDim = new sDimension(); 	   
 	        
-	        relX = new Number(ui.position.left - ui.originalPosition.left);
-	        relY = new Number(ui.position.top - ui.originalPosition.top);	
-	        relX = Math.round(relX / gZoomFactor); 
-	        relY = Math.round(relY / gZoomFactor);
+	    relX = new Number(ui.position.left - ui.originalPosition.left);
+	    relY = new Number(ui.position.top - ui.originalPosition.top);	
+	    relX = Math.round(relX / gZoomFactor); 
+	    relY = Math.round(relY / gZoomFactor);
+	    newObjDim.x = relX ;//gCurrSelectedObjectDim.x+relX;
+	    newObjDim.y = relY ;// gCurrSelectedObjectDim.y+relY;     		
+    	GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
+    		
+    		/*
 	        if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
 	        {
 	        	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
@@ -2830,6 +2844,8 @@ function OnObjectDrag(evt, ui){
 	    		var tipText = 'X-Pos: '+ newObjDim.x + 'px Y-Pos: ' + newObjDim.y + 'px'; 
 	    		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
 	    	}
+	    	*/
+    		
 	        
 	        if(gShowTooltip == true)
 	        {	        	
@@ -2852,8 +2868,15 @@ function OnObjectDragStop(evt,ui){
     relY = new Number(ui.position.top - ui.originalPosition.top);
     relX = Math.round(relX / gZoomFactor); 
     relY = Math.round(relY /gZoomFactor);
-    GX_MoveSelectedObject(relX, relY);     
+    //GX_MoveSelectedObject(relX, relY);     
+    GX_UpdatePosFromTranslation(gCurrentObjectSelected); 
     GX_UpdatePropertyOnUI('POSITION', gCurrSelectedObjectDim);
+    if(gCurrentObjectSelected.classList[0] == 'SVG_TEXT_OBJECT'){
+    	//set the bounading rectange 
+    	gGrabberDim =  GX_GetRectObjectDim(gCurrentObjectSelected);    	 
+    	GX_SetRectObjectDim(gCurrGrabber, gGrabberDim);
+    	GX_MakeTextEditable(gCurrentObjectSelected);
+    }
 }
 
 function OnObjectResizeStop(event, ui){
@@ -3283,11 +3306,13 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 	var shapeType = gNode.classList[1]; 
 	if(transfType == 'translate')
 	{
-		if( (objectType == 'SVG_PATH_OBJECT') || (objectType == 'GROUP') )
-		{
+		if( (objectType == 'SVG_PATH_OBJECT') || (objectType == 'GROUP') || (objectType == 'SVG_SHAPE_OBJECT') 
+				|| (objectType == 'SVG_TEXT_OBJECT')){
 			str = 'translate(' + transfDim.x + ','+ transfDim.y +')'; 
 			gTransfArray[0] = str; 
 		}
+		/*
+		 * rm now implementing pure translation as it should be 
 		else if(objectType == 'SVG_SHAPE_OBJECT')
 		{
 			if( (shapeType == 'RECTANGLE') || (shapeType == 'IMAGE') )
@@ -3311,6 +3336,7 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 			gNode.setAttribute('x',transfDim.x); 
 			gNode.setAttribute('y',transfDim.y); 
 		}
+		*/ 
 		/*
 		if((transfDim.x == 0) || (transfDim.y ==0) )
 		{
@@ -3454,11 +3480,56 @@ function GX_UpdatePathData(pathNode)
 	transprop.y = 0; 
 	//GX_SetTransformProperty(layerNode, 'translate', transprop); 	
 	GX_SetObjectAttribute(pathNode, 'PATH_DATA', gPathDataArray, true, false); 
-	GX_SetObjectAttribute(pathNode, "TRANSLATE", transprop,true, false);
-	
+	GX_SetObjectAttribute(pathNode, "TRANSLATE", transprop,true, false);	
 }
 
 //awlways work on tightest enclosing rectangle for REAd/WRITe 
+
+//_Rm this function will map translate from transform property of translation to co-ordinates
+function GX_UpdatePosFromTranslation(objNode){
+	//get the translate co-ordinates 
+	var transprop = GX_GetTransformProperty(objNode,'translate');
+	//if 0 then dont waste time return 
+	if( (transprop.x == 0) && (transprop.y == 0 )){
+		return ; 
+	}	
+	var objType = objNode.classList[0]; 
+	if(objType == 'SVG_PATH_OBJECT'){
+		GX_UpdatePathData(objNode); 
+		return ; 
+	}	
+	//do it for group / image and text objects as well 
+	var newObjDim = new sDimension(); 
+	gCurrSelectedObjectDim = GX_GetObjectAttribute(objNode, 'DIMENSION'); //GX_GetRectObjectDim(ObjNode);
+	
+	newObjDim.x = gCurrSelectedObjectDim.x + transprop.x; 
+    newObjDim.y = gCurrSelectedObjectDim.y + transprop.y; 
+    newObjDim.width = gCurrSelectedObjectDim.width; 
+    newObjDim.height =  gCurrSelectedObjectDim.height; 
+    newObjDim.rotate = gCurrSelectedObjectDim.rotate;          
+    newObjDim.rotCentreX = Math.round(newObjDim.x + newObjDim.width/2);
+    newObjDim.rotCentreY = Math.round(newObjDim.y + newObjDim.height/2); 
+    /*
+    if(objNode.classList[1]== 'ELLIPSE')
+    {
+    	newObjDim.x = newObjDim.rotCentreX;
+        newObjDim.y = newObjDim.rotCentreY; 
+    } 
+    else if(objNode.classList[1]== 'CIRCLE')
+    {
+    	newObjDim.x = newObjDim.rotCentreX;
+        newObjDim.y = newObjDim.rotCentreY; 
+    } 
+    */
+    
+   // GX_SetTransformProperty(objNode, 'translate',newObjDim);
+    GX_SetObjectAttribute(objNode, 'DIMENSION', newObjDim, true, false); 
+	// set the translate property to 0 
+	transprop.x = 0; 
+	transprop.y = 0; 
+	GX_SetObjectAttribute(objNode, "TRANSLATE", transprop,true, false);	
+	
+}
 function GX_GetRectObjectDim(ObjNode)
 {
 	 	var mypoint = new sDimension();
@@ -4044,7 +4115,7 @@ function GX_ToolbarHandler(event)
 		 break; 	
 	 case 'close_icon':
 		 GX_CloseSVGFile(); 
-		 break; 
+		 break;	 
 	 case 'diminfo':		 
 		 var svgdatanode = document.getElementById('SVGOBJECTCONTAINER'); 
 		 var width = svgdatanode.getAttribute('width'); 
@@ -5056,6 +5127,12 @@ function GX_SelectObjectInMultiMode(Node)
 	
 	gbMultiSelection = true; 
 	gMultiNodeArray.push(Node.id); 
+	if( (Node.classList[0] == 'SVG_PATH_OBJECT') || (Node.classList[0] == 'SVG_TEXT_OBJECT')){
+		gbAlignDimension =  false;
+		WAL_disableWidget('alignwidth_icon', 'data-customButton', false, true);
+		WAL_disableWidget('alignheight_icon', 'data-customButton', false, true);		
+	}
+			
 	//add iD woith ObjectID + 'gripper'
 	//add a class = 'CLONE_GRIPPER' 
 	
@@ -5123,38 +5200,33 @@ function GX_AlignDimension(alignType)
 		else if(alignType == 'RIGHT')
 		{
 			nextRightMargin = nextNodedim.x + nextNodedim.width; 
-			deltaX = nextRightMargin - refrightMargin; 
-			nextNodedim.x = nextNodedim.x - deltaX; 	
-			if(nextNodedim.x < 0)
-				nextNodedim.x = 0; 
-			offset.x = refNodedim.x - nextNodedim.x;
+			deltaX = refrightMargin -  nextRightMargin;			
+			offset.x = deltaX ; //refNodedim.x - nextNodedim.x;
 		}	
 		else if(alignType == 'BOTTOM')
 		{
 			nextBottomMargin = nextNodedim.y + nextNodedim.height; 
-			deltaY = nextBottomMargin - refbottomMargin; 
-			nextNodedim.y = nextNodedim.y - deltaY; 	
-			if(nextNodedim.y < 0)
-				nextNodedim.y = 0; 
-			offset.y =  refNodedim.y - nextNodedim.y;
+			deltaY = refbottomMargin -  nextBottomMargin; 
+			nextNodedim.y = nextNodedim.y - deltaY;			
+			offset.y =  deltaY ;//refNodedim.y - nextNodedim.y;
 		}	
 		else if(alignType == 'MIDDLE_HOR')
 		{
 			nextMidHor = nextNodedim.x + nextNodedim.width/2; 
-			deltaX = nextMidHor - refMiddleHor; 
+			deltaX = refMiddleHor - nextMidHor; 
+			offset.x = deltaX; 
+			/*
 			nextNodedim.x = nextNodedim.x - deltaX; 	
 			if(nextNodedim.x < 0)
 				nextNodedim.x = 0; 
 			offset.x = refNodedim.x - nextNodedim.x;
+			*/
 		}
 		else if(alignType == 'MIDDLE_VERT')
 		{
 			nextMidVert = nextNodedim.y + nextNodedim.height/2; 
-			deltaY = nextMidVert - refMiddleVert; 
-			nextNodedim.y = nextNodedim.y - deltaY; 	
-			if(nextNodedim.y < 0)
-				nextNodedim.y = 0; 
-			offset.y =  refNodedim.y - nextNodedim.y;
+			deltaY = refMiddleVert - nextMidVert; 
+			offset.y = deltaY; 			
 		}
 		
 		if( (alignType == 'WIDTH') || (alignType == 'HEIGHT')){				
@@ -5162,20 +5234,25 @@ function GX_AlignDimension(alignType)
 		}
 		else {
 			GX_SetObjectAttribute(nextNode, 'TRANSLATE', offset, true, false); 
-			if(objType == 'SVG_PATH_OBJECT')
-				GX_UpdatePathData(nextNode); 
-		}
-		
+			GX_UpdatePosFromTranslation(nextNode);
+			//if(objType == 'SVG_PATH_OBJECT')
+			//	GX_UpdatePathData(nextNode); 
+		}		
+		/*
 		gripperDim = nextNodedim; 
 		gripperDim.x -= 5; 
 		gripperDim.y -= 5;
 		gripperDim.width += 10;
 		gripperDim.height += 10; 
 		gripperNode =  document.getElementById(nextNode.id + 'GRIPPER'); 
-		GX_SetRectObjectDim(gripperNode, gripperDim);		
+		GX_SetRectObjectDim(gripperNode, gripperDim);	
+		*/
+		
 		//set attribute 
 	}	
 	 //EL_SaveEditList(gCompactEditList, true); 
+	//reset all selections
+	GX_ResetAllSelections();
 }
 
 function GX_CopyObject(objNode)
@@ -8028,7 +8105,7 @@ function GX_MakeTextEditable(srcTextNode)
 	toppos += Math.round(dim.height); 
 	editorParentNode.style.top = toppos + 'px';	
 	gTextEditorNode.style.width = Math.round(dim.width) + 'px'; 
-	gTextEditorNode.style.height = Math.round(dim.height) + 'px'; 
+	gTextEditorNode.style.height = Math.round(3*dim.height) + 'px'; 
 	gTextEditorNode.style.fontFamily = node.getAttribute('font-family');
 	
 	//_rm dont know why it is not working 
@@ -8075,7 +8152,8 @@ function OnTextEditKeyPress(event)
 
 function OnTextEditFocusOut(event)
 {	
-	var str = gTextEditorNode.value ;	
+	GX_HideandUpdateTextData(); 
+	/*var str = gTextEditorNode.value ;	
 	//node.style.display = 'block';
 	gTextEditorNode.parentNode.style.display = 'none'; 
 	if(gCurrentObjectSelected)
@@ -8085,6 +8163,26 @@ function OnTextEditFocusOut(event)
 		gCurrGrabber.setAttribute('width', dim.width); 
 		gCurrentObjectSelected.setAttribute('opacity', '1.0');
 		GXRDE_updateTextObjectData(gCurrentObjectSelected.id, gCurrentObjectSelected.firstChild.data);
+	}
+	*/
+	
+}
+
+function GX_HideandUpdateTextData(){
+	if(!gTextEditorNode)
+		return ; 
+	var str = gTextEditorNode.value ;
+	if(str.length  == 0)
+		return ; 	
+	gTextEditorNode.parentNode.style.display = 'none'; 
+	if((gCurrentObjectSelected) && (gCurrentObjectSelected.classList[0] == 'SVG_TEXT_OBJECT'))
+	{
+		gCurrentObjectSelected.firstChild.data  = str;    
+		var dim = gCurrentObjectSelected.getBBox(); 
+		gCurrGrabber.setAttribute('width', dim.width); 
+		gCurrentObjectSelected.setAttribute('opacity', '1.0');
+		GXRDE_updateTextObjectData(gCurrentObjectSelected.id, gCurrentObjectSelected.firstChild.data);
+		gTextEditorNode.value = ''; 
 	}	
 }
 
