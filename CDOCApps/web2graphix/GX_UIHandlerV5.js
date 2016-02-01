@@ -172,6 +172,7 @@ var gDDLHeight = '22' ; //'26px'
 
 var gEditWidth = "35";
 var gObjectEditMode = 'OBJECT_MODE';//'PROPERTIES_MODE';
+var gViewMode = 'EDITOR_MODE' ; //PREVIEW_MODE
 var gSnapToGrid =  false; 
 var gSnapRes = new Number(10);
 var gbMultiSelection = false; 
@@ -3746,8 +3747,8 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     		modDim.x = round(modDim.x - (scrollLeft/gZoomFactor)); 
     		modDim.y = round(modDim.y - (scrollTop/gZoomFactor));   
     		var tolerance = new Number(5);//round(10 * gInvZoomFactor); 
-    		modDim.x = round((modDim.x - gPanX) * gInvZoomFactor + XOffset); 
-    		modDim.y = round( (modDim.y - gPanY) * gInvZoomFactor + YOffset);
+    		modDim.x = round((modDim.x + gPanX) * gInvZoomFactor + XOffset); 
+    		modDim.y = round( (modDim.y + gPanY) * gInvZoomFactor + YOffset);
     		  	    
     		modDim.width = round(modDim.width * gInvZoomFactor );
     		modDim.height = round(modDim.height * gInvZoomFactor);
@@ -6927,6 +6928,13 @@ function GX_FindAnchorPointIndex(pathArray, boundary, pointX, pointY, startIndex
 
 function OnWindowScroll(event)
 {	
+	var windowID = event.currentTarget.id; 
+	if(windowID == 'editor_div'){
+		gPanX = event.currentTarget.scrollLeft 
+		gPanY = event.currentTarget.scrollTop;
+		//Debug_Message('X=' +  gPanX + 'Y=' +  gPanY); 
+		return; 
+	}
 	if( (bNewObjectAdding ==  true) || (bMoveObject == true) )
 	{
 		if( (window.pageXOffset != 0) || (window.pageYOffset != 0 ))
@@ -9178,6 +9186,10 @@ function GX_SetCanvasDimension(width, height){
 	  //setting the new dimension
 	  $('#canvas').width(width); 
 	  $('#canvas').height(height); 
+	  //updating the previewcanvas as well 
+	  $('#previewcanvas').width(width); 
+	  $('#previewcanvas').height(height); 
+	  
 	  var editorWidth = $('#editor_div').width(); 
 	  var editorHeight = $('#editor_div').height();
 	  var canvasWidth = $('#canvas').width(); 
@@ -9453,8 +9465,14 @@ function GX_RightTabHandler(tabIndex){
 }
 
 function GX_EditorTabHandler(tabIndex){
-	
+	if(tabIndex == 0)
+		gViewMode = 'EDITOR_MODE'; 
+	else{
+		gViewMode = 'PREVIEW_MODE';
+		GX_ShowPreview(); 
+	} 
 }
+
 
 function GX_OpacitySliderHandler(value, widgtNode){
 	if(!gCurrentObjectSelected)
@@ -9485,6 +9503,13 @@ function GX_GetObjectMaxDimensionToResize(objDim){
 		maxDim.height  += objDim.height;
 		
 	}
-	return maxDim; 
-	
+	return maxDim; 	
+}
+
+function GX_ShowPreview(){
+	 var retval = GXRDE_openSVGFile(gSVGFilename); 
+	 if(retval){
+		 var previewcanvasnode =  document.getElementById('previewcanvas'); 
+		 previewcanvasnode.innerHTML = retval; 
+	 }
 }
