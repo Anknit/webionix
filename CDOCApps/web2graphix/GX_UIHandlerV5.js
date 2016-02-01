@@ -1136,6 +1136,7 @@ function GX_Initialize()
 		OnDivPathMarkerDrag(event, ui); 		
 	});
 	*/ 
+	gSnapToGrid =  false; 
 	var JQSel = '#markerPoint'; 
 	$(JQSel).draggable({ cursor: "move" });	
 	gClientYOffset = $('#topcontainer').height() ;//- 40; 
@@ -1250,8 +1251,7 @@ function GX_InitializeDocument(svgFileName)
 	gsvgRootNode = 0;
 	bMove = false;
 	gCurrGrabber = 0;
-	bResize = false;
-	
+	bResize = false;	
 	gCurrDirection = 'NONE'; 
 	gPrevAttributeList = []; 
 	gCurrAttributeList =[]; 
@@ -1998,12 +1998,12 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
         	 h = gCurrSelectedObjectDim.height; 
         	 x = x  + gCurrLayerTranslateValues.x;
          	 y = y  + gCurrLayerTranslateValues.y;
-         	 if(gSnapToGrid == true){
-         		gCurrSelectedObjectDim.x = GX_ConvertToMultipleOf(gCurrSelectedObjectDim.x, 10) ; 
-         		gCurrSelectedObjectDim.y = GX_ConvertToMultipleOf(gCurrSelectedObjectDim.y, 10) ; 
-         		if(nodeClass != 'SVG_PATH_OBJECT')
-         			GX_SetRectObjectDim(node, gCurrSelectedObjectDim); 
-         	 }
+         	 //if(gSnapToGrid == true){
+         		//gCurrSelectedObjectDim.x = GX_ConvertToMultipleOf(gCurrSelectedObjectDim.x, 10) ; 
+         		//gCurrSelectedObjectDim.y = GX_ConvertToMultipleOf(gCurrSelectedObjectDim.y, 10) ; 
+         		//if(nodeClass != 'SVG_PATH_OBJECT')
+         		GX_SetRectObjectDim(node, gCurrSelectedObjectDim); 
+         	// }
     	 }
     	  var JQSel = '.SVG_SHAPE_OBJECT'; 
     	  $(JQSel).attr('opacity', gOpacityUnSelect); 
@@ -2799,7 +2799,7 @@ function OnObjectDrag(evt, ui){
 	    relX = new Number(ui.position.left - ui.originalPosition.left);
 	    relY = new Number(ui.position.top - ui.originalPosition.top);	
 	    relX = Math.round(relX / gZoomFactor); 
-	    relY = Math.round(relY / gZoomFactor);
+	    relY = Math.round(relY / gZoomFactor);	   
 	    newObjDim.x = relX ;//gCurrSelectedObjectDim.x+relX;
 	    newObjDim.y = relY ;// gCurrSelectedObjectDim.y+relY;     		
     	GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
@@ -3306,6 +3306,10 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 	var shapeType = gNode.classList[1]; 
 	if(transfType == 'translate')
 	{
+		if(gSnapToGrid == true){
+			transfDim.x = GX_ConvertToMultipleOf(transfDim.x, 10);
+			transfDim.y = GX_ConvertToMultipleOf(transfDim.y, 10); 
+		}
 		if( (objectType == 'SVG_PATH_OBJECT') || (objectType == 'GROUP') || (objectType == 'SVG_SHAPE_OBJECT') 
 				|| (objectType == 'SVG_TEXT_OBJECT')){
 			str = 'translate(' + transfDim.x + ','+ transfDim.y +')'; 
@@ -3647,27 +3651,16 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     var currObjectType = 0; 
     if(gCurrentObjectSelected)
     	currObjectType =  gCurrentObjectSelected.classList[0]; 
-    /*
-     * _rm should we not remove this.... 
-    if(gSnapToGrid == true)
-    {
-    	modDim.x = modDim.x / 10; 
-    	modDim.x = Math.round(modDim.x); 
-    	modDim.x *= 10; 
-    	
-    	modDim.y = modDim.y / 10; 
-    	modDim.y = Math.round(modDim.y); 
-    	modDim.y *= 10; 
-    	
-    	modDim.width = modDim.width / 10; 
-    	modDim.width = Math.round(modDim.width); 
-    	modDim.width *= 10; 
-    	
-    	modDim.height = modDim.height / 10; 
-    	modDim.height = Math.round(modDim.height); 
-    	modDim.height *= 10;    	
+   
+     /* _rm should we not remove this.... 
+    we dont resize the dimension to grid snap by default. if need to be done do it from outside however 
+    * for positioning do it from here
+    * */  
+    if(gSnapToGrid == true){
+    	modDim.x = GX_ConvertToMultipleOf(modDim.x, 10); 
+    	modDim.y = GX_ConvertToMultipleOf(modDim.y, 10);
     }
-    */
+    
     
     var myheight = modDim.height + 0; 
     rightLimit = modDim.x + modDim.width; 
@@ -3896,7 +3889,7 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('import_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('marker_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('grid_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('snap2grid_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    
     WAL_createCustomButton('multiselect_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('align_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     //zoompan interface 
@@ -4189,7 +4182,7 @@ function GX_ToolbarHandler(event)
 		var height = svgdatanode.getAttribute('height');	
 		WAL_setNumberInputValue("svgheightIP", height, false);		
 		WAL_showModalWindow(gSVGDimensionDlg,"GX_SVGDimensionDlgOK", "" );
-		break; 
+		break; 	 
 	case 'eraseBtn':
 		GX_StartErase(); 
 		break;
@@ -5795,46 +5788,9 @@ function GX_SetIndicatorPath(markerNode){
     }
         
     GX_ConvertArrayToPathData('indicatorpath', gIndicatorPath);        
-    pathNode.setAttribute("visibility", "visible");
-   
+    pathNode.setAttribute("visibility", "visible");   
 }
-/*
-else {
-    var relX = new Number(ClientX - gOrigMousePosX)*gZoomFactor;            
-    var relY = new Number(ClientY - gOrigMousePosY)*gZoomFactor;
-    relX = Math.round(relX); 
-    relY = Math.round(relY); 
-    bMarkerMove = false;
-    gsvgRootNode.setAttribute("cursor", "auto");
-    //now set the new path here 
-    var newpathvalue = new Number(gPathDataArray[gpathSegIndex][1]); 
-    newpathvalue += relX; 
-    if(gSnapToGrid == true)
-    {
-    	newpathvalue = newpathvalue/10; 
-    	newpathvalue = Math.round(newpathvalue); 
-    	newpathvalue *= 10; 
-    }
-    gPathDataArray[gpathSegIndex][1] = newpathvalue;
-    
-    newpathvalue = new Number(gPathDataArray[gpathSegIndex][2]);
-    newpathvalue += relY;
-    if(gSnapToGrid == true)
-    {
-    	newpathvalue = newpathvalue/10; 
-    	newpathvalue = Math.round(newpathvalue); 
-    	newpathvalue *= 10; 
-    }
-    gPathDataArray[gpathSegIndex][2] = newpathvalue; 	    
-    GX_UpdatePathData(gCurrentObjectSelected); 
-   // GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);       
-    pathNode.setAttribute("visibility", "hidden");
-    gIndicatorPath = []; 
-    GX_SetSelection(gCurrentObjectSelected, true, true); 
-    markerNode.setAttribute('r', '5'); 
-    markerNode.setAttribute('opacity', '0.5');         
-}     
-*/                 
+ 
 
 function OnPathMarkerMouseDown(node) {		
     var pathNode = document.getElementById("indicatorpath");    
@@ -8729,11 +8685,9 @@ function OnDivPathMarkerDragStop(event, ui){
     //now set the new path here 
     var newpathvalue = new Number(gPathDataArray[gpathSegIndex][1]); 
     newpathvalue += relX; 
-    if(gSnapToGrid == true)
-    {
-    	newpathvalue = newpathvalue/10; 
-    	newpathvalue = Math.round(newpathvalue); 
-    	newpathvalue *= 10; 
+    if(gSnapToGrid == true){
+    	newpathvalue =  GX_ConvertToMultipleOf(newpathvalue, 10); 
+    	
     }
     gPathDataArray[gpathSegIndex][1] = newpathvalue;
     
@@ -8741,9 +8695,7 @@ function OnDivPathMarkerDragStop(event, ui){
     newpathvalue += relY;
     if(gSnapToGrid == true)
     {
-    	newpathvalue = newpathvalue/10; 
-    	newpathvalue = Math.round(newpathvalue); 
-    	newpathvalue *= 10; 
+    	newpathvalue =  GX_ConvertToMultipleOf(newpathvalue, 10);
     }
     gPathDataArray[gpathSegIndex][2] = newpathvalue; 
     markerNode.setAttribute('data-position',gPathDataArray[gpathSegIndex][1] + ',' + gPathDataArray[gpathSegIndex][2] ); 
@@ -9378,6 +9330,9 @@ function GX_InitializePropertyTab(){
 	 WAL_createCustomButton('underline_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
 	 WAL_createCustomButton('strikethrough_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
 	 WAL_createCustomButton('smallcaps_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+	 
+	 WAL_createCheckBox('snaptogrid', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
+	 WAL_setCheckBoxValue('snaptogrid', false); 
 	 //sets the default values 
 	 GX_SetDefualtPropOnUI(); 
 }
