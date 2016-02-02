@@ -9,7 +9,8 @@
 <meta name="author" content="">
 <title id="filename">Noxta Editor-Ver 1.0</title>
   <!-- Bootstrap core CSS -->
-<link href="../CommonJS/jqwidget_3.9.1/styles/bootstrap.min.css" rel="stylesheet">
+
+<link href="../CommonJS/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="../CommonCSS/demos.css">
 <link rel="stylesheet" href="../CommonCSS/jquery.ui.all.css">
 <link rel="stylesheet" href="../CommonCSS/CDOCStyle.css"> 
@@ -196,7 +197,7 @@
 
  
 <script  type="text/javascript" src="../CommonJS/jqwidget_3.9.1/scripts/jquery-1.11.1.min.js"></script>
-<script  type="text/javascript" src="../CommonJS/jqwidget_3.9.1/scripts/bootstrap.min.js"></script>
+<script  type="text/javascript" src="../CommonJS/Bootstrap/js/scripts/bootstrap.min.js"></script>
 <script  type="text/javascript" src="../CommonJS/jqwidget_3.9.1/jqwidgets/jqxcore.js"></script>
 <script  type="text/javascript" src="../CommonJS/jqwidget_3.9.1/jqwidgets/jqx-all.js"></script>
 
@@ -436,8 +437,8 @@
 		    				</td>
 		    				<td >
 		    				<div>
-		    					<button id='edit_grad_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_ToolbarHandler(event)'>Edit</button> 
-		    					<button id='delete_grad_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_ToolbarHandler(event)'>Delete</button>
+		    					<button id='edit_grad_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_ToolbarHandler(event)'><span class="glyphicon glyphicon-edit" style='margin-right:5px'></span>Edit</button> 
+		    					<button id='delete_grad_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_ToolbarHandler(event)'><span class="glyphicon glyphicon-remove" style='margin-right:5px'></span>Delete</button>
 		    				</div> 
 		    					<!-- <div style= 'display:inline-block;margin-left:30px;'><div class="BTN_CONTAINER_SMALL"><input class='small_icon'  type = "image" id='edit_grad_icon' value=''  src='../CommonCSS/icons/Version1/linecolor.png' data-tooltiptext='Edit Gradient Properties' data-helptext='Edit Gradient Properties' style='width:22px; height:22px;margin-top:5px'/></div></div> 	
 		    					<div style= 'display:inline-block;margin-left:-10px;'><div class="BTN_CONTAINER_SMALL"><input class='small_icon'   type = "image" id='delete_grad_icon' value=''  src='../CommonCSS/icons/Version1/delete.png' data-tooltiptext='Remove Gradient' data-helptext='Remove Gradient' style='width:22px; height:22px;margin-top:5px;' /></div></div>
@@ -480,7 +481,37 @@
 		              			<div id='pathclose' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Closed/Open Path' data-helptext='Toggle between a Closed and Open path'></div>
 		              		</td>
 		              		<td></td>
-		              	</tr>			              		              	
+		              	</tr>		
+		              	<tr id='markerProp' class='propertyRow markerProperty' style='border-bottom:none'>
+		              		<td class='propertyName'>Markers</td>
+		              		<td class='propertyValues'>
+		              			<div id='markerTypelistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><span class='myLabel' style='text-align:right;'>Type</span><div id='markerTypeListDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
+		              			<div id='markerShapelistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><span class='myLabel' style='text-align:right;'>Shape</span><div id='markerShapeListDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
+		              		</td>
+		              		<td>
+		              			<div>
+		    						<button id='add_marker_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_ToolbarHandler(event)'><span class="glyphicon glyphicon-plus" style='margin-right:5px'></span>Add</button> 
+		    						<button id='delete_marker_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_ToolbarHandler(event)'><span class="glyphicon glyphicon-remove" style='margin-right:5px'></span>Delete</button>
+		    					</div>
+		              		</td>
+		              	</tr>
+		                <tr class='propertyRow markerProperty'>
+		              		<td></td>
+		              		<td style='width:270px'>
+		              		<div>
+		    					<button id='marker_stroke_color_btn' type="button" class="btn btn-xs propertyBtn" style='width:140px; margin-left:35px' onclick='GX_ToolbarHandler(event)'>Outline</button>
+		    							    					
+		    				</div> 	
+		    				</td>
+		    				<td >
+		    					<div>
+		    						<button id='marker_fill_color_btn' type="button" class="btn btn-xs propertyBtn" style='width:140px; margin-left:-25px;' onclick='GX_ToolbarHandler(event)'>Background</button>		    					
+		    					</div> 	
+		    					<!-- <div style= 'display:inline-block;margin-left:30px;'><div class="BTN_CONTAINER_SMALL"><input class='small_icon'  type = "image" id='edit_grad_icon' value=''  src='../CommonCSS/icons/Version1/linecolor.png' data-tooltiptext='Edit Gradient Properties' data-helptext='Edit Gradient Properties' style='width:22px; height:22px;margin-top:5px'/></div></div> 	
+		    					<div style= 'display:inline-block;margin-left:-10px;'><div class="BTN_CONTAINER_SMALL"><input class='small_icon'   type = "image" id='delete_grad_icon' value=''  src='../CommonCSS/icons/Version1/delete.png' data-tooltiptext='Remove Gradient' data-helptext='Remove Gradient' style='width:22px; height:22px;margin-top:5px;' /></div></div>
+		    					-->
+		    				</td>
+		              	</tr>            		              	
 		              	<tr id='largearcProp' class='propertyRow ellipticProp pathProperty'>
 		              		<td class='propertyName'>Large Arc</td>
 		              		<td class='propertyValues'>
