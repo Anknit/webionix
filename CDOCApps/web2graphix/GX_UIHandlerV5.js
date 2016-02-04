@@ -195,9 +195,9 @@ var gbNewGradObject =  false;
 var gDivPathMarkerSel = 0; 
 //marker related 
 var gMarkerType = []; 
- gMarkerType['Start Marker'] = 'marker-start'; 
- gMarkerType['Middle Marker'] = 'marker-mid'; 
- gMarkerType['End Marker'] = 'marker-end'; 
+ gMarkerType['Start'] = 'marker-start'; 
+ gMarkerType['Middle'] = 'marker-mid'; 
+ gMarkerType['End'] = 'marker-end'; 
 /*var ClientX = new Number(0);
 var ClientY = new Number(0);
 var newObjDim = new sDimension();
@@ -1722,7 +1722,7 @@ function GX_AddNewSVGObject(Type, name)
 {
 	//generate a unique ID 
 	var parentID; 
-	WAL_SetTabIndex('rightTabs', 0);
+	//WAL_SetTabIndex('rightTabs', 0);
 	var ObjID =  GXRDE_GetUniqueID('SVG_'); 
 	var objectType = Type.toUpperCase(); 
 	gNewObjectID = ObjID;
@@ -1760,9 +1760,10 @@ function GX_AddNewSVGObject(Type, name)
 		return ; 
 	}
 	
+	//change the tab only when SVG_shape/path/image objects being added as the object need to be added to the tree
+	WAL_SetTabIndex('rightTabs', 0);
 	var currNodeType = gCurrentTreeNode.getAttribute('type');
-	if ( (Type != 'GROUP') && (currNodeType != 'GROUP') )
-	{
+	if ( (Type != 'GROUP') && (currNodeType != 'GROUP')){
 		WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+gCurrLayerNode.id); 
 		currNodeType = gCurrentTreeNode.getAttribute('type');
 	}	
@@ -1999,12 +2000,12 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
         	 h = gCurrSelectedObjectDim.height; 
         	 x = x  + gCurrLayerTranslateValues.x;
          	 y = y  + gCurrLayerTranslateValues.y;
-         	 //if(gSnapToGrid == true){
-         		//gCurrSelectedObjectDim.x = GX_ConvertToMultipleOf(gCurrSelectedObjectDim.x, 10) ; 
-         		//gCurrSelectedObjectDim.y = GX_ConvertToMultipleOf(gCurrSelectedObjectDim.y, 10) ; 
-         		//if(nodeClass != 'SVG_PATH_OBJECT')
-         		GX_SetRectObjectDim(node, gCurrSelectedObjectDim); 
-         	// }
+         	 if(gSnapToGrid == true){
+         		gCurrSelectedObjectDim.x = GX_ConvertToMultipleOf(gCurrSelectedObjectDim.x, 10) ; 
+         		gCurrSelectedObjectDim.y = GX_ConvertToMultipleOf(gCurrSelectedObjectDim.y, 10) ; 
+         		if(nodeClass != 'SVG_PATH_OBJECT')
+         		  GX_SetRectObjectDim(node, gCurrSelectedObjectDim); 
+         	 }
     	 }
     	  var JQSel = '.SVG_SHAPE_OBJECT'; 
     	  $(JQSel).attr('opacity', gOpacityUnSelect); 
@@ -2869,7 +2870,11 @@ function OnObjectDragStop(evt,ui){
     relY = new Number(ui.position.top - ui.originalPosition.top);
     relX = Math.round(relX / gZoomFactor); 
     relY = Math.round(relY /gZoomFactor);
-    //GX_MoveSelectedObject(relX, relY);     
+    //GX_MoveSelectedObject(relX, relY);    
+    if(gCurrentObjectSelected.classList[0] == 'GROUP'){
+    	GX_UpdateLayerChildElements(gCurrentObjectSelected);
+    	return ; 
+    }    
     GX_UpdatePosFromTranslation(gCurrentObjectSelected); 
     gCurrSelectedObjectDim =  GX_GetRectObjectDim(gCurrentObjectSelected);
     GX_UpdatePropertyOnUI('POSITION', gCurrSelectedObjectDim);
@@ -3505,7 +3510,14 @@ function GX_UpdatePosFromTranslation(objNode){
 	}	
 	//do it for group / image and text objects as well 
 	var newObjDim = new sDimension(); 
-	gCurrSelectedObjectDim = GX_GetObjectAttribute(objNode, 'DIMENSION'); //GX_GetRectObjectDim(ObjNode);
+	if(objType == 'SVG_TEXT_OBJECT'){
+		gCurrSelectedObjectDim =  new sDimension(); 
+		
+		//get the original dimension rather than bounding box dimension 
+		gCurrSelectedObjectDim.x = new Number(objNode.getAttribute('x')); 
+		gCurrSelectedObjectDim.y = new Number(objNode.getAttribute('y')); 
+	}else
+		gCurrSelectedObjectDim = GX_GetObjectAttribute(objNode, 'DIMENSION'); //GX_GetRectObjectDim(ObjNode);
 	
 	newObjDim.x = gCurrSelectedObjectDim.x + transprop.x; 
     newObjDim.y = gCurrSelectedObjectDim.y + transprop.y; 
@@ -3888,7 +3900,7 @@ function GX_InitializeToolbar()
 	WAL_createCustomButton('text_icon', 'GX_ToolbarHandler',gWidgetTooltipID);   
     WAL_createCustomButton('image_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('import_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('marker_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    
     WAL_createCustomButton('grid_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     
     WAL_createCustomButton('multiselect_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -4326,14 +4338,14 @@ function GX_ToolbarHandler(event)
 			 Prop = 'small-caps'; 
 		 GX_SetObjectAttribute(gCurrentObjectSelected, "font-variant", Prop, true, false);
 		 break; 
-	case 'add_marker_icon':
+	case 'add_marker_btn':
 		var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
 		markerType = gMarkerType[markerType]; 		
 		var markerShape = WAL_getDropdownListSelection('markerShapeListDDL');
 		markerShape = markerShape.toUpperCase();			
 		GX_AddNewSVGObject('MARKER_' + markerShape, markerType); 
 		break; 
-	case 'delete_marker_icon':
+	case 'delete_marker_btn':
 		if(!gCurrentObjectSelected)
 			return ; 
 		if(gCurrentObjectSelected.classList[0] != 'SVG_PATH_OBJECT')
@@ -4342,7 +4354,7 @@ function GX_ToolbarHandler(event)
 		markerType = gMarkerType[markerType]; 	
 		GX_DeleteMarkerObject(gCurrentObjectSelected.id,markerType ); 
 		break; 
-	case 'marker_stroke_color_icon':
+	case 'marker_stroke_color_btn':
 		WAL_hideWidget('marker_colorpickwidget', true); 
 		if(!gCurrentObjectSelected)
 			return ; 
@@ -4352,10 +4364,14 @@ function GX_ToolbarHandler(event)
 		if(!gCurrentMarkerNode)
 			return ; 
 	    
-		var initColVal = gCurrentMarkerNode.getAttribute('stroke'); 		
-		WAL_showColorPickerWidget('marker_colorpickwidget', '', 'marker_stroke_color_icon','stroke', initColVal, gCurrentMarkerNode.id);
+		var initColVal = gCurrentMarkerNode.getAttribute('stroke'); 	
+		var pos = $('#rightpanel').position(); 
+		var fillpos = $('#marker_stroke_color_btn').position(); 
+		pos.top = pos.top + fillpos.top -100; 		
+		WAL_showColorPickerWidgetAtPos('marker_colorpickwidget', '','',  pos.left,pos.top, 'stroke', initColVal, gCurrentMarkerNode.id);
+		//WAL_showColorPickerWidgetAtPos('marker_colorpickwidget', '', 'marker_stroke_color_btn','stroke', initColVal, gCurrentMarkerNode.id);
 		break; 
-	case 'marker_fill_color_icon':
+	case 'marker_fill_color_btn':
 		WAL_hideWidget('marker_colorpickwidget', true); 
 		if(!gCurrentObjectSelected)
 			return ; 					
@@ -4363,8 +4379,12 @@ function GX_ToolbarHandler(event)
 		if(!gCurrentMarkerNode)
 			return ; 
 		
-		var initColVal = gCurrentMarkerNode.getAttribute('fill'); 		
-		WAL_showColorPickerWidget('marker_colorpickwidget', '', 'marker_fill_color_icon','fill', initColVal, gCurrentMarkerNode.id);
+		var initColVal = gCurrentMarkerNode.getAttribute('fill'); 	
+		var pos = $('#rightpanel').position(); 
+		var fillpos = $('#marker_fill_color_btn').position(); 
+		pos.top = pos.top + fillpos.top - 100; 		
+		WAL_showColorPickerWidgetAtPos('marker_colorpickwidget', '','',  pos.left,pos.top, 'fill', initColVal, gCurrentMarkerNode.id);
+		//WAL_showColorPickerWidget('marker_colorpickwidget', '', 'marker_fill_color_btn','fill', initColVal, gCurrentMarkerNode.id);
 		break;		
 	case 'delete_grad_btn':
 		var currgradTitle = WAL_getDropdownListSelection('gradlistDDL');
@@ -5389,7 +5409,17 @@ function GX_DDLHandler(Node, value)
 		GX_StartFreeDraw('DRAW_MODE');
 		return; 		
 	}
-	
+	//marker highlighter 
+	if(wdgtId == 'markerTypeListDDL'){
+		value = value.toUpperCase(); 
+		if(value =='NONE')
+			return; 
+		
+		//highlight the path node start point 
+		if((gCurrentObjectSelected) && (gCurrentObjectSelected.classList[0]== 'SVG_PATH_OBJECT')){
+			GX_HighlightMarker(value, gCurrentObjectSelected, true); 			
+		}
+	}
 	
 	if(wdgtId == 'listanimDDL')
 	{
@@ -6112,6 +6142,50 @@ function GX_SetPathMarkers(id, index, pos, type){
 	});
 	
 }
+//just highligh one marker in case of middle markers dont need to highlight all as this is an indicator to user 
+//which marker is being modified 
+function GX_HighlightMarker(type, pathNode, bShow){
+	
+	if(pathNode.classList[0] != 'SVG_PATH_OBJECT')
+		return ; 
+	var markerSelector = document.getElementById('MarkerHighlighter');
+	if(bShow == false){
+		$('#MarkerHighlighter').hide(); 
+		return ; 
+	}
+	//getting path parama here 
+	GX_UpdatePathData(pathNode); 
+	 var currDim = new sDimension();	
+	if(type == 'START'){
+		if(gPathDataArray[0][3] != 'START_POINT')
+			return ; 
+		currDim.x =  new Number(gPathDataArray[0][1]); 
+		currDim.y =  new Number(gPathDataArray[0][2]); 		
+	}
+	else if(type == 'MIDDLE'){
+		
+		if(gPathDataArray[1][3] != 'POINT')
+			return ; 
+		currDim.x =  new Number(gPathDataArray[1][1]); 
+		currDim.y =  new Number(gPathDataArray[1][2]); 
+	}
+	else if(type == 'END'){
+		
+		if(gPathDataArray[gPathDataArray.length-1][3] != 'END_POINT')
+			return ; 
+		currDim.x =  new Number(gPathDataArray[gPathDataArray.length-1][1]); 
+		currDim.y =  new Number(gPathDataArray[gPathDataArray.length-1][2]); 
+	}
+	var weight = new Number(gCurrentObjectSelected.getAttribute('stroke-width')); 
+	var factor = 6; 
+	currDim.width = weight*factor; 
+	currDim.height = weight*factor; 
+	var radius = Math.round(currDim.width/2); 
+	$('#MarkerHighlighter')[0].style.borderRadius = radius + 'px'; 
+	GX_SetRectObjectDim(markerSelector, currDim);
+	$('#MarkerHighlighter').show(); 
+}
+
 //Rm changing to the div path markers here 
 function GX_AddPathMarker(pathID, pathParam) {
     var pathNode = document.getElementById(pathID); 
@@ -6131,32 +6205,12 @@ function GX_AddPathMarker(pathID, pathParam) {
                 //copynode.setAttribute("id", 'marker_'+ 0);                    		
                 pos.x = new Number(pathParam[0][1]); 
                 pos.y = new Number(pathParam[0][2]); 
-                GX_SetPathMarkers('marker_'+ 0, 0, pos, 'START_POINT'); 
-        		//GX_SetRectObjectDim($(gDivPathMarkerSel)[0], currDim);
-               // copynode.setAttribute("cx", pathParam[0][1]);
-               // copynode.setAttribute("cy", pathParam[0][2]);
-        		//copynode.setAttribute("class", "PATH_MARKER START");
-        		//copynode.setAttribute("data-index", 0);
-                //copynode.css({visibility:"visible", background-color:'#4f4'});            
-                
-                //copynode.setAttribute("fill", "green");          
-                //copynode.setAttribute("pointer-events", "none");     
-               // svgcontentnode.appendChild(copynode);
+                GX_SetPathMarkers('marker_'+ 0, 0, pos, 'START_POINT');         		
                
     	}  	
 		if(pathParam[pathParam.length-1][3] == 'END_POINT')
     	{
-    			/*copynode = usenode.cloneNode(true);
-                copynode.setAttribute("id", 'marker_'+ pathParam.length-1);
-                copynode.setAttribute("cx", pathParam[pathParam.length-1][1]);
-                copynode.setAttribute("cy", pathParam[pathParam.length-1][2]);
-                copynode.setAttribute("visibility", "visible");
-                copynode.setAttribute("data-index", pathParam.length-1);
-                copynode.setAttribute("class", "markerclass END");
-                copynode.setAttribute("fill", "red");          
-                copynode.setAttribute("pointer-events", "none");     
-                svgcontentnode.appendChild(copynode);
-                */ 
+    			
                 pos.x = new Number(pathParam[pathParam.length-1][1]); 
                 pos.y = new Number(pathParam[pathParam.length-1][2]);
                 GX_SetPathMarkers('marker_'+ pathParam.length-1, pathParam.length-1, pos, 'END_POINT');
@@ -6166,49 +6220,12 @@ function GX_AddPathMarker(pathID, pathParam) {
     
     for (var k = 0; k < pathParam.length; k++) {
     	if( (pathParam[k][3] == 'POINT') || (pathParam[k][3] == 'START_POINT') || (pathParam[k][3] == 'END_POINT') )
-    	{
-    			//copynode = usenode.cloneNode(true);
-              //  copynode.setAttribute("id", 'marker_'+ k);
-                //copynode.setAttribute("cx", pathParam[k][1]);
-               // copynode.setAttribute("cy", pathParam[k][2]);
-               // copynode.setAttribute("visibility", "visible");
-               /* copynode.setAttribute("data-index", k);
-                copynode.setAttribute("class", "markerclass MIDDLE");
-                if(pathParam[k][3] == 'START_POINT')
-                {
-                	copynode.setAttribute("fill", "green");
-                	copynode.setAttribute("class", "markerclass START");
-                }
-                	
-                
-                if(pathParam[k][3] == 'END_POINT')
-                {
-                	copynode.setAttribute("fill", "red");   
-                	copynode.setAttribute("class", "markerclass END");
-                }
-                	*/ 
+    	{    			
                 pos.x = new Number(pathParam[k][1]); 
                 pos.y = new Number(pathParam[k][2]); 
-                GX_SetPathMarkers('marker_'+ k, k, pos, pathParam[k][3]);
-                
+                GX_SetPathMarkers('marker_'+ k, k, pos, pathParam[k][3]);                
     	}            
-     }   
-    /*
-    //get the end point here 
-    var lastIndex = pathParam.length-1; 
-    if(pathParam[lastIndex][0] == 'z')
-    {
-    	lastIndex--;    	
-    }
-    if(pathParam[lastIndex][3] == 'POINT')
-    {
-    	var markernode = document.getElementById('marker_'+lastIndex);
-    	if(!markernode)
-    		return ; 
-    	markernode.setAttribute('fill', 'red'); 
-    }*/
-    
-    	
+     } 
 }
 
 
@@ -8743,8 +8760,7 @@ function GX_Marker_ColorWidgetOK(event){
 	if(gCurrentMarkerNode){		
 		var colWdgt = document.getElementById('marker_colorpickwidget'); 
 		if(!colWdgt)
-		 return ;
-		
+		 return ;		
 		var colAttrName = colWdgt.getAttribute('data-attrName');
 		var colorval = WAL_getColorPickerValue('marker_colorpickwidget');
 		GX_SetObjectAttribute(gCurrentMarkerNode, colAttrName, colorval, true, false);
@@ -8769,6 +8785,8 @@ function GX_GetCurrentMarkerSelection(){
 	if(! ((gCurrentObjectSelected)&&(gCurrentObjectSelected.classList[0] == 'SVG_PATH_OBJECT')) )
 		return ;	
 	var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
+	if(markerType == 'None')
+		return 0; 
 	markerType = gMarkerType[markerType].toUpperCase();		
 	var markerID = gCurrentObjectSelected.id + '_' + markerType;		
 	var MarkerNode = document.getElementById(markerID);
@@ -9298,10 +9316,10 @@ function GX_InitializePropertyTab(){
 	 
 	// WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 360, 0,1, gWidgetTooltipID);
 	 WAL_createCheckBox('pathclose', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
-	 WAL_createNumberInput("radiusXIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true,300,0,1, gWidgetTooltipID);
-	 WAL_createNumberInput("radiusYIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 300,0, 1, gWidgetTooltipID);
-	 WAL_createCheckBox('largearcCheckBox', 'GX_CheckValueChange', '90', '20' , '13', false, false, gWidgetTooltipID);
-	 WAL_createCheckBox('sweepCheckBox', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);	 
+	 WAL_createNumberInput("radiusXIP", '50px', gDDLHeight, "GX_EditBoxValueChange",true,300,0,1, gWidgetTooltipID);
+	 WAL_createNumberInput("radiusYIP", '50px', gDDLHeight, "GX_EditBoxValueChange",true, 300,0, 1, gWidgetTooltipID);
+	 WAL_createCheckBox('largearcCheckBox', 'GX_CheckValueChange', '30', '20' , '13', false, false, gWidgetTooltipID);
+	 WAL_createCheckBox('sweepCheckBox', 'GX_CheckValueChange', '30', '20' , '13', false, false, gWidgetTooltipID);	 
 	 WAL_createNumberInput("lengthIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 500,0,1, gWidgetTooltipID);
 	 
 	 WAL_createColorPickerWindow("colorpickwidget", "colorpicker", '350', '250', "okbtn", "cancelbtn");
@@ -9345,7 +9363,47 @@ function GX_InitializePropertyTab(){
 	 
 	 WAL_createCheckBox('snaptogrid', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
 	 WAL_setCheckBoxValue('snaptogrid', false); 
+	 
+	 //marker interface
+	 var typelist = ['None','Start', 'Middle', 'End']; 
+	 WAL_createDropdownList('markerTypeListDDL', '60', '22', false, typelist, "GX_DDLHandler", '100', '70');
+	 WAL_SetItemInDropDownList('markerTypeListDDL', 0, false);
+	 
+	 var listBoxSrc = new Array();
+	    var image=""; 
+	    var markerValue;
+	    var numMarkers = 6; 
+	    for (i = 0; i < numMarkers; i++) {
+	       image = 'marker' + i + '.svg';          
+	        var html = "<div style='padding: 0px; margin: 0px; height: 20px; float: left;'><img width='auto' height='24px' style='float: left; margin-top: 1px; margin-right: 2px;' src='../USER_DATA/shared/Markers/" + image + "'/></div>";        
+	        switch(i)
+	        {
+	        case 0:
+	        	markerValue = "Circle"; 
+	        	break; 
+	        case 1:
+	        	markerValue = "Square"; 
+	        	break;         
+	        case 2:
+	        	markerValue = "Triangle"; 
+	        	break;         
+	        case 3:
+	        	markerValue = "Star"; 
+	        	break;         
+	        case 4:
+	        	markerValue = "CurvedTriangle"; 
+	        	break;         
+	        case 5:
+	        	markerValue = "Cross"; 
+	        	break;         
+	        default:
+	        	break;        	
+	        }
+	        listBoxSrc[i] = { html: html, value:markerValue};
+	    }	    
+	    WAL_createDropdownList('markerShapeListDDL', '40', '22', false, listBoxSrc, "", '120', '60');
 	 //sets the default values 
+	    WAL_createColorPickerWindow("marker_colorpickwidget", "marker_colorpicker", '350', '250', "marker_okbtn", "marker_cancelbtn");
 	 GX_SetDefualtPropOnUI(); 
 }
 
@@ -9365,6 +9423,8 @@ function GX_SetDefualtPropOnUI(){
 	WAL_setSliderValue('opacitySlider', 100); 	
 	$('.pathProperty').hide();
 	$('.fontProperty').hide(); 	
+	$('.markerProperty').hide(); 
+	WAL_SetItemInDropDownList('markerTypeListDDL', 0, false);
 }
 
 function GX_SetPropertyonUI(objNode){
@@ -9438,6 +9498,7 @@ function GX_SetPropertyonUI(objNode){
 	//now path type objects 
 	if(shapeType == 'SVG_PATH_OBJECT'){		
 		$('#pathcloseProp')[0].style.display = 'table-row'; 
+		$('.markerProperty').show();
 		$('#editbtnProp')[0].style.display = 'table-row'; 	
 		$('#addpointBtn').css({display:'none'}); 
 		$('#deletepointBtn').css({display:'none'}); 
