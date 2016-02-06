@@ -1109,6 +1109,10 @@ function GX_Initialize()
 		OnObjectResizeStop(event, ui); 		
 	});
 	
+	$(gCurrGripperSel).on( "resizestart", function( event, ui ) {
+		OnObjectResizeStart(event, ui); 		
+	});
+	
 	
 	//gGripperTextSpanNode = $(gCurrGripperSel)[0].firstElementChild; 
 	
@@ -2911,6 +2915,11 @@ function OnObjectResizeStop(event, ui){
 	
 }
 
+
+function OnObjectResizeStart(event, ui){	
+	relW = new Number(ui.size.width - ui.originalSize.width -10 ); 
+	relH = new Number(ui.size.height - ui.originalSize.height - 10); 
+}
 
 function OnObjectMouseOut(evt)
 {
