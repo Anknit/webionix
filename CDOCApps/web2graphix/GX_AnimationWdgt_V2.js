@@ -99,14 +99,21 @@ function sAnimInfo(){
 }
 var gAnimInfoTableSource = "";
 var gAnimInfoList = []; 
-
+var gTriggerList = 0; 
+var gRefAnimListDDL = 0; 
+var gRevTriggerList =[]; 
+ gRevTriggerList['time']  = 'At 0th Second'; 
+ gRevTriggerList['click'] = 'On Click';
+ gRevTriggerList['begin'] = 'With';
+ gRevTriggerList['end']   = 'After';
 var gAnimEndTimer = 400; 
 var gbAnimationEnd =  true; 
 var gInitAnimParam = 0; 
 
-var gAnimList = 0; //[animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, refAnimID, refContainerID]; 
+var gAnimList = 0; //[animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, refAnimID, refContainerID, duration, duration, beginParams.AnimEvent]; 
 var gCurrAttrname;
 var gCurrAnimNode = 0; 
+var gLastItemDisabled = 0; 
 var gCurrAnimParam=0; 
 var gbApplied = false; 
 var gNewAnimObject =  false; 
@@ -137,7 +144,7 @@ gAttrList['Zoom'] = 'ANIMATE_ZOOM';
 var gReverseAttrList =[]; 
 gReverseAttrList['fill']           =  'Fill-Color'     ; 
 gReverseAttrList['stroke']         =  'Stroke-Color'   ; 
-gReverseAttrList['opacity']   =  'Opacity'  ; 
+gReverseAttrList['opacity']   	   =  'Opacity'  ; 
 gReverseAttrList['visibility']     =  'Visibility'  ; 
 gReverseAttrList['stroke-width']   =  'Stroke-Width' ;
 gReverseAttrList['pathmotion']     =  'Motion along Path'   ;
@@ -147,7 +154,7 @@ gReverseAttrList['skewY']          =  'Vertical Skew';
 gReverseAttrList['scale']          =  'Fly-In'; 
 gReverseAttrList['translate']      =  'Move'; 
 gReverseAttrList['ANIMATE_PATH']   =  'Animate Path'; 
-gReverseAttrList['ANIMATE_ZOOM']   = 'Zoom'; 
+gReverseAttrList['ANIMATE_ZOOM']   =  'Zoom'; 
 
 
 //var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
@@ -1068,11 +1075,14 @@ function GX_GetAnimParamsFromUI(inputParam)
 
 
 function GX_InitializeAnimationTab(){
-	var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Fly-In', 'Move', 'Animate Path', 'Zoom'];
+	
  	//create the new animation widget interface here 	 
- 	WAL_createModelessWindow('newAnimationDlg', '220', '150', 'newAnimOK', 'newAnimCancel');
- 	WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '') ; 			
-    WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 100); 
+	
+ 	//WAL_createModalWindow(gSVGDimensionDlg, '250', '150', 'svgDimOK', 'svgDimCancel', false);
+ 	WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '') ; 		
+ 	var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Fly-In', 'Move', 'Animate Path', 'Zoom'];
+    WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 100, 0);
+    WAL_createModalWindow('newAnimationDlg', '220', '150', 'newAnimOK', 'newAnimCancel', false);
 	
     //creatingthe grid 
    /* sAnimInfo.prototype.id = ""; 
@@ -1082,24 +1092,28 @@ function GX_InitializeAnimationTab(){
 	sAnimInfo.prototype.refanimID = "";
 	sAnimInfo.prototype.duration = 0;
 	*/
-    gAnimInfoList =  GX_GetAnimInfoList(); 
+    gAnimInfoList =  GX_GetAnimInfoList();
     gAnimInfoTableSource =
     {
         datatype: "array",
         datafields: [           
+            
             { name: 'title', type: 'string' },
             { name: 'type', type: 'string' },
             { name: 'trigger', type: 'string' },
             { name: 'refanimID', type: 'string' },
             { name: 'duration', type: 'string' }
-        ],        
+        ], 
+        id: 'id',
         localdata : gAnimInfoList
     }
         
     var dataAdapter = new $.jqx.dataAdapter(gAnimInfoTableSource);  
-    var customcellsrenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
-               return '<span style="margin: 4px; margin-right: 10px; font-size: 8px; color:red, float: ' + columnproperties.cellsalign + ';">' + value + '</span>';
+   /* var customcellsrenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
+               return '<span style="font-size: 12px; color:blue; float: ' + columnproperties.cellsalign + ';">' + value + '</span>';
            }
+           */
+    var rowHeight = 20; 
     $("#jqxAnimgrid").jqxGrid(
    		 {
    		 width: '100%',
@@ -1110,33 +1124,41 @@ function GX_InitializeAnimationTab(){
          sortable: false,
          editable: true,             
          pageable:false,              
-         rowsheight : 40, 
+         rowsheight : rowHeight, 
          columnsresize: true,
          columns: [
-                   
-		{ text: 'Name', datafield:'title', width:'25%',editable: false, cellrenderer:customcellsrenderer},
-		{ text: 'Type', datafield:'type',cellrenderer:customcellsrenderer, width:'15%',editable: false},
-		{ text: 'Starts', datafield:'trigger', cellrenderer:customcellsrenderer,width:'15%',editable: false, columntype:'dropdownlist',cellsrenderer: customcellsrenderer, 
+             
+		{ text: 'Name', datafield:'title', width:'25%',editable: false},
+		{ text: 'Type', datafield:'type', width:'15%',editable: false },
+		{ text: 'Starts', datafield:'trigger',width:'15%',editable: true, columntype:'dropdownlist', 
 			validation: function (cell, value) {
 				 			return true; 	                         
             },                     
-                     createeditor: function (row, cellvalue, editor) {                         
-                       var source =["anim2", "anim3", "anim4"]; 
-						editor.jqxDropDownList({ source: source, selectedIndex: 1, width: '60', height: rowsheight});
+                     createeditor: function (row, cellvalue, editor) { 
+                    	 gTriggerList = editor[0]; 
+                    	 attrList = ['After', 'With', 'On Click', 'At 0th Second'];                      
+                    	 editor.jqxDropDownList({ source: attrList, selectedIndex: 1, width: '60', height: rowHeight,
+                    		 dropDownHeight: 100, dropDownWidth: 150});
                      }					   				
 		},
 				
-		{text: 'Reference', datafield:'refanimID', cellrenderer:customcellsrenderer,width:'25%',columntype:'textbox',  editable: true,cellsrenderer: customcellsrenderer,
+		{text: 'Reference', datafield:'refanimID',width:'25%',columntype:'dropdownlist',  editable: true,
 			validation: function (cell, value) {
 	 			return true; 	                         
 				},                     
-         createeditor: function (row, cellvalue, editor) {                         
-           var source =["anim2", "anim3", "anim4"]; 
-			editor.jqxDropDownList({ source: source, selectedIndex: 1, width: '60', height: rowsheight}); 
+         createeditor: function (row, cellvalue, editor) { 
+        	 gRefAnimListDDL = editor[0];         	
+           // var source =["anim2", "anim3", "anim4"]; 
+        	gAnimInfoList = GX_GetAnimInfoList();
+        	var animList =[]; 
+            for(var j=0; j < gAnimInfoList.length; j++){
+        		animList.push(gAnimInfoList[j].title); 
+        	}
+			editor.jqxDropDownList({ source: animList, selectedIndex: 1, width: '100', height: rowHeight,  dropDownHeight: 100, dropDownWidth: 150}); 
          	}
 		},
 		
-		{ text: 'Duration', datafield: 'duration',cellrenderer:customcellsrenderer, width:'20%',columntype:'numberinput',editable:true,cellsrenderer: customcellsrenderer, 
+		{ text: 'Duration(s)', datafield: 'duration',width:'20%',columntype:'numberinput',editable:true, 
 			validation: function (cell, value) {                      
                       return true;
                   },
@@ -1146,9 +1168,24 @@ function GX_InitializeAnimationTab(){
 		}
 		
       ],     
-	});  
-	
+	});  	
+    $("#jqxAnimgrid").on("cellclick", function (event){       	
+    	if(gRefAnimListDDL){
+    		if(gLastItemDisabled)
+    			WAL_enableDropDownListItemByValue(gRefAnimListDDL.id, gLastItemDisabled);
+    		gLastItemDisabled = event.args.row.bounddata.title; 
+    		WAL_disableDropDownListItemByValue(gRefAnimListDDL.id, gLastItemDisabled); 
+    	}    		
+    }); 
     
+    //other controls
+    var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
+    WAL_createDropdownList("pathModifyDDL", '140', gInputHeight, false, pathList, "GX_PathModifyHandler", '100');
+    WAL_createCheckBox('pathvisibilityCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
+    WAL_createCheckBox('rollingmotionCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);             
+    WAL_createNumberInput("offsetFromPathY", '60', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
+    WAL_setNumberInputValue('offsetFromPathY', 0, false);      
+    WAL_createDropdownList('offsetParamDDL', '100', gInputHeight, false, gOffsetList, "", '100');
 }
  function GX_CreateAnimationWidget(wdgtID)
  {
@@ -1449,7 +1486,10 @@ function GX_UpdateAnimInfoInList(animNode)
 			//in which case add the group id as the reference ID. 
 			var endval = animNode.getAttribute('fill');			
 			var titleval = GX_GetAnimTitle(animNode); 
-			var animInfo = [animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, beginParam.refAnimID, beginParam.refContainerID];
+			var duration = animNode.getAttribute('dur');
+			duration = duration.substring(0,duration.length-1); 
+			var animInfo = [animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, beginParam.refAnimID,
+			                beginParam.refContainerID, duration,beginParam.AnimEvent];
 			animNode.setAttribute('begin', ''); 			
 			animNode.setAttribute('fill', 'remove'); 			
 			//_rm first remove the existing entry and then add
@@ -1467,7 +1507,10 @@ function GX_UpdateAnimInfoInList(animNode)
 				var beginParams  = GX_GetAnimBeginParameters(beginval);				
 				var endval = motionAnimNode.getAttribute('fill');			
 				var titleval = animNode.classList[2]; 
-				var animInfo = [animNode.id, motionAnimNode.targetElement.id, attr, beginval, endval, titleval, beginParams.refAnimID, beginParams.refContainerID];
+				var duration = motionAnimNode.getAttribute('dur');
+				duration = duration.substring(0,duration.length-1);
+				var animInfo = [animNode.id, motionAnimNode.targetElement.id, attr, beginval, endval, titleval, beginParams.refAnimID, 
+				                beginParams.refContainerID, duration,beginParams.AnimEvent];
 				//visibleAnimNode.setAttribute('begin', '');
 				motionAnimNode.setAttribute('begin', '');
 				motionAnimNode.setAttribute('fill', 'remove'); 	
@@ -1482,9 +1525,11 @@ function GX_UpdateAnimInfoInList(animNode)
 				animNode1.setAttribute('begin', ''); 
 				var beginParams  = GX_GetAnimBeginParameters(beginval);
 				var endval = 'freeze';
-				
+				var duration = animNode1.getAttribute('dur');
+				duration = duration.substring(0,duration.length-1);
 				var titleval = animNode.classList[2]; 
-				var animInfo = [animNode.id, animNode1.targetElement.id, 'ANIMATE_PATH', beginval, endval, titleval, beginParams.refAnimID, beginParams.refContainerID];
+				var animInfo = [animNode.id, animNode1.targetElement.id, 'ANIMATE_PATH', beginval, endval, titleval, beginParams.refAnimID,
+				                eginParams.refContainerID, duration, beginParams.AnimEvent];
 				GX_RemoveAnimInfoFromList(animNode.id); 
 				gAnimList.push(animInfo);
 			}
@@ -1498,26 +1543,13 @@ function GX_UpdateAnimInfoInList(animNode)
 				var endval = 'freeze';
 				
 				var titleval = animNode.classList[2]; 
-				var animInfo = [animNode.id, animNode1.targetElement.id, 'ANIMATE_ZOOM', beginval, endval, titleval, beginParams.refAnimID, beginParams.refContainerID];
+				var duration = animNode1.getAttribute('dur');
+				duration = duration.substring(0,duration.length-1);				
+				var animInfo = [animNode.id, animNode1.targetElement.id, 'ANIMATE_ZOOM', beginval, endval, titleval, 
+				                beginParams.refAnimID, beginParams.refContainerID, duration, beginParams.AnimEvent];
 				GX_RemoveAnimInfoFromList(animNode.id); 
 				gAnimList.push(animInfo);
-			}
-			/*
-			else if(animType == 'ANIM_MOVE'){
-				attr = 'move';  
-				var moveXNode = animNode.childNodes[0]; 
-				var beginval = moveXNode.getAttribute('begin');	
-				var beginParams  = GX_GetAnimBeginParameters(beginval);	
-				var endval = moveXNode.getAttribute('fill');			
-				var titleval = animNode.classList[2]; 
-				var animInfo = [animNode.id, moveXNode.targetElement.id, attr, beginval, endval, titleval, beginParams.refAnimID, beginParams.refContainerID];
-				moveXNode.setAttribute('begin', '');
-				moveXNode.setAttribute('fill', 'remove'); 	
-				GX_RemoveAnimInfoFromList(animNode.id); 
-				gAnimList.push(animInfo);
-			}*/
-			
-			
+			}		
 		}
 }
 
@@ -3734,6 +3766,16 @@ function GX_RemoveAnimInfoFromList(animID)
 		//GX_PopulateAnimationList(); 
 		gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
 		GX_UpdateAnimationListbox();
+		 break;
+	 case 'add_anim_btn':
+		 gLastPositionValue = 0;
+		 GX_AddNewAnimation();
+		 break; 
+	 case 'delete_anim_btn':
+		 break; 
+	 case  'save_anim_btn':
+		 break; 
+	 case 'play_anim_btn':
 		 break; 
 	default:
 		break; 
@@ -4175,6 +4217,8 @@ function GX_GetPathValuesForAnimation(dvalue){
 	}
 	return newdValArr; 	
 }
+
+
 //var animInfo = [animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, beginParam.refAnimID, beginParam.refContainerID];
 function GX_GetAnimInfoList(){	
 	var animInfoList=[]; 
@@ -4183,12 +4227,35 @@ function GX_GetAnimInfoList(){
 	    	if(gAnimList[i][5] != 'Invisible Animation'){
 	    		animInfo.id = gAnimList[i][0]; 
 	    		animInfo.title = gAnimList[i][5]; 
-	    		animInfo.type = "Defualt";
-	    		animInfo.trigger = gAnimList[i][3];
-	    		animInfo.duration = 0;
+	    		animInfo.type = gReverseAttrList[gAnimList[i][2]];
+	    		animInfo.trigger = gRevTriggerList[gAnimList[i][9]];
+	    		animInfo.duration = gAnimList[i][8];
+	    		if(gAnimList[i][6]){
+	    			var info  = GX_GetAnimInfoByID(gAnimList[i][6]);
+	    			animInfo.refanimID = info[5];
+	    		}	    			
+	    		else
+	    			animInfo.refanimID = ""
 	    		animInfoList.push(animInfo); 
 	    	}	    		
 	    }		
 	
 	return animInfoList; 
+}
+
+
+function GX_UpdateAnimUI(){
+	gLastItemDisabled = 0; 
+	gAnimInfoList = GX_GetAnimInfoList(); 
+	gAnimInfoTableSource.localdata = gAnimInfoList; 
+	$('#jqxAnimgrid').jqxGrid('updatebounddata', 'cells');
+	//also update the refanimation list
+	var animList =[]; 
+	for(j=0; j < gAnimInfoList.length; j++){
+		animList.push(gAnimInfoList[j].title); 
+	}
+	if(gRefAnimListDDL)
+		WAL_UpdateDropDownList(gRefAnimListDDL.id, animList);
+	//gRefAnimListDDL.gRefAnimListDDL
+	
 }
