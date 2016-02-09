@@ -210,7 +210,7 @@
 <script   type="text/javascript" src="../CommonJS/gettheme.js"></script>
 <script   type="text/javascript" src="../CommonJS/Utilities.js"></script>
 <script   type="text/javascript" src="../CommonJS/CDOCWAL_V2.js"></script> 
-<script   type="text/javascript" src="GX_AnimationWdgt.js"></script>
+<script   type="text/javascript" src="GX_AnimationWdgt_V2.js"></script>
 <script   type="text/javascript" src="GX_UIHandlerV5.js"></script>
 <script   type="text/javascript" src="GX_RemoteDataExchange.js"></script>
 <script   type="text/javascript" src="Editlistmanager.js"></script>
@@ -611,65 +611,36 @@
 	 -->	                
    		   				
 		            </div>
-		       <div id='animationTab' style='background-color:#e8e8e8'>
-		          <div id="animationListWidget" style='display:none'>
-		 			<div id="animhdr1" style="font-weight:bold; font-size:medium;text-align:center">Animation List</div>
-		 		   <div id="animcontent1" style="overflow: hidden">    
-    				<div id="animationlist" style="margin-left:5px"></div>    
-   					<div id="animattrgroup" style="position:relative; margin-left:5px; margin-top:2px;  margin-right:5px; width: 352px; height: auto">
-    					<div id="animattrDivlist" class="ANIMATTR" style="display:none; margin-left:2px; margin-right:3px">Animate<div id="animAttrDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>     
-		          	   <div id="OPACITY_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">
-		                	<div id="startfracEdit" style="margin-left:2px; margin-top:10px">Initial Opacity<div id="startOpacityValueIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>	                	                	
-		                </div>
-	                 <div id="STROKE_WIDTH_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">
-	                	<div style="margin-left:2px; margin-top:10px">End Stroke Width<div id="startStrokeWidthValueIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>                	                	
-	                 </div>       
-                
-	                <div id="MOTION_PATH_GROUP" class="ATTR_UI_GROUP" style="display:none">	            	    
-		           	    <div  class="ANIMATTR" style="display:inline-block; margin-left:2px;">Current Path<div id="pathModifyDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
-		           	    <div id="pathvisibilityCB" style="display:inline-block;margin-left:5px; margin-top:2px">Path Visible</div>
-		           	    <div style='display:none; margin-left:2px; margin-top:0px'>PathOffset-X<div id='offsetFromPathX' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-	           	   		<div style='display:none; margin-left:2px; margin-top:5px'>Motion Offset From Path-Y<div id='offsetFromPathY' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-	           	   		<div  class="ANIMATTR" style="display:inline-block; margin-left:2px;">Touching<div id="offsetParamDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
-	           	   		<div id="rollingmotionCB" style="display:inline-block;margin-left:5px; margin-top:2px">Roll</div>
-	           	 	</div>
+		       		<div id='animationTab' style='background-color:#e8e8e8'>
+		       			<div style='margin-left:5px; margin-top:10px'>
+		       				<button id='add_anim_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_AnimListWidgetBtnHdlr(event)'><span class="glyphicon glyphicon-plus" style='margin-right:5px'></span>Add</button>
+		       				<button id='delete_anim_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_AnimListWidgetBtnHdlr(event)'><span class="glyphicon glyphicon-remove" style='margin-right:5px'></span>Delete</button>
+		       				<button id='save_anim_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_AnimListWidgetBtnHdlr(event)'><span class="glyphicon glyphicon-save" style='margin-right:5px'></span>Save</button>
+		       				<button id='play_anim_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_AnimListWidgetBtnHdlr(event)'><span class="glyphicon glyphicon-play" style='margin-right:5px'></span>Play</button>
+		       			</div>
+		       			<div id='jqxAnimWidget' style="margin-top:10px; text-align:center">
+					        <div id="jqxAnimgrid" style='font-size:12px'></div>  
+ 						</div>
+ 						
+ 						<div id="MOTION_PATH_GROUP" class="ATTR_UI_GROUP" style="display:block">	            	    
+			           	    <div  class="ANIMATTR" style="display:inline-block; margin-left:2px;">Current Path<div id="pathModifyDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
+			           	    <div id="pathvisibilityCB" style="display:inline-block;margin-left:5px; margin-top:2px">Path Visible</div>
+			           	    <div style='display:none; margin-left:2px; margin-top:0px'>PathOffset-X<div id='offsetFromPathX' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+		           	   		<div style='display:none; margin-left:2px; margin-top:5px'>Motion Offset From Path-Y<div id='offsetFromPathY' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+		           	   		<div  class="ANIMATTR" style="display:inline-block; margin-left:2px;">Touching<div id="offsetParamDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
+		           	   		<div id="rollingmotionCB" style="display:inline-block;margin-left:5px; margin-top:2px">Roll</div>
+		           	 	</div>
            	 	
-	           	 	<div id="MOVE_GROUP" class="ATTR_UI_GROUP" style="display:none">	 
-	           	 		<div id="autoReverseCB" style="display:inline-block;margin-left:5px; margin-top:2px">Auto Reverse</div>
-	           	 		<div  class="ANIMATTR" style="display:inline-block; margin-left:80px;">Pace<div id="paceValueDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>	           	 		
-	           	 	</div>
+		           	 	<div id="MOVE_GROUP" class="ATTR_UI_GROUP" style="display:block">	 
+		           	 		<div id="autoReverseCB" style="display:inline-block;margin-left:5px; margin-top:2px">Auto Reverse</div>
+		           	 		<div  class="ANIMATTR" style="display:inline-block; margin-left:80px;">Pace<div id="paceValueDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
+		           	 		
+		           	 	</div>
            	 	
-                	<div  class="ANIMATTR" style="display:none; margin-left:2px; margin-right:3px"><div id="animAttrDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
-	                <div id="ANGLE_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">                	
-	                	<div style="margin-left:2px; margin-top:10px;display:inline-block;">Final Angle(deg)<div id="endAngleValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:11px;"></div></div>                	
-	                </div>  
-	                <div id="ROTATE_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">    
-	                	<div id="autoRotateReverseCB" style="display:block;margin-left:5px; margin-top:2px">Auto Reverse</div>            	
-	                	<div style="margin-left:2px; margin-top:4px;display:inline-block;">Initial Angle(deg)<div id="initRotationValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:11px;"></div></div>
-	                	<div style="margin-left:2px; margin-top:4px;display:inline-block;">Final Angle(deg)<div id="endRotationValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:11px;"></div></div>                	
-	                </div>                 
-	                <div id="FROM_UI_GROUP" class="ATTR_UI_GROUP" style="display:none">                	
-	                	<div style="margin-left:2px; margin-top:10px;display:inline-block;">Initial Value(%)<div id="startValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:11px;"></div></div>                	
-	                </div>
-                                           	
-      </div> 
-				    <div>      
-				    	<div style="margin-left:2px; margin-top:10px;display:inline-block;">Start<div id="startParamDDL" class="EDIT_BOX group6" type="DIMENSION"></div></div>
-				    	<div id="animlist" style="display:inline-block; margin-left:8px;">Animation<div id="animlistDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
-				    </div>
-				    <div id="durEdit" style="display:block; margin-left:2px; margin-top:10px">Duration(sec)<div id="durationIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>
-				     <div id="repeatcountEdit" style="display:inline-block; margin-left:1px; margin-top:5px">Repeat Count<div id="repeatcountIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>
-				     <div id="endstatelist" style="display:inline-block; margin-left:8px;">End State<div id="endstatelistDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
-				    <div style="margin-top:20px;">
-				   		 	 <input type="button" id="applybtn" value="Apply">
-					   		 <input type="button" id="playbtn" value="Play">
-					   		 <input type="button" id="animdeletebtn" value="Delete" style='margin-left:15px'>	   	  	
-					 </div> 
-    			</div>
-			</div><!-- animatiolistwidget -->
-		  </div> <!-- animation tab -->
+		          		
+		  			</div> <!-- animation tab -->
 		                 
-		 </div>   <!-- jqtabs-2 -->
+		 		</div>   <!-- jqtabs-2 -->
         
     		
     		</div>    	
@@ -1045,21 +1016,7 @@
     	<div class="BTN_CONTAINER_SMALL" style='display:block'><input class='small_icon'  type = "image" id='alignright_icon' value=''  src='../CommonCSS/icons/Version1/alignright.png' title='Right Alignment' /></div>
     	<div class="BTN_CONTAINER_SMALL" style='display:block'><input class='small_icon'  type = "image" id='alignbottom_icon' value=''  src='../CommonCSS/icons/Version1/alignbottom.png' title='Bottom Alignment' /></div>
     	<div class="BTN_CONTAINER_SMALL" style='display:block'><input class='small_icon'  type = "image" id='alignhorcenter_icon' value=''  src='../CommonCSS/icons/Version1/alignhorcenter.png' title='Horizontal Alignment' /></div>
-    	<div class="BTN_CONTAINER_SMALL" style='display:block'><input class='small_icon'  type = "image" id='alignvertcenter_icon' value=''  src='../CommonCSS/icons/Version1/alignvertcenter.png' title='Vertical Alignment' /></div>
-   		
-    <!-- 
-         	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;'><input class='small_icon'  type = "image" id='group_icon' value=''  src='../CommonCSS/icons/Version1/group.png'  data-tooltiptext='Group' data-helptext='Add a new Group'/><span class='SMALL_TB_TEXT'>Group</span></div>
-	    	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;'><input class='small_icon'  type = "image" id='circle_icon' value=''  src='../CommonCSS/icons/Version1/circle.png'  data-tooltiptext='Circle' data-helptext='Using this draw a Circle'/><span class='SMALL_TB_TEXT'>Circle</span></div>
-	    	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;'><input class='small_icon'  type = "image" id='ellipse_icon' value=''  src='../CommonCSS/icons/Version1/ellipse.png'  data-tooltiptext='Ellipse' data-helptext='Using this draw an Ellipse'/><span class='SMALL_TB_TEXT'>Ellipse</span></div>
-	    	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;'><input class='small_icon'  type = "image" id='square_icon' value=''  src='../CommonCSS/icons/Version1/square.png' data-tooltiptext='Rectangle' data-helptext='Use this to draw a rectangle or a circle' /><span class='SMALL_TB_TEXT'>Rectangle</span></div>
-	    	
-	    	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;'><input class='small_icon'  type = "image" id='line_icon' value=''  src='../CommonCSS/icons/Version1/line.png' data-tooltiptext='Line' data-helptext='Use this to Select Lines'/><span class='SMALL_TB_TEXT'>Lines</span></div>
-	    	<div style= 'display:inline-block; margin-left:2px; margin-right:3px; margin-top:60px'><div id='lineDDL' class='EDIT_BOX' type='Curve' ></div></div>
-	    	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;'><input class='small_icon'  type = "image" id='polygon_icon' value=''  src='../CommonCSS/icons/Version1/polygon.png' data-tooltiptext='Polygon' data-helptext='Draws a polygon'/><span class='SMALL_TB_TEXT'>Polygon</span></div>	    	
-	    	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;'><input class='small_icon'  type = "image" id='freehand_icon' value=''  src='../CommonCSS/icons/Version1/freehand.png' data-tooltiptext='Free Hand' data-helptext='Draw with our mouse to draw a'/><span class='SMALL_TB_TEXT'>Freehand</span></div>
-	    	<div id='curvep' style= 'display:inline-block; margin-left:2px; margin-right:3px;margin-top:50px;'><div id='curveDDL' class='EDIT_BOX' type='Curve' ></div></div>
-	    	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;'><input class='small_icon'  type = "image" id='curve_icon' value=''  src='../CommonCSS/icons/Version1/path.png' data-tooltiptext='Curve' data-helptext='Use this to draw different types of Curves'/><span class='SMALL_TB_TEXT'>Curves</span></div>
-	   --> 
+    	<div class="BTN_CONTAINER_SMALL" style='display:block'><input class='small_icon'  type = "image" id='alignvertcenter_icon' value=''  src='../CommonCSS/icons/Version1/alignvertcenter.png' title='Vertical Alignment' /></div>   
 	    	
     </div>	  
  </div>
