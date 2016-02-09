@@ -1052,6 +1052,7 @@ function GX_Initialize()
     
     GX_InitializeToolbar(); 
     GX_InitializePropertyTab(); 
+    GX_InitializeAnimationTab(); 
     
     WAL_createNumberInput("svgwidthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1000, 0,1);
     WAL_createNumberInput("svgheightIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1000, 0,1);
@@ -1276,7 +1277,7 @@ function GX_InitializeDocument(svgFileName)
 			 var attr = gReverseAttrList[gAnimList[i][2]]; 
 			 animlist.push(gAnimList[i][5] + '-<b>' + attr + '</<b>'); 
 		 }		 
-		 WAL_ListBoxUpdateData('animationlist', animlist);		 
+		// WAL_ListBoxUpdateData('animationlist', animlist);		 
 	 }	
 	 //update the gradient list 
 	gGradientList = GX_GetGradientList(); 
@@ -1286,6 +1287,8 @@ function GX_InitializeDocument(svgFileName)
 	//GX_showEditorInterface('OBJECT_MODE'); 
 	gIndicatorPathNode = document.getElementById('indicatorpath'); 
 	// reset all variables to default state 
+	
+	//GX_InitializeAnimationTab(); 
 }
 
 function GX_MenuItemShow(menuid, itemText)
@@ -4399,11 +4402,7 @@ function GX_ToolbarHandler(event)
 		var currgradTitle = WAL_getDropdownListSelection('gradlistDDL');
 		var gradInfo = GX_GetGradInfoByTitle(currgradTitle); 
 		GX_RemoveGradient(gradInfo[1], currgradTitle);
-		break; 
-	 case 'anim_new_icon':
-		 gLastPositionValue = 0;
-		 GX_AddNewAnimation();
-		 break; 
+		break;	
 	 case 'anim_edit_icon':
 		 gLastPositionValue = 0; 
 		 var animTitle = WAL_getDropdownListSelection('listanimDDL');
@@ -7703,9 +7702,9 @@ function GX_AddNewAnimation()
 function GX_EditAnimation(animID)
 {
 	//get the animnode 
-	if(bAnimWdgtCreated != true)
+	/*if(bAnimWdgtCreated != true)
     	GX_CreateAnimationWidget('animationwidget'); 
-	
+	*/
 	var animNode = document.getElementById(animID); 
 	gCurrAnimNode = animNode; 
 	if(!animNode)
@@ -9529,8 +9528,14 @@ function GX_RightTabHandler(tabIndex){
 	gCurrentTabIndex = tabIndex; 
 	if(tabIndex == 0)
 		bTreeWidgetDisplay = true; 
-	else
-		bTreeWidgetDisplay = false; 	
+	else if(tabIndex == 1)
+		bTreeWidgetDisplay = false; 
+	else if(tabIndex == 2){
+		//now populate the anim data here
+		GX_UpdateAnimUI(); 
+		//get the list of animation
+		//refresh  the grid data here 
+	}
 
 }
 
