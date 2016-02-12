@@ -630,14 +630,17 @@ function GX_CopyAnimParam(srcParam, destParam){
 function GX_GetAnimParamsFromUI(inputParam)
 {	
 	var animParams = new sAnimParams();	
-	GX_CopyAnimParam(inputParam, animParams);	
-	//WAL_SetItemByValueInList('startParamDDL', itemValue, false);
-	/*
-	var itemValue = WAL_getDropdownListSelection('startParamDDL');
-	var refAnimTitle; 
-	if(itemValue == 'After'){
-		refAnimTitle = WAL_getDropdownListSelection('animlistDDL');		
-		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);
+	GX_CopyAnimParam(inputParam, animParams);
+	
+	//get the grid data first 
+	var  gridrowData = WAL_getGridSelectedRowData('jqxAnimgrid');
+	if(!gridrowData)
+		return ; 
+	var itemValue = gridrowData.trigger;
+	var refAnimTitle = gridrowData.refanimID;
+	if(refAnimTitle.length > 0)
+		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);	
+	if(itemValue == 'After'){		
 		if(refAnimInfo){
 			var refID = GX_GetProperReferenceAnim(refAnimInfo[0]); 
 			gCurrentAnimInfo[3]= refID + '.end'; 
@@ -645,9 +648,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 		animParams.startType = 'ON_ANIMEVENT'; 
 		animParams.AnimEventType = 'end';	
 	}
-	else if(itemValue == 'With'){
-		refAnimTitle = WAL_getDropdownListSelection('animlistDDL');		
-		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);
+	else if(itemValue == 'With'){		
 		if(refAnimInfo){
 			var refID = GX_GetProperReferenceAnim(refAnimInfo[0]); 
 			gCurrentAnimInfo[3]= refID + '.begin'; 
@@ -655,16 +656,14 @@ function GX_GetAnimParamsFromUI(inputParam)
 		animParams.startType = 'ON_ANIMEVENT'; 
 		animParams.AnimEventType = 'begin';		
 	}
-	else if(itemValue == 'At 0th Second'){				
-		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);
+	else if(itemValue == 'At 0th Second'){	
 		gCurrentAnimInfo[3]= '0s'; 
 		animParams.startType = 'ON_TIME'; 
 		animParams.AnimEventType = '';
 		animParams.startTime = 0; 
 		animParams.refAnimID = '';
 	}
-	else if(itemValue == 'On Click'){				
-		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);
+	else if(itemValue == 'On Click'){	
 		gCurrentAnimInfo[3]= animParams.UIObjectID + '.click'; //SVG_876.click; 
 		animParams.startType = 'ON_CLICK'; 
 		animParams.AnimEventType = '';
@@ -676,7 +675,9 @@ function GX_GetAnimParamsFromUI(inputParam)
 	var beginParam = GX_GetAnimBeginParameters(gCurrentAnimInfo[3]); 
 	animParams.refAnimID = beginParam.refAnimID; 
 	animParams.refContainerID = beginParam.refContainerID; 
-	*/
+	
+	//getting the duration
+	animParams.duration = gridrowData.duration; 
 	switch(animParams.attribute)
 	{	
 	case 'rotate':		
@@ -684,11 +685,7 @@ function GX_GetAnimParamsFromUI(inputParam)
     	animParams.endValue = value;      	
     	value =  WAL_getMaskedInputValue('initRotationValueIP'); 
     	animParams.startValue = value;     	
-    	animParams.autoReverse = WAL_getCheckBoxValue('autoRotateReverseCB');
-    	//get the center value 
-    	//var markerNode = document.getElementById('markerPoint');    	
-    	//var markDim = GX_GetRectObjectDim(markerNode);
-    	
+    	animParams.autoReverse = WAL_getCheckBoxValue('autoRotateReverseCB');    	
     	animParams.center = gMarkerPosition.centerX + ',' + gMarkerPosition.centerY; 
     	//animParams.endValue += ' ' +animParams.center;
     	//animParams.startValue += ' ' +animParams.center;
@@ -1045,7 +1042,7 @@ function GX_InitializeAnimationTab(){
     
     $("#jqxAnimgrid").on('rowselect', function (event){
     	var animName = event.args.row.title;
-    	GX_UpdateAnimInfoOnUI(animName)
+    	GX_UpdateAnimInfoOnUI(animName); 
     }); 
     
     //other controls
@@ -1109,9 +1106,9 @@ function GX_InitializeAnimationTab(){
                 
                
                 
-                WAL_createButton('playbtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
-                WAL_createButton('animdeletebtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
-                WAL_createButton('applybtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
+              //  WAL_createButton('playbtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
+              //  WAL_createButton('animdeletebtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
+              //  WAL_createButton('applybtn', 'GX_AnimListWidgetBtnHdlr(event)', '58','24', true);
                 
                       
               //  WAL_createRadioButton('motionvalbtn', 'GX_AnimDlgRadioValueChangeHdlr', '130', '20', false, false);
@@ -3374,11 +3371,10 @@ function GX_RemoveAnimInfoFromList(animID)
 		//animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval]; 
 	else if(gCurrentAnimInfo[2] == 'rotate'){
 			//var objNode = document.getElementById(gCurrentAnimInfo[3]);
-		//GX_SetSelection(animNode.targetElement, true, false);		
+		GX_SetSelection(animNode.targetElement, true, false);		
 	}
-	else 
-		;
-	//	GX_SetSelection(animNode.targetElement, true, false);
+	else 		
+		GX_SetSelection(animNode.targetElement, true, false);
 	//rm to be done later 
 	GX_SetAnimParamOnUI(gCurrAnimParam); 	
  }
@@ -3654,8 +3650,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			 GX_UpdateAnimationListbox(); 		    
 		 }
 		 break;
-	 case 'apply_anim_btn':
-		// gInitAnimParam = gCurrAnimParam; 
+	 case 'apply_anim_btn':	
 		 var tempAnimParam = GX_GetAnimParamsFromUI(gCurrAnimParam); 
 		 var attrArray = GX_CompareAndGetAnimParamArray(gCurrAnimParam, tempAnimParam); 		
 		//now update the array on server side 
@@ -3664,8 +3659,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			var respStr = GX_UpdateAnimObjectAttribute(gCurrAnimParam.animID, attrArray);
 			//respStr = GXRDE_updateAnimationObject(gCurrAnimParam.animID, attrArray); 
 			
-		}	
-		//GX_PopulateAnimationList(); 
+		}		
 		gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
 		GX_UpdateAnimationListbox();
 		 break;
