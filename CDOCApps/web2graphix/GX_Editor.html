@@ -377,7 +377,8 @@
 	<div id="sel_gripper" class="ui-widget-content GRIPPER" style='border:3px dashed blue; position:absolute'></div>
 	<div id='DivPathMarker' class="ui-widget-content" style='border:2px solid black; position:absolute; width:10px; height:10px; border-radius:5px' onmousemove='OnDivPathMarkerMouseMove(event)' onmouseout='OnDivPathMarkerMouseOut(event)'
      onmousedown='OnDivPathMarkerMouseDown(event)'></div>  
-     <div id='MarkerHighlighter' class='PATH_MARKER' style='border:2px solid red; position:absolute; width:20px; height:20px; border-radius:10px; display:none'></div>          		
+     <div id='MarkerHighlighter' class='PATH_MARKER' style='border:2px solid red; position:absolute; width:20px; height:20px; border-radius:10px; display:none'></div>
+     <div id='markerPoint'  class='CUSTOM_MARKER' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1;display:none'></div>          		
      </div> <!-- Canvas -->       	
                 
             </div>
@@ -622,7 +623,7 @@
 					        <div id="jqxAnimgrid" style='font-size:12px'></div>  
  						</div>
  						<table  style="width:100%; margin-top:8px">
- 							<tr id='commonAnim' class='propertyRow'>
+ 							<tr id='commonAnim' class='animpropertyRow'>
  								<td class='propertyValues'>
 			              			<div id="repeatcountEdit" style="display:inline-block; margin-left:1px; margin-top:2px"><span class='myLabel' style='text-align:right;'>Repeat Count</span><div id="repeatcountIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>		              					              		
 			              		</td>
@@ -631,7 +632,7 @@
 			              		</td>
  							</tr>
  						
-			              	<tr id='sasd' class='propertyRow MotionPathProperty'>			              		
+			              	<tr id='sasd' class='animpropertyRow MotionPathProperty'>			              		
 			              		<td class='propertyValues'>
 			              			<div  class="ANIMATTR" style="display:inline-block; margin-left:2px;"><span class='myLabel' style='text-align:right;'>Current Path</span><div id="pathModifyDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:2px"></div></div>		              					              		
 			              		</td>
@@ -639,7 +640,7 @@
 			              			<div><span class='myLabel' style='text-align:right;'>Path Visible</span><div id="pathvisibilityCB" style="display:inline-block;margin-left:1px; margin-top:2px;position:relative; top:5px"></div></div>
 			              		</td>
 			              	</tr >
-			              	<tr id='wqt' class='propertyRow MotionPathProperty'>			              		
+			              	<tr id='wqt' class='animpropertyRow MotionPathProperty'>			              		
 			              		<td class='propertyValues'>
 			              			<div  class="ANIMATTR" style="display:inline-block; margin-left:2px;"><span class='myLabel' style='text-align:right;'>Touching</span><div id="offsetParamDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:2px"></div></div>		              					              		
 			              		</td>
@@ -647,7 +648,7 @@
 			              			<div class="ANIMATTR" style="display:inline-block; margin-left:2px;"><span class='myLabel' style='text-align:right;'>Roll</span><div id="rollingmotionCB" style="display:inline-block;margin-left:5px; margin-top:2px; position:relative; top:5px"></div></div>
 			              		</td>
 			              	</tr >
-			              	<tr id='dfretr' class='propertyRow MoveProperty'>			              		
+			              	<tr id='dfretr' class='animpropertyRow MoveProperty'>			              		
 			              		<td class='propertyValues'>
 			              			<div><span class='myLabel' style='text-align:right;'>Auto Reverse</span><div id="autoReverseCB" style="display:inline-block;margin-left:5px; margin-top:2px; position:relative; top:5px"></div></div>		              					              		
 			              		</td>
@@ -655,15 +656,16 @@
 			              			<div  class="ANIMATTR" style="display:inline-block; margin-left:2px;"><span class='myLabel' style='text-align:right;'>Pace</span><div id="paceValueDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:2px"></div></div>
 			              		</td>
 			              	</tr >
-			                <tr id='dfretr' class='propertyRow RotateProperty'>			              		
+			                <tr id='dfretr' class='animpropertyRow RotateProperty'>			              		
 			              		<td class='propertyValues'>
+			              			<div><span class='myLabel' style='text-align:right;'>Auto Reverse</span><div id="autoRotateReverseCB" style="display:block;margin-left:5px; margin-top:2px"></div></div>
 			              			<div style="margin-left:2px; margin-top:4px;display:inline-block;"><span class='myLabel' style='text-align:right;'>Initial Angle(deg)</span><div id="initRotationValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:2px;"></div></div>		              					              		
 			              		</td>
 			              		<td class='propertyValues'>
 			              			<div style="margin-left:2px; margin-top:4px;display:inline-block;"><span class='myLabel' style='text-align:right;'>Final Angle(deg)</span><div id="endRotationValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:2px;"></div></div>
 			              		</td>
 			              	</tr >
-			              	<tr id='dfretr' class='propertyRow ValueProperty'>			              		
+			              	<tr id='dfretr' class='animpropertyRow ValueProperty'>			              		
 			              		<td class='propertyValues'>
 			              			<div style="margin-left:2px; margin-top:10px;display:inline-block;">Initial Value(%)<div id="startValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:2px;"></div></div>		              					              		
 			              		</td>
@@ -671,27 +673,7 @@
 			              			<div style="margin-left:2px; margin-top:10px;display:inline-block;">Final Value(%)<div id="endValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:2px;"></div></div>
 			              		</td>
 			              	</tr >
-			              	
-           	 		
-			              	
-		           	   		
-		              	</table>
-		              	
-		              	            	
-                	
-                	
- 						
- 						<div id="MOTION_PATH_GROUP" class="ATTR_UI_GROUP" style="display:block">	            	    
-			           	   <!--  <div  class="ANIMATTR" style="display:inline-block; margin-left:2px;">Current Path<div id="pathModifyDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:12px"></div></div>
-			           	    <div id="pathvisibilityCB" style="display:inline-block;margin-left:5px; margin-top:2px">Path Visible</div>  -->
-			           	    <div style='display:none; margin-left:2px; margin-top:0px'>PathOffset-X<div id='offsetFromPathX' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-		           	   		<div style='display:none; margin-left:2px; margin-top:5px'>Motion Offset From Path-Y<div id='offsetFromPathY' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
-		           	   		
-		           	 	</div>
-           	 	
-		           	 	
-           	 	
-		          		
+		              	</table> 
 		  			</div> <!-- animation tab -->
 		                 
 		 		</div>   <!-- jqtabs-2 -->
@@ -1028,7 +1010,7 @@
    <!-- <div id='DivPathMarker' class="ui-widget-content" style='border:2px solid black; position:absolute; width:10px; height:10px; border-radius:5px' onmousemove='OnDivPathMarkerMouseMove(event)' onmouseout='OnDivPathMarkerMouseOut(event)'
      onmousedown='OnDivPathMarkerMouseDown(event)'></div> -->
     
-    <div id='markerPoint'  class='CUSTOM_MARKER' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1;'></div>
+    <!-- <div id='markerPoint'  class='CUSTOM_MARKER' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1;'></div>-->
     
     <div id="deleteConfirmDlg" style="display:none"><div ">Confirm</div>
         <div  style="overflow: hidden"> 
