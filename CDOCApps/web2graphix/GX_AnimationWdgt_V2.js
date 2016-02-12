@@ -119,6 +119,7 @@ var gbApplied = false;
 var gNewAnimObject =  false; 
 var gLastPositionValue = 0; 
 var gDefaultRollingDuration = new Number(1); 
+var gMarkerPosition = 0; 
 //var attrList = ['fill', 'stroke', 'fill-opacity', 'visibility', 'stroke-width','translate', 'rotate', 'skewX','skewY'];
 var gMoveIndicatorPath = false; 
 
@@ -461,69 +462,43 @@ function GX_SetAnimParamOnUI(animParam) {
 		Debug_Message('undefined Anim Param'); 
 		return ; 
 	}
-	/*
-	if(animParam.animType == 'ANIM_MOTION'){
-		var invNode = document.getElementById(animParam.animID + '_V'); 
-		var invAnimParam = GX_GetAnimParamFromNode(invNode); 
-		animParam.startType = invAnimParam.startType; 
-		animParam.AnimEventType = invAnimParam.AnimEventType; 
-		animParam.refAnimID = invAnimParam.refAnimID;
-	}
-	*/
 	
-	var animlist=[];	
-	for(var i =0; i < gAnimList.length; i++)
-	{	    
-	    if(animParam.title  !=  gAnimList[i][5]){	    	 
-	    	var refAnimInfo = GX_GetBeginParamWithRefAnim(gAnimList[i]); 
-	    	if( (gAnimList[i][5] != 'Invisible Animation') && (refAnimInfo[0] != gCurrentAnimInfo[0] ) )
-	    		animlist.push(gAnimList[i][5]);
-	    }	    	 
-	}
-	WAL_UpdateDropDownList('animlistDDL', animlist);	
-	if(animParam.startType == 'ON_ANIMEVENT'){
-		if(animParam.AnimEventType == 'end'){
-			itemValue = 'After';  
-		}
-		else if(animParam.AnimEventType == 'begin'){
-			itemValue = 'With';  
-		}		
-		var refAnimInfo = GX_GetAnimInfoByID(animParam.refContainerID);		
-		WAL_SetItemByValueInList('animlistDDL', refAnimInfo[5], false);
-	}
-	else if(animParam.startType == 'ON_CLICK'){
-		itemValue = 'On Click';
-	}
-	else if(animParam.startType == 'ON_TIME'){
-		itemValue = 'At 0th Second';
-	}	
-	WAL_SetItemByValueInList('startParamDDL', itemValue, false);	
-	var itemvalue = gReverseAttrList[animParam.attribute]; 
-	var dummyNode =  document.getElementById('animAttrDDL'); 
-	GX_AnimAttrListHandler(dummyNode, animParam.attribute); 
-	//WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, false); 
-	//WAL_SetItemByValueInList('animAttrDDL', itemvalue, false); 	
-	//WAL_disableWidget('animAttrDDL', 'data-jqxDropDownList', false, true);
+	// reset the property UI
+	$('.animpropertyRow').hide();
+	
+	//showin common property first
+	$('#commonAnim')[0].style.display = 'table-row'; 
+	WAL_setNumberInputValue('repeatcountIP', animParam.repeatCount, false);    
+	WAL_SetItemByValueInList('endstatelistDDL', animParam.endState, false);
 	
 	switch(animParam.attribute)
 	{	
 	case 'rotate':		   	
     	
+		$('.RotateProperty').css({display:'table-row'}); 
 		WAL_setCheckBoxValue('autoRotateReverseCB', animParam.autoReverse );
 		WAL_setNumberInputValue('endRotationValueIP', animParam.endValue, false);
 		WAL_setNumberInputValue('initRotationValueIP', animParam.startValue, false);
 		var objNode = document.getElementById(gCurrentAnimInfo[1]);
 		//extract the center coordinates 
 		var valArr = animParam.center.split(','); 
+		with(Math){
+			//then set a grabber to this corodiantes
+			var myDim = new sDimension(); 
+			myDim.x = new Number(valArr[0]);
+			myDim.y = new Number(valArr[1]); 
+			myDim.width = new Number(10); 
+			myDim.height = new Number(10); 	
+			///call the update markers
+			//GX_UpdateMarkers(myDim, true, true); 
+			gMarkerPosition = new sDimension(); 
+			gMarkerPosition.centerX =  myDim.x; 
+			gMarkerPosition.centerY =  myDim.y; 
+			gMarkerPosition.x = gMarkerPosition.centerX + gMarkerPosition.width/2;
+			gMarkerPosition.y = gMarkerPosition.centerY + gMarkerPosition.height/2;
+		}
 		
-		//then set a grabber to this corodiantes
-		var myDim = new sDimension(); 
-		myDim.x = valArr[0];
-		myDim.y = valArr[1]
-		myDim.width = 5; 
-		myDim.height = 5; 	
-		///call the update markers
-		GX_UpdateMarkers(myDim, true, true); 
+		GX_SetPointMarker(myDim, true);
 		
 		break; 		
 	case 'pathmotion':	
@@ -580,148 +555,36 @@ function GX_SetAnimParamOnUI(animParam) {
 		
 		var endArr = animParam.endValue.split(' ');
 		var startArr = animParam.startValue.split(' ');
+		with(Math){
+			var endX, endY;
+			endX = new Number(objPos.centerX); 
+			endY = new Number(objPos.centerY); 
+			endX += new Number(endArr[0]); 
+			endY += new Number(endArr[1]); 
+			var markerdim = new sDimension(); 
+			markerdim.x = endX; 
+			markerdim.y = endY; 
+			markerdim.width = 10; 
+			markerdim.height = 10; 
+		//GX_UpdateMarkers(markerdim, true, true);		
+			gMarkerPosition = new sDimension();		
+			gMarkerPosition.centerX =  markerdim.x ; //gMarkerPosition.x + markerdim.width/2;
+			gMarkerPosition.centerY =  markerdim.y ; //gMarkerPosition.y + markerdim.height/2;
+			gMarkerPosition.x = gMarkerPosition.centerX - markerdim.width/2; 
+			gMarkerPosition.y = gMarkerPosition.centerY - markerdim.height/2; 
+		}
 		
-		var endX, endY;
-		endX = new Number(objPos.centerX); 
-		endY = new Number(objPos.centerY); 
-		endX += new Number(endArr[0]); 
-		endY += new Number(endArr[1]); 
-		var markerdim = new sDimension(); 
-		markerdim.x = endX; 
-		markerdim.y = endY; 
-		GX_UpdateMarkers(markerdim, true, true); 
+		GX_SetPointMarker(markerdim, true);
 		
     	gMoveIndicatorPath =  true; 
     	var currentPos = ["M", objPos.centerX, objPos.centerY, 'POINT'];
         gIndicatorPath.push(currentPos);        
         var currentPos = ["L", endX, endY, 'END_POINT'];
-        gIndicatorPath.push(currentPos);
-			//M50 130 L200 100 L300 150
-		//set the path value of the line properly
-		//make the line visible 
-		
+        gIndicatorPath.push(currentPos);		
 		break; 
 	default:
 		break; 			
 	}
-	
-	//DURATION 
-	WAL_setNumberInputValue('durationIP', animParam.duration, false);
-	WAL_setNumberInputValue('repeatcountIP', animParam.repeatCount, false);
-    // animParam.endState = 'freeze'; //FREEZE, REMOVE
-	WAL_SetItemByValueInList('endstatelistDDL', animParam.endState, true);
-	
-	/*var refAnimInfo = GX_GetBeginParamWithRefAnim(gCurrentAnimInfo); 
-	if(refAnimInfo[5] == 'Invisible Animation')
-		refAnimInfo = GX_GetBeginParamWithRefAnim(refAnimInfo); 
-	if(refAnimInfo[5]){		
-		WAL_SetItemByValueInList('animlistDDL', refAnimInfo[5], false); 
-	}
-		*/ 
-	
-	/*
-	//modify for rotate attribute 
-    if(animParam.attribute == 'rotate')
-    {
-    	var valarr  = animParam.startValue.split(" "); 
-    	animParam.startValue = valarr[0];     	
-    	valarr  = animParam.endValue.split(" "); 
-    	animParam.endValue = valarr[0];     	
-    }
-    WAL_setTextInputValue('animIDIP', animParam.animID, false);
-    // animParam.objectID = 0;
-    WAL_setTextInputValue('objectIDIP', animParam.objectID, false);
-    //animParam.duration = 0;
-    WAL_setNumberInputValue('durationIP', animParam.duration, false);
-    
-    WAL_setTextInputValue('animtitleIP', animParam.title, false);
-
-    //animParam.animType = ''; //ATTRIBUTE, MOTION,TRANSFORM
-    if ((animParam.animType == 'ANIM_ATTRIBUTE') || (animParam.animType == 'ANIM_TRANSFORM')) {
-        WAL_setradioButtonCheck('attrvalbtn', true); 
-        //animParam.attribute = '';
-        var itemvalue = gReverseAttrList[animParam.attribute]; 
-        WAL_SetItemByValueInList('animAttrDDL', itemvalue, false);
-        //animParam.startValue
-        
-      //here should be the switch statement
-		switch(animParam.attribute)
-		{		
-		
-		case 'fill-opacity':			
-			WAL_setNumberInputValue('startOpacityValueIP', animParam.startValue, false);
-			//WAL_setNumberInputValue('endOpacityValueIP', animParam.endValue, false);	
-			//continue from here next time			
-			break; 
-		 
-		case 'stroke-width':
-			WAL_setNumberInputValue('startStrokeWidthValueIP', animParam.startValue, false); 
-				
-			break;		
-		case 'rotate':			
-			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);					
-			break; 
-		case 'skewX':
-			
-			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
-			break;
-		case 'skewY':
-			
-			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);		
-			break;
-		default:
-			break; 			
-		}
-		 WAL_setNumberInputValue('offsetFromPathX', 0, true);
-	     WAL_setNumberInputValue('offsetFromPathY',0, true); 
-        
-        //WAL_setTextInputValue('startColValIP', animParam.startValue, false);
-        // animParam.endValue = '';
-        //WAL_setTextInputValue('endColValIP', animParam.endValue, false);    
-    }
-    else if (animParam.animType == 'ANIM_MOTION') {
-        WAL_setradioButtonCheck('motionvalbtn', true); 
-        //animParam.refPathID = 0;
-        WAL_SetItemByValueInList('pathlistDDL', animParam.refPathID, true);
-        // animParam.bPathVisible = true;
-        WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible);   
-        
-        var mystr = animParam.PathObjectOffset; 
-        var splitstring = mystr.split(',');
-        WAL_setNumberInputValue('offsetFromPathX', splitstring[0], true);
-        WAL_setNumberInputValue('offsetFromPathY', splitstring[1], true);         
-      
-    }
-    else if (animParam.startType == 'ON_UIEVENT') {
-        WAL_setradioButtonCheck('uieventRB', true);       
-        // animParam.UIEventType = 'M_CLICK';
-        var evtType;
-        if (animParam.UIEventType == 'M_CLICK') {
-            evtType = "Mouse Click";         
-        }
-        else if(animParam.UIEventType == 'M_MOVE') 
-        {
-            evtType = "Mouse Move"; 
-        }       
-        WAL_SetItemByValueInList('objectlistDDL', animParam.UIObjectID, true);             
-    }
-    else if (animParam.startType == 'ON_ANIMEVENT') {
-        WAL_setradioButtonCheck('animeventRB', true);    
-        
-        WAL_SetItemByValueInList('animeventlistDDL', animParam.AnimEventType, true);
-        //animParam.AnimID = 0;
-        var animInfo = GX_GetAnimInfoByID(animParam.refAnimID); 
-        if(!animInfo)
-        	return;        
-        WAL_SetItemByValueInList('animlistDDL', animInfo[5], true);   
-    }
-   
-    
-    // animParam.repeatCount = 0;
-    WAL_setNumberInputValue('repeatcountIP', animParam.repeatCount, false);
-    // animParam.endState = 'freeze'; //FREEZE, REMOVE
-    WAL_SetItemByValueInList('endstatelistDDL', animParam.endState, true);   
-    */
 	
 }
 
@@ -769,6 +632,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 	var animParams = new sAnimParams();	
 	GX_CopyAnimParam(inputParam, animParams);	
 	//WAL_SetItemByValueInList('startParamDDL', itemValue, false);
+	/*
 	var itemValue = WAL_getDropdownListSelection('startParamDDL');
 	var refAnimTitle; 
 	if(itemValue == 'After'){
@@ -812,7 +676,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 	var beginParam = GX_GetAnimBeginParameters(gCurrentAnimInfo[3]); 
 	animParams.refAnimID = beginParam.refAnimID; 
 	animParams.refContainerID = beginParam.refContainerID; 
-	
+	*/
 	switch(animParams.attribute)
 	{	
 	case 'rotate':		
@@ -822,17 +686,18 @@ function GX_GetAnimParamsFromUI(inputParam)
     	animParams.startValue = value;     	
     	animParams.autoReverse = WAL_getCheckBoxValue('autoRotateReverseCB');
     	//get the center value 
-    	var markerNode = document.getElementById('markerPoint');    	
-    	var markDim = GX_GetRectObjectDim(markerNode);
-    	animParams.center = markDim.centerX + ',' + markDim.centerY; 
+    	//var markerNode = document.getElementById('markerPoint');    	
+    	//var markDim = GX_GetRectObjectDim(markerNode);
+    	
+    	animParams.center = gMarkerPosition.centerX + ',' + gMarkerPosition.centerY; 
     	//animParams.endValue += ' ' +animParams.center;
     	//animParams.startValue += ' ' +animParams.center;
 		break; 		
 	case 'translate':
-		var markerNode = document.getElementById('markerPoint'); 
-		var markDim = GX_GetRectObjectDim(markerNode);
-    	var endX = new Number(markDim.centerX); 
-    	var endY = new Number(markDim.centerY);
+		//var markerNode = document.getElementById('markerPoint'); 
+		//var markDim = GX_GetRectObjectDim(markerNode);
+    	var endX = new Number(gMarkerPosition.centerX); 
+    	var endY = new Number(gMarkerPosition.centerY);
     	var startArr = animParams.center.split(' '); 
     	var startX =new Number(startArr[0]);
     	var startY =new Number(startArr[1]); 
@@ -948,7 +813,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 	}
 	
 	//duration 
-	animParams.duration = WAL_getMaskedInputValue('durationIP');	
+	//animParams.duration = WAL_getMaskedInputValue('durationIP');	
 	animParams.repeatCount = WAL_getMaskedInputValue('repeatcountIP');
 	animParams.endState = WAL_getDropdownListSelection('endstatelistDDL');	 
 	
@@ -1188,8 +1053,8 @@ function GX_InitializeAnimationTab(){
     WAL_createDropdownList("pathModifyDDL", '140', gInputHeight, false, pathList, "GX_PathModifyHandler", '100', '140');
     WAL_createCheckBox('pathvisibilityCB', 'GX_AnimDlgCBHdlr', gInputHeight, gInputHeight, '14', false, true);
     WAL_createCheckBox('rollingmotionCB', 'GX_AnimDlgCBHdlr', gInputHeight, gInputHeight, '14', false, true);             
-    WAL_createNumberInput("offsetFromPathY", '60', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
-    WAL_setNumberInputValue('offsetFromPathY', 0, false);      
+   // WAL_createNumberInput("offsetFromPathY", '60', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
+  //  WAL_setNumberInputValue('offsetFromPathY', 0, false);      
     WAL_createDropdownList('offsetParamDDL', '100', gInputHeight, false, gOffsetList, "", '100', 0);
     
     WAL_createNumberInput("repeatcountIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, 0, 1);
@@ -1207,6 +1072,7 @@ function GX_InitializeAnimationTab(){
     
     WAL_createNumberInput("startValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, -100, 1);
     WAL_createNumberInput("endValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, -100, 1);
+    WAL_createCheckBox('autoRotateReverseCB', 'GX_AnimDlgCBHdlr', gInputHeight, gInputHeight, '14', false, true);
 }
  function GX_CreateAnimationWidget(wdgtID)
  {
@@ -1230,8 +1096,7 @@ function GX_InitializeAnimationTab(){
                 var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
                 WAL_createDropdownList("pathModifyDDL", '140', gInputHeight, false, pathList, "GX_PathModifyHandler", '100');
                 
-                attrList = ['After', 'With', 'On Click', 'At 0th Second'];                
-                WAL_createDropdownList('startParamDDL', '100', gInputHeight, false, attrList, "GX_AnimAttrListHandler", '100');
+                
                 WAL_createDropdownList('animlistDDL', '130', gInputHeight, false, animlist, "GX_AnimAttrListHandler", '100');
                 WAL_createDecimalNumberInput("startOpacityValueIP", '80px', gInputHeight, "GX_AnimDlgEditHdlr",true, 1.0,0.0,0.1);
                 WAL_setNumberInputValue('startOpacityValueIP', 1.0, false); 
@@ -1258,14 +1123,14 @@ function GX_InitializeAnimationTab(){
               //  WAL_setradioButtonCheck('attrvalbtn', true); 
                // WAL_createNumberInput("offsetFromPathX", '60px', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
               //  WAL_setNumberInputValue('offsetFromPathX', 0, false); 
-                WAL_createNumberInput("offsetFromPathY", '60', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
-                WAL_setNumberInputValue('offsetFromPathY', 0, false);            
+             //   WAL_createNumberInput("offsetFromPathY", '60', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
+             //   WAL_setNumberInputValue('offsetFromPathY', 0, false);            
                  
                // WAL_createDropdownList('offsetParamDDL', '100', gInputHeight, false, gOffsetList, "", '100');
 				
                 
                 //rotation UI 
-                WAL_createCheckBox('autoRotateReverseCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
+                //WAL_createCheckBox('autoRotateReverseCB', 'GX_AnimDlgCBHdlr', '30', '24', '14', false, true);
                           
                 
                 
@@ -1667,8 +1532,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 {
 		 var itemval = value ; //gAttrList[value]; 
 		 var JQSel = '.ATTR_UI_GROUP'; 
-		 $(JQSel).hide(); 		
-		 //Debug_Message('Anim Attribute=' + value); 
+		 $(JQSel).hide(); 
 		 
 		 if(itemval == 'opacity')
 		 {
@@ -3510,12 +3374,13 @@ function GX_RemoveAnimInfoFromList(animID)
 		//animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval]; 
 	else if(gCurrentAnimInfo[2] == 'rotate'){
 			//var objNode = document.getElementById(gCurrentAnimInfo[3]);
-		GX_SetSelection(animNode.targetElement, true, false);		
+		//GX_SetSelection(animNode.targetElement, true, false);		
 	}
-	else
-		GX_SetSelection(animNode.targetElement, true, false);
+	else 
+		;
+	//	GX_SetSelection(animNode.targetElement, true, false);
 	//rm to be done later 
-	//GX_SetAnimParamOnUI(gCurrAnimParam); 	
+	GX_SetAnimParamOnUI(gCurrAnimParam); 	
  }
  
  function GX_NewAnimDlgOK(){
@@ -4275,7 +4140,7 @@ function GX_GetAnimInfoList(){
 }
 
 
-function GX_UpdateAnimUI(){
+function GX_UpdateAnimUIGrid(){
 	gLastItemDisabled = 0; 
 	gAnimInfoList = GX_GetAnimInfoList(); 
 	gAnimInfoTableSource.localdata = gAnimInfoList; 
