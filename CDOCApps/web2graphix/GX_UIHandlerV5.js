@@ -1144,7 +1144,11 @@ function GX_Initialize()
 	*/ 
 	gSnapToGrid =  false; 
 	var JQSel = '#markerPoint'; 
-	$(JQSel).draggable({ cursor: "move" });	
+	$(JQSel).draggable({ cursor: "move" });
+	$(JQSel).on( "dragstop", function( event, ui ) {
+		OnPointMarkerDragStop(event, ui); 
+	});
+	
 	gClientYOffset = $('#topcontainer').height() ;//- 40; 
    
 }
@@ -3797,7 +3801,7 @@ function GX_SetRectObjectDim(ObjNode, newDim)
         		modDim.height += tolerance; 
         	
     	}
-    		else if(nodeclass == 'PATH_MARKER'){
+    		else if((nodeclass == 'PATH_MARKER')|| (nodeclass == 'CUSTOM_MARKER')){
     			modDim.x = modDim.x - modDim.width/2; 
     			modDim.y = modDim.y - modDim.height/2;
     		}
@@ -5996,6 +6000,18 @@ function OnPathMarkerMouseDown(node) {
 function GX_HidePathMarker(){
 	$('.PATH_MARKER').hide(); 
 }
+
+function GX_SetPointMarker(dim, bShow){
+	var markerNode = $('#markerPoint')[0]; 
+	if(bShow == true){
+		GX_SetRectObjectDim(markerNode, dim); 
+		$('#markerPoint').show(); 
+	}
+	else{
+		$('#markerPoint').hide(); 
+	}		
+}
+
 function GX_UpdatePathMarker(pathID, pathParam, bShow)
 {
 	var JQSel = ".markerclass";  
@@ -8192,10 +8208,7 @@ function OnLogoutButton(event)
 
 function GX_ShowObjectPropertyInterface(objectType, bShow)
 {
-	var JQSel = '.' + objectType + '_PROPERTY'; 
-	//if(objectType == 'ELLIPSE')
-	//{		
-		//var JQSel = '.ELLIPSE_PROPERTY';
+		var JQSel = '.' + objectType + '_PROPERTY';	
 		if(bShow == true)
 			$(JQSel).css('display','inline-block'); 
 		else
@@ -8719,8 +8732,7 @@ function OnDivPathMarkerDragStop(event, ui){
     var newpathvalue = new Number(gPathDataArray[gpathSegIndex][1]); 
     newpathvalue += relX; 
     if(gSnapToGrid == true){
-    	newpathvalue =  GX_ConvertToMultipleOf(newpathvalue, 10); 
-    	
+    	newpathvalue =  GX_ConvertToMultipleOf(newpathvalue, 10);    	
     }
     gPathDataArray[gpathSegIndex][1] = newpathvalue;
     
@@ -9532,7 +9544,7 @@ function GX_RightTabHandler(tabIndex){
 		bTreeWidgetDisplay = false; 
 	else if(tabIndex == 2){
 		//now populate the anim data here
-		GX_UpdateAnimUI(); 
+		GX_UpdateAnimUIGrid(); 
 		//get the list of animation
 		//refresh  the grid data here 
 	}
@@ -9587,4 +9599,14 @@ function GX_ShowPreview(){
 		 var previewcanvasnode =  document.getElementById('previewcanvas'); 
 		 previewcanvasnode.innerHTML = retval; 
 	 }
+}
+
+function OnPointMarkerDragStop(event, ui){
+	relX = new Number(ui.position.left - ui.originalPosition.left);
+    relY = new Number(ui.position.top - ui.originalPosition.top);
+    relX = Math.round(relX / gZoomFactor); 
+    relY = Math.round(relY /gZoomFactor);
+    gMarkerPosition.centerX += relX; 
+    gMarkerPosition.centerY += relY;
+    
 }
