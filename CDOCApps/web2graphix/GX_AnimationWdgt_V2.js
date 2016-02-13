@@ -501,7 +501,8 @@ function GX_SetAnimParamOnUI(animParam) {
 		GX_SetPointMarker(myDim, true);
 		
 		break; 		
-	case 'pathmotion':	
+	case 'pathmotion':				
+		$('.MotionPathProperty').css({display:'table-row'});		
 		WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible); 
 		if( (animParam.objectType == 'ELLIPSE') || (animParam.objectType == 'CIRCLE') )  
 			WAL_disableWidget('rollingmotionCB', 'data-jqxCheckBox', false, false);
@@ -538,7 +539,8 @@ function GX_SetAnimParamOnUI(animParam) {
 		break;
     case 'translate':
 		//get the currentobject selected 		
-		//get he center    
+		//get he center   
+    	$('.MoveProperty').css({display:'table-row'});
     	WAL_setCheckBoxValue('autoReverseCB', animParam.autoReverse );
 		var objPos = GX_GetRectObjectDim(gCurrentObjectSelected); 
 		if(animParam.pace == 0)
@@ -546,14 +548,17 @@ function GX_SetAnimParamOnUI(animParam) {
 		else
 			WAL_SetItemByValueInList('paceValueDDL', 'Accelerate', false);		
 		//get the animParam end value 
-		var endValue = animParam.endValue; 
+		//var endValue = animParam.endValue; 
+		var endArr = animParam.endValue.split(' ');
 		//var indicatorPath = document.getElementById('indicatorpath'); 
 		gIndicatorPath = [];         
-		var pathvalue = 'M' + objPos.centerX + ' ' + objPos.centerY + ' l' + endValue; 
+		var pathvalue = 'M' + objPos.centerX + ',' + objPos.centerY + ' l' + endArr[0] + ',' + endArr[1] + " "; 
+		
+		//d="M277,53 L490,43 "
 		gIndicatorPathNode.setAttribute('d', pathvalue); 
 		gIndicatorPathNode.setAttribute('visibility', 'visible');
 		
-		var endArr = animParam.endValue.split(' ');
+		
 		var startArr = animParam.startValue.split(' ');
 		with(Math){
 			var endX, endY;
@@ -638,7 +643,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 		return ; 
 	var itemValue = gridrowData.trigger;
 	var refAnimTitle = gridrowData.refanimID;
-	if(refAnimTitle.length > 0)
+	if((refAnimTitle) && (refAnimTitle.length > 0) )
 		var refAnimInfo = GX_GetAnimInfoByTitle(refAnimTitle);	
 	if(itemValue == 'After'){		
 		if(refAnimInfo){
