@@ -939,6 +939,22 @@ function WAL_disableDropdownListItem(ID, itemIndex) {
     var item = $(JQSel).jqxDropDownList('disableAt', itemIndex);
 }
 
+function WAL_disableDropDownListItemByValue(ID, value){
+	var JQSel = '#' + ID;	
+	var item = $(JQSel).jqxDropDownList('getItemByValue', value);
+	if(item){
+		var index = item.index;
+		var item = $(JQSel).jqxDropDownList('disableAt', index);
+	}	
+}
+function WAL_enableDropDownListItemByValue(ID, value){
+	var JQSel = '#' + ID;	
+	var item = $(JQSel).jqxDropDownList('getItemByValue', value);
+	if(item){
+		var index = item.index;
+		var item = $(JQSel).jqxDropDownList('enableAt', index);
+	}	
+}
 function WAL_enableDropdownListItem(ID, itemIndex) {
 
     if (gInitialized != true)
@@ -3473,6 +3489,18 @@ function WAL_getGridRowData(ID, index){
 	var data = $(JQSel).jqxGrid('getrowdata', index);
 	return data; 
 }
+
+function WAL_getGridSelectedRowData(ID){
+	var JQSel = '#'+ID; 
+	var rowindex = $(JQSel).jqxGrid('getselectedrowindex');	
+	if(rowindex >= 0)
+		var data = $(JQSel).jqxGrid('getrowdata', rowindex);
+	else
+		data = 0; 	
+	return data; 
+}
+
+
 /*
 $("#jqxgrid").jqxGrid(
 		 {
@@ -3494,7 +3522,7 @@ $("#jqxgrid").jqxGrid(
 });
 */
 
-function WAL_CreatePopOver(ID, refID, title, bModal, Width, Height){
+function WAL_CreatePopOver(ID, refID, title, bModal, Width, Height, bCloseBtn){
 	
 	//popover 
 	var JQSel = '#' + ID; 	
@@ -3503,7 +3531,7 @@ function WAL_CreatePopOver(ID, refID, title, bModal, Width, Height){
          width: Width,
          height: Height,
          showArrow: true,
-         showCloseButton: true,
+         showCloseButton: bCloseBtn,
          arrowOffsetValue: 0,
          selector: $('#'+refID) , 
          title:title,
