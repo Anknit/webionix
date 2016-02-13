@@ -1955,7 +1955,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	objNode.setAttribute('pointer-events', 'visible');    	
     	if(objNode != gCurrentObjectSelected)
     		return ;      	 
-         	    	
+       $('.CUSTOM_MARKER').hide(); 
     	//GX_UpdateMarkers(0, false, true);
     	GX_HidePathMarker(); 
     	if(nodeClass == 'SVG_PATH_OBJECT')
@@ -9609,4 +9609,12 @@ function OnPointMarkerDragStop(event, ui){
     gMarkerPosition.centerX += relX; 
     gMarkerPosition.centerY += relY;
     
+    gPathDataArray = GX_ConvertPathDataToArray(gIndicatorPathNode);
+   // var pathvalue = 'M' + objPos.centerX + ' ' + objPos.centerY + ' l' + endValue; 
+    var endX = new Number(gPathDataArray[1][1]); 
+    endX  += relX;
+    endY = new Number(gPathDataArray[1][2]);
+    endY += relY; 
+    var pathValue = 'M' + gPathDataArray[0][1] + ',' + gPathDataArray[0][2] + ' l' +  endX + ',' +  endY + ' ';
+	gIndicatorPathNode.setAttribute('d', pathValue);    
 }
