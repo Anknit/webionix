@@ -519,21 +519,26 @@ function GX_SetAnimParamOnUI(animParam) {
 		WAL_SetItemByValueInList('offsetParamDDL', gOffsetList[offset], false);		
 		break; 
 	case 'skewX':
+		$('.SkewAnimProperty').show(); 
 		WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
 		break; 
 	case 'skewY':
+		$('.SkewAnimProperty').show(); 
 		WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
 		break; 
 	case 'opacity':
+		$('.OpacityAnimProperty').show(); 
 		WAL_setNumberInputValue('startOpacityValueIP', animParam.startValue, false);	
 		break;
 	case 'scale':
+		$('.ValueProperty').show();
 		var value = new Number(animParam.startValue); 		
 		value = value*100.0; 
 		value -= 100.0; 
 		WAL_setNumberInputValue('startValueIP', value, false);	
 		break;	
 	case 'ANIMATE_ZOOM':
+		$('.ValueProperty').show(); 
 		var value = animParam.startValue; 			
 		WAL_setNumberInputValue('startValueIP', value, false);	
 		break;
@@ -1075,6 +1080,12 @@ function GX_InitializeAnimationTab(){
     WAL_createNumberInput("startValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, -100, 1);
     WAL_createNumberInput("endValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, -100, 1);
     WAL_createCheckBox('autoRotateReverseCB', 'GX_AnimDlgCBHdlr', gInputHeight, gInputHeight, '14', false, true);
+    
+    WAL_createDecimalNumberInput("startOpacityValueIP", '80px', gInputHeight, "",true, 1.0,0.0,0.1);
+    WAL_setNumberInputValue('startOpacityValueIP', 1.0, false); 
+    
+    WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, -360, 1);
+    WAL_setNumberInputValue('endAngleValueIP', 0, false);  
 }
  function GX_CreateAnimationWidget(wdgtID)
  {
@@ -1100,14 +1111,12 @@ function GX_InitializeAnimationTab(){
                 
                 
                 WAL_createDropdownList('animlistDDL', '130', gInputHeight, false, animlist, "GX_AnimAttrListHandler", '100');
-                WAL_createDecimalNumberInput("startOpacityValueIP", '80px', gInputHeight, "GX_AnimDlgEditHdlr",true, 1.0,0.0,0.1);
-                WAL_setNumberInputValue('startOpacityValueIP', 1.0, false); 
+                
                                
                 WAL_createNumberInput("startStrokeWidthValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 15, 1, 1);
                 WAL_setNumberInputValue('startOpacityValueIP', 1, false); 
                 //WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, 0, 1);
-                WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, -360, 1);
-                WAL_setNumberInputValue('endAngleValueIP', 0, false);   
+                
                 
                
                 
@@ -1410,7 +1419,7 @@ function GX_UpdateAnimInfoInList(animNode)
 				duration = duration.substring(0,duration.length-1);
 				var titleval = animNode.classList[2]; 
 				var animInfo = [animNode.id, animNode1.targetElement.id, 'ANIMATE_PATH', beginval, endval, titleval, beginParams.refAnimID,
-				                eginParams.refContainerID, duration, beginParams.AnimEvent];
+				                beginParams.refContainerID, duration, beginParams.AnimEvent];
 				GX_RemoveAnimInfoFromList(animNode.id); 
 				gAnimList.push(animInfo);
 			}
@@ -1421,8 +1430,7 @@ function GX_UpdateAnimInfoInList(animNode)
 				var beginval = animNode1.getAttribute('begin'); 
 				animNode1.setAttribute('begin', ''); 
 				var beginParams  = GX_GetAnimBeginParameters(beginval);
-				var endval = 'freeze';
-				
+				var endval = 'freeze';				
 				var titleval = animNode.classList[2]; 
 				var duration = animNode1.getAttribute('dur');
 				duration = duration.substring(0,duration.length-1);				
