@@ -3295,7 +3295,11 @@ function GX_GetTransformProperty(gNode, transfType)
 		subarr = arr[j].split("("); 
 		if( (transfType == 'translate') && (subarr[0] == 'translate') )
 		{
-			innerArr = subarr[1].split(","); 
+			var delimiter = ','; 
+			var index = subarr[1].indexOf(','); 
+			if(index == -1)
+				delimiter = ' '; 			
+			innerArr = subarr[1].split(delimiter); 			
 			transfDim.x = new Number(innerArr[0]); 
 			transfDim.y = new Number(innerArr[1]);	
 			return transfDim; 
@@ -3303,7 +3307,11 @@ function GX_GetTransformProperty(gNode, transfType)
 		else if( (transfType == 'scale') && (subarr[0] == 'scale') )
 		{
 			//here the assumption is scale will always have two values for sx, sy
-			innerArr = subarr[1].split(","); 
+			var delimiter = ','; 
+			var index = subarr[1].indexOf(','); 
+			if(index == -1)
+				delimiter = ' '; 
+			innerArr = subarr[1].split(delimiter); 
 			transfDim.x = new Number(innerArr[0]); 
 			transfDim.y = new Number(innerArr[1]);		
 			return transfDim; 
