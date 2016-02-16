@@ -1381,7 +1381,8 @@ function GX_UpdateAnimInfoInList(animNode)
 			var animInfo = [animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, beginParam.refAnimID,
 			                beginParam.refContainerID, duration,beginParam.AnimEvent];
 			animNode.setAttribute('begin', ''); 			
-			animNode.setAttribute('fill', 'remove'); 			
+			animNode.setAttribute('fill', 'remove'); 	
+			animNode.setAttribute('onend', 'GX_OnAnimationEndHandler(evt)'); 			
 			//_rm first remove the existing entry and then add
 			GX_RemoveAnimInfoFromList(animNode.id); 
 			gAnimList.push(animInfo); 	
@@ -4161,4 +4162,19 @@ function GX_UpdateAnimUIGrid(){
 		WAL_UpdateDropDownList(gRefAnimListDDL.id, animList);
 	//gRefAnimListDDL.gRefAnimListDDL
 	
+}
+
+
+
+function GX_OnAnimationEndHandler(evt){
+	
+	var animNode = evt.target; 
+	var objID =  animNode.getAttribute('xlink:href'); 
+	objID = objID.substring(1,objID.length); 
+	var objNode = document.getElementById(objID); 
+	var transfStr = objNode.getAttribute('transform'); 
+	//set the default transform value here 
+	transfStr = 'translate(0,0) scale(1,1) rotate(0 0,0)'; 
+	objNode.setAttribute('transform', transfStr);	
+	//Debug_Message("End Animation Event"); 
 }
