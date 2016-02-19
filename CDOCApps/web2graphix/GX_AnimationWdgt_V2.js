@@ -2182,7 +2182,8 @@ function GX_RemoveAnimInfoFromList(animID)
 				 attrData = ['keyTimes','0;1'];  
 				 attrArray.push(attrData);
 			 }
-			 else if(animParams.attribute == 'scale'){
+			 else if( (animParams.attribute == 'scale') || (animParams.attribute == 'skewX')
+					 || (animParams.attribute == 'skewY') ){
 				 attrData = ['from',animParams.startValue];  
 				 attrArray.push(attrData); 
 				    
