@@ -3275,6 +3275,8 @@ function GX_GetLayerDimension(layerID)
 	layerDim.y = layerDim.y + minY;
 	layerDim.width = maxX - minX;
 	layerDim.height = maxY - minY; 
+	layerDim.centerX = Math.round(layerDim.x + layerDim.width/2);
+	layerDim.centerY= Math.round(layerDim.y + layerDim.height/2);
 	//Debug_Message("LayerX = " + layerDim.x + "LayerY=" + layerDim.y+ "Width="+ layerDim.width); 
 	return layerDim; 
 }
@@ -3631,9 +3633,12 @@ function GX_GetRectObjectDim(ObjNode)
 	    }
 	    else if(nodename == 'g')
 	    {
-	    	var tempDim = GX_GetTransformProperty(ObjNode, 'translate'); 
-	    	return tempDim; 
+	    	//_rm replacing this with proper one for the time being lets'see if this has some repurcussion
+	    //	var tempDim = GX_GetTransformProperty(ObjNode, 'translate'); 
+	    	//return tempDim;
+	    	return GX_GetLayerDimension(ObjNode.id);
 	    }	 
+	    
 	    else if(nodename == 'div'){
 	    	var JQSel = '#' + ObjNode.id; 
 	    	var pos = $(JQSel).position(); 
