@@ -14,7 +14,11 @@ sDimension.prototype.maxXIndex = -1;
 //added to tap in the rotation params as well 
 sDimension.prototype.rotate = 0; 
 sDimension.prototype.rotCentreX = 0; 
-sDimension.prototype.rotCentreY = 0; 
+sDimension.prototype.rotCentreY = 0;
+//scaling param incase of transform property
+sDimension.prototype.scaleX = 0; 
+sDimension.prototype.scaleY = 0; 
+
 function sDimension() {
     sDimension.prototype.x = new Number(0);
     sDimension.prototype.y = new Number(0);
@@ -29,10 +33,11 @@ function sDimension() {
     
     sDimension.prototype.rotate = 0; 
     sDimension.prototype.rotCentreX = 0; 
-    sDimension.prototype.rotCentreY = 0; 
-    
+    sDimension.prototype.rotCentreY = 0;     
     sDimension.prototype.centerX =  new Number(0); 
-    sDimension.prototype.centerY =  new Number(0);    
+    sDimension.prototype.centerY =  new Number(0);       
+    sDimension.prototype.scaleX = 0; 
+    sDimension.prototype.scaleY = 0; 
 }
 var gTreeWidgetID = 'node_panel'; 
 var gTreeNodeID = 'node_container'; 
@@ -3291,40 +3296,30 @@ function GX_GetTransformProperty(gNode, transfType)
 	var arr = str.split(" "); 
 	var subarr; 
 	var innerArr; 
-	for(var j =0; j < arr.length; j++)
-	{
-		arr[j] = arr[j].substring(0, arr[j].length-1); 
-		subarr = arr[j].split("("); 
-		if( (transfType == 'translate') && (subarr[0] == 'translate') )
-		{
-			var delimiter = ','; 
-			var index = subarr[1].indexOf(','); 
-			if(index == -1)
-				delimiter = ' '; 			
-			innerArr = subarr[1].split(delimiter); 			
-			transfDim.x = new Number(innerArr[0]); 
-			transfDim.y = new Number(innerArr[1]);	
-			return transfDim; 
-		}
-		else if( (transfType == 'scale') && (subarr[0] == 'scale') )
-		{
-			//here the assumption is scale will always have two values for sx, sy
-			var delimiter = ','; 
-			var index = subarr[1].indexOf(','); 
-			if(index == -1)
-				delimiter = ' '; 
-			innerArr = subarr[1].split(delimiter); 
-			transfDim.x = new Number(innerArr[0]); 
-			transfDim.y = new Number(innerArr[1]);		
-			return transfDim; 
-		}
-		else if((transfType == 'rotate') && (subarr[0] == 'rotate'))
-		{
-			//here the assumption is rotate will always have ONE values for angle NO cx, cy
-			transfDim.x = new Number(subarr[1]);	//using the width dimension for angle 
-			return transfDim; 
-		}
-	}
+	var	delimiter = ' '; //_rm this can be , or ' ' because of chrome issue it is now ' '
+	/*if(arr.length < 1){
+		Debug_Message("GX_GetTransformProperty : Transform String is : " +str ); 
+		return 0; 
+	}*/
+	
+	var x, y; 	
+	//translate param
+	x = arr[0].split('(')[1]; 
+	y = arr[1].substring(0,arr[1].length-1); 
+	transfDim.x = new Number(x); 
+	transfDim.y = new Number(y);	
+	
+	//scale param 
+	x = arr[2].split('(')[1]; 
+	y = arr[3].substring(0,arr[1].length-1); 
+	transfDim.scaleX = new Number(x); 
+	transfDim.scaleY = new Number(y);
+	
+	//rotate param 
+	x = arr[4].split('(')[1];	
+	x = x.substring(0, x.length-1); 
+	transfDim.rotate = new Number(x);	
+	return transfDim; 	
 }
 function GX_SetTransformProperty(gNode, transfType, transfDim)
 {
@@ -3333,9 +3328,15 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 	if(!Transfstr)
 		Transfstr = "";
 	gTransfArray = Transfstr.split(" "); 
+/*	if(gTransfArray.length <1){
+		Debug_Message("GX_SetTransformProperty : Transform String is : " +Transfstr ); 
+		return ; 
+	}
+	*/
 	var str=""; 
 	var objectType = gNode.classList[0]; 
 	var shapeType = gNode.classList[1]; 
+	var delimiter = ' '; 
 	if(transfType == 'translate')
 	{
 		if(gSnapToGrid == true){
@@ -3344,67 +3345,27 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 		}
 		if( (objectType == 'SVG_PATH_OBJECT') || (objectType == 'GROUP') || (objectType == 'SVG_SHAPE_OBJECT') 
 				|| (objectType == 'SVG_TEXT_OBJECT')){
-			str = 'translate(' + transfDim.x + ','+ transfDim.y +')'; 
-			gTransfArray[0] = str; 
+			//str = 'translate(' + transfDim.x + delimiter + transfDim.y +')'; 
+			gTransfArray[0] = 'translate(' + transfDim.x; 
+			gTransfArray[1] =  transfDim.y + ')'; 
 		}
-		/*
-		 * rm now implementing pure translation as it should be 
-		else if(objectType == 'SVG_SHAPE_OBJECT')
-		{
-			if( (shapeType == 'RECTANGLE') || (shapeType == 'IMAGE') )
-			{
-				gNode.setAttribute('x',transfDim.x); 
-				gNode.setAttribute('y',transfDim.y); 
-			}
-			else if( (shapeType == 'ELLIPSE') || (shapeType == 'CIRCLE') )
-			{
-				gNode.setAttribute('cx',transfDim.x); 
-				gNode.setAttribute('cy',transfDim.y); 
-			}
-			
-			str = 'rotate(' + transfDim.rotate;		
-			gTransfArray[2]= str;		
-			str = transfDim.rotCentreX +',' + transfDim.rotCentreY + ')';
-			gTransfArray[3]= str;
-		}	
-		else if(objectType == 'SVG_TEXT_OBJECT')
-		{
-			gNode.setAttribute('x',transfDim.x); 
-			gNode.setAttribute('y',transfDim.y); 
-		}
-		*/ 
-		/*
-		if((transfDim.x == 0) || (transfDim.y ==0) )
-		{
-			break; 
-		}
-		else
-		{		
-			str = transfDim.x +',' + transfDim.y + ')';
-			gTransfArray[3]= str;
-		}	
-		*/	
+		
 	}
 	else if(transfType == 'scale')
 	{
-		str = 'scale(' + transfDim.x + ','+ transfDim.y +')';		
-		gTransfArray[1] = str; 		
+		//str = 'scale(' + transfDim.x + delimiter + transfDim.y +')';		
+		gTransfArray[2] = 'scale(' + transfDim.x; 
+		gTransfArray[3] = transfDim.y + ')'; 	
 	}
 	else if(transfType == 'rotate')
 	{
-		str = 'rotate(' + transfDim.rotate;		
-		gTransfArray[2]= str;		
-		str = transfDim.rotCentreX +',' + transfDim.rotCentreY + ')';
-		gTransfArray[3]= str;		
-		/*gPathDataArray = GX_ConvertPathDataToArray(gNode); 	
-		centreRotation = GX_GetRectObjectDim(gNode); 
-		centreRotation.x = Math.round(centreRotation.x + centreRotation.width/2); 
-		centreRotation.y = Math.round(centreRotation.y + centreRotation.height/2); 
-		GX_SetRotationToPoints(transfDim.width, gPathDataArray, centreRotation);
-		GX_SetObjectAttribute(gNode, 'PATH_DATA', gPathDataArray, true, false); 
-		*/
+		//str = 'rotate(' + transfDim.rotate;		
+		gTransfArray[4]= 'rotate(' + transfDim.rotate + ')';		
 	}	
-	Transfstr = gTransfArray[0] + ' ' + gTransfArray[1] + ' '+ gTransfArray[2] + ' '+ gTransfArray[3];	
+	Transfstr = ''; 
+	for(var k=0; k < 5; k++){
+		Transfstr += (gTransfArray[k] + ' ' ); 
+	}		
 	gNode.setAttribute('transform', Transfstr); 	
 }
 
@@ -4256,6 +4217,9 @@ function GX_ToolbarHandler(event)
 		else if(gCurrentObjectSelected.classList[1] == 'FREEDRAW_PATH'){
 			$('#freedrawProp')[0].style.display = 'table-row';			
 		}		
+		break; 
+	case 'reloadPreviewBtn':
+		GX_ReloadPreview(); 
 		break; 
 	case 'stroke_color_icon':
 		WAL_hideWidget('colorpickwidget', true); 
@@ -9232,6 +9196,8 @@ function GX_ImportShapedlgOK(){
 		GX_ImportObject(gImportShapeFileName); 
 }
 
+var gEditorWidth =0; 
+var gEditorHeight= 0 ; 
 function GX_SetCanvasDimension(width, height){
 	  
 	  //setting the new dimension
@@ -9239,21 +9205,23 @@ function GX_SetCanvasDimension(width, height){
 	  $('#canvas').height(height); 
 	  //updating the previewcanvas as well 
 	  $('#previewcanvas').width(width); 
-	  $('#previewcanvas').height(height); 
+	  $('#previewcanvas').height(height); 	  
+	  gEditorWidth= $('#editor_div').width(); 
+	  gEditorHeight = $('#editor_div').height();
 	  
-	  var editorWidth = $('#editor_div').width(); 
-	  var editorHeight = $('#editor_div').height();
 	  var canvasWidth = $('#canvas').width(); 
 	  var canvasHeight = $('#canvas').height(); 
-	  var canvLeft = Math.round((editorWidth - canvasWidth)/2 + 15); 
+	  var canvLeft = Math.round((gEditorWidth - canvasWidth)/2 + 15); 
 	  if(canvLeft < 0)
 		  canvLeft = 15; 
 	  
-	  var canvTop = Math.round((editorHeight - canvasHeight)/2 +15) ;
+	  var canvTop = Math.round((gEditorHeight - canvasHeight)/4 +15) ;
 	  if(canvTop < 0)
 		  canvTop = 15; 
 	  $('#canvas')[0].style.left = canvLeft +'px'; 
 	  $('#canvas')[0].style.top = canvTop + 'px'; 
+	  $('#previewcanvas')[0].style.left = canvLeft +'px'; 
+	  $('#previewcanvas')[0].style.top = canvTop + 'px'; 
 	  gCurrentCanvasDim = GX_GetCanvasDimension(); 
 	  GX_UpdateCanvasLimits(gCurrentCanvasDim); 
 }
@@ -9565,8 +9533,10 @@ function GX_RightTabHandler(tabIndex){
 }
 
 function GX_EditorTabHandler(tabIndex){
-	if(tabIndex == 0)
+	if(tabIndex == 0){
 		gViewMode = 'EDITOR_MODE'; 
+		GX_ShowEditor(); 
+	}		
 	else{
 		gViewMode = 'PREVIEW_MODE';
 		GX_ShowPreview(); 
@@ -9605,12 +9575,16 @@ function GX_GetObjectMaxDimensionToResize(objDim){
 	}
 	return maxDim; 	
 }
-
+var gPreviewSVGStr = 0; 
 function GX_ShowPreview(){
-	 var retval = GXRDE_openSVGFile(gSVGFilename); 
-	 if(retval){
-		 var previewcanvasnode =  document.getElementById('previewcanvas'); 
-		 previewcanvasnode.innerHTML = retval; 
+	 gPreviewSVGStr = GXRDE_openSVGFile(gSVGFilename); 
+	 if(gPreviewSVGStr){
+		 var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
+		 var parentNode = svgNode.parentNode; 
+		 parentNode.removeChild(svgNode); 
+		// svgNode.setAttribute('id','SVGOBJECTCONTAINER_EDITOR'); 
+		 var previewcanvasnode =  document.getElementById('previewobjectcontainer'); 
+		 previewcanvasnode.innerHTML = gPreviewSVGStr; 
 	 }
 }
 
@@ -9630,4 +9604,26 @@ function OnPointMarkerDragStop(event, ui){
     endY += relY; 
     var pathValue = 'M' + gPathDataArray[0][1] + ',' + gPathDataArray[0][2] + ' l' +  endX + ',' +  endY + ' ';
 	gIndicatorPathNode.setAttribute('d', pathValue);    
+}
+
+function GX_ShowEditor(){
+	var fname  = gSVGFilename; 
+	GX_ResetAllSelections(); 
+	if(gEditorWidth){
+		$('#editor_div').width(gEditorWidth);
+		$('#editor_div').height(gEditorHeight);
+	}
+		
+	var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
+	var parentNode = svgNode.parentNode; 
+	parentNode.removeChild(svgNode); 
+	GX_OpenFile(fname);	
+}
+function GX_ReloadPreview(){
+	 var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
+	 var parentNode = svgNode.parentNode; 
+	 var node = parentNode.removeChild(svgNode);	 
+	 var previewcanvasnode =  document.getElementById('previewobjectcontainer'); 
+	 previewcanvasnode.innerHTML = gPreviewSVGStr; 	 
+	
 }
