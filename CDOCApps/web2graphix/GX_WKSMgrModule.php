@@ -319,7 +319,7 @@ function GX_WKS_CreateSVGFile(&$respData)
 	          </script>
 	    <defs id="MARKER_GROUP"></defs> 
 	    <g id="ANIMATION_GROUP" class="ANIMATION_LIST_GROUP"></g>
-		<g id="BASEGROUP" class="GROUP BaseGroup" transform="translate(0,0) scale(1,1) rotate(0 0,0)"></g></svg>' ; 
+		<g id="BASEGROUP" class="GROUP BaseGroup" transform="translate(0 0) scale(1 1) rotate(0)"></g></svg>' ; 
 		$retval = fwrite($fh, $prologstr);
 
 		if($retval == false){

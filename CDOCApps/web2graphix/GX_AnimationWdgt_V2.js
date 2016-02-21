@@ -4169,6 +4169,7 @@ function GX_UpdateAnimUIGrid(){
 
 function GX_OnAnimationEndHandler(evt){
 	
+	return; 
 	var animNode = evt.target; 
 	var objID =  animNode.getAttribute('xlink:href'); 
 	objID = objID.substring(1,objID.length); 
@@ -4177,5 +4178,5 @@ function GX_OnAnimationEndHandler(evt){
 	//set the default transform value here 
 	transfStr = 'translate(0,0) scale(1,1) rotate(0 0,0)'; 
 	objNode.setAttribute('transform', transfStr);	
-	//Debug_Message("End Animation Event"); 
+	Debug_Message("End Animation Event"); 
 }

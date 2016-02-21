@@ -32,8 +32,7 @@ function sDimension() {
     sDimension.prototype.rotCentreY = 0; 
     
     sDimension.prototype.centerX =  new Number(0); 
-    sDimension.prototype.centerY =  new Number(0);
-    
+    sDimension.prototype.centerY =  new Number(0);    
 }
 var gTreeWidgetID = 'node_panel'; 
 var gTreeNodeID = 'node_container'; 
@@ -120,7 +119,7 @@ var gCurrTooltipPos = new sPoint();
 var gTooltipTheme = 'black'; 
 var gSVGContainerbordercol = '#222222';
 var gUsername = ''; 
-var gShowTooltip =  true; 
+var gShowTooltip =  false; 
 var gOrigPointerPos = new sPoint();
 var gShowGrid =  true; 
 var bPointerMove = false; 
@@ -1072,7 +1071,7 @@ function GX_Initialize()
     WAL_createModalWindow(gImageDlg, '250', '150', 'imageOK', 'imageCancel', false);
     WAL_createModalWindow('deleteConfirmDlg', '250', '150', 'deleteOK', 'deleteCancel', false);
     
-    GX_MenuDisable(true);
+  //  GX_MenuDisable(true);
     /*
      * remove for the time being as it results into buggy behaviour
     var currFileName =  GXRDE_getCurrentSessionFileName(); 
@@ -1139,7 +1138,7 @@ function GX_Initialize()
 	});
 	*/
 	
-	gClientYOffset = $('#toolbar').height(); 
+	gClientYOffset = $('#toolbar').height()-5; 
 	//gClientXOffset = $('#toolbar').width(); 
 	 
    
@@ -1221,12 +1220,7 @@ function GX_InitializeDocument(svgFileName)
 	attrvalue = svgdatanode.getAttribute('viewBox'); 
 	svgcontainer.setAttribute('viewBox',attrvalue ); 
 	
-	var rectBorderNode =  document.getElementById('svgborder'); 
-	if(!rectBorderNode)
-	{
-		var rectBorder = '<rect id="svgborder" x="0" y="0" width="100%" height="100%" stroke="' + gSVGContainerbordercol + '" stroke-width="5" fill="none" visibility="visible"/>';
-		GX_AddNewNodeFromXMLString('objectcontainer', rectBorder);		
-	}
+	
 	WAL_SetItemInDropDownList('zoomDDL', 0, true);
 	//set the file name to title etc. 
 	if(svgFileName)
@@ -1459,7 +1453,7 @@ function GX_menu_open_svgfrom_remote()
 {
 	 var newsource = GXRDE_getAssetListFromServer('SVG');  
 	 WAL_ListBoxUpdateData('svgfileopenlistbox', newsource);
-	 WAL_showWindow(gSVGFileOpenDlg, true, 'open');
+	 WAL_showWindow(gSVGFileOpenDlg, true, 'topcontainer');
 }
 
 function GX_menu_delete_svgfrom_remote()
@@ -2534,8 +2528,9 @@ function OnObjectMouseDown(evt,ui) {
         else {
             gsvgRootNode.setAttribute("cursor", "auto");
             bMove = false;     
-            if(objectType == 'SVG_PATH_OBJECT')
+            /*if(objectType == 'SVG_PATH_OBJECT')
             	GX_UpdatePathMarker(gCurrentObjectSelected.id, gPathDataArray, true);
+            	*/ 
             GX_SetSelection(gCurrentObjectSelected, true, true);
         }            
     }
@@ -3443,11 +3438,12 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 	var str=""; 
 	var objectType = gNode.classList[0]; 
 	var shapeType = gNode.classList[1]; 
+	var delimiter = ' ' ; //this could be 'or ' ' for the time being it is ' '  bcoz of chorme  
 	if(transfType == 'translate')
 	{
 		if( (objectType == 'SVG_PATH_OBJECT') || (objectType == 'GROUP') )
 		{
-			str = 'translate(' + transfDim.x + ','+ transfDim.y +')'; 
+			str = 'translate(' + transfDim.x + delimiter + transfDim.y +')'; 
 			gTransfArray[0] = str; 
 		}
 		else if(objectType == 'SVG_SHAPE_OBJECT')
@@ -3465,7 +3461,7 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 			
 			str = 'rotate(' + transfDim.rotate;		
 			gTransfArray[2]= str;		
-			str = transfDim.rotCentreX +',' + transfDim.rotCentreY + ')';
+			str = delimiter + transfDim.rotCentreX + delimiter + transfDim.rotCentreY + ')';
 			gTransfArray[3]= str;
 		}	
 		else if(objectType == 'SVG_TEXT_OBJECT')
@@ -3487,7 +3483,7 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 	}
 	else if(transfType == 'scale')
 	{
-		str = 'scale(' + transfDim.x + ','+ transfDim.y +')';		
+		str = 'scale(' + transfDim.x + delimiter + transfDim.y +')';		
 		gTransfArray[1] = str; 		
 	}
 	else if(transfType == 'rotate')
@@ -3970,11 +3966,9 @@ function GX_InitializeToolbar()
 	WAL_createNumberInput("widthIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 1280, 0,1, gWidgetTooltipID);
     WAL_createNumberInput("heightIP", '58px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID);     
     WAL_createCustomButton('alignwidth_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
-    WAL_createCustomButton('alignheight_icon', 'GX_ToolbarHandler',gWidgetTooltipID);    
+    WAL_createCustomButton('alignheight_icon', 'GX_ToolbarHandler',gWidgetTooltipID);   
     
-    //position group 
-   // WAL_createNumberInput("lposIP", '58px', gDDLHeight,  "GX_EditBoxValueChange", true, 1280, 0,1, gWidgetTooltipID);
-   // WAL_createNumberInput("tposIP", '58px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID); 
+    
     WAL_createCustomButton('alignleft_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
     WAL_createCustomButton('aligntop_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
     WAL_createCustomButton('alignright_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
@@ -4478,6 +4472,7 @@ function GX_ToolbarHandler(Node)
 	case 'modify_icon':
 		GX_Modify();
 		break; 
+		/*
 	case 'addpoint_icon':
 		GX_AddPoint(); 
 		break;
@@ -4486,7 +4481,8 @@ function GX_ToolbarHandler(Node)
 		break; 
 	case 'smoothen_icon':
 		GX_Smoothen(); 
-		break; 
+		break;
+		*/ 
 	case 'stroke_color_icon':
 		WAL_hideWidget('colorpickwidget', true); 
 		var initColVal = '#ffffff'; 
@@ -4962,7 +4958,7 @@ function GX_SetObjectAttribute(ObjNode, AttrName, AttrValue, bListStore, bUpdate
 					classvalue = ObjNode.classList[0] +' ' +ObjNode.classList[1] +' '+rotatestr ;
 				
 				ObjNode.setAttribute('class', classvalue); 
-				GX_UpdatePathMarker(ObjNode.id, gPathDataArray, true);				
+				//GX_UpdatePathMarker(ObjNode.id, gPathDataArray, true);				
 			}
 			else if(objectType == 'SVG_SHAPE_OBJECT')
 			{
@@ -5938,7 +5934,12 @@ function OnPathMarkerMouseMove(evt) {
      }
 	if(bMarkerMove == false)
 	{
-		markerNode.setAttribute('r', '10'); 	   
+		//markerNode.setAttribute('r', '10');
+		var currDim = GX_GetRectObjectDim(markerNode); 
+		GX_SetRectObjectDim($(gDivPathMarkerSel)[0], currDim); 
+		markerNode.setAttribute('visibility', 'hidden'); 
+		$(gDivPathMarkerSel).css({visibility:'visible'}); 		
+		bMarkerSelected = true; 
 	}
  
 	 
@@ -6144,8 +6145,13 @@ function OnPathMarkerMouseOut(evt) {
     //if(bMarkerSelected == false)
     if(markerNode != gCurrentMarkerNode)
     {
-  	   markerNode.setAttribute('r', '5');    	 
-       gsvgRootNode.setAttribute("cursor", "auto");
+    	
+		$(gDivPathMarkerSel).css({visibility:'hidden'}); 		
+		bMarkerSelected = true; 
+  	    markerNode.setAttribute('r', '5');  
+  	    markerNode.setAttribute('visibility', 'visible'); 
+        gsvgRootNode.setAttribute("cursor", "auto");
+       
     }
    
    // alert("Mouse Out"); 
@@ -6315,10 +6321,12 @@ function GX_SetFreeDrawEditAttributes(ObjNode, bFlag)
 		var freedrawNode = document.getElementById('freedraw'); 
 		freedrawNode.setAttribute('visibility', 'visible'); 
 		freedrawNode.setAttribute('pointer-events', 'visible'); 
+		
 		//gCurrGrabber.setAttribute('pointer-events', 'none'); 
 		bDraw = false; 
 		var JQSel = '#drawingpen'; 
 		$(JQSel).css('visibility', 'visible'); 
+		 
 	}
 	else
 	{
@@ -6615,6 +6623,7 @@ function GX_Modify()
 	var objectType = gCurrentObjectSelected.classList[1]; 
 	if(objectType == 'FREEDRAW_PATH')
 	{
+		gNewObjectID = gCurrentObjectSelected.id; 
 		GX_StartFreeDraw(); 
 	}	
 }
@@ -7969,7 +7978,7 @@ function GX_MakeTextEditable(srcTextNode)
 	toppos += Math.round(dim.height); 
 	editorParentNode.style.top = toppos + 'px';	
 	gTextEditorNode.style.width = Math.round(dim.width) + 'px'; 
-	gTextEditorNode.style.height = Math.round(dim.height) + 'px'; 
+	gTextEditorNode.style.height = Math.round(3*dim.height) + 'px'; 
 	gTextEditorNode.style.fontFamily = node.getAttribute('font-family');
 	
 	//_rm dont know why it is not working 
@@ -8501,7 +8510,9 @@ function GX_updateImageFilename(filename)
 	//Debug_Message("UIH_updateFilename:Filname = " + node.getAttribute('value')); 
 }
 
-
+function OnDivPathMarkerDragStart(event, ui){
+	bMarkerMove = true; 
+}
 function OnDivPathMarkerDrag(event, ui){
 	
 	 if (bMarkerMove == true) {
@@ -8578,9 +8589,7 @@ function OnDivPathMarkerDragStop(event, ui){
    
 }
 
-function OnDivPathMarkerDragStart(event, ui){
-	gCurrentMarkerNode.setAttribute('visibility', 'hidden'); 
-}
+
 
 function GX_ConvertToMultipleOf(val, multiple){
 	var result; 

@@ -320,7 +320,7 @@ function EL_CompareAndAddtoList(prevAttrList, currAttrList, editList, compactLis
 	}
 	if(prevAttrList[0][0] != currAttrList[0][0])
 	{
-		Debug_Message("Object IDs mismatch in Previous and Current List"); 
+		//Debug_Message("Object IDs mismatch in Previous and Current List"); 
 		return;
 	}	
 	// compare the difference , if diff then add it to the list 
