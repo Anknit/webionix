@@ -143,19 +143,19 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 	switch($objectTypeVal)
 	{
 		case 'RECTANGLE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT RECTANGLE ROTATE,0', 'x'=> '10','y'=>'10', 'width'=>'0', 'height'=>'0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0', 'fill-opacity'=>'1.0');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT RECTANGLE ROTATE,0', 'x'=> '10','y'=>'10', 'width'=>'0', 'height'=>'0', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0', 'fill-opacity'=>'1.0');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'rect',$objectIDVal,0, $parentIDVal, $attrdefinition,''); 
 			break; 
 		case 'IMAGE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT IMAGE ROTATE,0', 'x'=> '20','y'=>'20', 'width'=>'100', 'height'=>'100', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'xlink:href'=>'gsgsgs', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT IMAGE ROTATE,0', 'x'=> '20','y'=>'20', 'width'=>'100', 'height'=>'100', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'xlink:href'=>'gsgsgs', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'image',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'ELLIPSE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT ELLIPSE ROTATE,0', 'cx'=> '0','cy'=>'0', 'rx'=>'0', 'ry'=>'0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'opacity'=>'1.0');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT ELLIPSE ROTATE,0', 'cx'=> '0','cy'=>'0', 'rx'=>'0', 'ry'=>'0', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'opacity'=>'1.0');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'ellipse',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'CIRCLE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT CIRCLE ROTATE,0', 'cx'=> '0','cy'=>'0','r'=>'0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'opacity'=>'1.0');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT CIRCLE ROTATE,0', 'cx'=> '0','cy'=>'0','r'=>'0', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'opacity'=>'1.0');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'circle',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'IMAGE':
@@ -163,7 +163,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'image',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'GROUP':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'GROUP '. $groupName, 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'GROUP '. $groupName, 'transform'=>'translate(0 0) scale(1 1) rotate(0)');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'g',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;	
 		case 'ANIM_GROUP':
@@ -171,38 +171,38 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'g',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;				
 		case 'LINE_PATH':
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT ' . $objectTypeVal . ' ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'd'=>'M0,0 L5,5', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'fill'=>'none','visibility'=>'visible',
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT ' . $objectTypeVal . ' ROTATE,0', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'd'=>'M0,0 L5,5', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'fill'=>'none','visibility'=>'visible',
 			'marker-start'=>'', 'marker-mid'=>'', 'marker-end'=>'');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'path',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'HOR_LINE_PATH':
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT ' . $objectTypeVal . ' ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'd'=>'M0,0 H5', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'fill'=>'none','visibility'=>'visible', 
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT ' . $objectTypeVal . ' ROTATE,0', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'd'=>'M0,0 H5', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'fill'=>'none','visibility'=>'visible', 
 			'marker-start'=>'', 'marker-mid'=>'', 'marker-end'=>'');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'path',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'VERT_LINE_PATH':
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT ' . $objectTypeVal . ' ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'd'=>'M0,0 V5', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'fill'=>'none','visibility'=>'visible',
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT ' . $objectTypeVal . ' ROTATE,0', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'd'=>'M0,0 V5', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'fill'=>'none','visibility'=>'visible',
 			'marker-start'=>'', 'marker-mid'=>'', 'marker-end'=>'');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'path',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break; 
 		case  'CBEZIER_PATH':
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT CUBIC_BEZIER ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'd'=>'M0,0 C10,10 20,10 20,0', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'fill'=>'none','visibility'=>'visible',
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT CUBIC_BEZIER ROTATE,0', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'd'=>'M0,0 C10,10 20,10 20,0', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'fill'=>'none','visibility'=>'visible',
 			'marker-start'=>'', 'marker-mid'=>'', 'marker-end'=>'');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'path',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'QBEZIER_PATH':
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT QUADRATIC_BEZIER ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'd'=>'M0,0 Q5,5 10,10', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter','stroke-opacity'=>'1',  'fill'=>'none','visibility'=>'visible',
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT QUADRATIC_BEZIER ROTATE,0', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'd'=>'M0,0 Q5,5 10,10', 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter','stroke-opacity'=>'1',  'fill'=>'none','visibility'=>'visible',
 			'marker-start'=>'', 'marker-mid'=>'', 'marker-end'=>'');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'path',$objectIDVal, 0, $parentIDVal, $attrdefinition,'');
 			break; 
 		case 'ELLIPTIC_PATH':
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT ELLIPTIC ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'd'=>'M-10,-10 A100,120 0 0 1 -5,-5', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1',  'fill'=>'none','visibility'=>'visible',
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT ELLIPTIC ROTATE,0', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'd'=>'M-10,-10 A100,120 0 0 1 -5,-5', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1',  'fill'=>'none','visibility'=>'visible',
 			'marker-start'=>'', 'marker-mid'=>'', 'marker-end'=>'');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'path',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'TEXT';
 		//<text id='text1' font-family="Verdana" font-size="45" fill="blue" x='40' y='100' >
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_TEXT_OBJECT TEXT TEXT ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'font-family'=>"Verdana", 'font-size'=>"20", 'fill'=>'none', 'font-weight'=>'normal',
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_TEXT_OBJECT TEXT TEXT ROTATE,0', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'font-family'=>"Verdana", 'font-size'=>"20", 'fill'=>'none', 'font-weight'=>'normal',
 				'font-style'=>'normal', 'font-variant'=>'normal', 'text-decoration'=>'normal', 'x'=>'5', 'y'=>'25', 'stroke'=>'black', 'stroke-width'=>'1', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter','stroke-opacity'=>'1',  'fill'=>'none','visibility'=>'visible');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'text',$objectIDVal, 0, $parentIDVal, $attrdefinition,'Enter Your Text Here      ');
 			break; 
@@ -210,13 +210,13 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$x = 150;
 			$y = 150;			
 			$dvalue = GX_OBJ_GetPolygonParams($x, $y, $nSides, $length); 
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT POLYGON ROTATE,0 CENTRE,'. $x . ','. $y .',' . $length, 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'd'=>$dvalue, 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter','stroke-opacity'=>'1',  'fill'=>'none','visibility'=>'visible',
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT POLYGON ROTATE,0 CENTRE,'. $x . ','. $y .',' . $length, 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'd'=>$dvalue, 'stroke'=>'black', 'stroke-width'=>'3', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter','stroke-opacity'=>'1',  'fill'=>'none','visibility'=>'visible',
 					'marker-start'=>'', 'marker-mid'=>'', 'marker-end'=>'');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'path',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break; 
 		case 'FREEDRAW_PATH':
 			//$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT FREEDRAW_PATH', 'transform'=>'translate(0,0)', 'd'=>'', 'stroke'=>'black', 'stroke-width'=>'2', 'fill'=>'green', 'fill-opacity'=>'0.6', 'onmousemove'=>'OnEraseMove(evt)');
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT FREEDRAW_PATH ROTATE,0', 'transform'=>'translate(0,0) scale(1,1) rotate(0 0,0)', 'd'=>'', 'stroke'=>'black', 'stroke-width'=>'2', 'fill'=>'none', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter','stroke-opacity'=>'1',  'fill-opacity'=>'1','visibility'=>'visible',
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_PATH_OBJECT FREEDRAW_PATH ROTATE,0', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'd'=>'', 'stroke'=>'black', 'stroke-width'=>'2', 'fill'=>'none', 'stroke-dasharray'=>'none','stroke-linejoin'=>'miter','stroke-opacity'=>'1',  'fill-opacity'=>'1','visibility'=>'visible',
 			'marker-start'=>'', 'marker-mid'=>'', 'marker-end'=>'');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'path',$objectIDVal, 0, $parentIDVal, $attrdefinition,'');
 			break;
