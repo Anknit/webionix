@@ -17,6 +17,7 @@ p.HTMLOBJECT{margin: 1px; padding:0px; }
 .ui-resizable-helper { border: 1px dotted green; }
 
 div.EDIT_BOX{display:inline-block; margin-left:2px; style:font-weight:bold;}
+.EDIT_BOX{ font-size:12px; }
 
 .TREEMENU {
 	font-size:x-small;
@@ -126,16 +127,14 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; style:font-weight:bold;}
         box-sizing:border-box;          
         width:32px;           
         float:left;   
-        /*margin-top:2px;*/   
-                  
+        /*margin-top:2px;*/                    
    }        
         
    span.MATH_EQUATION:hover
    {   	
    	 border:inset 1px grey; 
    }
-   div#sel_gripper{ width: 20px; height: 20px; padding: 1px; float: left; margin: 0 1px 1px 0; visibility:hidden; 
-    background-color:transparent }
+   div#sel_gripper{ width: 20px; height: 20px; padding: 1px; float: left; margin: 0 1px 1px 0; visibility:hidden; background-color:transparent }
   
   #DivPathMarker {
   			 border-radius: 25px;
@@ -156,5 +155,47 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; style:font-weight:bold;}
 	{
 	    border: none;
 	}
+	
+#propertyTab{
+	font-size:12px; 
+}
 
-  
+#animationTab{
+	font-size:12px; 
+}
+
+.propertyRow, .animpropertyRow{
+	border-bottom:2px ridge #c7c7c7; 
+	margin-top:10px; 
+	height:40px; 
+}
+ 
+.propertyName{
+	font-weight: bold; 
+	width:100px; 
+	margin-left:10px; 
+}
+.propertyValues{
+	
+}
+.myLabel{
+	position:relative;
+	top:-5px; 
+	margin-right:5px; 
+}
+
+.propertyBtn{
+	background-color:#666; 
+	color:#e0e0e0; 
+}
+
+.propertyBtn:hover{
+	background-color:#222; 
+	color:#fff;
+	border-color:#0000de;  
+}
+
+#contenttablejqxAnimgrid{
+	font-size:10px;
+	font-weight:bold; 
+}
