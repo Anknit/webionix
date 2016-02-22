@@ -1588,6 +1588,7 @@ function GX_OpenFile(fname){
      if(retval)
      {
     	 GX_CloseSVGFile(); 
+    	 gObjectList = 0; 
     	 var dataNode = document.getElementById('objectcontainer');   	 
     	 dataNode.innerHTML += retval; 
     	 GX_InitializeDocument(fname);     	 
@@ -9576,16 +9577,13 @@ function GX_GetObjectMaxDimensionToResize(objDim){
 	return maxDim; 	
 }
 var gPreviewSVGStr = 0; 
-function GX_ShowPreview(){
-	 gPreviewSVGStr = GXRDE_openSVGFile(gSVGFilename); 
-	 if(gPreviewSVGStr){
-		 var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
-		 var parentNode = svgNode.parentNode; 
-		 parentNode.removeChild(svgNode); 
-		// svgNode.setAttribute('id','SVGOBJECTCONTAINER_EDITOR'); 
-		 var previewcanvasnode =  document.getElementById('previewobjectcontainer'); 
-		 previewcanvasnode.innerHTML = gPreviewSVGStr; 
-	 }
+function GX_ShowPreview(){	
+		 var previewiFrame =  document.getElementById('svgpreview_iframe');
+		 var previewiFrame =  document.getElementById('svgpreview_iframe');	
+		 previewiFrame.setAttribute('src',"");
+		 var URLstr = GXRDE_getPageURL();		
+		 previewiFrame.setAttribute('src',URLstr );
+	 //}
 }
 
 function OnPointMarkerDragStop(event, ui){
@@ -9612,18 +9610,14 @@ function GX_ShowEditor(){
 	if(gEditorWidth){
 		$('#editor_div').width(gEditorWidth);
 		$('#editor_div').height(gEditorHeight);
-	}
-		
-	var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
-	var parentNode = svgNode.parentNode; 
-	parentNode.removeChild(svgNode); 
-	GX_OpenFile(fname);	
+	}	
 }
 function GX_ReloadPreview(){
-	 var svgNode = document.getElementById('SVGOBJECTCONTAINER'); 
-	 var parentNode = svgNode.parentNode; 
-	 var node = parentNode.removeChild(svgNode);	 
-	 var previewcanvasnode =  document.getElementById('previewobjectcontainer'); 
-	 previewcanvasnode.innerHTML = gPreviewSVGStr; 	 
 	
+	 var previewiFrame =  document.getElementById('svgpreview_iframe');	
+	 previewiFrame.setAttribute('src',"");
+	 var URLstr = GXRDE_getPageURL();		
+	 previewiFrame.setAttribute('src',URLstr );	
+	
+	 
 }

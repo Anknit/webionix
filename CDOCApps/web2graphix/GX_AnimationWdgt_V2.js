@@ -953,7 +953,7 @@ function GX_InitializeAnimationTab(){
  	//WAL_createModalWindow(gSVGDimensionDlg, '250', '150', 'svgDimOK', 'svgDimCancel', false);
  	WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '') ; 		
  	var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Fly-In', 'Move', 'Animate Path', 'Zoom'];
-    WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 100, 0);
+    WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 160, 165);
     WAL_createModalWindow('newAnimationDlg', '220', '150', 'newAnimOK', 'newAnimCancel', false);
 	
     //creatingthe grid 
