@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="google-signin-client_id" content="42338840257-9ll1lip2eqc6dg2p00ntl94njnb39d1r.apps.googleusercontent.com">
 <title>Webionix</title>
-<link rel="stylesheet" href="../CommonJS/Bootstrap/css/bootstrap.min.css">
-<script src="../CommonJS/jquery-1.10.2.min.js"></script>
-<script src="../CommonJS/Bootstrap/js/bootstrap.min.js"></script>
-<script src="../CommonPHP/SSO/js/sso.js" ></script>
+<link rel="stylesheet" href="../../../CommonJS/Bootstrap/css/bootstrap.min.css">
+<script src="../../../CommonJS/jquery-1.10.2.min.js"></script>
+<script src="../../../CommonJS/Bootstrap/js/bootstrap.min.js"></script>
+<script src="../js/sso.js" ></script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <!-- SSO Related logic here  -->
 <script>
@@ -15,7 +15,7 @@ $(document).ready(function(){
 	$("form").submit(function(e){
 		e.preventDefault();
 		a={"age":"23"};
-		sso.u="../web2graphix/GX_sso.php";		
+		sso.u="../../../web2graphix/GX_sso.php";		
 		sso.signup_verify(	$("#firstName").val(),	$("#lastName").val(),	a,	$("#password").val(), 'MySSOCallback');
 		
 	});
@@ -23,7 +23,7 @@ $(document).ready(function(){
 
 function MySSOCallback(optype, status){
 			var obj = JSON.parse(status);
-			var URLstr = '../web2graphix/WNX_Home.php';
+			var URLstr = '../../../web2graphix/WNX_Home.php';
 			if(!URLstr)
 					return;	
 			$('#signupSuccessMessage').show(); 		

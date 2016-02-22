@@ -98,7 +98,8 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 		}
 		$password	=	md5($password);
 		
-		$wksname = 'Folder_' . getTimeBasedString(); 
+		//$wksname = 'Folder_' . getTimeBasedString(); 
+		$wksname = $first_name . '_' . getTimeBasedString(); 
 		if($user_info	==	""	||	$user_info	==	false)
 		{
 			$d_data    =    array('Table'=>'userinfo','Fields'=>array('regAuthorityId'=>0,'username'=>$username, 'firstname'=>$first_name, 'lastname'=>$last_name, 'workspacename'=>$wksname, 'status'=>"verified",'password'=>$password),'clause'=>"emailid='"."$text"."'");
@@ -252,7 +253,8 @@ function sso_google($token)//if(isset($_POST['idtoken']))
 	if(!is_array($d_data))
 	{
 		$ott	=	sha1(uniqid("",true));
-		$wksname = 'Folder_' . getTimeBasedString();
+		//$wksname = 'Folder_' . getTimeBasedString();
+		$wksname = $first_name . '_' . getTimeBasedString();
 		$d_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott,'regAuthorityId'=>0,'usertype'=>'normal','username'=>$name,'firstname'=>$firstname, 'lastname'=>$lastname, 'emailid'=>$email,'status'=>"verified", 'workspacename'=>$wksname));
 		if(!$mysqlObj->Insert($d_data))
 		{
