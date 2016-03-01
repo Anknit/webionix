@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="google-signin-client_id" content="42338840257-9ll1lip2eqc6dg2p00ntl94njnb39d1r.apps.googleusercontent.com">
 <title>Webionix</title>
-<link rel="stylesheet" href="http://localhost/CDOCApps/CommonJS/Bootstrap/css/bootstrap.min.css">
-<script src="http://localhost/CDOCApps/CommonJS/jquery-1.10.2.min.js"></script>
-<script src="http://localhost/CDOCApps/CommonJS/Bootstrap/js/bootstrap.min.js"></script>
-<script src="http://localhost/CDOCApps/CommonPHP/SSO/js/sso.js" ></script>
+<link rel="stylesheet" href="../CommonJS/Bootstrap/css/bootstrap.min.css">
+<script src="../CommonJS/jquery-1.10.2.min.js"></script>
+<script src="../CommonJS/Bootstrap/js/bootstrap.min.js"></script>
+<script src="../CommonPHP/SSO/js/sso.js" ></script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <!-- SSO Related logic here  -->
 <script>
-sso.u="http://localhost/CDOCApps/web2graphix/GX_sso.php";
+sso.u="../web2graphix/GX_sso.php";
 var bSignedIn = false;
-var gAppURL = 'http://localhost/CDOCApps/web2graphix/GX_Editor.html'; 
+var gAppURL = '../web2graphix/GX_Editor.html'; 
 $(document).ready(function(){
 	
 	var gcallbackFn =''; 
-	sso.u="http://localhost/CDOCApps/web2graphix/GX_sso.php";
+	sso.u="../web2graphix/GX_sso.php";
 $("#signup").on("click",function(){
 	email	=	$("#sign-up-email").val();
 	sso.signup(email, 'MySSOCallback');
@@ -369,7 +369,7 @@ function OnBtnclick(event){
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>-->
-      <a class="navbar-brand" href="#myPage" style='margin-top:-15px'><img class="img-responsive" src="http://localhost/CDOCApps/CommonCSS/icons/Version1/SiteIcons/wnxnotextlogo.png" width='50px' height='50px'></a>
+      <a class="navbar-brand" href="#myPage" style='margin-top:-15px'><img class="img-responsive" src="../CommonCSS/icons/Version1/SiteIcons/wnxnotextlogo.png" width='50px' height='50px'></a>
       <p class="navbar-brand logotext" style='color:#f4511e;'>Noxta</p>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
@@ -417,21 +417,21 @@ function OnBtnclick(event){
     <!-- Wrapper for slides -->
     <div class="carousel-inner text-center" role="listbox">
       <div class="item active center" >
-        <img src="http://localhost/CDOCApps/CommonCSS/icons/Version1/SiteIcons/designer1.png"  width="auto" height="100" >    
+        <img src="../CommonCSS/icons/Version1/SiteIcons/designer1.png"  width="auto" height="100" >    
         <div class="carousel-caption">
           <h3>Discover the Artiste inside you </h3>           
         </div>
       </div>
 
       <div class="item center">
-        <img src="http://localhost/CDOCApps/CommonCSS/icons/Version1/SiteIcons/cloud1.jpg" width="auto" height="100">
+        <img src="../CommonCSS/icons/Version1/SiteIcons/cloud1.jpg" width="auto" height="100">
         <div class="carousel-caption">
           <h3>Work on the Cloud from anywhere anytime, No Installation required</h3>           
         </div>
       </div>
     
       <div class="item center">
-        <img src="http://localhost/CDOCApps/CommonCSS/icons/Version1/SiteIcons/Editor1.png"  width="auto" height="100">
+        <img src="../CommonCSS/icons/Version1/SiteIcons/Editor1.png"  width="auto" height="100">
         <div class="carousel-caption">
           <h3>No need to understand HTML,SVG , Just get going!</h3>           
         </div>

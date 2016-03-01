@@ -4253,6 +4253,15 @@ function GX_ToolbarHandler(event)
 			GX_ShowGradWindow(gradInfo[1], gradInfo[2]);			
 		}		
 		break; 
+	case 'edit_animpath_btn':
+		//select the animpath as current selected object		
+		var refPathNode  = document.getElementById(gCurrAnimParam.refPathID); 
+		if(refPathNode){
+			GX_SetSelection(refPathNode, true, false);		
+			//change tab to Properties
+			WAL_SetTabIndex('rightTabs', 1); 
+		}
+		break; 
 	case 'text_icon':
 		GX_AddNewSVGObject('text',''); 
 		break; 
@@ -4400,7 +4409,7 @@ function GX_ToolbarHandler(event)
 			gCurrAnimNode = document.getElementById(animID); 	
 			if(!gCurrAnimNode)
 				return ; 
-			GX_EditAnimation(animID); 
+			//GX_EditAnimation(animID); 
 		}			
 		 break; 
 	 case 'anim_preview_icon':
@@ -9525,6 +9534,8 @@ function GX_RightTabHandler(tabIndex){
 	else if(tabIndex == 1)
 		bTreeWidgetDisplay = false; 
 	else if(tabIndex == 2){
+		if(gCurrentObjectSelected)
+			GX_SetSelection(gCurrentObjectSelected, false, false); 
 		//now populate the anim data here
 		GX_UpdateAnimUIGrid(); 
 		//get the list of animation
@@ -9581,7 +9592,10 @@ function GX_ShowPreview(){
 		 var previewiFrame =  document.getElementById('svgpreview_iframe');
 		 var previewiFrame =  document.getElementById('svgpreview_iframe');	
 		 previewiFrame.setAttribute('src',"");
-		 var URLstr = GXRDE_getPageURL();		
+		 var URLstr = GXRDE_getPageURL();	
+		 var t = new Date(); 
+		 var sec = t.getUTCSeconds(); 
+		 URLstr += '?t=' + sec; 
 		 previewiFrame.setAttribute('src',URLstr );
 	 //}
 }
@@ -9620,4 +9634,33 @@ function GX_ReloadPreview(){
 	 previewiFrame.setAttribute('src',URLstr );	
 	
 	 
+}
+
+function GX_ReloadSVG(ObjID){
+	 var currfilename = gSVGFilename; 
+	 GX_CloseSVGFile();	 
+	 var retval = GXRDE_openSVGFile(currfilename); 
+	 var HTMLstr=""; 		 	 
+	 var currObjID = ObjID; 
+	 if(retval){
+		    // GX_CloseSVGFile();
+		   	 var dataNode = document.getElementById('objectcontainer');   	 
+		   	 dataNode.innerHTML += retval;		   	
+		  	 GX_InitializeDocument(currfilename);		   	
+	}	
+	
+	var xmlstr = GXRDE_GetSVGMetaXML(currfilename);    
+	if(xmlstr)
+	     GX_updateTreeWidget(xmlstr);   
+	WAL_expandAllTreeItems(gTreeNodeID, true);
+	if(currObjID)
+		WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);
+}
+
+function GX_ReloadNode(nodeID){
+	var Node = document.getElementById(nodeID);
+	var copyNode = Node.cloneNode(true);
+	var parentNode = Node.parentNode; 
+	parentNode.removeChild(Node); 
+	parentNode.appendChild(copyNode); 
 }

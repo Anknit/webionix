@@ -1,7 +1,8 @@
 <?php
+require_once 'GX_Config.php';
 
 function GX_DBInitialize(){
-	$fp = fopen("Config.txt", "r");
+	/*$fp = fopen("Config.txt", "r");
 	if($fp == False)return 0;
 	$buffsize = 2000;
 	$configstr = fread($fp, $buffsize)	;
@@ -10,15 +11,19 @@ function GX_DBInitialize(){
 		return 0 ;
 	//parse the string in query format and populate the variables
 	parse_str($configstr);
-	$serverloc = $SERVER_LOCATION;
+	*/
+	
+	$serverloc = $GLOBALS['SERVER_LOCATION'];
+	$author = $GLOBALS['DBAUTHOR'];
+	$user = $GLOBALS['DBUSER']; //'cdocadmin';
+	$pwd = $GLOBALS['DBPWD'];
+	$dbname = $GLOBALS['DBNAME'];
+	$hostaddr = $GLOBALS['DBHOSTADDR']; //p for persistence
+	
+	/*
 	if($serverloc == "LOCAL")
 	{
-		$author = 'rajarshi';
-		$user = 'cdocuser'; //'cdocadmin';
-		$pwd = NULL;
-		$dbname = 'cdocapptestdb';
-		$hostaddr = 'p:localhost:3306'; //p for persistence
-	}
+		
 	else if($serverloc == "REMOTE")
 	{
 		$author = 'rajarshi';
@@ -29,6 +34,7 @@ function GX_DBInitialize(){
 	}
 	else
 		return 0;	
+		*/
 	$dbhandle = mysqli_connect($hostaddr, $user, $pwd, $dbname);
 	if(!$dbhandle)
 	{

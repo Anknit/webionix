@@ -1,4 +1,6 @@
 <?php 
+include_once 'GX_Config.php';
+
 function CDOC_Session_Init(&$name, &$id, $workspacename)
 {
 	//generate a unique sesion name consisitng of username+userID
@@ -7,7 +9,7 @@ function CDOC_Session_Init(&$name, &$id, $workspacename)
 	//session_name($session_name);
 	//open the configuration file and read the string
 	//__DIR__.'./verify-sign-up.php'
-	$path = __DIR__ .'/Config.txt' ; 
+	/*$path = __DIR__ .'/Config.txt' ; 
 	$fp = fopen($path, "r");
 	if($fp == False)return False; 	
 	$buffsize = 2000; 
@@ -17,9 +19,9 @@ function CDOC_Session_Init(&$name, &$id, $workspacename)
 		return False ;		
 	//parse the string in query format and populate the variables
 	parse_str($configstr);
+	*/
 	
-	
-	$session_name = $SESSION_NAME; 
+	$session_name = $GLOBALS['SESSION_NAME']; 
 	
 	
 	session_name($session_name);
@@ -47,7 +49,7 @@ function CDOC_Session_Init(&$name, &$id, $workspacename)
 	$_SESSION['ProjectName']=0; 
 	$_SESSION['projXMLDOM'] = 0;
 	$_SESSION['projXMLfilename']=0; 
-	$_SESSION['baseWKSURI']=$BASE_WKSURI ; 
+	$_SESSION['baseWKSURI']=$GLOBALS['BASE_WKSURI'] ; 
 	$_SESSION['projectServerPath'] = rtrim($_SESSION['baseWKSURI'], 'USER_DATA'); //rtrim($_SESSION['baseWKSURI'], 'USER_DATA'); 
 	$_SESSION['projDataPath'] = 0; 
 	$_SESSION['projHTMLDOM'] = 0;
@@ -55,15 +57,15 @@ function CDOC_Session_Init(&$name, &$id, $workspacename)
 	$_SESSION['userProjectDataPath']=0; 
 	$_SESSION['sceneCompXMLFilePath'] = 0;
 	$_SESSION['sceneCompXMLDOM'] = 0;
-	$_SESSION['pathSeparator']=$PATH_SEPARATOR; 
+	$_SESSION['pathSeparator']=$GLOBALS['PATH_SEPARATOR']; 
 	$_SESSION['pathHTMLFile'] = 0; 
 	$_SESSION['currEditableObjID'] = 0;
 	$_SESSION['currPageID'] = 0;
 	$_SESSION['currProjID'] = 0; 
-	$_SESSION['$serverloc'] = $SERVER_LOCATION;
-	$_SESSION['script_path'] = $SCRIPT_PATH; 
-	$_SESSION['image_path'] = $IMAGE_PATH;
-	$_SESSION['user_data_path'] = $USER_DATA_PATH;
+	$_SESSION['$serverloc'] = $GLOBALS['SERVER_LOCATION'];
+	$_SESSION['script_path'] = $GLOBALS['SCRIPT_PATH']; 
+	$_SESSION['image_path'] = $GLOBALS['IMAGE_PATH'];
+	$_SESSION['user_data_path'] = $GLOBALS['USER_DATA_PATH'];
 	$_SESSION['svg_xml_dom'] = 0;
 	$_SESSION['svg_xml_FileName'] = 0;
 	$_SESSION['current_svg_FileName'] = 0;

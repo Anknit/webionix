@@ -1057,7 +1057,7 @@ function GX_InitializeAnimationTab(){
     
     //other controls
     var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
-    WAL_createDropdownList("pathModifyDDL", '140', gInputHeight, false, pathList, "GX_PathModifyHandler", '100', '140');
+    WAL_createDropdownList("pathModifyDDL", '100', gInputHeight, false, pathList, "GX_PathModifyHandler", '140', '140');
     WAL_createCheckBox('pathvisibilityCB', 'GX_AnimDlgCBHdlr', gInputHeight, gInputHeight, '14', false, true);
     WAL_createCheckBox('rollingmotionCB', 'GX_AnimDlgCBHdlr', gInputHeight, gInputHeight, '14', false, true);             
    // WAL_createNumberInput("offsetFromPathY", '60', gInputHeight, "GX_AnimDlgEditHdlr",true, 50,-50,1);
@@ -1701,34 +1701,15 @@ function GX_RemoveAnimInfoFromList(animID)
 		if(gNewAnimObject == true)
 		{
 			var retval = GX_AddAnimationElement(gCurrAnimParam, true);
-			if(gCurrAnimParam.animType == 'ANIM_MOTION')
-			{
-				var retval = GXRDE_openSVGFile(gSVGFilename); 
-			    var HTMLstr=""; 		 
-			    var currfilename = gSVGFilename; 
-			    var currObjID = gCurrAnimParam.objectID; 
-			    if(retval)
-			    {
-				     GX_CloseSVGFile();
-				   	 var dataNode = document.getElementById('objectcontainer');   	 
-				   	 dataNode.innerHTML += retval;		   	
-				  	 GX_InitializeDocument(currfilename);		   	
-			    }	
-			    var xmlstr = GXRDE_GetSVGMetaXML(currfilename);    
-			    if(xmlstr)
-			       GX_updateTreeWidget(xmlstr);   
-			    WAL_expandAllTreeItems(gTreeNodeID, true);
-			    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);		     
-			    GX_MenuItemShow('animate', 'Animate');	
-			    WAL_SetItemByValueInList('listanimDDL', gCurrAnimParam.animID, true); 
-			    GX_EditAnimation(gCurrAnimParam.animID); 
+			if(gCurrAnimParam.animType == 'ANIM_MOTION'){
+				GX_ReloadSVG(gCurrAnimParam.objectID);		   
+				WAL_SetTabIndex('rightTabs', 2);		  
 			}
 			
 		}		
 		if(gNewAnimObject == true)
 			gNewAnimObject = false; 
  }
- 
  
  
  function GX_AnimDlgBtnHdlr(node)
@@ -2285,10 +2266,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 	{
 	 		//if(gAnimList[k][5] != 'Invisible Animation')
 	 			animlist.push(gAnimList[k][5]); 
-	 	}
-	 	WAL_UpdateDropDownList('listanimDDL', animlist);
-	 	var index = animlist.length-1; 
-	 	WAL_SetItemInDropDownList('listanimDDL', index, true); 
+	 	}	 	
  }
  
  function GX_AnimColorWidgetOK(event)
@@ -3672,8 +3650,19 @@ function GX_RemoveAnimInfoFromList(animID)
 		if( (attrArray) && (attrArray.length >0) )
 		{
 			var respStr = GX_UpdateAnimObjectAttribute(gCurrAnimParam.animID, attrArray);
-			//respStr = GXRDE_updateAnimationObject(gCurrAnimParam.animID, attrArray); 
-			
+			if(gCurrAnimParam.animType == 'ANIM_MOTION'){
+				var id =  gCurrAnimParam.animID; 
+				GX_ReloadNode(id); 
+				
+				
+			//	GX_ReloadSVG(gCurrAnimParam.objectID);
+			//	WAL_SetTabIndex('rightTabs', 2);
+				/*setTimeout(function(){			
+					WAL_SetTabIndex('rightTabs', 2);		
+	    			}, 350);
+	    			*/ 
+				//	  
+			}
 		}		
 		gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
 		GX_UpdateAnimationListbox();

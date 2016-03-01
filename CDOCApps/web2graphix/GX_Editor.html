@@ -517,19 +517,10 @@
 		              			<div style='margin-left:-5px; display:inline-block;'><span class='myLabel' style='text-align:right;'>Sweep</span><div id='sweepCheckBox' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Sweep' data-helptext='Check to Enable Sweep'></div></div>   		   						
 		              		</td>
 		              		<td class='propertyValues'>
-		              			<div id='radiusXEdit' style='display:inline-block; margin-left:-65px;' data-tooltiptext='Horizontal Radius' data-helptext='Modify the Horizontal Radius'><span class='myLabel' style='text-align:right;'>Radius-X</span><div id='radiusXIP' class='EDIT_BOX group6' type='RADIUSX' ></div></div>
-		              			<div id='radiusYEdit' style='display:inline-block; margin-left:3px;' data-tooltiptext='Vertical Radius' data-helptext='Modify the Vertical Radius'><span class='myLabel' style='text-align:right;'>Radius-Y</span><div id='radiusYIP' class='EDIT_BOX group6' type='RADIUSY'></div></div>
+		              			<div id='radiusXEdit' style='display:inline-block; margin-left:-5px;' data-tooltiptext='Horizontal Radius' data-helptext='Modify the Horizontal Radius'><span class='myLabel' style='text-align:right;'>R<sub>x</sub></span><div id='radiusXIP' class='EDIT_BOX group6' type='RADIUSX' ></div></div>
+		              			<div id='radiusYEdit' style='display:inline-block; margin-left:3px;' data-tooltiptext='Vertical Radius' data-helptext='Modify the Vertical Radius'><span class='myLabel' style='text-align:right;'>R<sub>y</sub></span><div id='radiusYIP' class='EDIT_BOX group6' type='RADIUSY'></div></div>
 		              		</td>
 		              	</tr>		              	
-		              	<tr id='radiusProp' class='propertyRow ellipticProp pathProperty'>
-		              		<td class='propertyName'>Radius</td>
-		              		<td class='propertyValues'>
-		              			   		   						
-		              		</td>
-		              		<td class='propertyValues'>
-		              			
-		              		</td>
-		              	</tr>
 		              	<tr id='polygonProp' class='propertyRow polygonProp pathProperty'>
 		              		<td class='propertyName'>Length of Sides</td>
 		              		<td class='propertyValues'>
@@ -635,10 +626,11 @@
  						
 			              	<tr id='sasd' class='animpropertyRow MotionPathProperty'>			              		
 			              		<td class='propertyValues'>
-			              			<div  class="ANIMATTR" style="display:inline-block; margin-left:2px;"><span class='myLabel' style='text-align:right;'>Current Path</span><div id="pathModifyDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:2px"></div></div>		              					              		
+			              			<div  class="ANIMATTR" style="display:inline-block; margin-left:2px;"><span class='myLabel' style='text-align:right;'>Path</span><div id="pathModifyDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:2px"></div></div>		              					              		
 			              		</td>
 			              		<td class='propertyValues'>
-			              			<div><span class='myLabel' style='text-align:right;'>Path Visible</span><div id="pathvisibilityCB" style="display:inline-block;margin-left:1px; margin-top:2px;position:relative; top:5px"></div></div>
+			              			<div style="display:inline-block;"><span class='myLabel' style='text-align:right;'>Path Visible</span><div id="pathvisibilityCB" style="display:inline-block;margin-left:1px; margin-top:2px;position:relative; top:5px"></div></div>
+			              			<div style='display:inline-block; margin-left:7px; position:relative;top:-5px'><button id='edit_animpath_btn' type="button" class="btn btn-xs propertyBtn" style='width:90px' onclick='GX_ToolbarHandler(event)'><span class="glyphicon glyphicon-edit" style='margin-right:5px'></span>Edit Path</button></div>
 			              		</td>
 			              	</tr >
 			              	<tr id='wqt' class='animpropertyRow MotionPathProperty'>			              		

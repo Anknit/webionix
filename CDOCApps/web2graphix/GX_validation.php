@@ -1,11 +1,13 @@
 <?php
+require_once 'GX_Config.php';
 
-$author = 'rajarshi';
-$user = 'cdoc';
-$pwd = 'cdoc';
-$dbname = 'cdocapptestdb';
-$hostaddr = 'localhost:3306';
 
+
+$author = $DBAUTHOR;
+$user = $DBUSER; //'cdocadmin';
+$pwd = $DBPWD;
+$dbname = $DBNAME;
+$hostaddr = $DBHOSTADDR; //p for persistence
 
 /* Initialisation of the database and the corresposndin tables */
 
