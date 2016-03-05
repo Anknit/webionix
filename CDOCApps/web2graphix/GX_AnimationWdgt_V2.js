@@ -1912,7 +1912,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	    attrArray.push(attrData);		    
 		attrData = ['repeatCount',2];  		
 		attrArray.push(attrData);
-		attrData = ['fill','remove'];  		
+		//attrData = ['fill','remove'];  	
+		attrData = ['fill','freeze'];  	
 		attrArray.push(attrData);
 		//attrData = ['begin',containerGroupID + '_ANIM_MOTION.begin'];  	
 		attrData = ['begin',''];  	
@@ -3014,11 +3015,20 @@ function GX_RemoveAnimInfoFromList(animID)
 			 }
 			 else
 				 animNode.setAttribute(attrArray[i][0], attrArray[i][1]);
-		 	}			 
+		 	}
+		 //updating the local list here 
+		 if(attrArray[i][0]== 'fill'){
+			 //get the animlist index 
+			 var index = GX_GetAnimInfoListIndexByID(animID);
+			 gAnimList[index][4] = attrArray[i][1];			 
+		 }
+		 
 		 
 	 }//for loop 
 		 if(attrArray.length > 0)
 			 	var respStr = GXRDE_updateAnimationObject(animID, attrArray); 
+		 
+		
  }
  
 
@@ -3438,13 +3448,13 @@ function GX_RemoveAnimInfoFromList(animID)
 	    gInitAnimParam.calcMode = 'linear';
 	    gInitAnimParam.restart = 'never';
 	    gInitAnimParam.repeatCount = 0;
-	    gInitAnimParam.endState = 'remove'; //FREEZE, REMOVE
+	    gInitAnimParam.endState = 'freeze'; //FREEZE, REMOVE
 	    gInitAnimParam.PathObjectOffset=0;
 	    gInitAnimParam.PathStartPoint=new sPoint();
 	    gInitAnimParam.center = '';  //centre of rotation 	
 		var animType = 'ANIM_ATTRIBUTE'; 
 		if(attrtype == 'opacity'){
-			gInitAnimParam.startValue = '0.5';
+			gInitAnimParam.startValue = '0.3';
 		 	gInitAnimParam.endValue = '1';
 		}
 		else if(attrtype == 'rotate'){
@@ -3580,8 +3590,8 @@ function GX_RemoveAnimInfoFromList(animID)
 		gInitAnimParam.animType = animType; 		     
 	    GX_AddAnimationElement(gInitAnimParam, false); 
 	    var animNode = document.getElementById(gInitAnimParam.animID);
-	   // if(gInitAnimParam.animType == 'ANIM_MOTION')
-		{
+	    //if(gInitAnimParam.animType == 'ANIM_MOTION')
+		
 			var retval = GXRDE_openSVGFile(gSVGFilename); 
 		    var HTMLstr=""; 		 
 		    var currfilename = gSVGFilename; 
@@ -3597,9 +3607,13 @@ function GX_RemoveAnimInfoFromList(animID)
 		    if(xmlstr)
 		       GX_updateTreeWidget(xmlstr);   
 		    WAL_expandAllTreeItems(gTreeNodeID, true);
-		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);	  
-		    GX_MenuItemShow('animate', 'Animate'); 
-		}
+		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);			    
+		    setTimeout(function(){			
+				WAL_SetTabIndex('rightTabs', 2); 				
+				}, 500); 
+			
+		    //GX_MenuItemShow('animate', 'Animate'); 
+		
 	    /*
 	    else{
 	    	GX_UpdateAnimInfoInList(animNode);	   
@@ -3609,11 +3623,11 @@ function GX_RemoveAnimInfoFromList(animID)
 	    	  
 	   
 	    gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	    
-	    GX_UpdateAnimationListbox(); 
+	   
 	    
 	 //then add it to the list 
  }
- 
+ /*
  function GX_UpdateAnimationListbox(){
 	// gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
 	// gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
@@ -3627,6 +3641,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 }	 
 	// WAL_ListBoxUpdateData('animationlist', animlist);
  }
+ */
  
  function GX_AnimListWidgetBtnHdlr(event){
 	 var nodeid =  event.target.id; 
@@ -3640,7 +3655,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		 if(gCurrentAnimInfo){		 
 			 GX_RemoveAnimationObject(gCurrentAnimInfo[0]); 
 			 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
-			 GX_UpdateAnimationListbox(); 		    
+			 //GX_UpdateAnimationListbox(); 		    
 		 }
 		 break;
 	 case 'apply_anim_btn':	
@@ -3665,7 +3680,8 @@ function GX_RemoveAnimInfoFromList(animID)
 			}
 		}		
 		gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
-		GX_UpdateAnimationListbox();
+		//GX_UpdateAnimationListbox();
+		//WAL_ClearGridSelection('jqxAnimgrid'); 
 		 break;
 	 case 'add_anim_btn':
 		 gLastPositionValue = 0;
@@ -4165,4 +4181,9 @@ function GX_OnAnimationEndHandler(evt){
 		 gbAnimationEnd = true; 		
 		}, 
 		gAnimEndTimer); 
+}
+
+function GX_ResetAnimSelection(){
+	WAL_ClearGridSelection('jqxAnimgrid');
+	gCurrentAnimInfo = 0; 
 }
