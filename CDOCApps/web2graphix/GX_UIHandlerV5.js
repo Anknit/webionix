@@ -2278,6 +2278,7 @@ function GX_ResetAllSelections()
 	WAL_disableWidget('alignheight_icon', 'data-customButton', false, false);
 	
 	GX_HideandUpdateTextData(); 
+	GX_ResetAnimSelection(); 
 	
 }
 //incase of pointmarker only the x,y corodinate of GrabberDim should be used 
