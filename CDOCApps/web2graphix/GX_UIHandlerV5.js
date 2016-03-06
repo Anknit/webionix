@@ -3411,25 +3411,26 @@ function GX_UpdateLayerChildElements(layerNode)
 		}
 		else if(nodeclass = 'SVG_PATH_OBJECT')
 		{
-			GX_GetPathDimension(node);
-			var x, y; 
-			if(gPathDataArray)
-			{
-				for(var k=0; k < gPathDataArray.length; k++)
+			if(node){
+				GX_GetPathDimension(node);
+				var x, y; 
+				if(gPathDataArray)
 				{
-					if( (gPathDataArray[k][3] == 'POINT') || (gPathDataArray[k][3] == 'START_POINT')|| (gPathDataArray[k][3] == 'END_POINT') )
+					for(var k=0; k < gPathDataArray.length; k++)
 					{
-						x = new Number(gPathDataArray[k][1]) ; //''+ transprop.x;
-						y = new Number(gPathDataArray[k][2]);
-						x += transprop.x;
-						y += transprop.y;					
-						gPathDataArray[k][1] = Math.round(x) ;//transprop.x; 
-						gPathDataArray[k][2] = Math.round(y); //transprop.y;					
+						if( (gPathDataArray[k][3] == 'POINT') || (gPathDataArray[k][3] == 'START_POINT')|| (gPathDataArray[k][3] == 'END_POINT') )
+						{
+							x = new Number(gPathDataArray[k][1]) ; //''+ transprop.x;
+							y = new Number(gPathDataArray[k][2]);
+							x += transprop.x;
+							y += transprop.y;					
+							gPathDataArray[k][1] = Math.round(x) ;//transprop.x; 
+							gPathDataArray[k][2] = Math.round(y); //transprop.y;					
+						}
 					}
+					GX_SetObjectAttribute(node, 'PATH_DATA', gPathDataArray, true, false);
 				}
-				GX_SetObjectAttribute(node, 'PATH_DATA', gPathDataArray, true, false);
 			}
-			 
 		}
 	}
 	//now reset the layernode translate property
@@ -3614,9 +3615,12 @@ function GX_GetRectObjectDim(ObjNode)
 	    }
 	    else if(objClass = 'SVG_PATH_OBJECT')
 	    {
-	    	mypoint = GX_GetPathDimension(ObjNode);
-	    	mypoint.centerX = mypoint.x +  mypoint.width/2; 
-	    	mypoint.centerY = mypoint.y +  mypoint.height/2; 	    	
+	    	if(ObjNode){
+	    		mypoint = GX_GetPathDimension(ObjNode);
+		    	mypoint.centerX = mypoint.x +  mypoint.width/2; 
+		    	mypoint.centerY = mypoint.y +  mypoint.height/2; 
+	    	}
+	    		    	
 	    }
 	    
 	    var rotParam = ObjNode.classList[2]; 
@@ -3642,6 +3646,8 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     var rightLimit, bottomLimit; 
     var x, y, width, height; 
     //check the limits 
+    if(!ObjNode)
+    	return ; 
     var modDim = new sDimension() ; //newDim; 
     modDim.x = Math.round(newDim.x);
     modDim.x =  Math.abs(modDim.x);
@@ -4806,7 +4812,8 @@ function GX_GetPathDimension(pathNode)
 {
 	var pathnodeName = pathNode.nodeName.toUpperCase();	
 	var patharra1 ; 
-	
+	if(!pathNode)
+		return ; 
 	//frist convert parameters into an array 
 	var dvalue = pathNode.getAttribute('d');
 	if(!dvalue)
@@ -9654,6 +9661,8 @@ function GX_ReloadSVG(ObjID){
 	WAL_expandAllTreeItems(gTreeNodeID, true);
 	if(currObjID)
 		WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);
+	else
+		WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
 }
 
 function GX_ReloadNode(nodeID){
