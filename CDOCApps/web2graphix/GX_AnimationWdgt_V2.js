@@ -3591,7 +3591,11 @@ function GX_RemoveAnimInfoFromList(animID)
 	    GX_AddAnimationElement(gInitAnimParam, false); 
 	    var animNode = document.getElementById(gInitAnimParam.animID);
 	    //if(gInitAnimParam.animType == 'ANIM_MOTION')
-		
+	    	GX_ReloadSVG(0);
+	    	setTimeout(function(){			
+					WAL_SetTabIndex('rightTabs', 2); 				
+					}, 500); 
+	    	/*
 			var retval = GXRDE_openSVGFile(gSVGFilename); 
 		    var HTMLstr=""; 		 
 		    var currfilename = gSVGFilename; 
@@ -3607,10 +3611,9 @@ function GX_RemoveAnimInfoFromList(animID)
 		    if(xmlstr)
 		       GX_updateTreeWidget(xmlstr);   
 		    WAL_expandAllTreeItems(gTreeNodeID, true);
-		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);			    
-		    setTimeout(function(){			
-				WAL_SetTabIndex('rightTabs', 2); 				
-				}, 500); 
+		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);		
+		    */	    
+		   
 			
 		    //GX_MenuItemShow('animate', 'Animate'); 
 		
@@ -3654,8 +3657,14 @@ function GX_RemoveAnimInfoFromList(animID)
 	 case 'delete_anim_btn':		
 		 if(gCurrentAnimInfo){		 
 			 GX_RemoveAnimationObject(gCurrentAnimInfo[0]); 
+			 GX_ReloadSVG(0);
+		    	setTimeout(function(){			
+						WAL_SetTabIndex('rightTabs', 2); 				
+						}, 500); 
+		    /*	
 			 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
-			 //GX_UpdateAnimationListbox(); 		    
+			 GX_UpdateAnimationListbox();
+			 */ 		    
 		 }
 		 break;
 	 case 'apply_anim_btn':	
@@ -4160,10 +4169,13 @@ function GX_UpdateAnimUIGrid(){
 	gAnimInfoTableSource.localdata = gAnimInfoList; 
 	$('#jqxAnimgrid').jqxGrid('updatebounddata', 'cells');
 	//also update the refanimation list
+	/*
 	var animList =[]; 
 	for(j=0; j < gAnimInfoList.length; j++){
 		animList.push(gAnimInfoList[j].title); 
 	}
+	*/
+	
 	if(gRefAnimListDDL)
 		WAL_UpdateDropDownList(gRefAnimListDDL.id, animList);
 	//gRefAnimListDDL.gRefAnimListDDL
