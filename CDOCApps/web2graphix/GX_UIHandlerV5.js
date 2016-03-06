@@ -4811,7 +4811,7 @@ function GX_GetPathDimension(pathNode)
 	var dvalue = pathNode.getAttribute('d');
 	if(!dvalue)
 		return 0; 
-	gPathDataArray.splice(0,gPathDataArray.length); 
+	//gPathDataArray.splice(0,gPathDataArray.length); 
 	gPathDataArray = GX_ConvertPathDataToArray(pathNode);
 	if(!gPathDataArray)
 		return 0; 
@@ -4820,8 +4820,6 @@ function GX_GetPathDimension(pathNode)
 	newDim.x += transValue.x;
 	newDim.y += transValue.y; 
 	//run the minimax logic to find the dimension 
-	
-	
 	return newDim; 
 }
 
@@ -9535,8 +9533,8 @@ function GX_RightTabHandler(tabIndex){
 	else if(tabIndex == 1)
 		bTreeWidgetDisplay = false; 
 	else if(tabIndex == 2){
-		if(gCurrentObjectSelected)
-			GX_SetSelection(gCurrentObjectSelected, false, false); 
+	//	if(gCurrentObjectSelected)
+		//	GX_SetSelection(gCurrentObjectSelected, false, false); 
 		//now populate the anim data here
 		GX_UpdateAnimUIGrid(); 
 		//get the list of animation
