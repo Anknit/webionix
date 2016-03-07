@@ -1281,12 +1281,13 @@ function GX_InitializeDocument(svgFileName)
 		 GX_PopulateAnimationList(); 
 		 gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
 		 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
-		 var animlist = new Array(); 
+		 /*var animlist = new Array(); 
 		 for(var i =0; i <gAnimList.length; i++){
 			 var attr = gReverseAttrList[gAnimList[i][2]]; 
 			 animlist.push(gAnimList[i][5] + '-<b>' + attr + '</<b>'); 
 		 }		 
-		// WAL_ListBoxUpdateData('animationlist', animlist);		 
+		WAL_ListBoxUpdateData('animationlist', animlist);
+		*/ 		 
 	 }	
 	 //update the gradient list 
 	gGradientList = GX_GetGradientList(); 
@@ -9535,15 +9536,23 @@ function GX_SetPropertyonUI(objNode){
 
 function GX_RightTabHandler(tabIndex){
 	gCurrentTabIndex = tabIndex; 
-	if(tabIndex == 0)
-		bTreeWidgetDisplay = true; 
+	if(tabIndex == 0){
+		bTreeWidgetDisplay = true;
+		setTimeout(function(){			
+			WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
+			}, 250); 		
+	}
 	else if(tabIndex == 1)
 		bTreeWidgetDisplay = false; 
 	else if(tabIndex == 2){
 	//	if(gCurrentObjectSelected)
 		//	GX_SetSelection(gCurrentObjectSelected, false, false); 
 		//now populate the anim data here
-		GX_UpdateAnimUIGrid(); 
+		setTimeout(function(){			
+			GX_UpdateAnimUIGrid(); 	
+			}, 250); 
+		
+		
 		//get the list of animation
 		//refresh  the grid data here 
 	}
@@ -9615,6 +9624,10 @@ function OnPointMarkerDragStop(event, ui){
     gMarkerPosition.centerY += relY;
     
     gPathDataArray = GX_ConvertPathDataToArray(gIndicatorPathNode);
+    if(!gPathDataArray){
+    	Debug_Message("Indicator Path Data Array s Empty"); 
+    	return ; 
+    }
    // var pathvalue = 'M' + objPos.centerX + ' ' + objPos.centerY + ' l' + endValue; 
     var endX = new Number(gPathDataArray[1][1]); 
     endX  += relX;
@@ -9642,7 +9655,7 @@ function GX_ReloadPreview(){
 	 
 }
 
-function GX_ReloadSVG(ObjID){
+function GX_ReloadSVG(ObjID, bUpdateTree){
 	 var currfilename = gSVGFilename; 
 	 GX_CloseSVGFile();	 
 	 var retval = GXRDE_openSVGFile(currfilename); 
@@ -9654,15 +9667,17 @@ function GX_ReloadSVG(ObjID){
 		   	 dataNode.innerHTML += retval;		   	
 		  	 GX_InitializeDocument(currfilename);		   	
 	}	
+	if(bUpdateTree == true){
+		var xmlstr = GXRDE_GetSVGMetaXML(currfilename);    
+		if(xmlstr)
+		     GX_updateTreeWidget(xmlstr);   
+		WAL_expandAllTreeItems(gTreeNodeID, true);
+		if(currObjID)
+			WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);
+		else
+			WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
+	}
 	
-	var xmlstr = GXRDE_GetSVGMetaXML(currfilename);    
-	if(xmlstr)
-	     GX_updateTreeWidget(xmlstr);   
-	WAL_expandAllTreeItems(gTreeNodeID, true);
-	if(currObjID)
-		WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);
-	else
-		WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
 }
 
 function GX_ReloadNode(nodeID){
