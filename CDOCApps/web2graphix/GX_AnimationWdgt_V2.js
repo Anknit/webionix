@@ -1702,8 +1702,11 @@ function GX_RemoveAnimInfoFromList(animID)
 		{
 			var retval = GX_AddAnimationElement(gCurrAnimParam, true);
 			if(gCurrAnimParam.animType == 'ANIM_MOTION'){
-				GX_ReloadSVG(gCurrAnimParam.objectID);		   
-				WAL_SetTabIndex('rightTabs', 2);		  
+				GX_ReloadSVG(gCurrAnimParam.objectID, true);		   
+				setTimeout(function(){			
+					WAL_SetTabIndex('rightTabs', 2);					
+					}, 500);
+				
 			}
 			
 		}		
@@ -3059,20 +3062,7 @@ function GX_RemoveAnimInfoFromList(animID)
  
  
  
- function GX_OnAnimationEndHandler(evt)
- {	
-	 //Debug_Message('Énd of Animation Path'); 
-	 gCurrAnimNode = evt.target; 	 
-	 setTimeout(function(){		
-		 gCurrAnimNode.setAttribute('fill', 'remove');
-		 GX_RestoreAnimationObject(gCurrAnimNode.id); 
-		 GX_RestoreMotionObject(gCurrAnimNode);
-		 gbAnimationEnd = true; 		
-		}, 
-		gAnimEndTimer); 	
-	 
-	 
- }
+ 
  
  function GX_AnimEndTimerHandler()
  {
@@ -3081,7 +3071,8 @@ function GX_RemoveAnimInfoFromList(animID)
  }
  
  
- 
+ var gPathValue = 0; 
+ var gPolypathNode = 0; 
  function GX_PreviewAnimation(animID)
  {	 
   	var animnode = document.getElementById(animID);
@@ -3116,6 +3107,10 @@ function GX_RemoveAnimInfoFromList(animID)
   			var animNode1 = animnode.childNodes[0];
   			animNode1.setAttribute('restart', 'whenNotActive');
   			animNode1.setAttribute('fill', 'remove'); 
+  			var objID = animNode1.getAttribute('xlink:href');
+  			objID = objID.substring(1,objID.length); 
+  			gPolypathNode = document.getElementById(objID);
+  			gPathValue = gPolypathNode.getAttribute('d'); 
   			animNode1.beginElement();  			
   			return;   			
   		}
@@ -3145,11 +3140,8 @@ function GX_RemoveAnimInfoFromList(animID)
   		return ; 
   	 var name = animnode.nodeName.toUpperCase(); 
   	// if(name == 'ANIMATEMOTION')
-    //	 GX_RestoreMotionObject(animnode);
-  	 
+    //	 GX_RestoreMotionObject(animnode);  	 
      animnode.setAttribute('fill', 'remove');     
-    // Debug_Message("Restor Animation Object"); 
-     
  }
 
  function GX_RemoveAnimationObject(animID)
@@ -3243,8 +3235,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		  	  objNode.setAttribute("x", origValueArr[0]); 
 		      objNode.setAttribute("y", origValueArr[1]);   	  
 		 } 
-	 }
-	
+	 }	 
 	 else if(nodename == 'ANIMATE'){
 		 var parentNode = animNode.parentNode; 
 		 if(parentNode.nodeName == 'g'){
@@ -3262,6 +3253,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			 //Debug_Message('Setting Orig Value=' +origval ); 			 
 		 }		 
 	 }
+	 
  }
  
  function GX_ResetUI(animParam)
@@ -3410,7 +3402,10 @@ function GX_RemoveAnimInfoFromList(animID)
 		gInitAnimParam.title = animName; 
 	    gInitAnimParam.animID = GXRDE_GetUniqueID('ANIM_');  
 	    gInitAnimParam.objectID = gCurrentObjectSelected.id; 
-	    gInitAnimParam.objectType = gCurrentObjectSelected.classList[1];	   
+	    if(gCurrentObjectSelected.nodeName == 'g')
+	    	gInitAnimParam.objectType = 'GROUP';
+		else
+			gInitAnimParam.objectType = gCurrentObjectSelected.classList[1]; 	   	   
 	    gInitAnimParam.duration = 2;
 	    gInitAnimParam.animType = ''; // animType; 
 	    gInitAnimParam.attribute = attrtype;
@@ -3493,8 +3488,8 @@ function GX_RemoveAnimInfoFromList(animID)
 			var currObjNode =  gCurrentObjectSelected; 
 			var startX, startY; 	
 			var endX, endY; 
-			var pathLen = 200; 
-			var objectType = gCurrentObjectSelected.classList[1]; 
+			var pathLen = 200; 	
+			var objectType =  gInitAnimParam.objectType; 
 			if( (objectType == 'ELLIPSE') || (objectType == "CIRCLE") ){ 
 				var objDim =  GX_GetRectObjectDim(gCurrentObjectSelected);
 				startX = objDim.centerX; 
@@ -3506,6 +3501,11 @@ function GX_RemoveAnimInfoFromList(animID)
 				startY = objDim.centerY; 				
 			}
 			else if(objectType == 'RECTANGLE'){
+				var objDim =  GX_GetRectObjectDim(gCurrentObjectSelected); 
+				startX = objDim.centerX; 
+				startY = objDim.centerY; 		
+			}
+			else if(objectType == 'GROUP'){
 				var objDim =  GX_GetRectObjectDim(gCurrentObjectSelected); 
 				startX = objDim.centerX; 
 				startY = objDim.centerY; 		
@@ -3591,10 +3591,11 @@ function GX_RemoveAnimInfoFromList(animID)
 	    GX_AddAnimationElement(gInitAnimParam, false); 
 	    var animNode = document.getElementById(gInitAnimParam.animID);
 	    //if(gInitAnimParam.animType == 'ANIM_MOTION')
-	    	GX_ReloadSVG(0);
+	    	GX_ReloadSVG(0, true);	        	
 	    	setTimeout(function(){			
 					WAL_SetTabIndex('rightTabs', 2); 				
-					}, 500); 
+					}, 500);
+					  
 	    	/*
 			var retval = GXRDE_openSVGFile(gSVGFilename); 
 		    var HTMLstr=""; 		 
@@ -3657,10 +3658,12 @@ function GX_RemoveAnimInfoFromList(animID)
 	 case 'delete_anim_btn':		
 		 if(gCurrentAnimInfo){		 
 			 GX_RemoveAnimationObject(gCurrentAnimInfo[0]); 
-			 GX_ReloadSVG(0);
-		    	setTimeout(function(){			
-						WAL_SetTabIndex('rightTabs', 2); 				
-						}, 500); 
+			 GX_UpdateAnimUIGrid();
+			 GX_ReloadSVG(0, true);
+			 setTimeout(function(){			
+					WAL_SetTabIndex('rightTabs', 2); 	
+					 
+					}, 500);
 		    /*	
 			 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
 			 GX_UpdateAnimationListbox();
@@ -4165,9 +4168,12 @@ function GX_GetAnimInfoList(){
 
 function GX_UpdateAnimUIGrid(){
 	gLastItemDisabled = 0; 
+	$('#jqxAnimgrid').jqxGrid('clear');
 	gAnimInfoList = GX_GetAnimInfoList(); 
-	gAnimInfoTableSource.localdata = gAnimInfoList; 
-	$('#jqxAnimgrid').jqxGrid('updatebounddata', 'cells');
+	if(gAnimInfoList.length > 0){
+		gAnimInfoTableSource.localdata = gAnimInfoList; 
+		$('#jqxAnimgrid').jqxGrid('updatebounddata', 'cells');
+	}	
 	//also update the refanimation list
 	/*
 	var animList =[]; 
@@ -4183,8 +4189,22 @@ function GX_UpdateAnimUIGrid(){
 }
 
 
-
+/*
 function GX_OnAnimationEndHandler(evt){	
+	 gCurrAnimNode = evt.target; 	 
+	 setTimeout(function(){		
+		 gCurrAnimNode.setAttribute('fill', 'remove');
+		 GX_RestoreAnimationObject(gCurrAnimNode.id); 
+		 GX_RestoreMotionObject(gCurrAnimNode);
+		 gbAnimationEnd = true; 		
+		}, 
+		gAnimEndTimer); 
+}
+*/
+
+function GX_OnAnimationEndHandler(evt)
+{	
+	 //Debug_Message('Énd of Animation Path'); 
 	 gCurrAnimNode = evt.target; 	 
 	 setTimeout(function(){		
 		 gCurrAnimNode.setAttribute('fill', 'remove');
