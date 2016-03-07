@@ -954,7 +954,8 @@ function GX_InitializeAnimationTab(){
  	WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '') ; 		
  	var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Fly-In', 'Move', 'Animate Path', 'Zoom'];
     WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 160, 165);
-    WAL_createModalWindow('newAnimationDlg', '220', '150', 'newAnimOK', 'newAnimCancel', false);
+    WAL_createButton('newAnimPreview', '', '75', '24', true);
+    WAL_createModalWindow('newAnimationDlg', '230', '270', 'newAnimOK', 'newAnimCancel', false);
 	
     //creatingthe grid 
    /* sAnimInfo.prototype.id = ""; 
@@ -4218,4 +4219,67 @@ function GX_OnAnimationEndHandler(evt)
 function GX_ResetAnimSelection(){
 	WAL_ClearGridSelection('jqxAnimgrid');
 	gCurrentAnimInfo = 0; 
+}
+
+function GX_HideNewAnimPreview(bFlag){
+	
+	//hide all the svg elements 
+	if(bFlag == true){
+		$('.SVG_PATH_OBJECT_PREVIEW').hide(); 
+		$('.SVG_SHAPE_OBJECT_PREVIEW').hide(); 
+	}
+	else{
+		$('.SVG_PATH_OBJECT_PREVIEW').show(); 
+		$('.SVG_SHAPE_OBJECT_PREVIEW').show(); 
+	}
+		
+}
+
+function GX_NewAnimPreview(event){
+	//get the animtype 
+	GX_HideNewAnimPreview(true); 
+	var animType =  WAL_getDropdownListSelection('newAnimTypeDDL');
+	animType = gAttrList[animType];
+	var animID = 0; 
+	var objID = 0; 
+	animID = 'ANIM_' + animType; 
+	var animNode = document.getElementById(animID); 
+	//now get to the appropriate animation object 
+	switch(animType){
+	
+	case 'rotate':
+		//form proper animation id 		
+		objID = animNode.getAttribute('xlink:href'); 
+		objID = objID.substring(1, objID.length); 		
+		$('#' + objID).show(); 
+		//now call the 		
+		break; 
+	case 'pathmotion':
+		var animNode1 = animNode.childNodes[0];
+		objID = animNode1.getAttribute('xlink:href'); 
+		objID = objID.substring(1, objID.length); 		
+		$('#' + objID).show(); 
+		$('#SVG_1059').show(); 
+		break; 
+	case 'ANIMATE_PATH':
+		var animNode1 = animNode.childNodes[0];
+		objID = animNode1.getAttribute('xlink:href'); 
+		objID = objID.substring(1, objID.length); 		
+		$('#' + objID).show();		
+		break; 
+	case 'opacity':
+		//form proper animation id 		
+		objID = animNode.getAttribute('xlink:href'); 
+		objID = objID.substring(1, objID.length); 		
+		$('#' + objID).show(); 
+		//now call the 		
+		break; 
+		
+	default:
+		break; 
+	}
+	GX_PreviewAnimation(animID); 
+	//get the reference object ID 
+	//make it visible 
+	//call the begin element and animate 
 }
