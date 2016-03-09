@@ -130,12 +130,12 @@ gAttrList['Stroke-Color'] = 'stroke';
 gAttrList['Opacity'] = 'opacity'; 
 gAttrList['Visibility'] = 'visibility'; 
 gAttrList['Stroke-Width'] = 'stroke-width';
-gAttrList['Motion along Path'] = 'pathmotion';// 'translate';
+gAttrList['Path Aligned Motion'] = 'pathmotion';// 'translate';
 gAttrList['Rotate'] = 'rotate';
 gAttrList['Horizontal Skew'] = 'skewX';
 gAttrList['Vertical Skew'] = 'skewY';
 gAttrList['Fly-In'] = 'scale';
-gAttrList['Move'] = 'translate';
+gAttrList['Linear Motion'] = 'translate';
 gAttrList['Animate Path'] = 'ANIMATE_PATH';
 gAttrList['Zoom'] = 'ANIMATE_ZOOM'; 
 
@@ -148,12 +148,12 @@ gReverseAttrList['stroke']         =  'Stroke-Color'   ;
 gReverseAttrList['opacity']   	   =  'Opacity'  ; 
 gReverseAttrList['visibility']     =  'Visibility'  ; 
 gReverseAttrList['stroke-width']   =  'Stroke-Width' ;
-gReverseAttrList['pathmotion']     =  'Motion along Path'   ;
+gReverseAttrList['pathmotion']     =  'Path Aligned Motion'   ;
 gReverseAttrList['rotate']         =  'Rotate' ;
 gReverseAttrList['skewX']          =  'Horizontal Skew';
 gReverseAttrList['skewY']          =  'Vertical Skew';     
 gReverseAttrList['scale']          =  'Fly-In'; 
-gReverseAttrList['translate']      =  'Move'; 
+gReverseAttrList['translate']      =  'Linear Motion'; 
 gReverseAttrList['ANIMATE_PATH']   =  'Animate Path'; 
 gReverseAttrList['ANIMATE_ZOOM']   =  'Zoom'; 
 
@@ -952,10 +952,12 @@ function GX_InitializeAnimationTab(){
 	
  	//WAL_createModalWindow(gSVGDimensionDlg, '250', '150', 'svgDimOK', 'svgDimCancel', false);
  	WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '') ; 		
- 	var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Fly-In', 'Move', 'Animate Path', 'Zoom'];
+ 	//var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Fly-In', 'Move', 'Animate Path', 'Zoom'];
+ 	//alphabetical order
+ 	var attrList = ['Animate Path','Fly-In','Linear Motion', 'Path Aligned Motion','Opacity', 'Rotate', 'Horizontal Skew', 'Vertical Skew','Zoom'];
     WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 160, 165);
     WAL_createButton('newAnimPreview', '', '75', '24', true);
-    WAL_createModalWindow('newAnimationDlg', '230', '270', 'newAnimOK', 'newAnimCancel', false);
+    WAL_createModalWindow('newAnimationDlg', '230', '280', 'newAnimOK', 'newAnimCancel', true);
 	
     //creatingthe grid 
    /* sAnimInfo.prototype.id = ""; 

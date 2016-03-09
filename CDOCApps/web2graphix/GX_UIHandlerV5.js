@@ -7706,6 +7706,7 @@ function GX_AddNewAnimation()
   //  WAL_hideWidget('previewbtn', true); 
     WAL_setTextInputValue('newAnimtitleIP', '', false);	
     GX_HideNewAnimPreview(true); 
+    WAL_SetItemInDropDownList('newAnimTypeDDL', -1, true); 
 	WAL_showModalWindow('newAnimationDlg',"", "" );
 }
 
