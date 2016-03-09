@@ -4266,15 +4266,22 @@ function GX_NewAnimPreview(event){
 		objID = animNode1.getAttribute('xlink:href'); 
 		objID = objID.substring(1, objID.length); 		
 		$('#' + objID).show();		
-		break; 
+		break;	
 	case 'opacity':
-		//form proper animation id 		
+	case 'skewX':
+	case 'skewY':
+	case 'scale':
+	case 'translate':
 		objID = animNode.getAttribute('xlink:href'); 
 		objID = objID.substring(1, objID.length); 		
 		$('#' + objID).show(); 
-		//now call the 		
+		break;	
+	case 'ANIMATE_ZOOM':
+		var animNode1 = animNode.childNodes[0];
+		objID = animNode1.getAttribute('xlink:href'); 
+		objID = objID.substring(1, objID.length); 		
+		$('#' + objID).show();		
 		break; 
-		
 	default:
 		break; 
 	}
