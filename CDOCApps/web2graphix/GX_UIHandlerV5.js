@@ -7705,6 +7705,7 @@ function GX_AddNewAnimation()
    
   //  WAL_hideWidget('previewbtn', true); 
     WAL_setTextInputValue('newAnimtitleIP', '', false);	
+    GX_HideNewAnimPreview(true); 
 	WAL_showModalWindow('newAnimationDlg',"", "" );
 }
 
@@ -9687,3 +9688,5 @@ function GX_ReloadNode(nodeID){
 	parentNode.removeChild(Node); 
 	parentNode.appendChild(copyNode); 
 }
+
+
