@@ -136,7 +136,7 @@ gAttrList['Horizontal Skew'] = 'skewX';
 gAttrList['Vertical Skew'] = 'skewY';
 gAttrList['Fly-In'] = 'scale';
 gAttrList['Linear Motion'] = 'translate';
-gAttrList['Animate Path'] = 'ANIMATE_PATH';
+gAttrList['Animate Polygon'] = 'ANIMATE_PATH';
 gAttrList['Zoom'] = 'ANIMATE_ZOOM'; 
 
 
@@ -154,10 +154,28 @@ gReverseAttrList['skewX']          =  'Horizontal Skew';
 gReverseAttrList['skewY']          =  'Vertical Skew';     
 gReverseAttrList['scale']          =  'Fly-In'; 
 gReverseAttrList['translate']      =  'Linear Motion'; 
-gReverseAttrList['ANIMATE_PATH']   =  'Animate Path'; 
+gReverseAttrList['ANIMATE_PATH']   =  'Animate Polygon'; 
 gReverseAttrList['ANIMATE_ZOOM']   =  'Zoom'; 
 
+/*
+ *  'Animate Path', -- ONLY FOR pOLY
+	'Fly-In', --ALL
+	'Linear Motion', --ALL
+ 	'Path Aligned Motion', --SHAPE
+	'Opacity', --ALL
+	'Rotate', --ALL
+	'Horizontal Skew', ALL
+ 	'Vertical Skew',-ALL
+	'Zoom'; --SHAPE 
 
+ */
+gAnimItemDisabledList = []; 
+gAnimItemDisabledList['SVG_SHAPE_OBJECT'] = [0];
+gAnimItemDisabledList['SVG_PATH_OBJECT'] = [0,3,8];
+gAnimItemDisabledList['GROUP'] = [0,3,8];
+//NEED TO CHECK FURTEHR FOR TEXT AND IMAGES 
+gAnimItemDisabledList['SVG_TEXT_OBJECT'] = [0,3,8];
+var gCurrDisabledAnimItemArr = 0; 
 //var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
 var gPathTypeList = []; 
 gPathTypeList['Line'] = 'LINE_PATH'; 
@@ -954,7 +972,7 @@ function GX_InitializeAnimationTab(){
  	WAL_CreateTextInput('newAnimtitleIP', 160, 24, false, '') ; 		
  	//var attrList = ['Opacity', 'Motion along Path', 'Rotate', 'Horizontal Skew', 'Vertical Skew', 'Fly-In', 'Move', 'Animate Path', 'Zoom'];
  	//alphabetical order
- 	var attrList = ['Animate Path','Fly-In','Linear Motion', 'Path Aligned Motion','Opacity', 'Rotate', 'Horizontal Skew', 'Vertical Skew','Zoom'];
+ 	var attrList = ['Animate Polygon','Fly-In','Linear Motion', 'Path Aligned Motion','Opacity', 'Rotate', 'Horizontal Skew', 'Vertical Skew','Zoom'];
     WAL_createDropdownList('newAnimTypeDDL', 140, gInputHeight, false, attrList, "GX_AnimAttrListHandler", 160, 165);
     WAL_createButton('newAnimPreview', '', '75', '24', true);
     WAL_createModalWindow('newAnimationDlg', '230', '280', 'newAnimOK', 'newAnimCancel', true);
@@ -4291,4 +4309,27 @@ function GX_NewAnimPreview(event){
 	//get the reference object ID 
 	//make it visible 
 	//call the begin element and animate 
+}
+
+
+function GX_InitializeAnimationListItems(selectionType, bPolygonFlag){
+	
+	if( (gCurrDisabledAnimItemArr) && (gCurrDisabledAnimItemArr.length > 0)){
+		//first of all check enable the previously disabled items 
+		for(var i=0; i < gCurrDisabledAnimItemArr.length; i++){
+			WAL_enableDropdownListItem('newAnimTypeDDL',gCurrDisabledAnimItemArr[i]); 
+		}
+	}
+	gCurrDisabledAnimItemArr = gAnimItemDisabledList[selectionType];
+	if(!gCurrDisabledAnimItemArr)
+		return; 
+	for(var i=0; i < gCurrDisabledAnimItemArr.length; i++){
+		WAL_disableDropdownListItem('newAnimTypeDDL',gCurrDisabledAnimItemArr[i]); 
+	}
+		//then disable new items 
+		
+		if(bPolygonFlag == true){
+			WAL_enableDropdownListItem('newAnimTypeDDL', 0); 
+		}
+	
 }
