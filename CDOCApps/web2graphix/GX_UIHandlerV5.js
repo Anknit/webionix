@@ -1115,9 +1115,15 @@ function GX_Initialize()
 		OnObjectResizeStop(event, ui); 		
 	});
 	
+	$(gCurrGripperSel).on( "resize", function( event, ui ) {
+		OnObjectResizing(event, ui); 		
+	});
+	
 	$(gCurrGripperSel).on( "resizestart", function( event, ui ) {
 		OnObjectResizeStart(event, ui); 		
 	});
+	
+	
 	
 	
 	//gGripperTextSpanNode = $(gCurrGripperSel)[0].firstElementChild; 
@@ -1134,7 +1140,8 @@ function GX_Initialize()
 		OnObjectDrag(event,ui); 
 	});
 	
-	$(gCurrGripperSel).css({visibility:'hidden'}); 
+	//$(gCurrGripperSel).css({visibility:'hidden'}); 
+	$(gCurrGripperSel).hide(); 
 	
 	//path marker related 
 	/*
@@ -1883,7 +1890,8 @@ function GX_CloseSVGFile()
 	gFileNameHolder.innerHTML = "";
 	gSVGDimInfoHolder.innerHTML =""; 
 	gSVGFilename = "";
-	$(gCurrGripperSel).css({visibility: "hidden"});
+	//$(gCurrGripperSel).css({visibility: "hidden"});
+	$(gCurrGripperSel).hide(); 
 	//GX_UpdateMarkers(0, false, false); 
 	GX_HidePathMarker(); 
 	WAL_ClearTreeItem(gTreeWidgetID); 
@@ -1958,7 +1966,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	if(nodeClass == 'GROUP'){
     		GX_UpdateLayerChildElements(gCurrentObjectSelected);
     	}
-    	$(gCurrGripperSel).css({visibility:"hidden"});
+    	//$(gCurrGripperSel).css({visibility:"hidden"});
+    	$(gCurrGripperSel).hide(); 
     	objNode.setAttribute('pointer-events', 'visible');    	
     	if(objNode != gCurrentObjectSelected)
     		return ;      	 
@@ -1995,7 +2004,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	 GX_SetDefualtPropOnUI(); 
     	return ; 
     }
-    $(gCurrGripperSel).css({visibility:"visible"});
+    //$(gCurrGripperSel).css({visibility:"visible"});
+   
     /*
     if(gObjectEditMode == 'LAYOUT_MODE')
     	gCurrGrabber.setAttribute("pointer-events", "visible");
@@ -2066,6 +2076,9 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     gGrabberDim.width = gCurrSelectedObjectDim.width; 
     gGrabberDim.height = gCurrSelectedObjectDim.height; 
     GX_SetRectObjectDim(gCurrGrabber, gGrabberDim);
+    var newX = (gGrabberDim.x +50); 
+    var newY = (gGrabberDim.y +120); 
+    $(gCurrGripperSel).show(200); 
     //gGripperTextSpanNode.innerHTML = 'X-Pos: '+ gCurrSelectedObjectDim.x + 'px Y-Pos: ' + gCurrSelectedObjectDim.y + 'px'; 
    
    
@@ -2116,10 +2129,11 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     
     //this is to ensure while a new object is being added with 0 Dim. doesnt show up 
     if( (gCurrSelectedObjectDim.width == 0) && (gCurrSelectedObjectDim.height == 0) )
-    	$(gCurrGripperSel).css({visibility:'hidden'});
+    	$(gCurrGripperSel).hide(); 
+    	//$(gCurrGripperSel).css({visibility:'hidden'});
     
     $(gCurrGripperSel).resizable( "enable" );
-    $(gCurrGripperSel).resizable( "option", "containment", "parent" );
+    $(gCurrGripperSel).resizable( "option", "containment", "parent" );    
     if(nodeClass == 'SVG_SHAPE_OBJECT'){
     	//set the maxDimension here 
     	var maxdim = GX_GetObjectMaxDimensionToResize(gGrabberDim); 
@@ -2904,13 +2918,31 @@ function OnObjectDragStop(evt,ui){
     }
 }
 
+function OnObjectResizing(event, ui){
+	var relW, relH; 
+	var objectType = gCurrentObjectSelected.classList[0]; 
+	var newObjDim = new sDimension(); 
+	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
+		relW = new Number(ui.size.width - ui.originalSize.width); 
+		relH = new Number(ui.size.height - ui.originalSize.height);		 
+		relW = Math.round(relW / gZoomFactor); 
+		relH = Math.round(relH /gZoomFactor);
+		newObjDim.x = gCurrSelectedObjectDim.x ; 
+	    newObjDim.y = gCurrSelectedObjectDim.y ; 
+	    newObjDim.width = gCurrSelectedObjectDim.width + relW; 
+	    newObjDim.height =  gCurrSelectedObjectDim.height + relH; 	    
+		GX_SetRectObjectDim(gCurrentObjectSelected,newObjDim);
+	}
+}
 function OnObjectResizeStop(event, ui){
 	var relW, relH; 
 	var objectType = gCurrentObjectSelected.classList[0]; 
 	var newObjDim = new sDimension(); 
 	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
-		relW = new Number(ui.size.width - ui.originalSize.width -10 ); 
-		relH = new Number(ui.size.height - ui.originalSize.height - 10); 
+		relW = new Number(ui.size.width - ui.originalSize.width); 
+		relH = new Number(ui.size.height - ui.originalSize.height); 
+		//relW = new Number(ui.size.width - ui.originalSize.width -10 ); 
+		//relH = new Number(ui.size.height - ui.originalSize.height - 10); 
 		relW = Math.round(relW / gZoomFactor); 
 		relH = Math.round(relH /gZoomFactor);
 		newObjDim.x = gCurrSelectedObjectDim.x ; 
@@ -2932,8 +2964,8 @@ function OnObjectResizeStop(event, ui){
 
 
 function OnObjectResizeStart(event, ui){	
-	relW = new Number(ui.size.width - ui.originalSize.width -10 ); 
-	relH = new Number(ui.size.height - ui.originalSize.height - 10); 
+	relW = new Number(ui.size.width - ui.originalSize.width); 
+	relH = new Number(ui.size.height - ui.originalSize.height); 
 }
 
 function OnObjectMouseOut(evt)
@@ -3779,9 +3811,11 @@ function GX_SetRectObjectDim(ObjNode, newDim)
         		} 
         		*/ 
     			
-        		modDim.x = modDim.x; // -tolerance; 
-        	    modDim.y = modDim.y;
-        		modDim.height += tolerance; 
+        		modDim.x = modDim.x - tolerance; // -tolerance; 
+        	    modDim.y = modDim.y -tolerance;
+        		modDim.height += 2*tolerance;
+        		modDim.width += 2*tolerance;
+        		
         	
     	}
     		else if((nodeclass == 'PATH_MARKER')|| (nodeclass == 'CUSTOM_MARKER')){
@@ -4213,7 +4247,8 @@ function GX_ToolbarHandler(event)
 	case 'patheditBtn':
 		//Debug_Message('Edit clicked');
 		if(objectType == 'SVG_PATH_OBJECT'){
-			 $(gCurrGripperSel).css({visibility:"hidden"});
+			// $(gCurrGripperSel).css({visibility:"hidden"});
+			$(gCurrGripperSel).hide(); 
 			gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
 			GX_AddPathMarker(gCurrentObjectSelected.id, gPathDataArray, true); 
 		}
@@ -7153,7 +7188,8 @@ function GX_SetMarkerNodeSelection(markerNode, bFlag)
 	else
 	{		
 		//make the divmarker node visible here 
-		$(gCurrGripperSel).css({visibility: 'hidden'}); 
+		//$(gCurrGripperSel).css({visibility: 'hidden'});
+		$(gCurrGripperSel).hide(); 
 		var currDim = GX_GetRectObjectDim(markerNode); 
 		GX_SetRectObjectDim($(gDivPathMarkerSel)[0], currDim); 
 		markerNode.setAttribute('visibility', 'hidden'); 
@@ -7706,17 +7742,18 @@ function GX_AddNewAnimation()
   //  WAL_hideWidget('previewbtn', true); 
     WAL_setTextInputValue('newAnimtitleIP', '', false);	
     GX_HideNewAnimPreview(true); 
-    WAL_SetItemInDropDownList('newAnimTypeDDL', -1, true); 
+    WAL_SetItemInDropDownList('newAnimTypeDDL', -1, true);
+    //Update the DropDown list before showing up 
+    var bFlag = false; 
+    if(gCurrentObjectSelected.classList[1] == 'POLYGON')
+    	bFlag = true; 
+    GX_InitializeAnimationListItems(gCurrentObjectSelected.classList[0], bFlag);
 	WAL_showModalWindow('newAnimationDlg',"", "" );
 }
 
 
 function GX_EditAnimation(animID)
-{
-	//get the animnode 
-	/*if(bAnimWdgtCreated != true)
-    	GX_CreateAnimationWidget('animationwidget'); 
-	*/
+{	
 	var animNode = document.getElementById(animID); 
 	gCurrAnimNode = animNode; 
 	if(!animNode)
