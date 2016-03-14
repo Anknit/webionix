@@ -3309,6 +3309,8 @@ function WAL_createTab(ID,  Height, fnSelectHandler)
     	}	
         
     });
+    
+    
 
 }
 
