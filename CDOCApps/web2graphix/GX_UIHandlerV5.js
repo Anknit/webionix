@@ -9664,7 +9664,8 @@ function OnPointMarkerDragStop(event, ui){
     
     gPathDataArray = GX_ConvertPathDataToArray(gIndicatorPathNode);
     if(!gPathDataArray){
-    	Debug_Message("Indicator Path Data Array s Empty"); 
+    	//Debug_Message("Indicator Path Data Array s Empty"); 
+    	//_rm this can happen while center of rotation is being set 
     	return ; 
     }
    // var pathvalue = 'M' + objPos.centerX + ' ' + objPos.centerY + ' l' + endValue; 
@@ -9725,6 +9726,51 @@ function GX_ReloadNode(nodeID){
 	var parentNode = Node.parentNode; 
 	parentNode.removeChild(Node); 
 	parentNode.appendChild(copyNode); 
+}
+
+
+function GX_OBJ_GetPolygonParams(x,y, nSides, length) {
+	var gnInternalAngle = 2 * Math.PI / nSides;
+	var startAngle = Math.PI / nSides;
+	var radius = length;
+	with (Math){
+		radius = round(radius / (2 * sin(gnInternalAngle / 2)));	
+	}	
+	var currX = 0;
+	var currY = 0; 
+	var currAngle;   
+	pathParam = '';
+	var cx = x;
+	var cy = y;
+	//now find the offset by which each point should be move so as to align the object at start point
+	currAngle = startAngle;
+	var offset = new sPoint(); 
+	with (Math){
+		currX = round(cx + radius * cos(currAngle)); 
+		currY = round(cy - radius * sin(currAngle)); 
+		offset.x = currX - x; 
+		offset.y = currY - y; 
+	}
+	
+	//$newPoint = "M". $cx . ',' . $cy;
+//	$pathParam = $pathParam . $newPoint . ' ';     
+	for (k = 0; k < nSides; k++) {  
+		with(Math){
+			currAngle = startAngle + (k * gnInternalAngle);
+			currX = round(cx + radius * cos(currAngle)); 
+			currY = round(cy - radius * sin(currAngle)); 
+			currX -= offset.x; 
+			currY -= offset.y; 
+		}		 
+		if(k == 0)
+			newPoint = "M" + currX + ',' + currY + ' ';  
+		else
+			newPoint = "L" + currX + ',' + currY + ' ';
+		pathParam = pathParam + newPoint;  		
+	}	
+	pathParam = pathParam + 'z'; 
+	return pathParam;
+
 }
 
 
