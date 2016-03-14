@@ -1077,7 +1077,7 @@ function GX_InitializeAnimationTab(){
     }); 
     
     //other controls
-    var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
+    var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic', 'Polygon']; 
     WAL_createDropdownList("pathModifyDDL", '100', gInputHeight, false, pathList, "GX_PathModifyHandler", '140', '140');
     WAL_createCheckBox('pathvisibilityCB', 'GX_AnimDlgCBHdlr', gInputHeight, gInputHeight, '14', false, true);
     WAL_createCheckBox('rollingmotionCB', 'GX_AnimDlgCBHdlr', gInputHeight, gInputHeight, '14', false, true);             
@@ -1425,6 +1425,7 @@ function GX_UpdateAnimInfoInList(animNode)
 				                beginParams.refContainerID, duration,beginParams.AnimEvent];
 				//visibleAnimNode.setAttribute('begin', '');
 				motionAnimNode.setAttribute('begin', '');
+				
 				motionAnimNode.setAttribute('fill', 'remove'); 	
 				GX_RemoveAnimInfoFromList(animNode.id); 
 				gAnimList.push(animInfo);
@@ -1462,6 +1463,7 @@ function GX_UpdateAnimInfoInList(animNode)
 				gAnimList.push(animInfo);
 			}		
 		}
+		
 }
 
 
@@ -3942,7 +3944,14 @@ function GX_ModifyPathType(pathType){
 		
 		//M-10,-10 A100,120 0 0 1 -5,-5
 		break; 
-	case 'POLYGON':
+	case 'POLYGON':		
+		var pathValues =  GX_OBJ_GetPolygonParams(startPoint.x,startPoint.y, 5, 50); 		
+		var classValue = 'SVG_PATH_OBJECT POLYGON ROTATE,0 CENTRE'; 
+		GX_SetSelection(refPathNode, true, true);
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'd', pathValues, true, false); 
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'class', classValue, true, false); 
+		var gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected); 
+		GX_AddPathMarker(gCurrentObjectSelected.id, gPathDataArray, true);	
 		break; 
 	default:
 		break; 
@@ -3963,12 +3972,14 @@ function GX_PopulateAnimationList(){
 	var animListNode =  document.getElementById('ANIMATION_GROUP'); 
 	 gAnimList = new Array(); 
 	//get all the child nodes 
+	 Debug_Message("Animation Info Being  Updated :Before "); 
 	var nodeList = animListNode.childNodes; 
 	for(var j= 0 ; j <nodeList.length; j++){
 		var childNode = nodeList[j];
 		//take care of group element later on		
 		GX_UpdateAnimInfoInList(childNode);	
 	}
+	 Debug_Message("Animation Info Being  Updated: after"); 
 	//check if the node type is group in which case look into the class to determine animation type
 	//for each animation type look for appropriate animation element 
 	
