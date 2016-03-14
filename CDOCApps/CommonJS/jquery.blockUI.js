@@ -95,14 +95,15 @@
 			css: {
 				padding:	0,
 				margin:		0,
-				width:		'30%',
+				width:		'0%',
+				height:     '0%',
 				top:		'40%',
-				left:		'35%',
+				left:		'45%',
 				textAlign:	'center',
 				color:		'#000',
 				border:		'3px solid #aaa',
 				backgroundColor:'#fff',
-				cursor:		'wait'
+				cursor:		'wait'				
 			},
 
 			// minimal style set used when themes are used
@@ -173,7 +174,7 @@
 			fadeOut:  400,
 
 			// time in millis to wait before auto-unblocking; set to 0 to disable auto-unblock
-			timeout: 0,
+			timeout: 10000,
 
 			// disable if you don't want to show the overlay
 			showOverlay: true,
