@@ -1,5 +1,5 @@
 <?php 
-require_once __DIR__.'./sso_config.php';
+require_once 'sso_config.php';
 /*
  * 1. encrypts the text==>mail with random generated key
  * 2. @param: mail for encrypting and id of the user in databse to hide in the encrypted key

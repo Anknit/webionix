@@ -10,7 +10,7 @@ function ErrorLogging($message) {
 		//$filename	=	$_SESSION['HTTP_ROOT'].'/widget_factory/temp/Errors.txt';
 	//}
 	//else {
-		$filename	=	__DIR__.'\log\Errors.txt';		
+		$filename	=	__DIR__.'/log/Errors.txt';		
 	//}
 	
 	if(!file_exists($filename))

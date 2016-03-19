@@ -99,7 +99,16 @@ if(!function_exists('get_DbConfig')){
 	}	
 }
 */
+require_once __DIR__ . './../../../web2graphix/GX_Config.php';
+$sso_db_source = '';
+$sso_db_database = $GLOBALS['DBNAME'];
+$sso_db_dbType = 'mysql';
+$sso_db_host = $GLOBALS['DBHOSTADDR'];
+$sso_db_port = $GLOBALS['DBPORT'];
+$sso_db_username = $GLOBALS['DBUSER'];
+$sso_db_password = $GLOBALS['DBPWD'];
 
+/*
 $sso_db_source = ''; 
 $sso_db_database = 'cdocapptestdb';
 $sso_db_dbType = 'mysql';
@@ -107,6 +116,7 @@ $sso_db_host = 'localhost';
 $sso_db_port = '3306'; 
 $sso_db_username = 'cdocuser'; 
 $sso_db_password = '';
+*/
 
 
 

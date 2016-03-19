@@ -3,9 +3,9 @@ require_once __DIR__.'./../../DBManager/DbMgr.php';
 require_once __DIR__.'./../../MailMgr.php';
 //require_once __DIR__.'./session_manager.php';
 require_once __DIR__.'./../../ErrorHandling.php';
-require_once __DIR__.'./sso_config.php';
-require_once __DIR__.'./encryption.php';
-require_once __DIR__.'./validations.php';
+require_once 'sso_config.php';
+require_once 'encryption.php';
+require_once 'validations.php';
 
 /*
  * 1. For verifying the verification link sent to the mail

@@ -4,8 +4,8 @@
  * 2. 
  */
 require_once __DIR__.'./../../DBManager/DbMgrInterface.php';
-require_once __DIR__.'./session_log.php';
-require_once __DIR__.'./sso_config.php';
+require_once 'session_log.php';
+require_once 'sso_config.php';
 
 //require_once __DIR__.'./../../Corona/definitions.php';
 
