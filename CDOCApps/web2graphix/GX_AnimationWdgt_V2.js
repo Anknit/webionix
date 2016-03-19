@@ -1389,8 +1389,8 @@ function GX_UpdateAnimInfoInList(animNode)
 				attr = 'pathmotion';  	 	 				
 			}
 			*/
-				
-			var beginval = animNode.getAttribute('begin');
+			//
+			var beginval = GX_GetBeginValue(animNode); 
 			var beginParam = GX_GetAnimBeginParameters(beginval);			
 						
 			//if there is a reference node then check if the reference node is a group animation type of node 
@@ -1415,7 +1415,8 @@ function GX_UpdateAnimInfoInList(animNode)
 				var visibleAnimNode = animNode.childNodes[0]; 
 				var motionAnimNode = animNode.childNodes[1]; 
 				attr = 'pathmotion';  
-				var beginval = visibleAnimNode.getAttribute('begin');
+				var beginval = GX_GetBeginValue(visibleAnimNode); 				
+				//var beginval = visibleAnimNode.getAttribute('begin');
 				var beginParams  = GX_GetAnimBeginParameters(beginval);				
 				var endval = motionAnimNode.getAttribute('fill');			
 				var titleval = animNode.classList[2]; 
@@ -1434,12 +1435,16 @@ function GX_UpdateAnimInfoInList(animNode)
 				var nodelist = animNode.childNodes; 
 				var numAnim = nodelist.length; 
 				var animNode1 = animNode.childNodes[0];
-				var beginval = animNode1.getAttribute('begin'); 
+				//var beginval = animNode1.getAttribute('begin'); 
+				var beginval = GX_GetBeginValue(animNode1);
 				animNode1.setAttribute('begin', ''); 
 				var beginParams  = GX_GetAnimBeginParameters(beginval);
 				var endval = 'freeze';
 				var duration = animNode1.getAttribute('dur');
 				duration = duration.substring(0,duration.length-1);
+				with (Math){
+					duration = round(duration * nodelist.length); 
+				}				
 				var titleval = animNode.classList[2]; 
 				var animInfo = [animNode.id, animNode1.targetElement.id, 'ANIMATE_PATH', beginval, endval, titleval, beginParams.refAnimID,
 				                beginParams.refContainerID, duration, beginParams.AnimEvent];
@@ -1450,7 +1455,8 @@ function GX_UpdateAnimInfoInList(animNode)
 				var nodelist = animNode.childNodes; 
 				var numAnim = nodelist.length; 
 				var animNode1 = animNode.childNodes[0];
-				var beginval = animNode1.getAttribute('begin'); 
+				//var beginval = animNode1.getAttribute('begin');
+				var beginval = GX_GetBeginValue(animNode1);
 				animNode1.setAttribute('begin', ''); 
 				var beginParams  = GX_GetAnimBeginParameters(beginval);
 				var endval = 'freeze';				
@@ -3972,14 +3978,14 @@ function GX_PopulateAnimationList(){
 	var animListNode =  document.getElementById('ANIMATION_GROUP'); 
 	 gAnimList = new Array(); 
 	//get all the child nodes 
-	 Debug_Message("Animation Info Being  Updated :Before "); 
+	// Debug_Message("Animation Info Being  Updated :Before "); 
 	var nodeList = animListNode.childNodes; 
 	for(var j= 0 ; j <nodeList.length; j++){
 		var childNode = nodeList[j];
 		//take care of group element later on		
 		GX_UpdateAnimInfoInList(childNode);	
 	}
-	 Debug_Message("Animation Info Being  Updated: after"); 
+	// Debug_Message("Animation Info Being  Updated: after"); 
 	//check if the node type is group in which case look into the class to determine animation type
 	//for each animation type look for appropriate animation element 
 	
@@ -4213,9 +4219,14 @@ function GX_UpdateAnimUIGrid(){
 		animList.push(gAnimInfoList[j].title); 
 	}
 	*/
-	
+	 var animList =[];
+	 for(var j=0; j < gAnimInfoList.length; j++){
+ 		animList.push(gAnimInfoList[j].title); 
+ 	}	
 	if(gRefAnimListDDL)
 		WAL_UpdateDropDownList(gRefAnimListDDL.id, animList);
+		
+	
 	//gRefAnimListDDL.gRefAnimListDDL
 	
 }
@@ -4343,4 +4354,14 @@ function GX_InitializeAnimationListItems(selectionType, bPolygonFlag){
 			WAL_enableDropdownListItem('newAnimTypeDDL', 0); 
 		}
 	
+}
+
+function GX_GetBeginValue(animNode){
+	var descAnimID = 'DESC_' + animNode.id; 
+	var descNode = document.getElementById(descAnimID);	
+	if(descNode)
+		var beginval = descNode.classList[0];
+	else
+		var beginval = "0s"; 
+	return beginval; 
 }
