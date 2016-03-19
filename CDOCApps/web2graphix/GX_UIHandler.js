@@ -1116,8 +1116,8 @@ function GX_Initialize()
 		OnObjectDrag(event,ui); 
 	});
 	
-	$(gCurrGripperSel).css({visibility:'hidden'}); 
-	
+	//$(gCurrGripperSel).css({visibility:'hidden'}); 
+	$(gCurrGripperSel).hide(); 
 	//path marker related 
 	gDivPathMarkerSel = '#DivPathMarker'; 
 	$(gDivPathMarkerSel).draggable({ cursor: "move" });
@@ -1850,7 +1850,8 @@ function GX_CloseSVGFile()
 	gFileNameTitleNode.innerHTML = gInitTitle + ""; 
 	gFileNameHolder.innerHTML = "";
 	gSVGFilename = "";
-	$(gCurrGripperSel).css({visibility: "hidden"});
+	//$(gCurrGripperSel).css({visibility: "hidden"});
+	$(gCurrGripperSel).hide(); 
 	GX_UpdateMarkers(0, false, false); 
 	WAL_ClearTreeItem(gTreeWidgetID); 
 	
@@ -1937,7 +1938,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     }
     if(bFlag == false)
     {
-    	$(gCurrGripperSel).css({visibility:"hidden"});
+    	//$(gCurrGripperSel).css({visibility:"hidden"});
+    	$(gCurrGripperSel).hide(); 
     	objNode.setAttribute('pointer-events', 'visible');    	
     	if(objNode != gCurrentObjectSelected)
     		return ;      	 
@@ -1972,7 +1974,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	 gOrigFreedrawPathVal = 0;     	 
     	return ; 
     }
-    $(gCurrGripperSel).css({visibility:"visible"});
+   // $(gCurrGripperSel).css({visibility:"visible"});
+    $(gCurrGripperSel).hide(); 
     /*
     if(gObjectEditMode == 'LAYOUT_MODE')
     	gCurrGrabber.setAttribute("pointer-events", "visible");
@@ -2091,7 +2094,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     
     //this is to ensure while a new object is being added with 0 Dim. doesnt show up 
     if( (gCurrSelectedObjectDim.width == 0) && (gCurrSelectedObjectDim.height == 0) )
-    	$(gCurrGripperSel).css({visibility:'hidden'});
+    	$(gCurrGripperSel).hide(); 
+    	//$(gCurrGripperSel).css({visibility:'hidden'});
     
     $(gCurrGripperSel).resizable( "enable" );
     if(nodeClass == 'SVG_PATH_OBJECT')
