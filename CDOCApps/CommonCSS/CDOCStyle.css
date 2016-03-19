@@ -134,7 +134,14 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; style:font-weight:bold;}
    {   	
    	 border:inset 1px grey; 
    }
-   div#sel_gripper{ width: 20px; height: 20px; padding: 1px; float: left; margin: 0 1px 1px 0; visibility:hidden; background-color:transparent }
+   div#sel_gripper{ width: 20px; height: 20px; padding: 1px; float: left; margin: 0 1px 1px 0; 
+   /*visibility:hidden;*/
+   display:none; 
+   background-color:transparent;
+   border:2px solid #EF4D02; 
+  /* box-shadow: 10px 10px 5px grey;*/
+ 
+   }
   
   #DivPathMarker {
   			 border-radius: 25px;
