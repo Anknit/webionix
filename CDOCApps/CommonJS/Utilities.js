@@ -42,34 +42,12 @@ function AJX_RequestWithPureXMLReponse( RespDataType, ModID, RequestId, RequestB
 
 function BlockUIinAjax(bFlag) {
 
-    if ((bFlag == true) && (gUIBlock == false)){    	
-    	gUIBlock = true; 
-    	//document.body.style.cursor = "wait";
-    	WAL_showWaitPromptWindow('waitwindow', true); 
-      /*   $.blockUI({ css: {
-        border: 'none',
-        padding: '15px',
-        backgroundColor: '#000',
-        '-webkit-border-radius': '10px',
-        '-moz-border-radius': '10px',
-        opacity: .5,
-        color: '#fff'
-        }
-        });
-         
-         setTimeout(function(){		
-        	 gUIBlock = false;        	
-             $.unblockUI(); 			
-		}, 3500); */
-         
+    if (bFlag == true){        	
+    	$.blockUI({ message: '<p><img src="../CommonCSS/ajax-loader.gif" />Wait..</p>' });         
     }
-    else if( (bFlag == false) && (gUIBlock == true) ){
-    	gUIBlock = false; 
-    	WAL_showWaitPromptWindow('waitwindow', false); 
-       // $.unblockUI(); 
-       // Debug_Message("Now unblocking"); 
+    else if(bFlag == false){    	
+    	$.unblockUI();      
     }
-
 }
 
 function AJX_RequestWithReponseData(RespDataType, ModID, RequestId, RequestBody)
@@ -449,4 +427,16 @@ function UtilGetItemIndexFromArray(myArray, itemText)
 function Debug_Message(str)
 {
 	alert(str); 
+}
+
+function Truncate(number, places){	
+	var numstr =  '' + number; 
+	var dotpos =  numstr.indexOf('.');
+	if(dotpos == -1)
+		return new Number(numstr);
+	with (Math){
+		dotpos = dotpos + places + 1; 
+	}
+	numstr = numstr.substring(0, dotpos);	
+	return numstr; 
 }
