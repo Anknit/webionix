@@ -384,6 +384,40 @@ function GX_WKS_OpenSVGFile(&$respData)
 	if(!$svgNode)
 		return false; 
 	
+	//now modify the svgNode here 
+	$nodeList = $svgNode->childNodes; 
+	$nodeid = 0; 
+	for($i=0; $i < $nodeList->length; $i++){
+		$childNode = $nodeList->item($i);
+		$retval = $childNode->hasAttributes(); 
+		if($retval == true){
+			$nodeid = $childNode->getAttribute('id');		 
+			if($nodeid == 'ANIMATION_GROUP')
+			{
+				//then go further 
+				$nodeList = $childNode->childNodes;
+				for($j=0; $j < $nodeList->length; $j++){
+					$animChildNode = $nodeList->item($j);
+					$nodeName  = strtoupper($animChildNode->nodeName); 
+					if( ($nodeName == 'ANIMATE') || ($nodeName == 'ANIMATETRANSFORM')){
+						$begval = $animChildNode->getAttribute('begin'); 
+						$animChildNode->setAttribute('begin', '');
+					}					
+					else if($nodeName == 'G'){
+						$animType = $animChildNode->getAttribute('class');
+						$animType = strtok($animType, ' ');
+						$animType = strtok(' ');
+						if( ($animType == 'PATH_MOTION') || ($animType == 'ANIMATE_PATH') || ($animType == 'ANIMATE_ZOOM') ) {
+							$childAnimNode = $animChildNode->firstChild;						
+							$begval = $childAnimNode->getAttribute('begin'); 
+							$childAnimNode->setAttribute('begin', '');							
+						}						
+					}
+				}//for($j=0; $j < $nodeList->length; $j++)			
+			}//if($nodeid == 'ANIMATION_GROUP')
+		}
+	}
+	
 	$respData = $_SESSION['svg_xml_dom']->saveXML($svgNode);
 	$_SESSION['pathHTMLFile'] = $_SESSION['baseWKSURI'] . '/' . 'SVG' . '/' . $svgFileName; 
 	return true;
@@ -393,6 +427,7 @@ function GX_WKS_OpenSVGFile(&$respData)
 function GX_WKS_deleteSVGFile(&$respdata)
 {
 	$fname = $respdata;
+	
 	$fpath = $_SESSION['projDataPath'] . $_SESSION['pathSeparator'].$fname;	
 	deleteassetfile($fpath);
 	
