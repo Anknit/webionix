@@ -1284,7 +1284,9 @@ function GX_InitializeDocument(svgFileName)
 	 
 	 if(!gObjectList)
 	 {
-		 //GX_UpdateAnimationListbox(); 
+		 //GX_UpdateAnimationListbox();
+		 //reset this here 
+		 gRefAnimListDDL = 0; 
 		 GX_PopulateAnimationList(); 
 		 gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
 		 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
@@ -9770,7 +9772,8 @@ function GX_OBJ_GetPolygonParams(x,y, nSides, length) {
 	}	
 	pathParam = pathParam + 'z'; 
 	return pathParam;
-
 }
 
-
+function GX_OnLoadSVG(evt){
+	
+}
