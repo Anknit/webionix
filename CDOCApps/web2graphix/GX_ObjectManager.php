@@ -645,7 +645,7 @@ function GX_OBJ_AddNewSVGAnimation(&$respData)
 	$animIDVal   = strtoupper($ANIMID);
 	$parentIDVal = strtoupper($PARENTID);
 	$attrlen     = strtoupper($ATTRLEN);	
-	
+	$beginVal = 0; 
 	$SVGDom = $_SESSION['svg_xml_dom'];
 	$SVGFileName = $_SESSION['svg_xml_FileName'];	
 	GX_OBJ_DeleteSVGElement($animIDVal);	
@@ -665,6 +665,9 @@ function GX_OBJ_AddNewSVGAnimation(&$respData)
 				{
 					$attrdefinition[$attrname]= $attrval;
 				}
+				if($attrname == 'begin'){
+					$beginVal = $attrval; 
+				}
 			}			
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'animate',$animIDVal, $siblingID, $parentIDVal, $attrdefinition,'');
 		break;
@@ -675,6 +678,9 @@ function GX_OBJ_AddNewSVGAnimation(&$respData)
 				$attrname	   = $ATTRNAME[$i];
 				$attrval       = $ATTRVAL[$i];
 				$attrdefinition[$attrname]= $attrval;
+				if($attrname == 'begin'){
+					$beginVal = $attrval;
+				}
 			}
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'animateTransform',$animIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
@@ -691,6 +697,9 @@ function GX_OBJ_AddNewSVGAnimation(&$respData)
 				$attrval       = $ATTRVAL[$i];
 				$attrdefinition[$attrname]= $attrval;
 			}			
+			if($attrname == 'begin'){
+				$beginVal = $attrval;
+			}
 		}	
 		$attrdefinition['xmlns:xlink']=  "http://www.w3.org/1999/xlink";		
 		$childAttrdefn = array("xlink:href"=>$mpathID); 
@@ -702,7 +711,7 @@ function GX_OBJ_AddNewSVGAnimation(&$respData)
 	
 	//now add the title of the animation 
 	$descID = 'DESC_'.$animIDVal; 
-	$attrdefinition = array('id'=>$descID, "class"=>$animTypeVal);
+	$attrdefinition = array('id'=>$descID, "class"=>$beginVal);
 	if($ATTRVAL[0] != 'none')
 		$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'desc',$descID, 0, $animIDVal, $attrdefinition,$ATTRVAL[0]);
 	
@@ -734,14 +743,20 @@ function GX_OBJ_UpdateSVGAnimation(&$respData)
 
 	$SVGDom = $_SESSION['svg_xml_dom'];
 	$SVGFileName = $_SESSION['svg_xml_FileName'];	
-	
+	$beginVal = 0; 
 	for($i=0; $i < $attrlen; $i++){
 		$attrname	   = $ATTRNAME[$i];
 		$attrval       = $ATTRVAL[$i];
 		$attrdefinition[$attrname]= $attrval;
+		if($attrname == 'begin')
+			$beginVal = $attrval; 
 	}
 	//then get the XML string and pass it back to the client
 	$retval = GX_COMMON_UpdateSVGAttributes($SVGDom, $SVGFileName, $animIDVal, $attrdefinition);
+	if($beginVal){
+		$descAtrDef['class'] = $beginVal; 
+		GX_COMMON_UpdateSVGAttributes($SVGDom, $SVGFileName, 'DESC_' . $animIDVal, $descAtrDef);		
+	}
 	if($retval == true)
 		$respData = 'OK';
 	else
@@ -846,6 +861,7 @@ function GX_OBJ_AddMultipleSVGAnimation(&$respData)
 {
 	//$elemID, $type, $class, $parentID
 	parse_str($respData);
+	$beginVal = 0; 
 	//DEPENDING ON OBJECT TYPE CALL THE APPROPRIATE FUNCTION
 	$animTypeVal = strtoupper($ANIMTYPE);
 	$parentIDVal   = strtoupper($PARENTID);
@@ -856,6 +872,7 @@ function GX_OBJ_AddMultipleSVGAnimation(&$respData)
 		$attrname	   = $ATTRNAME[$j];
 		$attrval       = $ATTRVAL[$j];
 		$commonAttrDefn[$attrname] = $attrval; 
+		
 	}
 	$objInfoArray = array(); 
 	for($i=0;  $i < $objectLength; $i++){
@@ -865,7 +882,7 @@ function GX_OBJ_AddMultipleSVGAnimation(&$respData)
 	$SVGDom = $_SESSION['svg_xml_dom'];
 	$SVGFileName = $_SESSION['svg_xml_FileName'];	
 	$numOfObj =  count($objInfoArray); 
-	
+	$firstElem = false; 
 	if(($animTypeVal = 'ANIMATE_PATH') || ($animTypeVal = 'ANIMATE_ZOOM') ){
 		foreach ($objInfoArray as $animID => $namevalue){
 			$myanimID = $animID;
@@ -876,11 +893,20 @@ function GX_OBJ_AddMultipleSVGAnimation(&$respData)
 			for($k=0; $k <$len; $k++){
 				$temapArr = explode('=' , $objspecAttrArray[$k]);
 				$attrdefinition[$temapArr[0]] = $temapArr[1];
+				if((!$beginVal) && ($temapArr[0] == 'begin')){
+					$beginVal = $temapArr[1];
+				}
 			}
 			foreach ($commonAttrDefn as $attrname => $attrval){
 				$attrdefinition[$attrname] = $attrval;
 			}
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'animate',$myanimID, 0, $parentIDVal, $attrdefinition,'');
+			$descID = 'DESC_'.$myanimID;
+			$descattrdefinition = array('id'=>$descID, "class"=>$beginVal);
+			if($firstElem == false){
+				$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'desc',$descID, 0, $myanimID, $descattrdefinition,$animTypeVal);
+				$firstElem = true; 
+			}				
 		
 		}//foreach ($objInfoArray as $animID => $namevalue)
 	}
