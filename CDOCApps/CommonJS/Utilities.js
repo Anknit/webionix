@@ -50,6 +50,7 @@ function BlockUIinAjax(bFlag) {
     }
 }
 
+
 function AJX_RequestWithReponseData(RespDataType, ModID, RequestId, RequestBody)
 //function AJX_RequestWithPureTextReponse(RespDataType, ModID, RequestId, RequestBody)
 {
@@ -222,7 +223,38 @@ function AJX_RequestWithNoReponseData(RespDataType, ModID, RequestId, RequestBod
     return 'OK' ; 	    
 
 }
-
+//_rm new AJX function with callback 
+function AJX_RequestWithReponseCallback(RespDataType, ModID, RequestId, RequestBody, callbackFn){
+	var xhr = new XMLHttpRequest();
+    var newURI = gAppURI + "?modid=" + ModID + "&reqid=" + RequestId + "&type=" + RespDataType;
+   // gAsyncAJXObj.onreadystatechange = AJX_DataLoadCallback; 
+    BlockUIinAjax(true);
+    xhr.open("POST", newURI, true);  
+    //Debug_Message("Sending the Async Request ReqID=" +RequestId ); 
+    xhr.onload = function(e) {
+    	
+    	if (xhr.status != 200) {
+    		 respstr = 'FAIL'; 
+    	     // Debug_Message("Unexpected status code " + xhr.status );
+    	      //return respstr;
+    	}
+    	else
+    	{
+    		
+    		// var fnstr = callbackFn + '("' + xhr.responseText + '");'
+    		var respStr = xhr.responseText;
+    		 var fnstr = callbackFn + "(respStr)"; 
+    		 eval(fnstr);     		 
+    		// var expr = callbackFn + "(attrName, value)"; 
+			//  eval(expr); 	
+    	}
+    	BlockUIinAjax(false);
+  	};
+  	
+  	xhr.send(RequestBody);	    
+   // BlockUIinAjax(false); 
+    return 'OK' ; 	    
+}
 
 function AJX_DataLoadCallback()
 {
