@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="../CommonJS/Bootstrap/css/bootstrap.min.css">
 <script src="../CommonJS/jquery-1.10.2.min.js"></script>
 <script src="../CommonJS/Bootstrap/js/bootstrap.min.js"></script>
+<script src="../CommonJS/jquery.blockUI_2.70.js"></script>
+<script   type="text/javascript" src="../CommonJS/Utilities.js"></script>
 <script src="../CommonPHP/SSO/js/sso.js" ></script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <!-- SSO Related logic here  -->
@@ -41,6 +43,7 @@ function OnClickSSOButtons(event){
 	case 'signupBtn':
 		email	=	$("#sign-up-email").val();
 		sso.signup(email, 'MySSOCallback');
+		
 		break;
 	case 'signinBtn':
 		email	=	$("#sign-in-email").val();
@@ -54,9 +57,11 @@ function OnClickSSOButtons(event){
 	default:	
 		break; 
 	}
+	BlockUIinAjax(true);
 }
 function MySSOCallback(optype, status){
 	var obj = JSON.parse(status); 	
+	BlockUIinAjax(false);
 	switch(optype){
 	
 	case 'signup':

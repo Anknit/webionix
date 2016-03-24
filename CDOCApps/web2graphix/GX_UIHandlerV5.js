@@ -49,6 +49,7 @@ var gSVGImportList = 0;
 var gSVGGroupNameDlgID ='newGroupNameDlg'; 
 //var gSVGFileDeleteDlg = "svgfiledeletedlg"; 
 var gSVGDimensionDlg = 'svgdimensiondlg'; 
+var gImageNameDlgID = "newImageDlg"; 
 var gCanvasNode = 0; 
 var gImportShapeFileName = ""; 
 var gPolyInputDlg = 'polygonipdlg';
@@ -133,7 +134,7 @@ var gOrigPointerPos = new sPoint();
 var gShowGrid =  true; 
 var bPointerMove = false; 
 var gOrigFreedrawPathVal = 0; 
-var gImageDlg 	= 'imageLoadDlg';
+//var gImageDlg 	= 'imageLoadDlg';
 var gCurrentMarkerNode = 0; 
 var gObjectList = 0; 
 var gObjectListInRoI = 0; 
@@ -1035,7 +1036,8 @@ function GX_Initialize()
     WAL_createWindow(gSVGFileOpenDlg,"Asset List", true, '282', '350', false,	true, false, false, false, "", 'SVGFO_LB_okbtn', 'SVGFO_LB_cancelbtn');
     WAL_createModalWindow(gSVGFileNameDlgID, '250', '150', 'pageOK', 'pageCancel', false);
     WAL_createModalWindow(gSVGExportDlgID, '320', '180', 'exportOK', 'exportCancel', false);
-   
+    WAL_createModalWindow(gImageNameDlgID, '350', '100', 'imageOK', 'imageCancel', true);
+    
     WAL_createModalWindow(gSVGImportListDlgID, '430', '580', 'importOK', 'importCancel', true);    
     var imagerenderer = function (row, datafield, value) {
         return '<img style="margin-left: 5px; margin-top:5px; margin-bottom:5px" height="40" width="40" src="../USER_DATA/shared/shapes/' + value + '"/>';
@@ -1074,7 +1076,7 @@ function GX_Initialize()
     WAL_createCheckBox('animateFillColor', 'GX_FillColorAnimCheckValueChange', '50', gWidgetHeight, '13', false, false);
     WAL_createModelessWindow('fillcolorDlg', '250', '150', 'fillcolOK', 'fillcolCancel');
     
-    WAL_createModalWindow(gImageDlg, '250', '150', 'imageOK', 'imageCancel', false);
+    //WAL_createModalWindow(gImageDlg, '250', '150', 'imageOK', 'imageCancel', false);
     WAL_createModalWindow('deleteConfirmDlg', '250', '150', 'deleteOK', 'deleteCancel', false);
 
     
@@ -1487,9 +1489,14 @@ function GX_MenuItemHandler(event)
 }
 function GX_menu_open_svgfrom_remote()
 {
-	 var newsource = GXRDE_getAssetListFromServer('SVG');  
-	 WAL_ListBoxUpdateData('svgfileopenlistbox', newsource);
-	 WAL_showWindow(gSVGFileOpenDlg, true, 'open_icon');
+	 var newsource = GXRDE_getAssetListFromServer('SVG', 'AssetListFn'); 	 
+	 AssetListFn = function(respStr){		
+		 var listarr = respStr.split('#'); 
+		 WAL_ListBoxUpdateData('svgfileopenlistbox', listarr);
+		 WAL_showWindow(gSVGFileOpenDlg, true, 'open_icon');		
+	 }
+	 
+	
 	// WAL_showWindow(gSVGFileOpenDlg, true, 'topcontainer');
 }
 
@@ -1541,26 +1548,21 @@ function GX_SVGFileDlgNameOK()
    
     svgfname += ".svg"; 
     GX_SetSelection(gCurrentObjectSelected, false, true);
-   	retval = GXRDE_addNewSVGFile(svgfname);	
-   	if(retval == "ALREADY_EXISTS")
-   	{
-   		Debug_Message("This File Name Already Exists");
-   		$(JQSel).val("");
-    	WAL_showModalWindow(gSVGFileNameDlgID,"GX_SVGFileDlgNameOK", "" );
-    	return; 
-   	}
-   	GX_CloseSVGFile(); 
-	var dataNode = document.getElementById('objectcontainer');
-	dataNode.innerHTML += retval;
-	 var xmlstr = GXRDE_GetSVGMetaXML(svgfname);    
-     if(xmlstr)
-      	 GX_updateTreeWidget(xmlstr);  
-	GX_InitializeDocument(svgfname); 
-	WAL_expandAllTreeItems(gTreeNodeID, true);
-	WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');	
+	gCurrfName =  svgfname; 
+	gCurrObjID = 0;    	
+	GXRDE_addNewSVGFile(svgfname,'NewFileCallback');
 }
 
-
+function NewFileCallback(respStr){   		
+		
+		if(respStr == "ALREADY_EXISTS"){
+	   		Debug_Message("This File Name Already Exists");
+	   		$(JQSel).val("");
+	    	WAL_showModalWindow(gSVGFileNameDlgID,"GX_SVGFileDlgNameOK", "" );
+	    	return; 
+	   	}
+		OpenfileCallback(respStr); 
+}
 
 function GX_LBOKHandler(){
 	 var myitem = WAL_ListBoxGetSelectedItem('svgfileopenlistbox'); 
@@ -1572,44 +1574,37 @@ function GX_LBOKHandler(){
      GX_SetSelection(gCurrentObjectSelected, false, true);
      GX_OpenFile(fname);
          
-    /* 
-     var retval = GXRDE_openSVGFile(fname); 
-     var HTMLstr=""; 
-     if(retval)
-     {
-    	 GX_CloseSVGFile(); 
-    	 var dataNode = document.getElementById('objectcontainer');   	 
-    	 dataNode.innerHTML += retval; 
-    	 GX_InitializeDocument(fname);     	 
-     }	
     
-   
-     var xmlstr = GXRDE_GetSVGMetaXML(fname);    
-     if(xmlstr)
-      	 GX_updateTreeWidget(xmlstr);   
-     WAL_expandAllTreeItems(gTreeNodeID, true);
-     WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
-    */
+}
+var gCurrfName = 0; 
+var gCurrObjID = 0; 
+function GX_OpenFile(fname){
+	gCurrfName =  fname; 
+	gCurrObjID = 0; 
+	GXRDE_openSVGFile(gCurrfName, 'OpenfileCallback'); 	 	
 }
 
-function GX_OpenFile(fname){
-	 var retval = GXRDE_openSVGFile(fname); 
-     var HTMLstr=""; 
-     if(retval)
-     {
-    	 GX_CloseSVGFile(); 
-    	 gObjectList = 0; 
-    	 var dataNode = document.getElementById('objectcontainer');   	 
-    	 dataNode.innerHTML += retval; 
-    	 GX_InitializeDocument(fname);     	 
-     }	
-    
-   
-     var xmlstr = GXRDE_GetSVGMetaXML(fname);    
-     if(xmlstr)
+function OpenfileCallback(respStr){
+	// Debug_Message("Callback on return") ;
+	var HTMLstr="";	 
+    if(respStr){
+	   	 GX_CloseSVGFile(); 
+	   	 gObjectList = 0; 
+	   	 var dataNode = document.getElementById('objectcontainer');   	 
+	   	 dataNode.innerHTML += respStr; 
+	   	 GX_InitializeDocument(gCurrfName);     	 
+    }	   
+    var xmlstr = GXRDE_GetSVGMetaXML(gCurrfName, 'xmlFileCallback');     	     
+}
+
+function  xmlFileCallback(xmlstr){
+  	 if(xmlstr)
       	 GX_updateTreeWidget(xmlstr);   
-     WAL_expandAllTreeItems(gTreeNodeID, true);
-     WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
+     WAL_expandAllTreeItems(gTreeNodeID, true);	    
+     if(gCurrObjID)
+		WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+gCurrObjID);
+	 else
+		WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');     
 }
 
 function IsNameValid(strname)
@@ -1646,6 +1641,8 @@ function GX_AddNewNodeFromXMLString(parentID, objXMLStr)
 	
 	var XMLDoc =  loadXMLString(objXMLStr);
 	var objNode = XMLDoc.firstChild; 
+	if(!objNode)
+		return ; 
 	var parentNode = document.getElementById(parentID); 
 	var retVal = GX_AddNodes(objNode, parentNode);
 	if(retVal == false)
@@ -1744,26 +1741,59 @@ function GX_AddNewSVGNodeFromXMLString(objXMLStr)
 	elem = parentNode.insertBefore(elem,refNode);
 	return true;
 }
+function NewGradObjectDefaultFn(respStr){
+	GX_AddNewNodeFromXMLString(gNewParentID, respStr); 	
+	GX_ShowGradWindow(gNewObjectID, gNewObjType); 
+	//GX_ShowGradWindow(gNewObjectID, 'LINEAR_GRAD');		
+	if(!gNewObjectID){
+			Debug_Message("Grad title not Found");
+			return; 
+	}
+	//add it to the list items
+	var fillurl = 'url(#' + gNewObjectID + ')';
+	if(gbMultiSelection == true){						
+			GX_ApplyPropertyToMultipleObjects('fill', fillurl);
+	}
+	else if(gCurrentObjectSelected){
+		var objectType = gCurrentObjectSelected.classList[0]; 
+		if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
+		{
+			var fillurl = 'url(#' + gNewObjectID + ')';				
+			GX_SetObjectAttribute(gCurrentObjectSelected, "fill", fillurl, true, false);				
+		}			
+	}
+}		
 
-function GX_AddNewSVGObject(Type, name)
+function NewMarkerDefaultCallbackFn(respStr){
+	GX_AddNewNodeFromXMLString(gNewParentID, respStr); 
+	gCurrentObjectSelected.setAttribute(gNewName, 'url(#' +gNewObjectID + ')' ); 
+	
+	return ; 
+}
+
+
+function GX_AddNewSVGObject(Type, name, callbackFn)
 {
 	//generate a unique ID 
+	if((!callbackFn) || (callbackFn.length < 1)){
+		Debug_Message("Callback function missing"); 
+		return; 
+	} 
 	var parentID; 
 	//WAL_SetTabIndex('rightTabs', 0);
 	var ObjID =  GXRDE_GetUniqueID('SVG_'); 
 	var objectType = Type.toUpperCase(); 
 	gNewObjectID = ObjID;
+	gNewObjType = objectType; 
 	bNewObjectAdding =  true; 
 	var retval; 
 	//send out the request and get the XML from server
 	if ( (objectType == 'LINEAR_GRADIENT')|| (objectType == 'RADIAL_GRADIENT') )
 	{
 		parentID = 'SVGDEFINITION'; 
-		retval = GXRDE_addNewSVGObject(ObjID, parentID, objectType);
-		GX_AddNewNodeFromXMLString(parentID, retval); 
-		//var gradinfo = ['Default:Linear', ObjID]; 
-		//gGradientList.push(gradinfo); 
-		return ObjID;		
+		gNewParentID = parentID; 
+		GXRDE_addNewSVGObject(ObjID, parentID, objectType, callbackFn);
+		return; 		
 	}
 	if( (objectType == 'MARKER_TRIANGLE') || (objectType == 'MARKER_SQUARE') || (objectType == 'MARKER_CIRCLE')
 			|| (objectType == 'MARKER_STAR') || (objectType == 'MARKER_CURVEDTRIANGLE')|| (objectType == 'MARKER_CROSS') ){
@@ -1780,13 +1810,14 @@ function GX_AddNewSVGObject(Type, name)
 		ObjID = gCurrentObjectSelected.id + '_' + name; 
 		ObjID = ObjID.toUpperCase(); 
 		parentID = 'MARKER_GROUP'; 
-		GX_DeleteObject(ObjID);		
-		retval = GXRDE_addNewSVGObject(ObjID, parentID, objectType);
-		GX_AddNewNodeFromXMLString(parentID, retval); 
-		gCurrentObjectSelected.setAttribute(name, 'url(#' +ObjID + ')' ); 
-		return ; 
-	}
-	
+		GX_DeleteObject(ObjID);	
+		gNewObjectID = ObjID; 
+		gNewParentID = parentID; 
+		gNewName = name; 
+		GXRDE_addNewSVGObject(ObjID, parentID, objectType, callbackFn);
+		return; 
+		
+	}	
 	//change the tab only when SVG_shape/path/image objects being added as the object need to be added to the tree
 	WAL_SetTabIndex('rightTabs', 0);
 	var currNodeType = gCurrentTreeNode.getAttribute('type');
@@ -1794,7 +1825,6 @@ function GX_AddNewSVGObject(Type, name)
 		WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+gCurrLayerNode.id); 
 		currNodeType = gCurrentTreeNode.getAttribute('type');
 	}	
-	
 	
 	if(objectType == 'GROUP')
 	{
@@ -1804,19 +1834,36 @@ function GX_AddNewSVGObject(Type, name)
 	else
 		parentID = gCurrentTreeNode.getAttribute('dataid');
 	
+	gNewObjectID = ObjID; 
+	gNewObjType = objectType;
+	gNewParentID = parentID; 	
 	if(objectType == 'POLYGON')
-		retval = GXRDE_addNewSVGPolygonObject(ObjID, parentID, objectType, gnPolygonSides, gPolygonLength); 
+		retval = GXRDE_addNewSVGPolygonObject(ObjID, parentID, objectType, gnPolygonSides, gPolygonLength, callbackFn); 
 	else if(objectType == 'GROUP'){
-		retval = GXRDE_addNewSVGGroupObject(ObjID, parentID, objectType, name); 		
+		retval = GXRDE_addNewSVGGroupObject(ObjID, parentID, objectType, name, callbackFn); 		
+	}
+	else if(objectType == 'IMAGE'){
+		var url = name; 
+		GXRDE_addNewImageObject(ObjID, parentID, objectType, url, callbackFn); 
 	}
 	else		
-		retval = GXRDE_addNewSVGObject(ObjID, parentID, objectType);
-	if(objectType ==  'IMAGE')
-		return ObjID; 
+		retval = GXRDE_addNewSVGObject(ObjID, parentID, objectType, callbackFn);	
+}
+
+var gNewObjType = 0;
+var gNewParentID = 0; 
+var gNewName = 0; 
+function callbackSVGAddDefualtFn(retval){
+	
+	var objectType = gNewObjType;
+	var parentID = gNewParentID; 
+	var ObjID = gNewObjectID; 	
+	//if(objectType ==  'IMAGE')
+	//	return; 
 	var myobjType; 
 	 var nodeTitle; 
 	if(retval != 'ERROR')
-	{		
+	{		//rm star jere 
 		 GX_AddNewNodeFromXMLString(parentID, retval); 
 		 var newNode = document.getElementById(ObjID);
 		 if(!newNode)
@@ -1825,7 +1872,9 @@ function GX_AddNewSVGObject(Type, name)
 		  if(objectType == 'GROUP')
 		  {
 			  myobjType = 'GROUP';
-			  nodeTitle = 'Group'; 
+			  var classval = newNode.getAttribute('class'); 
+			  nodeTitle = classval.split(' '); 
+			  nodeTitle = 'Group:' + nodeTitle[1];  
 		  }			  
 		  else
 		  {
@@ -1836,12 +1885,10 @@ function GX_AddNewSVGObject(Type, name)
 			  nodeTitle = nodeTitle[1]; 
 		  }	 
 		 var newXMLStr = '<li id="TM_'+ ObjID + '"  type="' + myobjType+ '" class="TREEMENU" level="3" dataid="' +ObjID + '"  data-type="' + nodename +'"  name="'+ nodeTitle+'"></li>';
-		 WAL_AddTreeItem(gTreeWidgetID, newXMLStr, gCurrentTreeNode, "", true);
-		// WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+ObjID);
+		 WAL_AddTreeItem(gTreeWidgetID, newXMLStr, gCurrentTreeNode, "", true);		 
 	}	
 	if(gSVGFilename)
-	{
-		
+	{		
 		GX_InitializeDocument(gSVGFilename);
 		if(gObjectList)
 		{
@@ -1852,16 +1899,20 @@ function GX_AddNewSVGObject(Type, name)
 			if( (objType == 'SVG_SHAPE_OBJECT') || (objType == 'SVG_PATH_OBJECT' ) || (objType == 'SVG_TEXT_OBJECT' ) )
 				gObjectList.push([ObjID, objType]); 
 		}
-		
-		
 	}
 	if(objType == 'SVG_TEXT_OBJECT'){
 		//WAL_SetMenuItem('GXmenu', 'properties');
-		GX_showEditorInterface('PROPERTIES_MODE');
+		//GX_showEditorInterface('PROPERTIES_MODE');
 	}
 	WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+ObjID);		
-	return ObjID; 
+	if( (objectType != 'GROUP') && (objectType != 'POLYGON') && (objType != 'SVG_TEXT_OBJECT')&& (objType != 'IMAGE') ){
+		GX_StartFreeDraw('DRAW_MODE');	
+	}
+	//best is to reload the entire file 
+	//if(objectType == 'GROUP')
+	//	GX_ReloadSVG(ObjID, true); 			
 }
+
 
 function GX_CloseSVGFile()
 {
@@ -2080,7 +2131,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     GX_SetRectObjectDim(gCurrGrabber, gGrabberDim);
     var newX = (gGrabberDim.x +50); 
     var newY = (gGrabberDim.y +120); 
-    $(gCurrGripperSel).show(200); 
+    //$(gCurrGripperSel).show(200); 
+    $(gCurrGripperSel).show();
     //gGripperTextSpanNode.innerHTML = 'X-Pos: '+ gCurrSelectedObjectDim.x + 'px Y-Pos: ' + gCurrSelectedObjectDim.y + 'px'; 
    
    
@@ -3211,11 +3263,7 @@ function GX_TreeHandlerDragEnd(item, dropItem, args, dropPosition, tree)
 	 var objArr = []; 
 	 objArr.push(objectID); 
 	 GXRDE_MoveObjectToGroup(destParentNode.id, objArr);
-	 GX_UpdateTreeWidget(); 
-	/* var xmlstr = GXRDE_GetSVGMetaXML(gSVGFilename);    
-     if(xmlstr)
-      	 GX_updateTreeWidget(xmlstr);*/
-	 
+	 GX_UpdateTreeWidget();  
      retval  = GX_setTreeItemSelection(nodeID);	
 	 if(dropPosition != 'inside'){
 		 
@@ -4285,9 +4333,7 @@ function GX_ToolbarHandler(event)
 		var fillpos = $('#stroke_color_icon').position(); 
 		pos.top = pos.top + fillpos.top; 		
 		WAL_showColorPickerWidgetAtPos('colorpickwidget', '','',  pos.left,pos.top, 'stroke', initColVal, gCurrentObjectSelected.id);
-		break; 
-	
-		
+		break;		
 	case 'edit_grad_btn':
 		var currgradTitle = WAL_getDropdownListSelection('gradlistDDL');
 		var gradInfo = GX_GetGradInfoByTitle(currgradTitle); 
@@ -4307,9 +4353,7 @@ function GX_ToolbarHandler(event)
 			WAL_SetTabIndex('rightTabs', 1); 
 		}
 		break; 
-	case 'text_icon':
-		GX_AddNewSVGObject('text',''); 
-		break; 
+	
 	case 'group_icon':
 		//GX_AddNewSVGObject('GROUP'); 
 		var JQSel = "#" + "groupNameIP";	
@@ -4323,28 +4367,30 @@ function GX_ToolbarHandler(event)
 			$(JQSel).val("");				
 		 WAL_showModalWindow(gSVGGroupNameDlgID,"GX_SVGGroupDlgNameOK", "" );	
 		break;
+	case 'text_icon':
+		GX_AddNewSVGObject('text','', 'callbackSVGAddDefualtFn'); 
+		break; 
 	case 'circle_icon':
-		 gNewObjectID = GX_AddNewSVGObject('circle',''); 
-		 GX_StartFreeDraw('DRAW_MODE');
+		 GX_AddNewSVGObject('circle','','callbackSVGAddDefualtFn'); 		 
 		break; 
 	case 'ellipse_icon':
-		gNewObjectID = GX_AddNewSVGObject('ellipse',''); 
-		 GX_StartFreeDraw('DRAW_MODE');
+		GX_AddNewSVGObject('ellipse','', 'callbackSVGAddDefualtFn'); 		
 		break; 
 	case 'square_icon':
-		gNewObjectID = GX_AddNewSVGObject('rectangle',''); 
-		 GX_StartFreeDraw('DRAW_MODE');
+		 GX_AddNewSVGObject('rectangle','', 'callbackSVGAddDefualtFn'); 
+		// GX_StartFreeDraw('DRAW_MODE');
 		break;	
 	case 'polygon_icon':
 		WAL_showModalWindow(gPolyInputDlg,"GX_PolyInputDlgOK", "" );
 		break; 
 	
 	case 'freehand_icon':
-		gNewObjectID = GX_AddNewSVGObject('freedraw_path',''); 		 
-		GX_StartFreeDraw('DRAW_MODE');
+		GX_AddNewSVGObject('freedraw_path','', 'callbackSVGAddDefualtFn'); 		
 		break; 
 	case 'image_icon':
-		GX_AddNewImageSVG(); 		
+		 var JQSel = "#" + "imageURLIP";	
+		 $(JQSel).val("");				
+		 WAL_showModalWindow(gImageNameDlgID,"GX_ImageDlgOK", "" );			
 		break; 
 	case 'boldBtn':
 		 var Prop = gCurrentObjectSelected.getAttribute('font-weight'); 
@@ -4391,7 +4437,7 @@ function GX_ToolbarHandler(event)
 		markerType = gMarkerType[markerType]; 		
 		var markerShape = WAL_getDropdownListSelection('markerShapeListDDL');
 		markerShape = markerShape.toUpperCase();			
-		GX_AddNewSVGObject('MARKER_' + markerShape, markerType); 
+		GX_AddNewSVGObject('MARKER_' + markerShape, markerType, 'NewMarkerDefaultCallbackFn'); 
 		break; 
 	case 'delete_marker_btn':
 		if(!gCurrentObjectSelected)
@@ -5436,8 +5482,7 @@ function GX_DDLHandler(Node, value)
 			var drawType = 'QBEZIER_PATH';
 		else if(value =='Elliptic' )
 			var drawType = 'ELLIPTIC_PATH';	
-		GX_AddNewSVGObject(drawType,''); 
-		GX_StartFreeDraw('DRAW_MODE');
+		GX_AddNewSVGObject(drawType,'', 'callbackSVGAddDefualtFn'); 		
 		return; 		
 	}
 	else if(wdgtId == 'lineDDL')
@@ -5448,8 +5493,7 @@ function GX_DDLHandler(Node, value)
 			var drawType = 'VERT_LINE_PATH';
 		else if(value =='Normal' )
 			var drawType = 'LINE_PATH';	
-		GX_AddNewSVGObject(drawType,''); 
-		GX_StartFreeDraw('DRAW_MODE');
+		GX_AddNewSVGObject(drawType,'', 'callbackSVGAddDefualtFn');		
 		return; 		
 	}
 	//marker highlighter 
@@ -5516,7 +5560,7 @@ function GX_DDLHandler(Node, value)
 		}
 		else if(value == 'New:Radial')
 		{
-		  var gradID = GX_AddNewSVGObject('RADIAL_GRADIENT','');	
+		  var gradID = GX_AddNewSVGObject('RADIAL_GRADIENT','', 'NewGradObjectDefaultFn');	
 		  GX_ShowGradWindow(gradID, 'RADIAL_GRAD'); 		 
 		}
 		else
@@ -5581,52 +5625,13 @@ function GX_DDLHandler(Node, value)
 			 GX_ShowFillColorWidget();
 		}
 		else if(value == 'Linear Gradient'){
-			gbNewGradObject =  true; 
-			 var gradID = GX_AddNewSVGObject('LINEAR_GRADIENT');		
-			 GX_ShowGradWindow(gradID, 'LINEAR_GRAD');		
-			if(!gradID)
-			{
-				Debug_Message("Grad title not Found");
-				return; 
-			}
-			//add it to the list items
-			var fillurl = 'url(#' + gradID + ')';
-			if(gbMultiSelection == true){						
-					GX_ApplyPropertyToMultipleObjects('fill', fillurl);
-			}
-			else if(gCurrentObjectSelected) 
-			{
-				var objectType = gCurrentObjectSelected.classList[0]; 
-				if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
-				{
-					var fillurl = 'url(#' + gradID + ')';				
-					GX_SetObjectAttribute(gCurrentObjectSelected, "fill", fillurl, true, false);				
-				}			
-			}		
+			gbNewGradObject =  true; 			 
+			 GX_AddNewSVGObject('LINEAR_GRADIENT', '',  'NewGradObjectDefaultFn');	
+			
 		}
 		else if(value == 'Radial Gradient'){
 			gbNewGradObject =  true; 
-			var gradID = GX_AddNewSVGObject('RADIAL_GRADIENT');		
-			 GX_ShowGradWindow(gradID, 'RADIAL_GRAD');		
-			if(!gradID)
-			{
-				Debug_Message("Grad title not Found");
-				return; 
-			}
-			//add it to the list items	
-			var fillurl = 'url(#' + gradID + ')';
-			if(gbMultiSelection == true){						
-				GX_ApplyPropertyToMultipleObjects('fill', fillurl);
-			}
-			else if(gCurrentObjectSelected) 
-			{
-				var objectType = gCurrentObjectSelected.classList[0]; 
-				if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
-				{
-					//var fillurl = 'url(#' + gradID + ')';				
-					GX_SetObjectAttribute(gCurrentObjectSelected, "fill", fillurl, true, false);				
-				}			
-			}	
+			GX_AddNewSVGObject('RADIAL_GRADIENT', '',  'NewGradObjectDefaultFn');		
 		}
 	}
 	
@@ -6290,7 +6295,7 @@ function GX_PolyInputDlgOK()
 	var Length = WAL_getMaskedInputValue('polyLengthIP');
 	gnPolygonSides = nSides;
 	gPolygonLength = Length; 
-	GX_AddNewSVGObject('POLYGON',''); 
+	GX_AddNewSVGObject('POLYGON','', 'callbackSVGAddDefualtFn'); 
 }
 
 function GX_StartFreeDraw(mode)
@@ -7385,9 +7390,9 @@ function OnGradPointClick(evt) {
     if (bGradPointMove == false) {
         if (!gGradSVGNode)
         {
-        	if(gCurrentGradientType == 'LINEAR_GRAD' )
+        	if(gCurrentGradientType == 'LINEAR_GRADIENT' )
         		gGradSVGNode = document.getElementById('LINEAR_GRAD_PREVIEW_RECTANGLE');
-        	else if(gCurrentGradientType == 'RADIAL_GRAD' )
+        	else if(gCurrentGradientType == 'RADIAL_GRADIENT' )
         		gGradSVGNode = document.getElementById('RG_CIRCLE');
         }
                       
@@ -7451,9 +7456,9 @@ function OnGradDragStart(evt){
 	    if (bGradPointMove == false) {
 	        if (!gGradSVGNode)
 	        {
-	        	if(gCurrentGradientType == 'LINEAR_GRAD' )
+	        	if(gCurrentGradientType == 'LINEAR_GRADIENT' )
 	        		gGradSVGNode = document.getElementById('LINEAR_GRAD_PREVIEW_RECTANGLE');
-	        	else if(gCurrentGradientType == 'RADIAL_GRAD' )
+	        	else if(gCurrentGradientType == 'RADIAL_GRADIENT' )
 	        		gGradSVGNode = document.getElementById('RG_CIRCLE');
 	        }	       
 	        gInitMousePoint = new sPoint();
@@ -7641,7 +7646,7 @@ function GX_ShowGradWindow(gradID, gradType)
  		var JQSel = "#" + 'gradTitleIP';        
         WAL_disableWidget('gradTitleIP', 'data-jqxInput', false, false);
  	 }
-     if(gradType == 'LINEAR_GRAD')
+     if(gradType == 'LINEAR_GRADIENT')
      {
     	 $(JQSel).jqxWindow('setTitle', 'Linear Gradient Settings');    	 
      	 rgnode.style.display = 'none'; 
@@ -7666,7 +7671,7 @@ function GX_ShowGradWindow(gradID, gradType)
      	$(JQSel).show(); 
      	
      }
-     else if(gradType == 'RADIAL_GRAD')
+     else if(gradType == 'RADIAL_GRADIENT')
      {
     	 $(JQSel).jqxWindow('setTitle', 'Radial Gradient Settings');    	 
      	 rgnode.style.display = 'block'; 
@@ -8330,40 +8335,13 @@ function GX_SVGGroupDlgNameOK()
     }
     if( (gCurrentObjectSelected) && (gCurrentObjectSelected.classList[0] == 'GROUP')
     		&& (gCurrentObjectSelected.id != 'BASEGROUP') ){
-    	/*
-    	 GXRDE_updateGroupName(gCurrentObjectSelected.id, svgGroupname);    
-    	 var xmlstr = GXRDE_GetSVGMetaXML(gSVGFilename);    
-         if(xmlstr)
-          	 GX_updateTreeWidget(xmlstr);
-          	 */
+    	
     	GX_UpdateTreeWidget(); 
          var nodeID = 'TM_' + gCurrentObjectSelected.id; 
          retval  = GX_setTreeItemSelection(nodeID);	 
     }
     else
-    	GX_AddNewSVGObject('GROUP', svgGroupname); 
-    
-   
-  /*  GX_SetSelection(gCurrentObjectSelected, false);
-   	retval = GXRDE_addNewSVGFile(svgfname);	
-   	if(retval == "ALREADY_EXISTS")
-   	{
-   		Debug_Message("This File Name Already Exists");
-   		$(JQSel).val("");
-    	WAL_showModalWindow(gSVGFileNameDlgID,"GX_SVGFileDlgNameOK", "" );
-    	return; 
-   	}
-   	GX_CloseSVGFile(); 
-	var dataNode = document.getElementById('objectcontainer');
-	dataNode.innerHTML += retval;
-	 var xmlstr = GXRDE_GetSVGMetaXML(svgfname);    
-     if(xmlstr)
-      	 GX_updateTreeWidget(xmlstr);  
-	GX_InitializeDocument(svgfname); 
-	WAL_expandAllTreeItems(gTreeNodeID, true);
-	WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
-	*/
-    
+    	GX_AddNewSVGObject('GROUP', svgGroupname, 'callbackSVGAddDefualtFn'); 
 }
 
 function GX_ContextMenuClick(menuID){
@@ -8405,17 +8383,28 @@ function GX_MovetoGroupDlgOK(){
 	//if new group selected 
 	var groupName = $('#newgroupNameIP').val(); 
 	if(groupName.length > 0){
-		GX_AddNewSVGObject('GROUP', groupName); 
-		GX_UpdateGroupList(); 
+		//needs to be handled properly 
+		GX_AddNewSVGObject('GROUP', groupName, 'newSVGGroupCallback'); 
+		newSVGGroupCallback =  function(respStr){
+			callbackSVGAddDefualtFn(respStr);
+			GX_UpdateGroupList(); 
+			var groupID = GX_GetGroupIDfromList(groupName); 
+			for(var i=0; i <gMultiNodeArray.length; i++)
+				 GX_MoveObjectToGroup(gMultiNodeArray[i], groupID);
+			GXRDE_MoveObjectToGroup(groupID,gMultiNodeArray);
+			GX_UpdateTreeWidget();	
+			return ; 
+		}		
 	}
 	else{
 		groupName = WAL_getDropdownListSelection('grouptoDDL'); 
+		var groupID = GX_GetGroupIDfromList(groupName); 
+		for(var i=0; i <gMultiNodeArray.length; i++)
+			 GX_MoveObjectToGroup(gMultiNodeArray[i], groupID);
+		GXRDE_MoveObjectToGroup(groupID,gMultiNodeArray);
+		GX_UpdateTreeWidget();	
 	}
-	var groupID = GX_GetGroupIDfromList(groupName); 
-	for(var i=0; i <gMultiNodeArray.length; i++)
-		 GX_MoveObjectToGroup(gMultiNodeArray[i], groupID);
-	GXRDE_MoveObjectToGroup(groupID,gMultiNodeArray);
-	GX_UpdateTreeWidget();	
+	
 }
 
 function GX_UpdateGroupList(){
@@ -8455,12 +8444,8 @@ function GX_GetGroupIDfromList(name){
 	return 0; 
 }
 
-function GX_UpdateTreeWidget(){
-	var xmlstr = GXRDE_GetSVGMetaXML(gSVGFilename);    
-    if(xmlstr)
-     	 GX_updateTreeWidget(xmlstr);  
-    WAL_expandAllTreeItems(gTreeNodeID, true); 
-	
+function GX_UpdateTreeWidget(){	
+	var xmlstr = GXRDE_GetSVGMetaXML(gSVGFilename,'xmlFileCallback');   	
 }
 
 function GX_CreateFillWidget(){
@@ -8654,12 +8639,15 @@ function Smoothen(Points){
 	
 }
 var gImageObjID = 0; 
-function GX_AddNewImageSVG(){
-	//add new image SVG object 
-	gImageObjID = GX_AddNewSVGObject('image', ''); 
-	
+function GX_AddNewImageSVG(URL){		
+	GX_AddNewSVGObject('image', URL,'newImageCallbackFn'); 
+	newImageCallbackFn = function(respStr){
+		//WAL_showModalWindow(gImageDlg,"GX_ImageLoadOK", "" );	
+		GX_ReloadSVG(gNewObjectID, true); 
+		
+	}
 	//BlockUIinAjax(true);
-	WAL_showModalWindow(gImageDlg,"GX_ImageLoadOK", "" );	
+	
 	
 	//now get the entire SVG file 
 	//var respstr = GXRDE_getProjectDataPath(); 
@@ -9176,15 +9164,13 @@ function GX_ImportObject(srcFileName){
 		GX_CloseSVGFile();
 	   	 var dataNode = document.getElementById('objectcontainer');   	 
 	   	 dataNode.innerHTML += retVal;		   	
-	  	 GX_InitializeDocument(svgFname);	  	 
-	  	var xmlstr = GXRDE_GetSVGMetaXML(svgFname);    
-	    if(xmlstr)
-	       GX_updateTreeWidget(xmlstr);   
-	    WAL_expandAllTreeItems(gTreeNodeID, true);
-	    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+newObjID);	
+	  	 GX_InitializeDocument(svgFname);
+	  	 gCurrObjID = newObjID; 
+	  	var xmlstr = GXRDE_GetSVGMetaXML(svgFname, 'xmlFileCallback');    
+	    
 	}
-	WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+newObjID);		
-	return newObjID; 
+	//WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+newObjID);		
+	//return newObjID; 
 }
 
 function GX_ExportObject(){	
@@ -9536,10 +9522,10 @@ function GX_SetPropertyonUI(objNode){
 				var info = GX_GetGradInfoByID(fillstr);
 				if(info[0])
 					WAL_SetItemByValueInList('gradlistDDL', info[0], 'true'); 
-				if(info[2] == 'LINEAR_GRAD'){
+				if(info[2] == 'LINEAR_GRADIENT'){
 					WAL_SetItemByValueInList('fillcolorDDL', 'Linear Gradient', 'true');
 				}
-				else if(info[2] == 'RADIAL_GRAD'){
+				else if(info[2] == 'RADIAL_GRADIENT'){
 					WAL_SetItemByValueInList('fillcolorDDL', 'Radial Gradient', 'true');
 				}
 			}
@@ -9698,6 +9684,10 @@ function GX_ReloadPreview(){
 }
 
 function GX_ReloadSVG(ObjID, bUpdateTree){
+	gCurrfName =  gSVGFilename; 
+	gCurrObjID = ObjID; 
+	GXRDE_openSVGFile(gCurrfName, 'OpenfileCallback'); 	
+	/*
 	 var currfilename = gSVGFilename; 
 	 GX_CloseSVGFile();	 
 	 var retval = GXRDE_openSVGFile(currfilename); 
@@ -9714,13 +9704,17 @@ function GX_ReloadSVG(ObjID, bUpdateTree){
 		if(xmlstr)
 		     GX_updateTreeWidget(xmlstr);   
 		WAL_expandAllTreeItems(gTreeNodeID, true);
+		
+		
 		if(currObjID)
 			WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);
 		else
 			WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
-	}
-	
+	}	
+	*/
 }
+
+ 
 
 function GX_ReloadNode(nodeID){
 	var Node = document.getElementById(nodeID);
@@ -9776,4 +9770,11 @@ function GX_OBJ_GetPolygonParams(x,y, nSides, length) {
 
 function GX_OnLoadSVG(evt){
 	
+}
+
+function GX_ImageDlgOK(){
+	var JQSel = "#imageURLIP";	
+	var url = $(JQSel).val();
+	GX_AddNewImageSVG(url); 
+	//Debug_Message("Image OK"); 
 }

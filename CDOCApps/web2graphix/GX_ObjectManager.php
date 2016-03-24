@@ -124,6 +124,9 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 	{
 		$groupName = $NAME; 
 	}
+	if($OBJECTTYPE == 'IMAGE'){
+		$imageURL = $URL; 
+	}
 	
 	if($OBJECTTYPE == 'ANIM_GROUP'){
 		$groupName = $NAME;
@@ -147,7 +150,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'rect',$objectIDVal,0, $parentIDVal, $attrdefinition,''); 
 			break; 
 		case 'IMAGE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT IMAGE ROTATE,0', 'x'=> '20','y'=>'20', 'width'=>'100', 'height'=>'100', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'xlink:href'=>'gsgsgs', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT IMAGE ROTATE,0', 'x'=> '20','y'=>'20', 'width'=>'100', 'height'=>'100', 'transform'=>'translate(0 0) scale(1 1) rotate(0)', 'xlink:href'=>$imageURL, 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0', 'fill'=>'none', 'fill-opacity'=>'1.0');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'image',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'ELLIPSE':
@@ -159,7 +162,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'circle',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'IMAGE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT IMAGE ROTATE,0', 'x'=> '20','y'=>'20', 'width'=>'100', 'height'=>'100', 'xlink:href'=>'gsgsgs');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT IMAGE ROTATE,0', 'x'=> '20','y'=>'20', 'width'=>'100', 'height'=>'100', 'xlink:href'=>'');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'image',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'GROUP':
@@ -221,7 +224,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'path',$objectIDVal, 0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'LINEAR_GRADIENT':
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_GRAD_OBJECT LINEAR_GRAD Default:Linear', 'x1'=>'0%','y1'=>'0%', 'x2'=>'100%'
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_GRAD_OBJECT LINEAR_GRADIENT Default:Linear', 'x1'=>'0%','y1'=>'0%', 'x2'=>'100%'
 			, 'y2'=>'100%', 'spreadMethod'=>'pad');		
 			$tagval = " "; 
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'linearGradient',$objectIDVal,0, $parentIDVal, $attrdefinition,$tagval);
@@ -265,7 +268,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$respData = $SVGDom->saveXML($objNode);
 			break;			
 			case 'RADIAL_GRADIENT':
-				$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_GRAD_OBJECT RADIAL_GRAD Default:Radial', 'cx'=>'50%','cy'=>'50%', 'r'=>'100%'
+				$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_GRAD_OBJECT RADIAL_GRADIENT Default:Radial', 'cx'=>'50%','cy'=>'50%', 'r'=>'100%'
 				, 'fx'=>'50%','fy'=>'50%', 'spreadMethod'=>'pad');				
 				$tagval = " ";
 				$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'radialGradient',$objectIDVal,0, $parentIDVal, $attrdefinition,$tagval);

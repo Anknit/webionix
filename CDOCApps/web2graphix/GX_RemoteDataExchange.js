@@ -1,47 +1,28 @@
 gAppURI = "GX_AppModule.php";
 
-function GXRDE_addNewSVGFile(svgFname)
-{
-	
-	var respstring = AJX_RequestWithReponseData("text", "WKSM", "102", svgFname);
-    if (!respstring) {
-
-        Debug_Message("could not get data");
-        return null;
-    }
-    
-    return respstring; 
-}
-function GXRDE_openSVGFile(svgFname)
+function GXRDE_addNewSVGFile(svgFname, callbackFn)
 {	
-	var respstring = AJX_RequestWithReponseData("text", "WKSM", "103", svgFname);
+	AJX_RequestWithReponseCallback("text", "WKSM", "102", svgFname, callbackFn);    
+}
+function GXRDE_openSVGFile(svgFname, callback)
+{	
+	var respstring = AJX_RequestWithReponseCallback("text", "WKSM", "103", svgFname,callback);
     if (!respstring) {
 
         Debug_Message("could not get data");
         return null;
     }    
-    return respstring; 
+    //return respstring; 
 }
 
-function GXRDE_getAssetListFromServer(assetType)
+function GXRDE_getAssetListFromServer(assetType, callbackFn)
 {
-	var respstring = AJX_RequestWithReponseData("text", "WKSM", "104", assetType);
-    if (!respstring) {
-
-        Debug_Message("could not get data");
-        return null;
-    }
-    var listarr = respstring.split('#'); 
-    return listarr; 
+	AJX_RequestWithReponseCallback("text", "WKSM", "104", assetType, callbackFn);    
+    
 }
 function GXRDE_deleteSVGFile(svgFname)
 {	
-	var respstring = AJX_RequestWithReponseData("text", "WKSM", "105", svgFname);
-    if (respstring != 'OK') {
-
-        Debug_Message("Can't Delete the file");
-        return null;
-    }       
+	AJX_RequestWithNoReponseData("text", "WKSM", "105", svgFname);         
 }
 
 function GXRDE_GetUniqueID(ObjectType) {
@@ -59,41 +40,39 @@ function GXRDE_GetUniqueID(ObjectType) {
     }while (bUnique == false)
     return ObjID;
 }
-function GXRDE_addNewSVGObject(objectID, parentID, objectType)
+function GXRDE_addNewSVGObject(objectID, parentID, objectType, callbackFn)
 {
 	var reqbody = "&OBJECTTYPE=" + objectType + "&OBJECTID=" + objectID + "&REFID=" + parentID ;
-	var respstring = AJX_RequestWithReponseData("text", "OBJM", "301", reqbody);
-	if(respstring)
-		return respstring;
-	else
-		return 'ERROR';	
+	AJX_RequestWithReponseCallback("text", "OBJM", "301", reqbody, callbackFn);	
 }
-function GXRDE_addNewSVGGroupObject(objectID, parentID, objectType, name)
+
+function GXRDE_addNewSVGGroupObject(objectID, parentID, objectType, name, callbackFn)
 {
 	var reqbody = "&OBJECTTYPE=" + objectType + "&OBJECTID=" + objectID + "&REFID=" + parentID +'&NAME=' + name;
-	var respstring = AJX_RequestWithReponseData("text", "OBJM", "301", reqbody);
-	if(respstring)
-		return respstring;
-	else
-		return 'ERROR';	
+	AJX_RequestWithReponseCallback("text", "OBJM", "301", reqbody, callbackFn);
+		
 }
 function GXRDE_updateGroupName(groupID, groupName)
 {		
 	var reqbody  = "&GROUPID=" + groupID + "&NAME=" + groupName ;	
-	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "313", reqbody);	
+	AJX_RequestWithNoReponseData("text", "OBJM", "313", reqbody);	
 }
 
-function GXRDE_addNewSVGPolygonObject(objectID, parentID, objectType, numSides, nLength)
+function GXRDE_addNewSVGPolygonObject(objectID, parentID, objectType, numSides, nLength, callbackFn)
 {
 	var reqbody = "&OBJECTTYPE=" + objectType + "&OBJECTID=" + objectID + "&REFID=" + parentID 
 	+ "&NUMSIDES="+numSides + "&CIRCRADIUS=" + nLength;
-	var respstring = AJX_RequestWithReponseData("text", "OBJM", "301", reqbody);
-	if(respstring)
-		return respstring;
-	else
-		return 'ERROR';
-	
+	AJX_RequestWithReponseCallback("text", "OBJM", "301", reqbody, callbackFn);
 }
+
+function GXRDE_addNewImageObject(objectID, parentID, objectType, URL, callbackFn)
+{
+	var reqbody = "&OBJECTTYPE=" + objectType + "&OBJECTID=" + objectID + "&REFID=" + parentID 
+	+ "&URL="+URL;
+	AJX_RequestWithReponseCallback("text", "OBJM", "301", reqbody, callbackFn);
+}
+
+
 function GXRDE_MoveZIndex(currobjID, beforeID,befParentID)
 {
 	var reqbody = "&CURROBJECTID=" + currobjID + "&BEFOREID=" + beforeID + '&BEFOREPARENTID='+ befParentID;
@@ -112,15 +91,8 @@ function GXRDE_MoveObjectToGroup(groupID,objectIDArray ){
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "312", reqbody);	
 }
 
-function GXRDE_GetSVGMetaXML(svgFname)
-{	
-	var respstring = AJX_RequestWithReponseData("text", "WKSM", "106", svgFname);
-    if (!respstring) {
-
-        Debug_Message("could not get data");
-        return null;
-    }    
-    return respstring; 
+function GXRDE_GetSVGMetaXML(svgFname, callback){	    
+    AJX_RequestWithReponseCallback("text", "WKSM", "106", svgFname,callback);    
 }
 function GXRDE_DeleteObject(currobjID)
 {
