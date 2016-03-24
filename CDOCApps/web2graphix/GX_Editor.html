@@ -209,6 +209,7 @@
 
 <script   type="text/javascript" src="../CommonJS/gettheme.js"></script>
 <script   type="text/javascript" src="../CommonJS/Utilities.js"></script>
+<script   type="text/javascript" src="../CommonJS/jquery.blockUI_2.70.js"></script>
 <script   type="text/javascript" src="../CommonJS/CDOCWAL_V2.js"></script> 
 <script   type="text/javascript" src="GX_AnimationWdgt_V2.js"></script>
 <script   type="text/javascript" src="GX_UIHandlerV5.js"></script>
@@ -996,7 +997,7 @@
         	<div id='newanimattrDivlist' class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Animate<div id='newAnimTypeDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
         	<div id='previewAnim' style='border:1px solid grey;text-align:center;margin-top:5px'><div><input type="button" id ='newAnimPreview' value="Preview"  onclick='GX_NewAnimPreview(event)'/></div>       		
 				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="SVGOBJECTCONTAINER" x="0px" y="0px" width="210px" height="100px" viewBox="0 0 210 100" version="1.1">
-		      		<title>Preview Animation</title><defs id="SVGDEFINITION"> <linearGradient id="SVG_319" class="SVG_GRAD_OBJECT LINEAR_GRAD mylinear" x1="0%" y1="0%" x2="100%" y2="100%" spreadMethod="pad"> <stop id="SVG_319_STOP0" class="SVG_STOP_OBJECT" offset="0%" stop-color="red"/><stop id="SVG_319_STOP1" class="SVG_STOP_OBJECT" offset="100%" stop-color="#410056"/><stop id="SVG_319_STOP2" class="SVG_STOP_OBJECT" offset="100%" stop-color="none"/><stop id="SVG_319_STOP3" class="SVG_STOP_OBJECT" offset="100%" stop-color="none"/></linearGradient></defs>
+		      		<title>Preview Animation</title><defs id="SVGDEFINITION"> <linearGradient id="SVG_319" class="SVG_GRAD_OBJECT LINEAR_GRADIENT mylinear" x1="0%" y1="0%" x2="100%" y2="100%" spreadMethod="pad"> <stop id="SVG_319_STOP0" class="SVG_STOP_OBJECT" offset="0%" stop-color="red"/><stop id="SVG_319_STOP1" class="SVG_STOP_OBJECT" offset="100%" stop-color="#410056"/><stop id="SVG_319_STOP2" class="SVG_STOP_OBJECT" offset="100%" stop-color="none"/><stop id="SVG_319_STOP3" class="SVG_STOP_OBJECT" offset="100%" stop-color="none"/></linearGradient></defs>
 		       <script type="application/ecmascript">
 			          <![CDATA[
 			                   
@@ -1044,7 +1045,7 @@
        </div>          
    </div>
    
-   
+ <!--   
    <div id="imageLoadDlg" style="display:none"><div id="Div2">Please Select Image file</div>
         <div id='Div4' style="overflow: hidden">           
             <form enctype="multipart/form-data" action="GX_FileUploaded.php" id="imgForm" method="post" name="frmImageLoad">
@@ -1060,7 +1061,7 @@
             </div>          
        </div>          
      </div>
-     
+    -->
      <div id="waitwindow" ><div id="windowtitle">Wait......</div> 
        <div id='mycontent'style="overflow: hidden">                     
        </div>        
@@ -1118,5 +1119,16 @@
 	    	
     </div>	  
  </div> 
+ 
+ <div id="newImageDlg" style="display:none"><div id="Div2">Enter URL of the Image</div>
+        <div id='Div3' style="overflow: hidden"> 
+            <label>URL<input  id='imageURLIP' type='url' value="" placeholder="Type in OR Copy paste the URL" style="width:300px"/></label>
+            <div> 
+                <input type="button" id ='imageOK'     value="OK"  />
+                <input type="button" id ='imageCancel' value="Cancel"  />
+            </div>
+       </div>          
+  </div>
+  
 </body>
 </html>
