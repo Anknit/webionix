@@ -2890,9 +2890,18 @@ function OnObjectDrag(evt, ui){
 	    relX = Math.round(relX / gZoomFactor); 
 	    relY = Math.round(relY / gZoomFactor);	   
 	    newObjDim.x = relX ;//gCurrSelectedObjectDim.x+relX;
-	    newObjDim.y = relY ;// gCurrSelectedObjectDim.y+relY;     		
+	    newObjDim.y = relY ;// gCurrSelectedObjectDim.y+relY;  
+	    newObjDim.rotate = gCurrSelectedObjectDim.rotate;//.
+	    newObjDim.rotCentreX = gCurrSelectedObjectDim.rotCentreX +relX ;
+	    newObjDim.rotCentreY = gCurrSelectedObjectDim.rotCentreY + relY; 
     	GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
-    		
+    	/*if(gCurrSelectedObjectDim.rotate != 0){
+    		newObjDim.rotate = gCurrSelectedObjectDim.rotate;          
+            newObjDim.rotCentreX = Math.round(newObjDim.x + gCurrSelectedObjectDim.width/2);
+            newObjDim.rotCentreY = Math.round(newObjDim.y + gCurrSelectedObjectDim.height/2);
+            GX_SetTransformProperty(gCurrentObjectSelected, 'rotate',newObjDim);
+    	}*/
+    	 
     		/*
 	        if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
 	        {
@@ -3401,9 +3410,12 @@ function GX_GetTransformProperty(gNode, transfType)
 	transfDim.scaleY = new Number(y);
 	
 	//rotate param 
-	x = arr[4].split('(')[1];	
-	x = x.substring(0, x.length-1); 
-	transfDim.rotate = new Number(x);	
+	var rot = arr[4].split('(')[1];	
+	var rotX = arr[5] ;//x.substring(0, x.length-1);
+	var rotY = arr[6].substring(0, arr[6].length-1);
+	transfDim.rotate = new Number(rot);
+	transfDim.rotCentreX = new Number(rotX); 
+	transfDim.rotCentreY = new Number(rotY);
 	return transfDim; 	
 }
 function GX_SetTransformProperty(gNode, transfType, transfDim)
@@ -3413,6 +3425,7 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 	if(!Transfstr)
 		Transfstr = "";
 	gTransfArray = Transfstr.split(" "); 
+	var Transflength = gTransfArray.length; 
 /*	if(gTransfArray.length <1){
 		Debug_Message("GX_SetTransformProperty : Transform String is : " +Transfstr ); 
 		return ; 
@@ -3422,6 +3435,12 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 	var objectType = gNode.classList[0]; 
 	var shapeType = gNode.classList[1]; 
 	var delimiter = ' '; 
+	var translateStr;
+	var scaleStr ;
+	var rotStr; 
+	translateStr = gTransfArray[0] + ' ' + gTransfArray[1]; 
+	scaleStr	 = gTransfArray[2] + ' ' + gTransfArray[3];
+	rotStr 		 = gTransfArray[4] + ' ' + gTransfArray[5] + ' ' + gTransfArray[6]; 
 	if(transfType == 'translate')
 	{
 		if(gSnapToGrid == true){
@@ -3433,6 +3452,16 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 			//str = 'translate(' + transfDim.x + delimiter + transfDim.y +')'; 
 			gTransfArray[0] = 'translate(' + transfDim.x; 
 			gTransfArray[1] =  transfDim.y + ')'; 
+			translateStr =  gTransfArray[0] +  ' ' + gTransfArray[1]; 			
+			//also update the Rotation center 			
+		/*	if(transfDim.rotate != 0 ){
+				var rotX = new Number(transfDim.rotCentreX) ;
+				var rotY = new Number(transfDim.rotCentreY);
+				rotX += transfDim.x; 
+				rotY += transfDim.y; 
+				rotStr  = gTransfArray[4] + ' ' + rotX + ' ' + rotY + ')';
+			}
+			*/			
 		}
 		
 	}
@@ -3440,17 +3469,18 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 	{
 		//str = 'scale(' + transfDim.x + delimiter + transfDim.y +')';		
 		gTransfArray[2] = 'scale(' + transfDim.x; 
-		gTransfArray[3] = transfDim.y + ')'; 	
+		gTransfArray[3] = transfDim.y + ')';
+		scaleStr	 = gTransfArray[2] + ' ' + gTransfArray[3];
 	}
-	else if(transfType == 'rotate')
-	{
-		//str = 'rotate(' + transfDim.rotate;		
-		gTransfArray[4]= 'rotate(' + transfDim.rotate + ')';		
+	else if(transfType == 'rotate'){
+		gTransfArray[4] = 'rotate(' + transfDim.rotate; 
+		gTransfArray[5] = transfDim.rotCentreX; 
+		gTransfArray[6] = transfDim.rotCentreY + ')';		
+		rotStr = gTransfArray[4] + " " + gTransfArray[5] + " " + gTransfArray[6]; 
 	}	
-	Transfstr = ''; 
-	for(var k=0; k < 5; k++){
-		Transfstr += (gTransfArray[k] + ' ' ); 
-	}		
+	Transfstr = ''; 	
+	Transfstr = translateStr + ' ' + scaleStr + ' ' + rotStr; 
+			
 	gNode.setAttribute('transform', Transfstr); 	
 }
 
@@ -3614,6 +3644,8 @@ function GX_UpdatePosFromTranslation(objNode){
     
    // GX_SetTransformProperty(objNode, 'translate',newObjDim);
     GX_SetObjectAttribute(objNode, 'DIMENSION', newObjDim, true, false); 
+    if(newObjDim.rotate != 0)
+    	GX_SetTransformProperty(objNode, 'rotate', newObjDim);
 	// set the translate property to 0 
 	transprop.x = 0; 
 	transprop.y = 0; 
@@ -8912,8 +8944,10 @@ function GX_MoveSelectedObject(relX, relY){
         	newObjDim.x = newObjDim.rotCentreX;
             newObjDim.y = newObjDim.rotCentreY; 
         }  
-        retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "TRANSLATE", newObjDim, false, false);
-                  
+        retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "DIMENSION", newObjDim, false, false);
+        if(newObjDim.rotate != 0)
+        	GX_SetTransformProperty(gCurrentObjectSelected, 'rotate', newObjDim);
+        	
     }        	
 	else if(objectType == 'GROUP')
 	{    		
