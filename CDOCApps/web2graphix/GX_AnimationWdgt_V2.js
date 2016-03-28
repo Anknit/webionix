@@ -1867,7 +1867,10 @@ function GX_RemoveAnimInfoFromList(animID)
 		//INDUCE A VISIBLE ANIMATION BEFORE 
 		//GX_AddNewAnimElementInDOM(newAnimID, 'ANIMATION_GROUP','ANIM_ATTRIBUTE', newAttr, bUpdateUI);
 		var classvalue = 'PATH_MOTION ' + animParams.title ; 
-		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue); 
+		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue, 0); 
+		groupCallback = function(respStr){
+			//do nothing 
+		}
 		containerGroupID = animParams.animID ; 
 		var newAttr = []; 
 		var newAnimID = animParams.animID + '_V'; 
@@ -1971,7 +1974,7 @@ function GX_RemoveAnimInfoFromList(animID)
 				valstr += valueArr[j]; 
 		}
 		var classvalue = 'ANIMATE_PATH ' + animParams.title + ' ' + valstr; 
-		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue); 
+		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue, 0); 
 		containerGroupID = animParams.animID ;
 		var newAttr = []; 	
 		    
@@ -2027,7 +2030,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	}
 	else if(animParams.animType == 'ANIM_MOVE'){
 		var classvalue = 'ANIM_MOVE ' + animParams.title + '  0;0' ; 
-		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue); 
+		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue,0); 
 		containerGroupID = animParams.animID ; 
 		var myarrS = animParams.startPos.split(','); 
 	    var myarrE = animParams.endPos.split(',');
@@ -2068,7 +2071,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		//var dvalue = animParams.values; 
 		
 		var classvalue = 'ANIMATE_ZOOM ' + animParams.title;		
-		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue); 
+		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue,0); 
 		containerGroupID = animParams.animID ;
 		var newAttr = []; 	
 		    
@@ -3404,7 +3407,8 @@ function GX_RemoveAnimInfoFromList(animID)
  }
  
  function GX_NewAnimDlgOK(){
-	 //add the new animation object and do the needful 	 	
+	 //add the new animation object and do the needful 
+	 var bReload = true; 
 		var animName  =  WAL_getInputValue('newAnimtitleIP');
 		var lastAnimID=0;
 		if(gAnimList.length > 0)			
@@ -3539,21 +3543,31 @@ function GX_RemoveAnimInfoFromList(animID)
 				startX = objDim.centerX; 
 				startY = objDim.centerY; 		
 			}
-			var MyRefPathID = GX_AddNewSVGObject('line_path','');
-			gInitAnimParam.refPathID=MyRefPathID; 			
-			//now selection would have changed to path 
-			endX =  new Number(startX) + pathLen; 
-			endY =  startY; 
-			var dAttrVal = 'M' + startX + ','+ startY + ' L'+endX +',' + endY;			
-			GX_SetObjectAttribute(gCurrentObjectSelected, 'd', dAttrVal, true, false); 
-			var pos = GX_CalculateMotionAnimPathOffset(gInitAnimParam.objectID, gInitAnimParam.refPathID);
-	    	var splitArr = pos.split(';'); 
-	    	gInitAnimParam.PathObjectOffset = splitArr[0]; 
-	    	gInitAnimParam.originalPosition = splitArr[1]; 
-	    	gInitAnimParam.PathStartPoint = GX_GetPathStartPoint(gCurrentObjectSelected); 
-	    	GX_ResetAllSelections();
-			GX_SetSelection(currObjNode, true, false); 			
-			//now add the motionpath anim object 
+			bReload = false; 
+			var MyRefPathID = GX_AddNewSVGObject('line_path','','mynewcallback' );
+			mynewcallback = function(respStr){
+				callbackSVGAddDefualtFn(respStr);
+				gInitAnimParam.refPathID = gNewObjectID; 
+				endX =  new Number(startX) + pathLen; 
+				endY =  startY; 
+				var dAttrVal = 'M' + startX + ','+ startY + ' L'+endX +',' + endY;			
+				GX_SetObjectAttribute(gCurrentObjectSelected, 'd', dAttrVal, true, false);
+				var pos = GX_CalculateMotionAnimPathOffset(gInitAnimParam.objectID, gInitAnimParam.refPathID);
+		    	var splitArr = pos.split(';'); 
+		    	gInitAnimParam.PathObjectOffset = splitArr[0]; 
+		    	gInitAnimParam.originalPosition = splitArr[1]; 
+		    	gInitAnimParam.PathStartPoint = GX_GetPathStartPoint(gCurrentObjectSelected); 
+		    	GX_ResetAllSelections();
+				GX_SetSelection(currObjNode, true, false); 	
+				
+				gInitAnimParam.animType = animType; 		     
+			    GX_AddAnimationElement(gInitAnimParam, false); 
+			    var animNode = document.getElementById(gInitAnimParam.animID);			  
+			    GX_ReloadSVG(gInitAnimParam.objectID, true);	
+			    gCurrentTabIndex = 2; 
+			    gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 
+			    return ; 
+			}
 		}//if(attrtype == 'pathmotion')
 		else if(attrtype == 'move'){
 			//object type is stored 
@@ -3616,46 +3630,19 @@ function GX_RemoveAnimInfoFromList(animID)
 			Debug_Message('Other Anim attr not supported'); 
 			return ; 
 		}
-		gInitAnimParam.animType = animType; 		     
-	    GX_AddAnimationElement(gInitAnimParam, false); 
-	    var animNode = document.getElementById(gInitAnimParam.animID);
-	    //if(gInitAnimParam.animType == 'ANIM_MOTION')
-	    	GX_ReloadSVG(0, true);	        	
-	    	setTimeout(function(){			
-					WAL_SetTabIndex('rightTabs', 2); 				
-					}, 500);
-					  
-	    	/*
-			var retval = GXRDE_openSVGFile(gSVGFilename); 
-		    var HTMLstr=""; 		 
-		    var currfilename = gSVGFilename; 
-		    var currObjID = gInitAnimParam.objectID; 
-		    if(retval)
-		    {
-			     GX_CloseSVGFile();
-			   	 var dataNode = document.getElementById('objectcontainer');   	 
-			   	 dataNode.innerHTML += retval;		   	
-			  	 GX_InitializeDocument(currfilename);		   	
-		    }	
-		    var xmlstr = GXRDE_GetSVGMetaXML(currfilename);    
-		    if(xmlstr)
-		       GX_updateTreeWidget(xmlstr);   
-		    WAL_expandAllTreeItems(gTreeNodeID, true);
-		    WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+currObjID);		
-		    */	    
-		   
-			
-		    //GX_MenuItemShow('animate', 'Animate'); 
-		
-	    /*
-	    else{
-	    	GX_UpdateAnimInfoInList(animNode);	   
-	    }
-	    */
-	    
-	    	  
-	   
-	    gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	    
+		if(bReload == true){
+			gInitAnimParam.animType = animType; 		     
+		    GX_AddAnimationElement(gInitAnimParam, false); 
+		    var animNode = document.getElementById(gInitAnimParam.animID);
+		    //if(gInitAnimParam.animType == 'ANIM_MOTION')
+		    	gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
+		    	GX_ReloadSVG(gInitAnimParam.objectID, true);	    
+		    	
+		    	/*setTimeout(function(){			
+						WAL_SetTabIndex('rightTabs', 2); 				
+						}, 500);*/	   		    
+		}
+			    
 	   
 	    
 	 //then add it to the list 
