@@ -99,7 +99,7 @@ function GXRDE_DeleteObject(currobjID)
 	var reqbody = "&CURROBJECTID=" + currobjID;
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "307", reqbody);	
 }
-
+/*
 function GXRDE_getCurrentSessionFileName()
 {
 	var reqbody = "";
@@ -107,17 +107,14 @@ function GXRDE_getCurrentSessionFileName()
 	return respstring; 
 }
 
-function GXRDE_CopyShapeObject(objectID, groupID, newID)
+*/
+function GXRDE_CopyShapeObject(objectID, groupID, newID, callbackFn)
 {
 	var reqbody = "&OBJECTID=" + objectID + "&NEWOBJDID=" + newID + "&GROUPID=" + groupID ;
-	var respstring = AJX_RequestWithReponseData("text", "OBJM", "308", reqbody);
-	if(respstring)
-		return respstring;
-	else
-		return 'ERROR';	
+	AJX_RequestWithReponseCallback("text", "OBJM", "308", reqbody, callbackFn);	
 }
 
-function GXRDE_addNewAnimationObject(animID, parentID, animType, attrArray)
+function GXRDE_addNewAnimationObject(animID, parentID, animType, attrArray,callbackFn)
 {	
 	var len = attrArray.length; 
 	var reqbody  = "&ANIMTYPE=" + animType + "&ANIMID=" + animID + "&PARENTID=" + parentID +
@@ -127,11 +124,7 @@ function GXRDE_addNewAnimationObject(animID, parentID, animType, attrArray)
 		var attrstr = "&ATTRNAME[]=" +  attrArray[j][0] + "&ATTRVAL[]="+ attrArray[j][1];
 		reqbody += attrstr; 			
 	}
-	var respstring = AJX_RequestWithReponseData("text", "OBJM", "309", reqbody);
-	if(respstring)
-		return respstring;
-	else
-		return 'ERROR';
+	AJX_RequestWithNoReponseData("text", "OBJM", "309", reqbody);	
 }
 
 function GXRDE_addMultipleAnimObjects(parentID, animType, commonAttrList, animIDList, objAttrList){
@@ -148,7 +141,7 @@ function GXRDE_addMultipleAnimObjects(parentID, animType, commonAttrList, animID
 		attrstr = '&ANIMID[]=' + animIDList[i] + '&NAMEVALUEPAIR[]=' + objAttrList[i]; 
 		reqBody += attrstr; 
 	}
-	var respstring = AJX_RequestWithReponseData("text", "OBJM", "315", reqBody);
+	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "315", reqBody);
 	if(respstring)
 		return respstring;
 	else
@@ -165,7 +158,7 @@ function GXRDE_updateMultipleAnimObjects(animIDList, objAttrList){
 		attrstr = '&ANIMID[]=' + animIDList[i] + '&NAMEVALUEPAIR[]=' + objAttrList[i]; 
 		reqBody += attrstr; 
 	}
-	var respstring = AJX_RequestWithReponseData("text", "OBJM", "316", reqBody);
+	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "316", reqBody);
 	//Debug_Message(respstring); 
 	if(respstring)
 		return respstring;
@@ -190,7 +183,7 @@ function GXRDE_updateTextObjectData(objID, string)
 {	
 	
 	var reqbody  = "&OBJECTID=" + objID + "&DATA=" + string;	
-	var respstring = AJX_RequestWithReponseData("text", "OBJM", "311", reqbody);	
+	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "311", reqbody);	
 }
 
 function GXRDE_getPageURL()
