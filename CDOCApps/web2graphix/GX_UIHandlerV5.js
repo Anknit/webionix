@@ -142,6 +142,9 @@ var gCurrentTabIndex = 0;
 var gBaseMarkerNode = 0; 
 var gFreeDrawMode = 0; //DRAW_MODE,ERASE_MODE
 var gbAlignDimension = true; 
+var gCurrfName = 0; 
+var gCurrObjID = 0; 
+
 sAttributeStructure.prototype.strokewidth = "";
 function sAttributeStructure() {
 	sAttributeStructure.prototype.strokewidth = "";
@@ -1411,19 +1414,7 @@ function GX_MenuItemShow(menuid, itemText)
 	 case 'redo':
 		 GX_MenuChangeEditAction('REDO');
 		 break; 
-	 case 'move_fwd':
-		 GX_MoveObjectZIndex(gCurrentObjectSelected, 'FORWARD'); 
-		 break; 
-	 case 'move_bwd':
-		 GX_MoveObjectZIndex(gCurrentObjectSelected, 'BACKWARD'); 
-		 break; 
-	 case 'move_top':
-		 GX_MoveObjectZIndex(gCurrentObjectSelected, 'TOP'); 
-		 break;
-	 case 'move_bottom':
-		 GX_MoveObjectZIndex(gCurrentObjectSelected, 'BOTTOM'); 
-		 break;
-	
+	 
 		 
 	 case 'removenode':		 
 		 WAL_showModalWindow('deleteConfirmDlg','', ''); 
@@ -1431,12 +1422,14 @@ function GX_MenuItemShow(menuid, itemText)
 		 //WAL_expandAllTreeItems(gTreeNodeID, true);
 		 break; 
 	
-	 case 'copy':
+	/* case 'copy':
 		 GX_CopyObject(gCurrentObjectSelected); 
 		 break; 
 	 case 'paste':
 		 GX_PasteObject(); 
 		 break;
+		 */
+		 
 	 case 'zoom':
 		 GX_showEditorInterface('ZOOMPAN_MODE'); 
 		 break; 
@@ -1576,8 +1569,7 @@ function GX_LBOKHandler(){
          
     
 }
-var gCurrfName = 0; 
-var gCurrObjID = 0; 
+
 function GX_OpenFile(fname){
 	gCurrfName =  fname; 
 	gCurrObjID = 0; 
@@ -1594,7 +1586,8 @@ function OpenfileCallback(respStr){
 	   	 dataNode.innerHTML += respStr; 
 	   	 GX_InitializeDocument(gCurrfName);     	 
     }	   
-    var xmlstr = GXRDE_GetSVGMetaXML(gCurrfName, 'xmlFileCallback');     	     
+    var xmlstr = GXRDE_GetSVGMetaXML(gCurrfName, 'xmlFileCallback'); 
+   
 }
 
 function  xmlFileCallback(xmlstr){
@@ -1604,7 +1597,12 @@ function  xmlFileCallback(xmlstr){
      if(gCurrObjID)
 		WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+gCurrObjID);
 	 else
-		WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');     
+		WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');   
+     
+     //set the tab order here 
+     setTimeout(function(){		    	
+ 		WAL_SetTabIndex('rightTabs', gCurrentTabIndex);	 		
+ 			}, 1000);
 }
 
 function IsNameValid(strname)
@@ -1775,10 +1773,11 @@ function NewMarkerDefaultCallbackFn(respStr){
 function GX_AddNewSVGObject(Type, name, callbackFn)
 {
 	//generate a unique ID 
-	if((!callbackFn) || (callbackFn.length < 1)){
+/*	if((!callbackFn) || (callbackFn.length < 1)){
 		Debug_Message("Callback function missing"); 
 		return; 
-	} 
+	}
+	*/ 
 	var parentID; 
 	//WAL_SetTabIndex('rightTabs', 0);
 	var ObjID =  GXRDE_GetUniqueID('SVG_'); 
@@ -1848,7 +1847,7 @@ function GX_AddNewSVGObject(Type, name, callbackFn)
 	}
 	else		
 		retval = GXRDE_addNewSVGObject(ObjID, parentID, objectType, callbackFn);	
-}
+	}
 
 var gNewObjType = 0;
 var gNewParentID = 0; 
@@ -3170,6 +3169,7 @@ function GX_MoveObjectToGroup(objectID, destparentID){
 
 function GX_updateTreeWidget(string)
 {
+	var currTabIndex = gCurrentTabIndex; 
 	WAL_SetTabIndex('rightTabs', 0);
 	var newresptr = "<div id='node_container' style='overflow:auto; width:inherit; height:inherit; border:none; font-style:italic'>"+string+"</div>";
 	WAL_updateTree(gTreeWidgetID,  'auto', 'auto', newresptr, "GX_TreeItemClick", true, "GX_TreeHandlerDragStart", "GX_TreeHandlerDragEnd");
@@ -3190,6 +3190,7 @@ function GX_updateTreeWidget(string)
 	JQSel = "#"+gTreeNodeID + " .jqx-widget-content"; 
      $(JQSel).css('background-color', 'transparent');	
   //   gPreviousTreeInfoType = gCurrentTreeInfoType; 
+     gCurrentTabIndex =  currTabIndex; 
           
 }
 
@@ -5404,10 +5405,12 @@ function GX_CopyObject(objNode)
 function GX_PasteObject()
 {
 	//determine the current Layer selected
-	if(!gCurrLayerNode)
+	if(!gCurrLayerNode){
+		Debug_Message("Choose a Group to Paste the object"); 
 		return ; 
-	gCurrLayerID = gCurrLayerNode.id;
-	
+	}
+		
+	gCurrLayerID = gCurrLayerNode.id;	
 	//check if the object exist
 	var objNodeToCopy =  document.getElementById(gObjectIDToCopy); 
 	if(!objNodeToCopy)
@@ -5418,9 +5421,8 @@ function GX_PasteObject()
 	
 	//generate an Unique Id 
 	var newObjID =  GXRDE_GetUniqueID('SVG_');
-	var retVal = GXRDE_CopyShapeObject(gObjectIDToCopy, gCurrLayerID, newObjID);	
-	if(retVal != 'ERROR')
-	{		
+	GXRDE_CopyShapeObject(gObjectIDToCopy, gCurrLayerID, newObjID, 'copyCallbackFn');	
+	copyCallbackFn = function(retVal){
 		 GX_AddNewNodeFromXMLString(gCurrLayerID, retVal); 
 		 var newNode = document.getElementById(newObjID);
 		 var newdim = GX_GetRectObjectDim(newNode); 
@@ -5443,12 +5445,8 @@ function GX_PasteObject()
 		 var newXMLStr = '<li id="TM_'+ newObjID + '"  type="' + myobjType+ '" class="TREEMENU" level="3" dataid="' +newObjID + '"  data-type="' + nodename +'"  name="'+ nodeTitle+'"></li>';
 		 WAL_AddTreeItem(gTreeWidgetID, newXMLStr, gCurrentTreeNode, "", true);
 		 WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+newObjID);
-	}	
+	}
 	
-	//Debug_Message("End if Function Paste"); 
-	
-	
-	//post request to server to copy the object with corresponding layer node 
 }
 
 function GX_ApplyZoom(zoomFactor)
@@ -8405,6 +8403,13 @@ function GX_ContextMenuClick(menuID){
 	 case 'move_bottom':
 		 GX_MoveObjectZIndex(gCurrentObjectSelected, 'BOTTOM'); 
 		 break;
+	 case 'copymenu':
+		 if(gCurrentObjectSelected)
+			 GX_CopyObject(gCurrentObjectSelected); 
+		 break; 
+	 case 'pastemenu':
+		 GX_PasteObject();
+		 break; 
 	default:
 		break; 
 	}
