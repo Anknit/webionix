@@ -1,0 +1,219 @@
+<!DOCTYPE html> 
+<html> 
+    <head>
+        <script type="text/javascript">
+                   
+            var myVideo = 0;  //document.getElementById("video1");
+            var mypara = 0;
+            var myTimer = 0;
+            var slideIndex = 0;
+            var prevSlideIndex = -1; 
+            var elapsedTime = 0;
+            var timeout = 1500;
+            var mySlideList;// = new Array(7);
+            var nextdisplayTime = 0;
+            //SlideInfo.prototype = new Object();
+            SlideInfo.prototype.id = 0;
+            SlideInfo.prototype.displayTime = -1;
+            function SlideInfo() {
+                SlideInfo.prototype.id = 0;
+                SlideInfo.prototype.displayTime = -1;
+            }
+            
+            function MyInit() {
+                 myVideo = document.getElementById("video1");
+                 mypara = document.getElementById("vidstatus");
+                  mySlideList = new Array(7);
+                  for (var p = 0; p < 7; p++) {
+                      mySlideList[p] = new SlideInfo(); 
+                     mySlideList[p].id = "Div" + (p+1);
+                     mySlideList[p].displayTime = 8 * p; 
+                 }
+                 nextdisplayTime = mySlideList[0].displayTime;
+                alert("mypara=" + mypara.id); 
+            }
+            
+            function playPause() {
+                if (myVideo.paused)
+                    myVideo.play();
+                else
+                    myVideo.pause();
+            }
+
+            function makeBig() {
+                myVideo.height = (myVideo.videoHeight * 2);
+            }
+
+            function makeSmall() {
+                myVideo.height = (myVideo.videoHeight / 2);
+            }
+
+            function makeNormal() {
+                myVideo.height = (myVideo.videoHeight);
+            }
+
+            function MyLoadedMetadata() {
+                alert("Meta Data loaded");
+                MyInit(); 
+            }
+
+            function MyLoadedData() {
+                if (!mypara)
+                    mypara = document.getElementById("vidstatus");
+
+                mypara.innerHTML = "Video Data Loaded Ver1.1</br>";
+               // myVideo.play();
+            }
+            function MyWaiting() {
+                mypara.innerHTML += "Waiting Ver1,1</br>";
+            }
+            function MyPlaying() {
+                myTimer = setInterval(function() {
+                    MyTimeUpdate(); 
+                }, timeout);   	
+                
+                mypara.innerHTML += "Now Playing</br>";
+            }
+
+            function MyStalled() {
+                mypara.innerHTML += "Now Stalled </br>";
+            }
+            function MyTimeUpdate() {       
+             
+            if(myVideo.currentTime > nextdisplayTime)
+            {
+                ShowNextSlide(); 
+                nextdisplayTime = mySlideList[slideIndex+1].displayTime; 
+            }                
+            mypara.innerHTML = "Now Playing At:" + myVideo.currentTime;   //+  myVideo.currentTime;
+            }
+            
+            function ShowNextSlide() {
+              
+                var divid;
+                var divNode=0; 
+                if (slideIndex > 7)
+                    return;
+                if (prevSlideIndex >= 0) {
+                    divid = mySlideList[prevSlideIndex].id;
+                    divNode = document.getElementById(divid);
+                }                   
+                 if(divNode)
+                     divNode.style.display = "none";
+
+                divid = mySlideList[slideIndex].id;
+                divNode = document.getElementById(divid);
+                if(divNode)
+                    divNode.style.display = "block";
+                prevSlideIndex = slideIndex;
+                slideIndex++;    
+            }
+            function Myfailed(e) {
+                // video playback failed - show a message saying why
+                switch (e.target.error.code) {
+                    case e.target.error.MEDIA_ERR_ABORTED:
+                        alert('You aborted the video playback.');
+                        break;
+                    case e.target.error.MEDIA_ERR_NETWORK:
+                        alert('A network error caused the video download to fail part-way.');
+                        break;
+                    case e.target.error.MEDIA_ERR_DECODE:
+                        alert('The video playback was aborted due to a corruption problem or because the video used features your browser did not support.');
+                        break;
+                    case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                        alert('The format is not supported.');
+                        break;
+                    default:
+                        alert('An unknown error occurred.');
+                        break;
+                }
+                clearInterval(myTimer);
+            }
+            function MyEnd() {
+                clearInterval(myTimer);
+                mypara.innerHTML = "Playback Ended";
+
+            }
+            function MySeekEnd() {
+                mypara.innerHTML += "</br>Seeked Till:" + myVideo.currentTime;
+            }
+            function MyPause() {
+
+                mypara.innerHTML += "</br>Paused At:" + myVideo.currentTime;
+            }
+            function OnchangeSourceChrToMp4() {
+                var vidNode = document.getElementById('video1');
+                var chrsrcnode = document.getElementById('chrsrc');
+                var chrsrc = chrsrcnode.getAttribute('src');
+                vidNode.setAttribute('src', chrsrc);
+                alert("Src changed to MP4");
+            }
+            function OnchangeSourceMP4ToChr() {
+                var vidNode = document.getElementById('video1');
+                var chrsrcnode = document.getElementById('mozsrc');
+                var chrsrc = chrsrcnode.getAttribute('src');
+                vidNode.setAttribute('src', chrsrc);
+                alert("Src changed to OGG");
+            }
+            
+            function MyNewTimeUpdate(event){
+            	var pNode = document.getElementById('TUText'); 
+            	var time = 0; 
+            	with (Math){	
+            		time =  round(event.timeStamp/1000); 
+            	}
+            	pNode.innerHTML = Math.round(myVideo.currentTime) + ' s'; 
+            }
+</script> 
+
+    </head>
+<body> 
+
+<div style="text-align:center"> 
+  <button onclick="playPause()">Play/Pause</button> 
+  <button onclick="makeBig()">Big</button>
+  <button onclick="makeSmall()">Small</button>
+  <button onclick="makeNormal()">Normal</button>
+  <br /> 
+  <div id="videocontainer1" style="width:320px; height:240px; left: 50px; top: 120px ; border: solid medium grey" > 
+      <video id="video1" controls poster= "http://localhost/VIDEO/videoposter.jpg"  onloadedmetadata="MyLoadedMetadata()" width="320px" height="240px"
+      onloadeddata="MyLoadedData()" onwaiting="MyWaiting()" onplaying="MyPlaying()" onstalled="MyStalled()" onpause="MyPause()"  
+       onerror ="Myfailed(event)" onemptied="MyStalled()" onended="MyEnd()" onseeked="MySeekEnd()" ontimeupdate="MyNewTimeUpdate(event)">  
+        <source id='chrsrc' src="http://localhost/Audio/Guppi.mp4" type="video/mp4" />         
+                
+           
+        Your browser does not support HTML5 video.
+      </video>
+  </div>
+  
+  
+  <!--
+  
+  <div id="videocontainer2" style="width:320px; height:240px; left: 450px; top: 120px ; border: solid medium grey" > 
+      <video id="video2" onloadedmetadata="MyLoadedMetadata()" width="320px" height="240px"
+      autoplay='true' controls="true">
+        <source src="http://localhost/VIDEO/Love_aaj_kal.mp4" type="video/mp4" />
+        <source src="http://localhost/VIDEO/Love_aaj_kal.ogg" type="video/ogg" />       
+        Your browser does not support HTML5 video.
+      </video>
+  </div>
+  --> 
+  
+</div> 
+
+<button onclick="OnchangeSourceChrToMp4()">OGGToMP4</button>
+<button onclick="OnchangeSourceMP4ToChr()">MP4ToOGG</button>
+<p id='vidstatus'>Video info</p>
+<p id='timeupdate'>Time Update:<span id='TUText'></span></p>
+
+<div id='Div1' style="display:none"><p>Early Morning on a beautiful meadow, where </br> one can see the golden  rays of the sun. </br></p></div>
+<div id='Div2' style="display:none"><p>There is a slim , pretty stream flowing down the hill.</br>Oh! here wakes up the Owl !</p></div>
+<div id='Div3' style="display:none"><p>And Lo! it just falls down from the Tree </p></div>
+<div id='Div4' style="display:none"><p>So here comes the Big Buck Bunny !!!! What a Fun</p></div>
+<div id='Div5' style="display:none"><p>Here we go inside the cave and look there is this sleeping Gorilla !!! </br>Hasn't he waken up yet.Come on !!</p></div>
+<div id='Div6' style="display:none"><p>Finally Gorilla wakes up and is sleepily coming out</p></div>
+<div id='Div7' style="display:none"><p>Oh What a sight .... Suddenly he seems to be full of energy !!!</p></div>
+</body> 
+</html>
+
+

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<style >
+.AUDIO_LINK:hover{
+	color:red; 
+	border:1px blue inset; 
+	cursor:pointer; 
+}
+</style>
+<script type="text/javascript" src="http://localhost/CDOCApps/CommonJS/jquery.js"></script>
+
+<script type='text/javascript' >
+
+sBookMetaInfo.prototype.filepath = ""; 
+sBookMetaInfo.prototype.startTime = 0;
+sBookMetaInfo.prototype.text = 0;
+function  sBookMetaInfo(){
+	sBookMetaInfo.prototype.filepath = ""; 
+	sBookMetaInfo.prototype.startTime = 0; //in seconds 
+	sBookMetaInfo.prototype.text = 0;
+}
+var gItemNumbers = 3; 
+var gAudioNode = 0; 
+var gAudSource = 0; 
+var gBookMetaInfoList;  
+
+function GetbookMarkData(Index){
+	var BookMetaInfoList =  new Array(gItemNumbers); 
+	for(var  k=0; k < gItemNumbers; k++){
+		BookMetaInfoList[k] = new sBookMetaInfo(); 
+	}
+	BookMetaInfoList[0].filepath = ""; 
+	BookMetaInfoList[0].startTime = 10000; 
+	BookMetaInfoList[0].text = Index + " - Topic-1"; 	
+	BookMetaInfoList[1].filepath = ""; 
+	BookMetaInfoList[1].startTime = 80000; 
+	BookMetaInfoList[1].text = Index + " - Topic-2"; 	
+	BookMetaInfoList[2].filepath = ""; 
+	BookMetaInfoList[2].startTime = 200000; 
+	BookMetaInfoList[2].text = Index + " - Topic-3"; 		
+	return BookMetaInfoList; 
+}
+$(document).ready(function (){
+	//initializing the bookmark list here 	
+	gAudioNode = document.getElementById('myaudioPlayer'); 
+	alert("Document Loading");	
+}); 
+
+function OnLinkHandler(event){
+	
+	var aNode = document.getElementById(event.target.id); 
+	var filePath = aNode.getAttribute('data-media'); 	
+    gAudioNode.src = filePath; 
+    gAudioNode.load(); 
+}
+function SetCurrentMetadata(index){
+	//based on the index get the meta data 
+	//set the current index into metadata array 
+	//set the currentStarttime of meta data 
+	//return 
+}
+
+function OnTopicHandler(event){
+	
+}
+</script> 
+
+</head>
+<body>
+<div id='myaudioTopics'>
+	<ul>
+	 <li><span id='T0' class='AUDIO_LINK' onclick='OnTopicHandler(event)' data-startTime="" >Default Topic-1</span></li>
+	 <li><span id='T1' class='AUDIO_LINK' onclick='OnTopicHandler(event)' data-startTime="" >Default topic-2</span></li>
+	 <li><span id='T2' class='AUDIO_LINK' onclick='OnTopicHandler(event)' data-startTime="" >Defualt Topic-3</span></li>  
+    </ul> 
+</div>
+<audio id='myaudioPlayer' controls autoplay src="" preload='none' ></audio>
+
+<script> 
+/*
+ * Onloadeddata
+ Onerror
+ Onstalled
+ Onpause
+ Ontimeupdate
+ Onseeked
+ onended
+
+ */
+
+</script> 
+ <ul>
+ <li> <span id='0' class='AUDIO_LINK' onclick='OnLinkHandler(event)' data-mediaIdx="0" data-media='http://localhost/Audio/holmes.mp3'>Holmes</span> </li>
+ <li> <span id='1' class='AUDIO_LINK' onclick='OnLinkHandler(event)' data-mediaIdx="1" data-media='http://localhost/Audio/aristo.mp3'>Aristo</span> </li>
+ <li> <span id='2' class='AUDIO_LINK' onclick='OnLinkHandler(event)' data-mediaIdx="2" data-media='http://localhost/Audio/brown.mp3'>Brown</span> </li>  
+ </ul> 
+
+</body>
+</html>
