@@ -985,12 +985,7 @@ function GX_Initialize()
 	  {
 		Debug_Message("Unable To Determine Browser Type");   
 	  }
-	  gUsername = GXRDE_getUsername(); 
-	  if(!gUsername)
-	  {
-		  Debug_Message('Valid user name not found'); 
-		  return; 
-	  }
+	  
 	 // Debug_Message('Welcome:' +gUsername ); 
 		
   //  WAL_createMenu("mainMenu", '450px', '25px', 'horizontal', "UIH_MenuItemClick", "actionText");  
@@ -4140,8 +4135,7 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('strikethrough_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     WAL_createCustomButton('smallcaps_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
     
-    var usernameNode = document.getElementById('username'); 
-    usernameNode.innerHTML = gUsername; 
+    
     
     //object toolbar interface
     
@@ -4228,6 +4222,16 @@ function GX_InitializeToolbar()
     WAL_createNumberInput("marker_strokeWeightIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,0,1, gWidgetTooltipID);
     WAL_setNumberInputValue('marker_strokeWeightIP', 1, false);
     
+    gUsername = GXRDE_getUsername('usernameCallback'); 
+    usernameCallback = function(respStr){
+	    if(!gUsername){
+	    	  Debug_Message('Valid user name not found'); 
+	    	  return; 
+	    }
+        var usernameNode = document.getElementById('username'); 
+        usernameNode.innerHTML = gUsername; 
+    }
+	
 }
 
 function GX_EditBoxValueChange(value, widgetnode)

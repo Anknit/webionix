@@ -99,15 +99,7 @@ function GXRDE_DeleteObject(currobjID)
 	var reqbody = "&CURROBJECTID=" + currobjID;
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "307", reqbody);	
 }
-/*
-function GXRDE_getCurrentSessionFileName()
-{
-	var reqbody = "";
-	var respstring = AJX_RequestWithReponseData("text", "WKSM", "108", "");	
-	return respstring; 
-}
 
-*/
 function GXRDE_CopyShapeObject(objectID, groupID, newID, callbackFn)
 {
 	var reqbody = "&OBJECTID=" + objectID + "&NEWOBJDID=" + newID + "&GROUPID=" + groupID ;
@@ -186,27 +178,23 @@ function GXRDE_updateTextObjectData(objID, string)
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "311", reqbody);	
 }
 
-function GXRDE_getPageURL()
+function GXRDE_getPageURL(callbackFn)
 {
 	 //get the Page link from the server
-    var respstring = AJX_RequestWithReponseData("text", "WKSM", "107");
-    if (respstring == "FAIL") {
-        return null; 
-    }    
-    return respstring; 
+    AJX_RequestWithReponseCallback("text", "WKSM", "107", "", callbackFn);    
 }
 
 function GXRDE_sessionEnd()
 {
-	var respstring = AJX_RequestWithReponseData("text", "SMGR", "500");
+	var respstring = AJX_RequestWithNoReponseData("text", "SMGR", "500");
     if (respstring == "FAIL") {
         return null; 
     }    
 }
 
-function GXRDE_getUsername()
+function GXRDE_getUsername(callbackFn)
 {
-	var respstring = AJX_RequestWithReponseData("text", "SMGR", "501");
+	var respstring = AJX_RequestWithReponseCallback("text", "SMGR", "501", '', callbackFn);
     if (respstring == "FAIL") {
         return null; 
     }   
