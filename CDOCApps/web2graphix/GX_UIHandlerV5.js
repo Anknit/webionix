@@ -8688,13 +8688,9 @@ function GX_AddNewImageSVG(URL){
 		GX_ReloadSVG(gNewObjectID, true); 
 		
 	}
-	//BlockUIinAjax(true);
-	
-	
-	//now get the entire SVG file 
-	//var respstr = GXRDE_getProjectDataPath(); 
-	//Debug_Message(respstr); 
+	//BlockUIinAjax(true);	 
 }
+
 function GX_ImageLoadOK(){
 	var nodename = 'IMAGE'; 
 	var objectID = gImageObjID; 
