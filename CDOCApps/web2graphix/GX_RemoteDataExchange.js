@@ -222,9 +222,9 @@ function GXRDE_removeAttribute(elemtID, attrname){
 	return respstring; 	
 }
 
-function GXRDE_getProjectDataPath()
+function GXRDE_getProjectDataPath(callbackFn)
 {
-	 var respstr = AJX_RequestWithReponseData("text", "PRJM", "209", "");
+	 var respstr = AJX_RequestWithReponseData("text", "PRJM", "209", "", callbackFn);
 	    if (respstr == "FAIL") {
 	        Debug_Message("Failed to Get Project Data Path due to some error");
 	        return 'FAIL'; 
