@@ -1007,12 +1007,7 @@ function GX_Initialize()
 	  {
 		Debug_Message("Unable To Determine Browser Type");   
 	  }
-	  gUsername = GXRDE_getUsername(); 
-	  if(!gUsername)
-	  {
-		  Debug_Message('Valid user name not found'); 
-		  return; 
-	  }
+	  
 	 // Debug_Message('Welcome:' +gUsername ); 
 		
   //  WAL_createMenu("mainMenu", '450px', '25px', 'horizontal', "UIH_MenuItemClick", "actionText");  
@@ -1168,6 +1163,16 @@ function GX_Initialize()
 	
 	gClientYOffset = $('#topcontainer').height() ;//- 40; 
    
+	GXRDE_getUsername('usernameCallback'); 
+    usernameCallback = function(respStr){
+	    if(!respStr){
+	    	  Debug_Message('Valid user name not found'); 
+	    	  return; 
+	    }
+        var usernameNode = document.getElementById('welcomeMsg'); 
+        gUsername = respStr; 
+        usernameNode.innerHTML = gUsername; 
+    }
 }
 
 function GX_MenuDisable(bFlag)
@@ -9673,11 +9678,15 @@ function GX_ShowPreview(){
 		 var previewiFrame =  document.getElementById('svgpreview_iframe');
 		 var previewiFrame =  document.getElementById('svgpreview_iframe');	
 		 previewiFrame.setAttribute('src',"");
-		 var URLstr = GXRDE_getPageURL();	
-		 var t = new Date(); 
-		 var sec = t.getUTCSeconds(); 
-		 URLstr += '?t=' + sec; 
-		 previewiFrame.setAttribute('src',URLstr );
+		  GXRDE_getPageURL('appURLCallback');
+		 appURLCallback = function(URLstr){
+			 var t = new Date(); 
+			 var sec = t.getUTCSeconds(); 
+			 URLstr += '?t=' + sec; 
+			 gPreviewSVGStr = URLstr; 
+			 previewiFrame.setAttribute('src',gPreviewSVGStr );
+		 }
+		 
 	 //}
 }
 
@@ -9716,8 +9725,8 @@ function GX_ReloadPreview(){
 	
 	 var previewiFrame =  document.getElementById('svgpreview_iframe');	
 	 previewiFrame.setAttribute('src',"");
-	 var URLstr = GXRDE_getPageURL();		
-	 previewiFrame.setAttribute('src',URLstr );	
+	 //var URLstr = GXRDE_getPageURL();		
+	 previewiFrame.setAttribute('src',gPreviewSVGStr );	
 	
 	 
 }
