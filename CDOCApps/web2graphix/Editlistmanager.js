@@ -147,7 +147,7 @@ function EL_SaveEditList(finalEditList, bAsyncMode) {
         }
         else    
         {
-        	var respstring = AJX_RequestWithReponseData("text", "OBJM", "305", reqbody);
+        	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "305", reqbody);
             if (respstring != "OK")
             {            	
             	Debug_Message("EL_SaveEditList Error: " + reqbody);
