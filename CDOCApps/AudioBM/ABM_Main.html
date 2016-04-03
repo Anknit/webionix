@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Audio Bookmark</title>
+<link href="../CommonJS/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../CommonCSS/demos.css">
+<link rel="stylesheet" href="../CommonCSS/jquery.ui.all.css">
+<link href="../CommonJS/jqwidget_3.9.1/jqwidgets/styles/jqx.base.css" rel="stylesheet">
+<link href="../CommonJS/jqwidget_3.9.1/jqwidgets/styles/jqx.mygrey.css" rel="stylesheet">
+<style>
+p{
+font-size:12px;
+}
+  
+body{
+font-size:12px;
+}
+.my_link:hover{
+	cursor:pointer; 
+	color:blue;
+	font-weight:bold; 
+}
+ </style>
+<script src="ABMDataInterface.js"></script>
+<script   type="text/javascript" src="../CommonJS/gettheme.js"></script>
+<script   type="text/javascript" src="../CommonJS/Utilities.js"></script>
+<script  type="text/javascript" src="../CommonJS/jqwidget_3.9.1/scripts/jquery-1.11.1.min.js"></script>
+<script   type="text/javascript" src="../CommonJS/jquery.blockUI_2.70.js"></script>
+<script  type="text/javascript" src="../CommonJS/Bootstrap/js/bootstrap.min.js"></script>
+<script  type="text/javascript" src="../CommonJS/jqwidget_3.9.1/jqwidgets/jqxcore.js"></script>
+<script  type="text/javascript" src="../CommonJS/jqwidget_3.9.1/jqwidgets/jqx-all.js"></script>
+
+
+<script type='text/javascript' >
+
+sBookMetaInfo.prototype.filepath = ""; 
+sBookMetaInfo.prototype.startTime = 0;
+sBookMetaInfo.prototype.text = 0;
+function  sBookMetaInfo(){
+	sBookMetaInfo.prototype.filepath = ""; 
+	sBookMetaInfo.prototype.startTime = 0; //in seconds 
+	sBookMetaInfo.prototype.text = 0;
+}
+   gAppURI = 'ABM_AppMgr.php'; 
+   var gMetaInfo = 0; 
+   var gAudioNode = 0; 
+   var gObjList =0; 
+   var gchapterArr=0; 
+	var gbookmarkArr=0; 
+   var gChapNodeList=0; 
+   var gCurrentIndex =0 ; 
+   var gChapInfo = 0; 
+   var gBookmarkInfo = 0; 
+   $(document).ready(function (){
+		//initializing the bookmark list here 	
+		gAudioNode = document.getElementById('myaudioPlayer'); 
+		
+	}); 
+
+	
+	function OnBtnHandler(event){
+		
+		switch(event.target.id){
+		
+		case 'metainfoBtn':
+			var retval = ABM_ImportAudioInfo('dataFetchcallbackFn'); 
+			dataFetchcallbackFn = function(respData){
+				var gObjList = jQuery.parseJSON(respData);		
+				//create the anchor list here 				
+				var parentNode = document.getElementById('audioList'); 
+				var nodelist = CreateElementList(parentNode, gObjList.length, 'li', 'OnAudioListHandler(event)') ; 
+				//now add audio specific data here 				
+				for(var k=0;  k < nodelist.length; k++){
+					var node = nodelist[k]; 
+					var obj = gObjList[k]; 
+					node.setAttribute('id', obj.ID);
+					node.setAttribute('data-url', obj.URL ); 
+					node.innerHTML = obj.title; 
+				}
+			}						
+			break;
+		case 'timeBtn':
+			var time = 3712; 
+			var str = GX_GetTimeFormat(time);
+			alert("Time= " + str); 
+			break; 
+			
+		default:
+			break; 
+		}
+	}
+	
+	function CreateElementList(parentNode, numItems, elemType, HandlerFn){
+		parentNode.innerHTML =""; 
+		if(elemType == 'li'){
+			for(var j= 0; j < numItems; j++){
+				var anchorNode = document.createElement(elemType); 
+				anchorNode.setAttribute('id', j); 
+				anchorNode.setAttribute('class', 'my_link'); 
+				//anchorNode.setAttribute('onclick', "OnAudioListHandler(event)"); 
+				anchorNode.setAttribute('onclick', HandlerFn); 
+				anchorNode.innerHTML = "a_" + j; 
+				parentNode.appendChild(anchorNode); 
+			}
+		}		
+		return parentNode.childNodes; 
+	}	
+	
+	
+	function OnAudioListHandler(event){
+		var aNode = event.target; 
+		var filePath = aNode.getAttribute('data-url'); 	
+	     
+	    //now get the meta data 
+	    ABM_GetChapterBookmarkInfo(aNode.id, 'audioloadCallbackFn'); 
+	    audioloadCallbackFn = function(respData){
+	    	gMetaInfo = jQuery.parseJSON(respData);
+	    	var chapStr = gMetaInfo[0].chapter; 
+	    	//now create the list of chapters and populate it 
+	    	var audListNode =  document.getElementById('audioListContainer'); 
+	    	var bmStr = gMetaInfo[0].bookmark; 
+	    	gChapInfo = GX_GetBookmarkArray(chapStr); 
+	    	gChapNodeList = CreateElementList(audListNode, gChapInfo.length, 'li', 'OnChapterHandler(event)');
+	    	for(var i=0 ; i < gChapNodeList.length; i++){
+	    		var node = gChapNodeList[i]; 				
+				node.setAttribute('data-time', gChapInfo[i].startTime);				
+				node.innerHTML = gChapInfo[i].text + ':' + GX_GetTimeFormat(gChapInfo[i].startTime); 
+				node.setAttribute('data-index', i);	
+	    	}
+	    	gCurrentIndex = 0; 
+	    	//bookmark 
+	    	gBookmarkInfo = GX_GetBookmarkArray(bmStr); 
+	    	var bmNode = document.getElementById('bookmarkList'); 
+	    	var nodeList = CreateElementList(bmNode, gBookmarkInfo.length, 'li', 'OnBookmarkHandler(event)');
+	    	for(var i=0 ; i < nodeList.length; i++){
+	    		var node = nodeList[i]; 				
+				node.setAttribute('data-time', gBookmarkInfo[i].startTime);				
+				node.innerHTML = gBookmarkInfo[i].text + '-' + GX_GetTimeFormat(gBookmarkInfo[i].startTime); 
+	    	}	    	
+	    	gAudioNode.src = filePath;
+	    	gAudioNode.load(); 
+	    	ABM_UpdateUI(0); 
+	    }	    
+	}
+	
+	function OnABMTimeUpdate(event){
+		time =  Math.round(event.timeStamp/1000);
+	}
+
+	function ABM_UpdateUI(itemIndex){
+		var prevNode = gChapNodeList[gCurrentIndex]; 
+		prevNode.style.textDecoration = 'none'; 
+		prevNode.style.color = 'black';
+		prevNode.style.fontWeight = 'normal'; 
+		var node = gChapNodeList[itemIndex]; 
+		node.style.textDecoration = 'underline'; 
+		node.style.color = 'blue';
+		node.style.fontWeight = 'bold'; 
+		gCurrentIndex = itemIndex; 
+		
+	}
+	function GX_GetTimeFormat(inputSec){
+		var h;
+		var m; 
+		var s;
+		with (Math){			
+			h = floor(inputSec / 3600);
+			var temp = round(inputSec % 3600); 
+			m = floor(temp/60);
+			s = (temp%60); 
+		}
+		if(h < 10)
+			h = '0' + h; 
+		if(m < 10)
+			m = '0' +  m; 
+		if(s < 10)
+			s = '0' + s; 
+		return h + ':' + m + ':' +  s ; 
+	}
+	function OnChapterHandler(event){
+		var node =  event.target; 
+		var PTS = node.getAttribute('data-time'); 
+		var index = node.getAttribute('data-index'); 
+		gAudioNode.currentTime = PTS; 
+		ABM_UpdateUI(index); 
+	}
+	function OnBookmarkHandler(event){
+		var node =  event.target; 
+		var PTS = node.getAttribute('data-time'); 
+		gAudioNode.currentTime = PTS; 
+	}
+	
+	function GX_GetBookmarkArray(metaString){
+		var arr = metaString.split(';'); 
+		var numEntries = arr.length; 
+		var BookMetaInfoList =  new Array(numEntries); 
+		for(var j=0;  j < numEntries; j++){
+			BookMetaInfoList[j] = new sBookMetaInfo(); 
+			var entrystr = arr[j]; 
+			var nArr = entrystr.split('#'); 
+			BookMetaInfoList[j].text = nArr[0]; 
+			BookMetaInfoList[j].startTime = nArr[1]; 
+		}
+		return BookMetaInfoList; 		
+	}
+	
+	function GetbookMarkData(Index){
+		var BookMetaInfoList =  new Array(gItemNumbers); 
+		for(var  k=0; k < gItemNumbers; k++){
+			BookMetaInfoList[k] = new sBookMetaInfo(); 
+		}
+		BookMetaInfoList[0].filepath = ""; 
+		BookMetaInfoList[0].startTime = 10000; 
+		BookMetaInfoList[0].text = Index + " - Topic-1"; 	
+		BookMetaInfoList[1].filepath = ""; 
+		BookMetaInfoList[1].startTime = 80000; 
+		BookMetaInfoList[1].text = Index + " - Topic-2"; 	
+		BookMetaInfoList[2].filepath = ""; 
+		BookMetaInfoList[2].startTime = 200000; 
+		BookMetaInfoList[2].text = Index + " - Topic-3"; 		
+		return BookMetaInfoList; 
+	}
+</script>
+</head>
+<body>
+<p> Welcome to the <b>Audio bookmark</b> demo page </p>
+
+<input id='metainfoBtn' type='button' value="GetMeta" onclick="OnBtnHandler(event)" /> 
+<input id='timeBtn' type='button' value="Time" onclick="OnBtnHandler(event)" /> 
+
+<div id='audioplayercontainer'>
+	<div id='chapterList'></div>
+	<audio id='myaudioPlayer' controls autoplay src="" preload='none' ontimeupdate='OnABMTimeUpdate(event)'></audio>
+	<div id='bookmarkList'></div>
+</div>
+<div id='audioListContainer'><ul id='audioList'></ul></div>
+</body>
+</html>
