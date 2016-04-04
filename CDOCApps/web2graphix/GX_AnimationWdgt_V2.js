@@ -1,5 +1,5 @@
 
-var gInputHeight = '22';
+var gInputHeight = '20';
 var gCurrentAnimInfo=0; 
 var bAnimWdgtCreated = false; 
 sAnimParams.prototype.animID = 0;
@@ -485,7 +485,7 @@ function GX_SetAnimParamOnUI(animParam) {
 	$('.animpropertyRow').hide();
 	
 	//showin common property first
-	$('#commonAnim')[0].style.display = 'table-row'; 
+	$('#commonAnim').show();// = 'table-row'; 
 	WAL_setNumberInputValue('repeatcountIP', animParam.repeatCount, false);    
 	WAL_SetItemByValueInList('endstatelistDDL', animParam.endState, false);
 	
@@ -493,7 +493,7 @@ function GX_SetAnimParamOnUI(animParam) {
 	{	
 	case 'rotate':		   	
     	
-		$('.RotateProperty').css({display:'table-row'}); 
+		$('.RotateProperty').show(); 
 		WAL_setCheckBoxValue('autoRotateReverseCB', animParam.autoReverse );
 		WAL_setNumberInputValue('endRotationValueIP', animParam.endValue, false);
 		WAL_setNumberInputValue('initRotationValueIP', animParam.startValue, false);
@@ -520,7 +520,7 @@ function GX_SetAnimParamOnUI(animParam) {
 		
 		break; 		
 	case 'pathmotion':				
-		$('.MotionPathProperty').css({display:'table-row'});		
+		$('.MotionPathProperty').show();		
 		WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible); 
 		if( (animParam.objectType == 'ELLIPSE') || (animParam.objectType == 'CIRCLE') )  
 			WAL_disableWidget('rollingmotionCB', 'data-jqxCheckBox', false, false);
@@ -563,7 +563,7 @@ function GX_SetAnimParamOnUI(animParam) {
     case 'translate':
 		//get the currentobject selected 		
 		//get he center   
-    	$('.MoveProperty').css({display:'table-row'});
+    	$('.MoveProperty').show();
     	WAL_setCheckBoxValue('autoReverseCB', animParam.autoReverse );
 		var objPos = GX_GetRectObjectDim(gCurrentObjectSelected); 
 		if(animParam.pace == 0)
@@ -1091,7 +1091,7 @@ function GX_InitializeAnimationTab(){
     
     WAL_createCheckBox('autoReverseCB', 'GX_AnimDlgCBHdlr', gInputHeight, gInputHeight, '14', false, true);
     var paceList = ['Uniform', 'Accelerate']; 
-    WAL_createDropdownList("paceValueDDL", '120', gInputHeight, false, paceList, "GX_PathModifyHandler", '50','140');
+    WAL_createDropdownList("paceValueDDL", '100', gInputHeight, false, paceList, "GX_PathModifyHandler", '50','100');
     
     WAL_createNumberInput("initRotationValueIP", '54px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, -360, 1);
     WAL_setNumberInputValue('initRotationValueIP', 0, false);

@@ -176,8 +176,8 @@ var gCurrLayerID=0;
 var gCurrLayerNode=0; 
 var gCurrLayerTranslateValues = 0;
 var gButtonWidth = '24'; 
-var gButtonHeight='24'; 
-var gDDLHeight = '22' ; //'26px'
+var gButtonHeight='20'; 
+var gDDLHeight = '20' ; //'26px'
 
 var gEditWidth = "35";
 var gObjectEditMode = 'OBJECT_MODE';//'PROPERTIES_MODE';
@@ -4340,14 +4340,16 @@ function GX_ToolbarHandler(event)
 			gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
 			GX_AddPathMarker(gCurrentObjectSelected.id, gPathDataArray, true); 
 		}
-		$('#addpointBtn').css({display:'none'}); 
-		$('#deletepointBtn').css({display:'none'}); 
+		//$('#addpointBtn').css({display:'none'}); 
+		//$('#deletepointBtn').css({display:'none'}); 
+		$('.polypointEditProperty').hide(); 
 		if(gCurrentObjectSelected.classList[1] == 'POLYGON'){
-			$('#addpointBtn').css({display:'table-row'}); 
-			$('#deletepointBtn').css({display:'table-row'}); 
+			//$('#addpointBtn').css({display:'inline-block'}); 
+			//$('#deletepointBtn').css({display:'inline-block'}); 
+			$('.polypointEditProperty').show(); 
 		}
 		else if(gCurrentObjectSelected.classList[1] == 'FREEDRAW_PATH'){
-			$('#freedrawProp')[0].style.display = 'table-row';			
+			$('.freedrawProp').show(); 			
 		}		
 		break; 
 	case 'reloadPreviewBtn':
@@ -6420,7 +6422,7 @@ function GX_SetFreeDrawEditAttributes(ObjNode, mode, bFlag)
 			$(JQSel).css('visibility', 'hidden');
 		}
 		if(mode == 'REDRAW_MODE'){
-			$('#freedrawProp')[0].style.display = 'none';
+			$('.freedrawProp').hide(); 
 		}
 		gFreeDrawMode = 0; 
 		//gCurrGrabber.setAttribute('pointer-events', 'visible'); 
@@ -9347,9 +9349,9 @@ function GX_InitializePropertyTab(){
 	 
 	 WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 180, -180,1, gWidgetTooltipID);	   
 	 var fillValue = ['None', 'Solid','Linear Gradient', 'Radial Gradient'];	 
-	 WAL_createDropdownList("fillcolorDDL", '120','22',false, fillValue, "GX_DDLHandler", '80', '150');
+	 WAL_createDropdownList("fillcolorDDL", '80',gDDLHeight,false, fillValue, "GX_DDLHandler", '100', '120');
 	 var gradList = ['none', 'item2', 'ítem3'];
-	 WAL_createDropdownList('gradlistDDL', '120', '22', false, gradList, "GX_DDLHandler", '80', '150');
+	 WAL_createDropdownList('gradlistDDL', '80', gDDLHeight, false, gradList, "GX_DDLHandler", '100', '120');
 	 
 	 //stroke interface
 	 WAL_createCustomButton('stroke_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -9396,7 +9398,7 @@ function GX_InitializePropertyTab(){
 	        }
 	        listBoxSrc[i] = { html: html, value:dashValue};
 	    }	        
-	 WAL_createDropdownList('strokedashDDL', '120', '22', false, listBoxSrc, "GX_DDLHandler", '80', '150');    
+	 WAL_createDropdownList('strokedashDDL', '80', gDDLHeight, false, listBoxSrc, "GX_DDLHandler", '100', '120');    
 	 WAL_createSlider('opacitySlider', '130px','12px', true, 0, 100, 1,25, true, false ,'GX_OpacitySliderHandler', false, '');
 	 
 	// WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 360, 0,1, gWidgetTooltipID);
@@ -9436,9 +9438,9 @@ function GX_InitializePropertyTab(){
 	                            "<span style='font-family:\"Courier New\", Courier, monospace'>Courier New</span>",
 	                            "<span style='font-family:\"Lucida Console\", Monaco, monospace'>Lucida Console</span>",
 	                            ]; 
-	 WAL_createDropdownListWithItemStyle("fontNameDDL", '170px', '22', false, "GX_DDLHandler", '200',fontFamilyValue, 'fontFamilyValue',fontFamilyDisplay, 'fontFamilyDisplay');
+	 WAL_createDropdownListWithItemStyle("fontNameDDL", '170px', gDDLHeight, false, "GX_DDLHandler", '140',fontFamilyValue, 'fontFamilyValue',fontFamilyDisplay, 'fontFamilyDisplay');
 	 
-	 WAL_createNumberInput("fontSizeIP", '80px', '24', "GX_EditBoxValueChange",true, 100,8,1, gWidgetTooltipID);
+	 WAL_createNumberInput("fontSizeIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 100,8,1, gWidgetTooltipID);
 	 WAL_setNumberInputValue('fontSizeIP', 18, false);
 	 WAL_createCustomButton('bold_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
 	 WAL_createCustomButton('italic_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
@@ -9451,7 +9453,7 @@ function GX_InitializePropertyTab(){
 	 
 	 //marker interface
 	 var typelist = ['None','Start', 'Middle', 'End']; 
-	 WAL_createDropdownList('markerTypeListDDL', '60', '22', false, typelist, "GX_DDLHandler", '100', '70');
+	 WAL_createDropdownList('markerTypeListDDL', '60', gDDLHeight, false, typelist, "GX_DDLHandler", '100', '70');
 	 WAL_SetItemInDropDownList('markerTypeListDDL', 0, false);
 	 
 	 var listBoxSrc = new Array();
@@ -9486,7 +9488,7 @@ function GX_InitializePropertyTab(){
 	        }
 	        listBoxSrc[i] = { html: html, value:markerValue};
 	    }	    
-	    WAL_createDropdownList('markerShapeListDDL', '40', '22', false, listBoxSrc, "", '120', '60');
+	    WAL_createDropdownList('markerShapeListDDL', '40', gDDLHeight, false, listBoxSrc, "", '120', '60');
 	 //sets the default values 
 	    WAL_createColorPickerWindow("marker_colorpickwidget", "marker_colorpicker", '350', '250', "marker_okbtn", "marker_cancelbtn");
 	 GX_SetDefualtPropOnUI(); 
@@ -9582,16 +9584,17 @@ function GX_SetPropertyonUI(objNode){
 	WAL_SetItemByValueInList('strokedashDDL', strokedashvalue, false);	
 	//now path type objects 
 	if(shapeType == 'SVG_PATH_OBJECT'){		
-		$('#pathcloseProp')[0].style.display = 'table-row'; 
+		$('#pathcloseProp')[0].style.display = 'block'; 
 		$('.markerProperty').show();
-		$('#editbtnProp')[0].style.display = 'table-row'; 	
-		$('#addpointBtn').css({display:'none'}); 
-		$('#deletepointBtn').css({display:'none'}); 
+		$('#editbtnProp')[0].style.display = 'block'; 	
+		//$('#addpointBtn').css({display:'none'}); 
+		//$('#deletepointBtn').css({display:'none'}); 
+		$('.polypointEditProperty').hide(); 
 		if(objectType == 'ELLIPTIC'){
 			$('.ellipticProp').show(); 
 		}
 		if(objectType == 'POLYGON'){
-			$('#polygonProp')[0].style.display = 'table-row';			
+			$('#polygonProp')[0].style.display = 'block';			
 		}
 		
 		GX_UpdatePathParamOnUI(objNode); 		
