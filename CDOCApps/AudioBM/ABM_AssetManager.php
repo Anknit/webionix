@@ -21,7 +21,7 @@ function GX_ExportMetaData($filename, $title, $category){
 function GX_ImportMetaData(){
 	$dbhandle = GX_DBInitialize();	
 	$ReadArray	=	array(
-			'Fields'=> 'ID, URL, title, summary',
+			'Fields'=> 'ID, URL, title, summary,author, ImageURL',
 			'Table'=> 'audiometainfo',			
 			'order'	=> 'title DESC'
 	);	

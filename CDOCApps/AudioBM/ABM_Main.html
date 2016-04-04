@@ -66,7 +66,7 @@ function  sBookMetaInfo(){
 		case 'metainfoBtn':
 			var retval = ABM_ImportAudioInfo('dataFetchcallbackFn'); 
 			dataFetchcallbackFn = function(respData){
-				var gObjList = jQuery.parseJSON(respData);		
+				gObjList = jQuery.parseJSON(respData);		
 				//create the anchor list here 				
 				var parentNode = document.getElementById('audioList'); 
 				var nodelist = CreateElementList(parentNode, gObjList.length, 'li', 'OnAudioListHandler(event)') ; 
@@ -237,3 +237,11 @@ function  sBookMetaInfo(){
 <div id='audioListContainer'><ul id='audioList'></ul></div>
 </body>
 </html>
+
+<div class="row">
+  <div class="col-xs-6 col-md-3">
+    <a href="#" class="thumbnail">
+      <img src="..." alt="...">
+    </a>
+  </div>
+</div>
