@@ -120,16 +120,18 @@ var gWidgetHeight = '22';
 var gInitFillColor = 0; 
 var gInitFillValue = 0; 
 var bNewObjectAdding = false; 
-var gWidgetTooltipID = 'widgettooltip' ; // 'dataContainerSplitter'; 
-var gSelectorTooltipID = 'selectortooltip' ;
-var gCurrTooltipSel = '#selectortooltip'; 
+
+
+
 var gttHeight = 30; 
 var gTooltipOffset = new sPoint(-5, -30 ); 
 var gCurrTooltipPos = new sPoint(); 
 var gTooltipTheme = 'black'; 
+var gTooltipSrc=0; 
+var bScrollPrevent = false; 
 var gSVGContainerbordercol = '#222222';
 var gUsername = ''; 
-var gShowTooltip =  false; 
+var gShowTooltip =  true; 
 var gOrigPointerPos = new sPoint();
 var gShowGrid =  true; 
 var bPointerMove = false; 
@@ -1173,6 +1175,8 @@ function GX_Initialize()
         gUsername = respStr; 
         usernameNode.innerHTML = gUsername; 
     }
+    
+    WAL_createModelessWindow('helpDlg', '350', '450', 'helpOK', 'helpCancel');    
 }
 
 function GX_MenuDisable(bFlag)
@@ -2052,10 +2056,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     		gCurrAnimNode=0;
     	}
     	gIndicatorPathNode.setAttribute('visibility', 'hidden'); 
-    	 //var TTSel ='#' +  gSelectorTooltipID; 
-    	 //$(TTSel).jqxTooltip({content: ttText, theme: gTheme, position:'absolute', showArrow:true,  absolutePositionX:graberOffset.left, absolutePositionY:graberOffset.top, showDelay:gShowDelay});
-    	 //$(TTSel).jqxTooltip('close');//open(); 
-    	 $(gCurrTooltipSel).jqxTooltip('destroy');//open();
+    	 
     	// Debug_Message('Tooltip Closed');
     	 gOrigFreedrawPathVal = 0;     
     	 GX_SetDefualtPropOnUI(); 
@@ -2161,29 +2162,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     
    // WAL_ShowTooltip(gSelectorTooltipID, false)f; 
     //set the tooltip here
-   
-    var TTSel ='#' +  gSelectorTooltipID; 
-    var ttText = 'To Move or Resize Click Once and then Move the mouse without any Button down </br>' + 
-    'Click once again to freeze the final value  ' 
-    +'<span class="LINK_TYPES" onclick="OnTooltipButton(event)" style="color:#ee2222; font-weight:bold">  Switch-Off</span>'; 
-    var grabSel = '#' + gCurrGrabber.id;
-    var graberOffset = $(grabSel).offset(); 
-    var ttHeight = 45; //$(TTSel).jqxTooltip('height'); 
-     
-    var top = new Number(graberOffset.top -ttHeight-5); 
-    if(gShowTooltip == true)
-    {
-    	gTooltipOffset.x = 0;
-    	gTooltipOffset.y = 0;    	
-    	gCurrTooltipPos.x = gGrabberDim.x + gTooltipOffset.x; 
-        gCurrTooltipPos.y = gGrabberDim.y + gClientYOffset + gTooltipOffset.y - gttHeight;
-        
-    	var tipText = 'X-Pos: '+ gCurrSelectedObjectDim.x + 'px Y-Pos: ' + gCurrSelectedObjectDim.y + 'px'; 
-    	$(gCurrTooltipSel).jqxTooltip({content: tipText, theme: gTheme, position:'absolute', showArrow:true,  
-        	absolutePositionX:gCurrTooltipPos.x, absolutePositionY:gCurrTooltipPos.y , showDelay:gShowDelay, autoHide:5000});     	 
-     	$(gCurrTooltipSel).jqxTooltip('open');//open();
-    }  
-    
+      
     
     //this is to ensure while a new object is being added with 0 Dim. doesnt show up 
     if( (gCurrSelectedObjectDim.width == 0) && (gCurrSelectedObjectDim.height == 0) )
@@ -2272,8 +2251,7 @@ function OnSVGParentClick(evt)
 	//if it is text node then do the needful 
 	//if( (gCurrentObjectSelected) && (gCurrentObjectSelected.nodeName.toUpperCase() == 'TEXT') && (gObjectEditMode == 'MODIFY_TEXT_MODE') )
 		//GX_SaveText(gCurrentObjectSelected); 
-	//check if the click is outside the gripper rectangle only then act
-	 WAL_ShowTooltip(gWidgetTooltipID, false); 
+	
 	
 	var status = gCurrGrabber.style.visibility ; //getAttribute('visibility'); 
 	if(status == 'visible')
@@ -2949,14 +2927,7 @@ function OnObjectDrag(evt, ui){
 	    	*/
     		
 	        
-	        if(gShowTooltip == true)
-	        {	        	
-	        	gCurrTooltipPos.x = ui.position.left + gTooltipOffset.x; 
-	            gCurrTooltipPos.y = ui.position.top + gTooltipOffset.y - gttHeight;	        	
-	        	$(gCurrTooltipSel).jqxTooltip({content: tipText, theme: gTheme, position:'absolute', showArrow:true,  
-	            	absolutePositionX:gCurrTooltipPos.x, absolutePositionY:gCurrTooltipPos.y, showDelay:gShowDelay, autoHide:5000});     	 
-	         	$(gCurrTooltipSel).jqxTooltip('open');
-	        } 
+	        
 	       
 }
 function OnObjectDragStop(evt,ui){	 
@@ -4014,40 +3985,39 @@ function GX_InitializeToolbar()
 	//INITALIZING LAYOUT INTERFACE
 	//second row item layout_interface
 	//WAL_createTooltip('widgettooltip', 'div', 1000); 
-	WAL_createTooltip(gWidgetTooltipID, 'div', 1000,0); 	 
-	WAL_createTooltip(gSelectorTooltipID, 'div', 1000, 50);
-	gShowTooltip =  false; 
-	WAL_createCustomButton('object_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
-	WAL_createCustomButton('text_icon', 'GX_ToolbarHandler',gWidgetTooltipID);   
-    WAL_createCustomButton('image_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('import_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+	
+	gShowTooltip =  true; 
+	WAL_createCustomButton('object_icon', 'GX_ToolbarHandler');
+	WAL_createCustomButton('text_icon', 'GX_ToolbarHandler');   
+    WAL_createCustomButton('image_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('import_icon', 'GX_ToolbarHandler');
     
-    WAL_createCustomButton('grid_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('grid_icon', 'GX_ToolbarHandler');
     
-    WAL_createCustomButton('multiselect_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('align_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+    WAL_createCustomButton('multiselect_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('align_icon', 'GX_ToolbarHandler');
     //zoompan interface 
     var zoomeValueDisplay = ['Normal','1.25x','1.5x','2.0x', '2.25x', '2.5x', '3.0x'];    
     WAL_createDropdownList('zoomDDL', '100', '24', false, zoomeValueDisplay, "GX_DDLHandler", '80', 0);
    
-    WAL_createCustomButton('file_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('delete_icon', 'GX_ToolbarHandler', gWidgetTooltipID);	
-    WAL_createCustomButton('group_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('circle_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('ellipse_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('square_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('freehand_icon', 'GX_ToolbarHandler', gWidgetTooltipID);    
+    WAL_createCustomButton('file_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('delete_icon', 'GX_ToolbarHandler');	
+    WAL_createCustomButton('group_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('circle_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('ellipse_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('square_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('freehand_icon', 'GX_ToolbarHandler');    
     WAL_CreatePopOver('shapes_popup', 'object_icon', 'Objects', false, 'auto', 'auto', true);
     var lineTypes = ['Horizontal','Vertical','Normal']; 
-    WAL_createDropdownListwithButton("lineDDL", '0','0',lineTypes, "GX_DDLHandler", '140', '80','line_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
+    WAL_createDropdownListwithButton("lineDDL", '0','0',lineTypes, "GX_DDLHandler", '140', '80','line_icon', gButtonWidth, gButtonHeight);
     
     var curveTypes = ['Cubic Bezier','Quadratic Bezier','Elliptic']; 
-    WAL_createDropdownListwithButton("curveDDL", '0','0',curveTypes, "GX_DDLHandler", '140', '80','curve_icon', gButtonWidth, gButtonHeight, gWidgetTooltipID);
+    WAL_createDropdownListwithButton("curveDDL", '0','0',curveTypes, "GX_DDLHandler", '140', '80','curve_icon', gButtonWidth, gButtonHeight);
     
-    WAL_createCustomButton('new_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-    WAL_createCustomButton('open_icon', 'GX_ToolbarHandler', gWidgetTooltipID);  
-    WAL_createCustomButton('close_icon', 'GX_ToolbarHandler', gWidgetTooltipID); 
+    WAL_createCustomButton('new_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('open_icon', 'GX_ToolbarHandler');  
+    WAL_createCustomButton('close_icon', 'GX_ToolbarHandler'); 
     
     WAL_CreatePopOver('project_popup', 'file_icon','Projects', false, 'auto', 'auto', true);
     
@@ -4056,15 +4026,15 @@ function GX_InitializeToolbar()
     
     
     WAL_CreatePopOver('align_popup', 'align_icon','Alignment', false, '90', 'auto', false);
-    WAL_createCustomButton('alignwidth_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
-    WAL_createCustomButton('alignheight_icon', 'GX_ToolbarHandler',gWidgetTooltipID);
-    WAL_createCustomButton('alignleft_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
-    WAL_createCustomButton('aligntop_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
-    WAL_createCustomButton('alignright_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
-    WAL_createCustomButton('alignbottom_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
+    WAL_createCustomButton('alignwidth_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('alignheight_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('alignleft_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('aligntop_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('alignright_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('alignbottom_icon', 'GX_ToolbarHandler');
   
-    WAL_createCustomButton('alignhorcenter_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID);
-    WAL_createCustomButton('alignvertcenter_icon', 'GX_ToolbarHandler','widgettooltip', gWidgetTooltipID); 
+    WAL_createCustomButton('alignhorcenter_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('alignvertcenter_icon', 'GX_ToolbarHandler'); 
     
     
 }
@@ -4714,7 +4684,7 @@ function GX_CheckValueChange(event)
 	var state = event.args.checked; 
 	var JQSel; 
 	var node; 		
-	if(CBID != 'snaptogrid'){
+	if( (CBID != 'snaptogrid')&&(CBID != 'tooltipBtn') ) {
 		if(!gCurrentObjectSelected){
 			Debug_Message('No Object Selected'); 
 			return ; 
@@ -4731,6 +4701,16 @@ function GX_CheckValueChange(event)
 	case 'pathclose':
 		gClosePath = state;
 		GX_SetClosePath(gCurrentObjectSelected, gClosePath); 		
+		break; 
+	case 'tooltipBtn':
+		if(gShowTooltip == true){
+			$('[data-toggle="tooltip"]').tooltip('destroy'); 
+			gShowTooltip = false; 
+		}
+		else{
+			$('[data-toggle="tooltip"]').tooltip();
+			gShowTooltip = true; 
+		}
 		break; 
 		
 	case 'largearcCheckBox':
@@ -7049,7 +7029,7 @@ function OnWindowScroll(event)
 		//Debug_Message('X=' +  gPanX + 'Y=' +  gPanY); 
 		return; 
 	}
-	if( (bNewObjectAdding ==  true) || (bMoveObject == true) )
+	if( (bNewObjectAdding ==  true) || (bMoveObject == true)  || (bScrollPrevent == true) )
 	{
 		if( (window.pageXOffset != 0) || (window.pageYOffset != 0 ))
 		{
@@ -7059,6 +7039,8 @@ function OnWindowScroll(event)
 				window.scrollTo(horScroll, vertScroll);
 		}
 		bNewObjectAdding = false; 
+		bScrollPrevent = false; 
+		//Debug_Message("Scrolling stopped"); 
 	}
 	
 }
@@ -8883,6 +8865,13 @@ var bMoveObject = false;
 function OnKeyDown(event){
 	
 	//alert('Key ID = ' +  event.keyIdentifier);
+	var myKey = String.fromCharCode(event.keyCode);
+	if(myKey == 'H'){
+		if(gTooltipSrc)
+			GX_OpenHelp(gTooltipSrc); 
+		return ; 
+	}		
+		
 	if(!gCurrentObjectSelected)
 		return ; 
 	var pos = $(gCurrGripperSel).position(); 
@@ -8986,14 +8975,7 @@ function GX_MoveSelectedObject(relX, relY){
 
     gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected); 
     gGrabberDim = GX_GetRectObjectDim(gCurrGrabber);
-    if(gShowTooltip == true){	    
-    	var tipText = 'X-Pos: '+ gCurrSelectedObjectDim.x + 'px Y-Pos: ' + gCurrSelectedObjectDim.y + 'px'; 
-    	gCurrTooltipPos.x = gGrabberDim.x + gTooltipOffset.x; 
-        gCurrTooltipPos.y = gGrabberDim.y + gTooltipOffset.y + gClientYOffset - gttHeight;	        	
-    	$(gCurrTooltipSel).jqxTooltip({content: tipText, theme: gTheme, position:'absolute', showArrow:true,  
-        	absolutePositionX:gCurrTooltipPos.x, absolutePositionY:gCurrTooltipPos.y, showDelay:gShowDelay, autoHide:5000});     	 
-     	$(gCurrTooltipSel).jqxTooltip('open');
-    } 
+    
    
 }
 
@@ -9340,22 +9322,22 @@ function GX_UpdateCanvasLimits(canvDim){
 
 function GX_InitializePropertyTab(){
 	
-	 WAL_createNumberInput("lposIP", '80px', gDDLHeight,  "GX_EditBoxValueChange", true, 1280, 0,1, gWidgetTooltipID);
-	 WAL_createNumberInput("tposIP", '80px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID);
+	 WAL_createNumberInput("lposIP", '80px', gDDLHeight,  "GX_EditBoxValueChange", true, 1280, 0,1);
+	 WAL_createNumberInput("tposIP", '80px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1);
 	 
-	 WAL_createNumberInput("widthIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 1280, 0,1, gWidgetTooltipID);
-	 WAL_createNumberInput("heightIP", '80px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1, gWidgetTooltipID); 
+	 WAL_createNumberInput("widthIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 1280, 0,1);
+	 WAL_createNumberInput("heightIP", '80px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1); 
 	    
 	 
-	 WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 180, -180,1, gWidgetTooltipID);	   
+	 WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 180, -180,1);	   
 	 var fillValue = ['None', 'Solid','Linear Gradient', 'Radial Gradient'];	 
 	 WAL_createDropdownList("fillcolorDDL", '80',gDDLHeight,false, fillValue, "GX_DDLHandler", '100', '120');
 	 var gradList = ['none', 'item2', 'ítem3'];
 	 WAL_createDropdownList('gradlistDDL', '80', gDDLHeight, false, gradList, "GX_DDLHandler", '100', '120');
 	 
 	 //stroke interface
-	 WAL_createCustomButton('stroke_color_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-	 WAL_createNumberInput("strokeWeightIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,0,1, gWidgetTooltipID);
+	 WAL_createCustomButton('stroke_color_icon', 'GX_ToolbarHandler');
+	 WAL_createNumberInput("strokeWeightIP", '58px', gDDLHeight, "GX_EditBoxValueChange",true, 100,0,1);
 	 WAL_setNumberInputValue('strokeWeightIP', 1, false);
 	// var listBoxSrc = []; 
 	    var listBoxSrc = new Array();
@@ -9401,13 +9383,13 @@ function GX_InitializePropertyTab(){
 	 WAL_createDropdownList('strokedashDDL', '80', gDDLHeight, false, listBoxSrc, "GX_DDLHandler", '100', '120');    
 	 WAL_createSlider('opacitySlider', '130px','12px', true, 0, 100, 1,25, true, false ,'GX_OpacitySliderHandler', false, '');
 	 
-	// WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 360, 0,1, gWidgetTooltipID);
-	 WAL_createCheckBox('pathclose', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
-	 WAL_createNumberInput("radiusXIP", '50px', gDDLHeight, "GX_EditBoxValueChange",true,300,0,1, gWidgetTooltipID);
-	 WAL_createNumberInput("radiusYIP", '50px', gDDLHeight, "GX_EditBoxValueChange",true, 300,0, 1, gWidgetTooltipID);
-	 WAL_createCheckBox('largearcCheckBox', 'GX_CheckValueChange', '30', '20' , '13', false, false, gWidgetTooltipID);
-	 WAL_createCheckBox('sweepCheckBox', 'GX_CheckValueChange', '30', '20' , '13', false, false, gWidgetTooltipID);	 
-	 WAL_createNumberInput("lengthIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 500,0,1, gWidgetTooltipID);
+	
+	 WAL_createCheckBox('pathclose', 'GX_CheckValueChange', '110', '20' , '13', false, false);
+	 WAL_createNumberInput("radiusXIP", '50px', gDDLHeight, "GX_EditBoxValueChange",true,300,0,1);
+	 WAL_createNumberInput("radiusYIP", '50px', gDDLHeight, "GX_EditBoxValueChange",true, 300,0, 1);
+	 WAL_createCheckBox('largearcCheckBox', 'GX_CheckValueChange', '30', '20' , '13', false, false);
+	 WAL_createCheckBox('sweepCheckBox', 'GX_CheckValueChange', '30', '20' , '13', false, false);	 
+	 WAL_createNumberInput("lengthIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 500,0,1);
 	 
 	 WAL_createColorPickerWindow("colorpickwidget", "colorpicker", '350', '250', "okbtn", "cancelbtn");
 	 GX_CreateGradientWidget('gradientDlg');
@@ -9440,16 +9422,20 @@ function GX_InitializePropertyTab(){
 	                            ]; 
 	 WAL_createDropdownListWithItemStyle("fontNameDDL", '170px', gDDLHeight, false, "GX_DDLHandler", '140',fontFamilyValue, 'fontFamilyValue',fontFamilyDisplay, 'fontFamilyDisplay');
 	 
-	 WAL_createNumberInput("fontSizeIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 100,8,1, gWidgetTooltipID);
+	 WAL_createNumberInput("fontSizeIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 100,8,1);
 	 WAL_setNumberInputValue('fontSizeIP', 18, false);
-	 WAL_createCustomButton('bold_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-	 WAL_createCustomButton('italic_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-	 WAL_createCustomButton('underline_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-	 WAL_createCustomButton('strikethrough_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
-	 WAL_createCustomButton('smallcaps_icon', 'GX_ToolbarHandler', gWidgetTooltipID);
+	 WAL_createCustomButton('bold_icon', 'GX_ToolbarHandler');
+	 WAL_createCustomButton('italic_icon', 'GX_ToolbarHandler');
+	 WAL_createCustomButton('underline_icon', 'GX_ToolbarHandler');
+	 WAL_createCustomButton('strikethrough_icon', 'GX_ToolbarHandler');
+	 WAL_createCustomButton('smallcaps_icon', 'GX_ToolbarHandler');
 	 
-	 WAL_createCheckBox('snaptogrid', 'GX_CheckValueChange', '110', '20' , '13', false, false, gWidgetTooltipID);
-	 WAL_setCheckBoxValue('snaptogrid', false); 
+	 WAL_createCheckBox('snaptogrid', 'GX_CheckValueChange', '110', '20' , '13', false, false);
+	 WAL_setCheckBoxValue('snaptogrid', false);
+	 
+	 WAL_createCheckBox('tooltipBtn', 'GX_CheckValueChange', '110', '20' , '13', false, false);
+	 WAL_setCheckBoxValue('tooltipBtn', true);
+	 
 	 
 	 //marker interface
 	 var typelist = ['None','Start', 'Middle', 'End']; 
@@ -9824,4 +9810,12 @@ function GX_ImageDlgOK(){
 	var url = $(JQSel).val();
 	GX_AddNewImageSVG(url); 
 	//Debug_Message("Image OK"); 
+}
+
+function GX_OpenHelp(URL){
+	//Debug_Message("Clicked on Help"); 
+	$('#helpFrame').attr('src', URL); 
+	bScrollPrevent = true; 
+	 WAL_showModalWindow('helpDlg',"", "" );	
+	//$("#helpModal").modal(); 
 }
