@@ -326,9 +326,7 @@ function WAL_createToggleButton(buttonID, handlerFnName, Width, Height, RCFlag) 
     $(JQSel).jqxToggleButton({ width: Width, height: Height, toggled: true, theme: gTheme });
     $(JQSel).attr(widgetType, "true");
 
-    var tipText = $(JQSel).attr('data-tooltip');
-    if (tipText)
-        WAL_createTooltip(buttonID, tipText,0); 
+   
     
     expr = handlerFnName + "()";
     $(JQSel).on('click', function() {
@@ -353,9 +351,7 @@ function WAL_createButton(buttonID, handlerFnName, Width, Height, RCFlag) {
     $(JQSel).attr(widgetType, "true");
 
 
-    var tipText = $(JQSel).attr('data-tooltip');     
-    if (tipText)
-        WAL_createTooltip(buttonID, tipText,0);
+   
 
     expr = handlerFnName + "()";
 
@@ -435,7 +431,7 @@ function WAL_createButtonGroupSelectable(buttonGrpID, selectMode, handlerFnNameS
 
 
 
-function WAL_createCheckBox(buttonID, handlerFnName, Width, Height, boxSize, disabled, checked, tooltipID) {
+function WAL_createCheckBox(buttonID, handlerFnName, Width, Height, boxSize, disabled, checked) {
 
     if (gInitialized != true)
         return;
@@ -447,10 +443,7 @@ function WAL_createCheckBox(buttonID, handlerFnName, Width, Height, boxSize, dis
     $(JQSel).jqxCheckBox({ width: Width, height: Height, theme: gTheme, boxSize: boxSize, disabled: disabled, animationShowDelay: 10, animationHideDelay: 10, checked: checked});
     $(JQSel).attr(widgetType, "true");
     $(JQSel).attr("data-cbvalue", checked);
-    var tipText = $(JQSel).attr('data-tooltip');
-    if (tipText)
-        WAL_createTooltip(buttonID, tipText,0); 
-
+    
     $(JQSel).on('change', function(event) {
         var state = event.args.checked;
         $(this).attr("data-cbvalue", state);
@@ -460,11 +453,7 @@ function WAL_createCheckBox(buttonID, handlerFnName, Width, Height, boxSize, dis
         }
     });
     
-    if(tooltipID)
-    {
-    	//var parentNode =  document.getElementById(ID).parentNode; 
-    	WAL_createWidgetTooltip(buttonID, tooltipID); 
-    }
+   
     return;
 
 
@@ -490,9 +479,7 @@ function WAL_createRadioButton(buttonID, handlerFnName, Width, Height, disabled,
 
     var groupName = node.getAttribute("id");
     node.setAttribute("data-type", "radiogroup");
-    var tipText = $(JQSel).attr('data-tooltip');
-    if (tipText)
-        WAL_createTooltip(buttonID, tipText,0); 
+    
     
     $(JQSel).jqxRadioButton({groupName: groupName,  width: Width, height: Height, theme: gTheme, disabled: disabled, animationShowDelay: 10, animationHideDelay: 10, checked: checked });
     $(JQSel).attr(widgetType, "true");
@@ -663,7 +650,7 @@ function WAL_createDropdownListWithCheckbox(ID, Width, Height, AutoOpen, DataSou
 	    return;
 }
 
-function WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource,  handlerFnName, DDLdropDownWidth, DDLdropDownHeight, buttonID, buttonwidth, buttonheight, tooltipID) {
+function WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource,  handlerFnName, DDLdropDownWidth, DDLdropDownHeight, buttonID, buttonwidth, buttonheight) {
 	 if (gInitialized != true)
 	        return;
 	    var widgetType = gWidgetType['jqxDropDownList']; 
@@ -688,12 +675,10 @@ function WAL_createDropdownListwithButton(ID, dispwidth, dispheight,DataSource, 
 	    $(JQSel).attr(widgetType, "true");
 
 	    var btnJQSel = "#"+buttonID; 
-	    WAL_createCustomButton(buttonID, "", tooltipID); 
+	    WAL_createCustomButton(buttonID, ""); 
 	    $(btnJQSel).on('click', function(){
 	    	
-	    	/*var toolSel = '#'+gCurrTooltipID; 
-            $(toolSel).jqxTooltip('close');
-            */ 
+	    	
 	    	var node =  document.getElementById(ID); 
 	    	node = node.parentNode; 
 	    	var pos = $(btnJQSel).position(); 
@@ -900,10 +885,7 @@ function WAL_createDropdownListWithIcons(ID, Width, Height, AutoOpen, DataSource
             });
 
     $(JQSel).attr(widgetType, "true");
-    var tipText = $(JQSel).attr('data-tooltip');
-    if (tipText)
-        WAL_createTooltip(ID, tipText,0); 
-
+   
     $(JQSel).on('select', function(event) {
         var item = $(this).jqxDropDownList('getSelectedItem');
         //alert(" Closing Item=" + item.label);
@@ -1543,7 +1525,7 @@ function WAL_createSplitter(ID, Width, Height, Orientation, bshowSplitBar, bresi
 	        splitBarSize: '3px', resizable:bresizable, panels: panel});
 	    return true; 
 }
-
+/*
 function WAL_createTooltip(ID, tipText, hideDelay, height) {
 	
     var JQSel = "#" + ID;
@@ -1568,6 +1550,7 @@ function WAL_createTooltip(ID, tipText, hideDelay, height) {
     });
    
 }
+*/
 
 function WAL_IsTooltipOpen(ID)
 {
@@ -1767,19 +1750,26 @@ function WAL_createModelessWindow(ID, myWidth, myHeight, myOKID, myCANCELID) {
     var buttonGap = 5; 
 
     var buttonHeight = '24'; 
-    WAL_createButton(myOKID, '', buttonWidth, buttonHeight, true);
-    WAL_createButton(myCANCELID, '', buttonWidth, buttonHeight, true);
-    
-
+    if( (myOKID) && (myCANCELID)){
+    	WAL_createButton(myOKID, '', buttonWidth, buttonHeight, true);
+        WAL_createButton(myCANCELID, '', buttonWidth, buttonHeight, true);
+    }
     var OKID = "#" + myOKID; 
     var CANCELID = "#"+ myCANCELID; 
-    
- $(JQSel).jqxWindow({ width: myWidth, height: myHeight, theme: gTheme, showCollapseButton: false, isModal: false, autoOpen: false, draggable: true, 
-	 resizable: false, closeButtonAction: 'hide', showCloseButton: true , okButton: $(OKID), cancelButton: $(CANCELID), position:'center'});  
+    if( (myOKID) && (myCANCELID)){
+    	 $(JQSel).jqxWindow({ width: myWidth, height: myHeight, theme: gTheme, showCollapseButton: false, isModal: false, autoOpen: false, draggable: true, 
+    		 resizable: false, closeButtonAction: 'hide', showCloseButton: true , okButton: $(OKID), cancelButton: $(CANCELID), position:'center'});  
 
-    $(JQSel).attr(widgetType, "true");
-    $(JQSel).attr('data-okID', myOKID);   
-    $(JQSel).attr('data-cancelID',myCANCELID); 
+    	    $(JQSel).attr(widgetType, "true");
+    	    $(JQSel).attr('data-okID', myOKID);   
+    	    $(JQSel).attr('data-cancelID',myCANCELID); 
+    }
+    else{    
+    	 $(JQSel).jqxWindow({ width: myWidth, height: myHeight, theme: gTheme, showCollapseButton: false, isModal: false, autoOpen: false, draggable: true, 
+    		 resizable: false, closeButtonAction: 'hide', showCloseButton: true , position:'center'});  
+    }
+    
+
    
    //this will toggle the open and closing of the window from the button
 
@@ -2428,8 +2418,7 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
      });
      
      $(JQSel).on('shown', function(event){    	 
-    	 var toolSel = '#'+gCurrTooltipID; 
-         $(toolSel).jqxTooltip('close'); 
+    	 
      });
     
  }
@@ -2504,7 +2493,7 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
      
  }
  
- function WAL_createNumberInput(ID, Width, Height, HandlerFnForValueChange, bSpinButton, maxValue, minValue, stepValue, tooltipID) {
+ function WAL_createNumberInput(ID, Width, Height, HandlerFnForValueChange, bSpinButton, maxValue, minValue, stepValue) {
 
      var JQSel = "#" + ID;
      var widgetType = gWidgetType['jqxNumberInput'];
@@ -2549,17 +2538,9 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
          var expr = HandlerFnForValueChange + "(value, node)";         
              eval(expr);
      }     
-     });
-    if(tooltipID)
-    {
-    	var parentNode =  document.getElementById(ID).parentNode; 
-    	WAL_createWidgetTooltip(parentNode.id, tooltipID); 
-    }
-    	
-
- }
+     }); }
  
- function WAL_createDecimalNumberInput(ID, Width, Height, HandlerFnForValueChange, bSpinButton, maxValue, minValue, stepValue, tooltipID) {
+ function WAL_createDecimalNumberInput(ID, Width, Height, HandlerFnForValueChange, bSpinButton, maxValue, minValue, stepValue) {
 
      var JQSel = "#" + ID;
      var widgetType = gWidgetType['jqxNumberInput'];
@@ -2608,14 +2589,7 @@ function WAL_createMoveablePopUpWindow(ID, Width, Height, HandlerFnClose)
              eval(expr);
      }
      
-     });
-
-    
-    if(tooltipID)
-    {
-    	var parentNode =  document.getElementById(ID).parentNode; 
-    	WAL_createWidgetTooltip(parentNode.id, tooltipID); 
-    }
+     });   
  }
  
  
@@ -2968,7 +2942,7 @@ function WAL_SetItemByValueInList(ID, value, bInternalEvent)
 			$(JQSel).attr('data-internalevent', 'false');
 	}
 }
-function WAL_createCustomButton(buttonID, clickHandler, tooltipID)
+function WAL_createCustomButton(buttonID, clickHandler)
 {
 
     if (gInitialized != true)
@@ -3001,10 +2975,7 @@ function WAL_createCustomButton(buttonID, clickHandler, tooltipID)
             	 $('#'+gLastClickedButtonNodeID).removeAttr('style'); 
              gLastClickedButtonNodeID = node.id;              
              eval(expr);
-             if(gCurrTooltipID){
-            	 var toolSel = '#'+gCurrTooltipID; 
-                 $(toolSel).jqxTooltip('close'); 
-             }
+             
              
            //  $('.IMAGE_BUTTON').removeAttr('style'); 
              //node.style.border = 'ridge 2px #e0e9f5';      
@@ -3014,40 +2985,16 @@ function WAL_createCustomButton(buttonID, clickHandler, tooltipID)
          }
      });
      
-    // WAL_createWidgetTooltip(buttonID, tooltipID); 
-  /*   
-     $(JQSel).on('mousemove', function(event){
-    	var node = event.target; 
-    	var tooltipID = $(JQSel).attr('data-tooltipID'); 
-     	if(!tooltipID)
-     		return ;    
-     	 gCurrTooltipID = tooltipID; 
-     	var tiptext = node.getAttribute('data-tooltiptext'); 
-     	if(!tiptext)
-     		return ; 
-     	gCurrentTooltipOwnerID = node.id; 
-     	var tooltipsrc = '<p>'+tiptext + '<span class="LINK_TYPES" onclick="OnHelpButton(event)" style="color:blue">  Help..</span>' + '</p>';
-     	var nodeSel = '#'+ node.id; 
-     	var pos = $(nodeSel).offset();  
-     	var height =  new Number($(nodeSel).outerHeight()); 
-     	var top =  new Number(pos.top + height + 6); //   new Number(node.offsetTop + node.offsetHeight +  6); 
-     	var left =  new Number(pos.left + 6);  //new Number(node.offsetLeft + 6);      	
-     	var tipSel = '#' + tooltipID; 
-     	$(tipSel).jqxTooltip({content: tooltipsrc, position:'absolute', absolutePositionX:left, absolutePositionY:top});
-     	$(tipSel).jqxTooltip('open');//open(); 
-     });   
-     */  
+  
 }
 
 var gShowDelay = 3000; 
-
-function WAL_createWidgetTooltip(ID, tooltipID)
+/*
+function WAL_createWidgetTooltip(ID)
 {
 	//var node = document.getElementById(ID); 
 	var JQSel = '#' + ID; 
-	 if(tooltipID != 0){
-	    $(JQSel).attr('data-tooltipID', tooltipID);	    	
-	}
+	
 	
 	 $(JQSel).on('mousemove', function(event){
 		 if(gContextTooltip == false)
@@ -3076,6 +3023,8 @@ function WAL_createWidgetTooltip(ID, tooltipID)
 	     	//$(tipSel).jqxTooltip('refresh');
 	     });     
 }
+*/
+
 function OnHelpButton(event){
 	 
 	// alert('Clicked on me'); 
