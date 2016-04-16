@@ -131,7 +131,7 @@ var gTooltipSrc=0;
 var bScrollPrevent = false; 
 var gSVGContainerbordercol = '#222222';
 var gUsername = ''; 
-var gShowTooltip =  true; 
+var gShowTooltip =  false; 
 var gOrigPointerPos = new sPoint();
 var gShowGrid =  true; 
 var bPointerMove = false; 
@@ -3988,7 +3988,7 @@ function GX_InitializeToolbar()
 	//second row item layout_interface
 	//WAL_createTooltip('widgettooltip', 'div', 1000); 
 	
-	gShowTooltip =  true; 
+	
 	WAL_createCustomButton('object_icon', 'GX_ToolbarHandler');
 	WAL_createCustomButton('text_icon', 'GX_ToolbarHandler');   
     WAL_createCustomButton('image_icon', 'GX_ToolbarHandler');
