@@ -5394,11 +5394,10 @@ function GX_CopyObject(objNode)
 function GX_PasteObject()
 {
 	//determine the current Layer selected
-	if(!gCurrLayerNode){
+	if( (!gCurrentObjectSelected) || (gCurrentObjectSelected.classList[0] != 'GROUP')){
 		Debug_Message("Choose a Group to Paste the object"); 
 		return ; 
-	}
-		
+	}		
 	gCurrLayerID = gCurrLayerNode.id;	
 	//check if the object exist
 	var objNodeToCopy =  document.getElementById(gObjectIDToCopy); 
@@ -8935,13 +8934,13 @@ function GX_MoveSelectedObject(relX, relY){
         newObjDim.rotCentreY = Math.round(newObjDim.y + newObjDim.height/2);
         if(gCurrentObjectSelected.classList[1]== 'ELLIPSE')
         {
-        	newObjDim.x = newObjDim.rotCentreX;
-            newObjDim.y = newObjDim.rotCentreY; 
+        	//newObjDim.x = newObjDim.rotCentreX;
+           // newObjDim.y = newObjDim.rotCentreY; 
         } 
         else if(gCurrentObjectSelected.classList[1]== 'CIRCLE')
         {
-        	newObjDim.x = newObjDim.rotCentreX;
-            newObjDim.y = newObjDim.rotCentreY; 
+        	//newObjDim.x = newObjDim.rotCentreX;
+           // newObjDim.y = newObjDim.rotCentreY; 
         }  
         retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "DIMENSION", newObjDim, false, false);
         if(newObjDim.rotate != 0)
