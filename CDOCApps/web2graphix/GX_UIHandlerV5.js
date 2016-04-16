@@ -1177,6 +1177,7 @@ function GX_Initialize()
     }
     
     WAL_createModelessWindow('helpDlg', '350', '450', 'helpOK', 'helpCancel');    
+    WAL_CreateNotification('messageNotification', 10000, 'auto')  ; 
 }
 
 function GX_MenuDisable(bFlag)
@@ -1563,6 +1564,7 @@ function NewFileCallback(respStr){
 	    	WAL_showModalWindow(gSVGFileNameDlgID,"GX_SVGFileDlgNameOK", "" );
 	    	return; 
 	   	}
+		WAL_ShowNotification('messageNotification','info', "Your New Project has been created Successfully</br>You can now Add Shapes/Images/Text to your project", 3000); 
 		OpenfileCallback(respStr); 
 }
 
