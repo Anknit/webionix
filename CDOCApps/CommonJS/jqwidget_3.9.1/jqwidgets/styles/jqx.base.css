@@ -1,4 +1,4 @@
-ï»¿/*Rounded Corners*/
+/*Rounded Corners*/
 /*top-left rounded Corners*/
 .jqx-rc-tl
 {
@@ -695,7 +695,7 @@ button.jqx-button, input[type=button].jqx-button,  input[type=submit].jqx-button
 }
 /*applied to the Grid's Table element.*/
 .jqx-grid-table {
-    font-size: 13px;
+    font-size: inherit;
     table-layout: fixed;
     margin: 0px;
     padding: 0px;
@@ -2626,11 +2626,11 @@ of the horizontal scrollbar.*/
     overflow: hidden;
     border: 1px solid transparent;
 }
-/*applied to the jqxWindow when itâ€™s disabled*/
+/*applied to the jqxWindow when it’s disabled*/
 .jqx-window-disabled
 {
 }
-/*applied to the windowâ€™s header*/
+/*applied to the window’s header*/
 .jqx-window-header
 {
     outline: none;
@@ -2642,12 +2642,12 @@ of the horizontal scrollbar.*/
     white-space: nowrap;
     overflow: hidden;  
 }
-/*applied to the windowâ€™s header when the window is disabled*/
+/*applied to the window’s header when the window is disabled*/
 .jqx-window-header-disabled
 {
 
 }
-/*applied to the windowâ€™s content*/
+/*applied to the window’s content*/
 .jqx-window-content
 {
     outline: none;
@@ -2657,7 +2657,7 @@ of the horizontal scrollbar.*/
     padding: 5px;
     -webkit-background-clip: padding-box; background-clip: padding-box;
 }
-/*applied to the windowâ€™s content when the window is disabled*/
+/*applied to the window’s content when the window is disabled*/
 .jqx-window-content-disabled
 {
     outline: none;
@@ -2665,7 +2665,7 @@ of the horizontal scrollbar.*/
     text-align: left;
     padding: 5px;
 }
-/*applied to the windowâ€™s close button*/
+/*applied to the window’s close button*/
 .jqx-window-close-button
 {
     cursor: pointer;
@@ -2686,7 +2686,7 @@ of the horizontal scrollbar.*/
     cursor: pointer;
     background-image: url(images/icon-down.png);
 }
-/*setting styles of the modal windowâ€™s background*/
+/*setting styles of the modal window’s background*/
 .jqx-window-modal
 {
    background-color: Black;
@@ -3773,7 +3773,7 @@ of the horizontal scrollbar.*/
 .jqx-item{-ms-touch-action: none; -moz-box-sizing: content-box; box-sizing: content-box;  color: inherit; -webkit-text-size-adjust: none;}
 
 /*applied to containers to set a background and border color. Tabs, NavigationBar, Calendar content.*/
-.jqx-widget-content {-moz-box-sizing: content-box; box-sizing: content-box; -ms-touch-action: none; -moz-background-clip: padding; -webkit-text-size-adjust: none; background-clip: padding-box; -webkit-background-clip: padding-box; -webkit-tap-highlight-color: rgba(0,0,0,0); font-family: Verdana,Arial,sans-serif; font-style: normal; font-size: 13px; border-color: #c7c7c7; background: #fff; }
+.jqx-widget-content {-moz-box-sizing: content-box; box-sizing: content-box; -ms-touch-action: none; -moz-background-clip: padding; -webkit-text-size-adjust: none; background-clip: padding-box; -webkit-background-clip: padding-box; -webkit-tap-highlight-color: rgba(0,0,0,0); font-family: Verdana,Arial,sans-serif; font-style: normal; font-size: 10px; border-color: #c7c7c7; background: #fff; }
 /*applied to header areas. Tabs, Menu, Window, Calendar.*/
 .jqx-widget-header {-moz-box-sizing: content-box; box-sizing: content-box; -ms-touch-action: none;-moz-background-clip: padding; -webkit-text-size-adjust: none; background-clip: padding-box; -webkit-background-clip: padding-box; -webkit-tap-highlight-color: rgba(0,0,0,0); border-color: #c5c5c5; background: #e8e8e8; }
 

@@ -3490,3 +3490,34 @@ function WAL_CreatePopOver(ID, refID, title, bModal, Width, Height, bCloseBtn){
          animationType: 'fade'
      });	
 }
+
+function WAL_CreateNotification(ID, timeOut, Width){
+	var JQSel = '#' + ID; 	
+	var msgNodeID = $(JQSel)[0].firstElementChild.id; 
+	$(JQSel).attr('data-msgnodeid',msgNodeID ); 
+	$(JQSel).jqxNotification({width: Width, position: "top-left", opacity: 0.9, autoOpen: false, animationOpenDelay: 400, autoClose: true, autoCloseDelay: timeOut,
+		template: "info", animationCloseDelay: 10, theme: gTheme});
+	
+}
+/*
+ * type == 'info' , 'warning', 'success' , 'error', 'mail', 'time'
+ */
+function WAL_ShowNotification(ID,type, msgString, timeout){
+	var JQSel = '#' + ID; 	
+	$(JQSel).jqxNotification('closeAll');
+	var id = $(JQSel).attr('data-msgnodeid');
+	var msgNode = document.getElementById(id); 
+	msgNode.innerHTML = msgString; 
+	if(type)
+		$(JQSel).jqxNotification({template: type}); 
+	if(timeout)
+		$(JQSel).jqxNotification(autoCloseDelay: timeout});
+	
+	$(JQSel).jqxNotification('refresh');
+	$(JQSel).jqxNotification('open'); 
+}
+
+function WAL_HideNotification(ID){
+	$(JQSel).jqxNotification('closeAll'); 
+}
+

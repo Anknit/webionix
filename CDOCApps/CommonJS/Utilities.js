@@ -243,10 +243,10 @@ function AJX_RequestWithReponseCallback(RespDataType, ModID, RequestId, RequestB
     		
     		// var fnstr = callbackFn + '("' + xhr.responseText + '");'
     		var respStr = xhr.responseText;
-    		 var fnstr = callbackFn + "(respStr)"; 
-    		 eval(fnstr);     		 
-    		// var expr = callbackFn + "(attrName, value)"; 
-			//  eval(expr); 	
+    		if(callbackFn){
+    			var fnstr = callbackFn + "(respStr)"; 
+       		 	eval(fnstr);  
+    		}    			
     	}
     	BlockUIinAjax(false);
   	};
