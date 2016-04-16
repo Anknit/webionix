@@ -4706,11 +4706,11 @@ function GX_CheckValueChange(event)
 		break; 
 	case 'tooltipBtn':
 		if(gShowTooltip == true){
-			$('[data-toggle="tooltip"]').tooltip('destroy'); 
+			GX_ShowTooltip(false); 
 			gShowTooltip = false; 
 		}
 		else{
-			$('[data-toggle="tooltip"]').tooltip();
+			GX_ShowTooltip(true); 
 			gShowTooltip = true; 
 		}
 		break; 
@@ -6589,7 +6589,9 @@ function OnFreeDrawDragStart(evt, ui){
 	if(!gCurrentObjectSelected){
 		Debug_Message('Object not selected');
 		return ; 	
-	}
+	}	
+	GX_ShowTooltip(false); 
+	
 	
 	var nodeid = evt.target.id; 
 	//alert("my nodeid =" +  nodeid); 
@@ -6703,7 +6705,7 @@ function OnFreeDrawDragEnd(evt, ui){
 		 return ; 
 	 }	
 	 GX_SetSelection(gCurrentObjectSelected, true, true);
-	 	
+	 GX_ShowTooltip(true); 
 	// Debug_Message('Drag End'); 
 }
 
@@ -8867,9 +8869,8 @@ function OnKeyDown(event){
 	
 	//alert('Key ID = ' +  event.keyIdentifier);
 	var myKey = String.fromCharCode(event.keyCode);
-	if(myKey == 'H'){
-		if(gTooltipSrc)
-			GX_OpenHelp(gTooltipSrc); 
+	if((gTooltipSrc) && (myKey == 'H')){		
+		GX_OpenHelp(gTooltipSrc); 
 		return ; 
 	}		
 		
@@ -9512,7 +9513,7 @@ function GX_SetPropertyonUI(objNode){
 	WAL_setNumberInputValue("tposIP", dim.y, false);
 	WAL_setNumberInputValue("widthIP", dim.width, false);
 	WAL_setNumberInputValue("heightIP", dim.height, false);
-	if(shapeType == 'SVG_SHAPE_OBJECT'){
+	if( (objectType == 'RECTANGLE')|| (objectType == 'ELLIPSE') || (objectType == 'IMAGE') ) {		
 		WAL_disableWidget('widthIP', 'data-jqxNumberInput', false, false); 
 		WAL_disableWidget('heightIP', 'data-jqxNumberInput', false, false); 
 	}
@@ -9520,8 +9521,13 @@ function GX_SetPropertyonUI(objNode){
 		WAL_disableWidget('widthIP', 'data-jqxNumberInput', false, true); 
 		WAL_disableWidget('heightIP', 'data-jqxNumberInput', false, true); 
 	}	
-	WAL_setNumberInputValue('rotateIP', dim.rotate, false);
-	
+	WAL_setNumberInputValue('rotateIP', dim.rotate, false); 
+	if( (objectType == 'VERT_LINE_PATH')|| (objectType == 'HOR_LINE_PATH') 
+			|| (objectType == 'FREEDRAW_PATH') || (objectType == 'CIRCLE')){
+		WAL_disableWidget('rotateIP', 'data-jqxNumberInput', false, true); 
+	}
+	else
+		WAL_disableWidget('rotateIP', 'data-jqxNumberInput', false, false); 
 	//updating the gradient values 
 	
 	//now based on specific object type extract those property and set the UI. also show them as we proceed 
@@ -9819,4 +9825,26 @@ function GX_OpenHelp(URL){
 	bScrollPrevent = true; 
 	 WAL_showModalWindow('helpDlg',"", "" );	
 	//$("#helpModal").modal(); 
+}
+
+function GX_ShowTooltip(bFlag){
+	if(bFlag == true){
+		$('[data-toggle="tooltip"]').tooltip({html:true, trigger:'hover'}); 
+		  $("[data-toggle='tooltip']").on('shown.bs.tooltip', function(){
+			var mytext = $(".tooltip-inner").html(); 
+			var XMLDoc =  loadXMLString(mytext);
+			var objNode = XMLDoc.firstElementChild.firstElementChild;		
+			if(objNode.nodeName == 'a'){
+				gTooltipSrc = 	objNode.getAttribute('href'); 
+			}			
+		});	
+		  $("[data-toggle='tooltip']").on(' hidden.bs.tooltip', function(){
+			  gTooltipSrc = 0; 
+			});	
+		 
+	}
+	else{
+		$('[data-toggle="tooltip"]').tooltip('destroy'); 
+	}
+	 
 }

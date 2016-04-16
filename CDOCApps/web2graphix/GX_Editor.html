@@ -223,16 +223,7 @@
 	  
 	  WAL_Initialize();
 	  GX_Initialize();
-	  $('[data-toggle="tooltip"]').tooltip({html:true, trigger:'hover'}); 
-	  $("[data-toggle='tooltip']").on('shown.bs.tooltip', function(){
-		var mytext = $(".tooltip-inner").html(); 
-		var XMLDoc =  loadXMLString(mytext);
-		var objNode = XMLDoc.firstElementChild.firstElementChild;		
-		if(objNode.nodeName == 'a'){
-			gTooltipSrc = 	objNode.getAttribute('href'); 
-		}		
-	});
-	  
+	  GX_ShowTooltip(true);  
  }); 
   
   </script> 
@@ -421,7 +412,7 @@
 		            </div>
 		            <div id='propertyTab' style='background-color:#e8e8e8'>
 		              <div  style="width:100%; margin-top:15px">
-		              	<div id='positionProp' class='propertyRow'>
+		              	<div id='positionProp' class='propertyRow' data-toggle="tooltip" data-placement="top" title="<p>Co-ordinates of Top-Left Corner of the Object<a href=Help/NewHelp.htm#filltype></a></br>Press 'H' button for more..</p>">
 		              		<div class='propertyName'>Position:</div>
 		              		<div class='propertyValues' style='display:inline-block; margin-left:27px'> 
 		              			<div id='LPosEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='X co-ordinate' data-helptext='X Position'><span class='myLabel' style='text-align:right;'>X</span><div id='lposIP' class='EDIT_BOX group7' type='DIMENSION' style='font-size:10px'></div></div>		              					              		
@@ -440,9 +431,9 @@
 		              		<div class='propertyValues' style='display:inline-block; margin-left:5px;'><div id='rotateEdit' style='display:inline-block; margin-left:1px;' data-tooltiptext='Rotate' data-helptext='Rotate the Object by given angle'><span class='myLabel' style='text-align:right;'>Rotate</span><div id='rotateIP' class='EDIT_BOX group6' type='ROTATION'></div></div></div>
 		              		<div class='propertyValues' style='display:inline-block; margin-left:10px;'><!-- <div id='rotateSlider' style='display:inline-block;margin-left:3px;'></div>--></div>
 		              	</div>		              	
-		              	<div id='fillProp' class='propertyRow'>
+		              	<div id='fillProp' class='propertyRow' data-toggle="tooltip" data-placement="top" title="<p>Select Type of Bacground Filling <a href=Help/NewHelp.htm#filltype>More</a></p>">
 		              		<div class='propertyName'>Fill:</div>
-		              		<div class='propertyValues' style='display:inline-block; margin-left:-32px;' data-toggle="tooltip" data-placement="right" title="<p>Select Type of Bacground Filling <a href=Help/NewHelp.htm#filltype>More</a></p>"><div id='filldiv' style= 'display:inline-block; margin-left:29px; margin-right:3px' ><span class='myLabel' style='text-align:right;'>Fill Type</span><div id='fillcolorDDL' class='EDIT_BOX'></div></div></div>
+		              		<div class='propertyValues' style='display:inline-block; margin-left:-32px;' ><div id='filldiv' style= 'display:inline-block; margin-left:29px; margin-right:3px' ><span class='myLabel' style='text-align:right;'>Fill Type</span><div id='fillcolorDDL' class='EDIT_BOX'></div></div></div>
 		              		<div class='propertyValues' style='margin-left:52px;margin-top:5px;'>
 		              			<div id='gradlistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><span class='myLabel' style='text-align:right;'>Use Gradient</span><div id='gradlistDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
 		              			<div style= 'display:inline-block;position:relative; top:-10px'>
@@ -985,7 +976,7 @@
        <div id='mycontent'style="overflow: hidden">                     
        </div>        
     </div>
-    <div id="drawingpen" class="ui-widget-content" style='border:3px solid black; position:absolute; width:8px;height:8px;left:50px; top:50px; visibility:hidden' data-toggle="tooltip" data-placement="right" title="<p>Drag this Dot to create the Desired Shapes<a href=Help/NewHelp.htm#project></a></br>Press 'H' Button for Details</p>"></div>
+    <div id="drawingpen" class="ui-widget-content" style='border:3px solid black; position:absolute; width:8px;height:8px;left:50px; top:50px; visibility:hidden' data-toggle="tooltip" data-placement="right" title="<p>Drag this Dot Downward to create the Desired Shape<a href=Help/NewHelp.htm#project></a></br>Press 'H' Button for Details</p>"></div>
     <div id="eraserpen"  style='border:2px solid red; position:absolute; width:10px;height:10px;left:50px; top:50px; visibility:hidden' onclick='OnEraserPenClick(event)'></div>
     <!-- <div id="sel_gripper" class="ui-widget-content GRIPPER" style='border:3px dashed blue; position:absolute'></div>-->
     
