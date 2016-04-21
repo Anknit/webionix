@@ -222,6 +222,10 @@ function GXRDE_removeAttribute(elemtID, attrname){
 	return respstring; 	
 }
 
+function GXRDE_downloadCurrentProject(){
+	var respstring = AJX_RequestWithNoReponseData("text", "WKSM", "109", '');	
+	return respstring; 	
+}
 function GXRDE_getProjectDataPath(callbackFn)
 {
 	 var respstr = AJX_RequestWithReponseData("text", "PRJM", "209", "", callbackFn);

@@ -206,6 +206,9 @@ gReverseOffsetList['Top'] = 0;
 gReverseOffsetList['Center'] = 1;
 gReverseOffsetList['Bottom'] = 2;
 
+var gRotAnimTransfValue = 0; 
+var gRotAnimObjectNode = 0; 
+
 var gMaxKeytimesInterval = new Number(10); 
 var gKeytimesValues ='0;.1;.2;.3;.4;.5;.6;.7;.8;.9;1'; 
 
@@ -3105,7 +3108,7 @@ function GX_RemoveAnimInfoFromList(animID)
  
  var gPathValue = 0; 
  var gPolypathNode = 0; 
- function GX_PreviewAnimation(animID)
+ function GX_PreviewAnimation(animID, objectID, animType)
  {	 
   	var animnode = document.getElementById(animID);
   	if(!animnode)
@@ -3156,6 +3159,10 @@ function GX_RemoveAnimInfoFromList(animID)
   	}
   	
   //	var animInfo = GX_GetAnimInfoByID(animID); 
+  	if(animType.toUpperCase()== 'ROTATE'){  		
+  		gRotAnimObjectNode = document.getElementById(objectID); 
+  		gRotAnimTransfValue = gRotAnimObjectNode.getAttribute('transform'); 
+  	}
   	var restartval =  animnode.getAttribute('restart');
   	animnode.setAttribute('restart', 'whenNotActive');
     animnode.setAttribute('fill', 'remove'); 
@@ -3669,7 +3676,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	 switch(nodeid){	 
 	 case 'play_anim_btn':
 		 if(gCurrentAnimInfo)
-			 GX_PreviewAnimation(gCurrentAnimInfo[0]); 		
+			 GX_PreviewAnimation(gCurrentAnimInfo[0], gCurrentAnimInfo[1], gCurrentAnimInfo[2]); 		
 		 break; 
 	 case 'delete_anim_btn':		
 		 if(gCurrentAnimInfo){		 
@@ -4234,12 +4241,17 @@ function GX_OnAnimationEndHandler(evt){
 
 function GX_OnAnimationEndHandler(evt)
 {	
-	 //Debug_Message('Énd of Animation Path'); 
+	// Debug_Message('Énd of Animation Path'); 
 	 gCurrAnimNode = evt.target; 	 
 	 setTimeout(function(){		
 		 gCurrAnimNode.setAttribute('fill', 'remove');
 		 GX_RestoreAnimationObject(gCurrAnimNode.id); 
 		 GX_RestoreMotionObject(gCurrAnimNode);
+		 if(gRotAnimTransfValue){
+			 gRotAnimObjectNode.setAttribute('transform', gRotAnimTransfValue); 
+			 gRotAnimTransfValue =0; 
+			 gRotAnimObjectNode = 0; 
+		 }
 		 gbAnimationEnd = true; 		
 		}, 
 		gAnimEndTimer); 

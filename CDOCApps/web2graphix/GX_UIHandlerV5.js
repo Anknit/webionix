@@ -2020,7 +2020,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
 	   		{
 	   			gCurrLayerNode = node; //i.e. l;ayer node is set here 
 	   			GX_UpdateLayerChildElements(gCurrentObjectSelected); 
-	   			gCurrentObjectSelected.removeAttribute('opacity'); 
+	   			
 	   		}		   		
 	   	}    	
     }
@@ -2096,16 +2096,16 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
          	 }
     	 }
     	  var JQSel = '.SVG_SHAPE_OBJECT'; 
-    	  $(JQSel).attr('opacity', gOpacityUnSelect); 
+    	 
     	    
     	  JQSel = '.SVG_PATH_OBJECT';
-    	  $(JQSel).attr('opacity', gOpacityUnSelect); 
+    	 
     	  
     	  var JQSel = '.SVG_TEXT_OBJECT'; 
-    	  $(JQSel).attr('opacity', gOpacityUnSelect); 
+    	 
     	   
     	 JQSel = '#' + node.id; 
-    	 $(JQSel).removeAttr('opacity');       	
+    	  	
     }
     else if(nodeClass == 'GROUP')
     {
@@ -2288,7 +2288,7 @@ function OnSVGParentClick(evt)
 function GX_ResetAllSelections()
 {
 	 var JQSel = '.GROUP'; 
-	 $(JQSel).removeAttr('opacity'); 
+	 
 	//restore the animation object
 	 
 	if(gCurrentObjectSelected)
@@ -2319,11 +2319,11 @@ function GX_ResetAllSelections()
 		gEnableMultiSelection = false; 
 	}
 	var JQSel = '.SVG_SHAPE_OBJECT'; 
-	$(JQSel).removeAttr('opacity');   
+	
 	JQSel = '.SVG_PATH_OBJECT';
-	$(JQSel).removeAttr('opacity');   
+	
 	JQSel = '.SVG_TEXT_OBJECT'; 
-	$(JQSel).removeAttr('opacity');		
+	
 	
 	//resetting the alignbuttons 
 	gbAlignDimension =  true;
@@ -3279,9 +3279,9 @@ function GX_setTreeItemSelection(itemID)
 function GX_ShowLayerInterface(layerID)
 {
 	var JQSel = '.GROUP'; 
-	$(JQSel).attr('opacity', gOpacityUnSelect); 
+	
 	JQSel = '#' +  layerID; 
-	$(JQSel).removeAttr('opacity'); 	
+		
 	//var layerDim = GX_GetLayerDimension(layerID);
 	var layerNode = document.getElementById(layerID);	
 	gCurrLayerNode = layerNode; 
@@ -3298,10 +3298,10 @@ function GX_ShowObjectInterface(objectID)
 	var layerID = layerNode.id; 
 	//reduce the opacity of all layers 
 	var JQSel = '.GROUP';
-	$(JQSel).attr('opacity', gOpacityUnSelect); 
+	
 	//set the opacity of current layer 
 	JQSel= '#' + layerID; 
-	$(JQSel).removeAttr('opacity'); 
+	
 	
 	//set the selection to current object 
 	GX_SetSelection(gCurrentObjectSelected,false, false); 
@@ -4038,7 +4038,7 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('alignhorcenter_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('alignvertcenter_icon', 'GX_ToolbarHandler'); 
     
-    
+    WAL_createCustomButton('download_icon', 'GX_ToolbarHandler');
 }
 
 function GX_EditBoxValueChange(value, widgetnode)
@@ -4365,7 +4365,9 @@ function GX_ToolbarHandler(event)
 			WAL_SetTabIndex('rightTabs', 1); 
 		}
 		break; 
-	
+	case 'download_icon':
+		GX_DownloadCurrentProject(); 
+		break;  
 	case 'group_icon':
 		//GX_AddNewSVGObject('GROUP'); 
 		var JQSel = "#" + "groupNameIP";	
@@ -5926,7 +5928,7 @@ function OnPathMarkerMouseDown(node) {
         gsvgRootNode.setAttribute("cursor", "pointer");
         bMarkerMove = true;          
       //  markerNode.setAttribute('r', '12'); 
-	   // markerNode.setAttribute('opacity', '1'); 
+	  
         var index = markerNode.getAttribute("data-index");
         if (!index)
             return;
@@ -8181,7 +8183,7 @@ function GX_MakeTextEditable(srcTextNode)
 	//editornode.style.color = node.getAttribute('fill');
 	editorParentNode.style.display = 'block';  
 	//_rm bug due to the opacity settings here
-	//node.setAttribute('opacity', '0.3'); 
+	
 }
 
 
@@ -8219,19 +8221,7 @@ function OnTextEditKeyPress(event)
 
 function OnTextEditFocusOut(event)
 {	
-	GX_HideandUpdateTextData(); 
-	/*var str = gTextEditorNode.value ;	
-	//node.style.display = 'block';
-	gTextEditorNode.parentNode.style.display = 'none'; 
-	if(gCurrentObjectSelected)
-	{
-		gCurrentObjectSelected.firstChild.data  = str;    
-		var dim = gCurrentObjectSelected.getBBox(); 
-		gCurrGrabber.setAttribute('width', dim.width); 
-		gCurrentObjectSelected.setAttribute('opacity', '1.0');
-		GXRDE_updateTextObjectData(gCurrentObjectSelected.id, gCurrentObjectSelected.firstChild.data);
-	}
-	*/
+	GX_HideandUpdateTextData(); 	
 	
 }
 
@@ -8246,8 +8236,7 @@ function GX_HideandUpdateTextData(){
 	{
 		gCurrentObjectSelected.firstChild.data  = str;    
 		var dim = gCurrentObjectSelected.getBBox(); 
-		gCurrGrabber.setAttribute('width', dim.width); 
-		gCurrentObjectSelected.setAttribute('opacity', '1.0');
+		gCurrGrabber.setAttribute('width', dim.width); 		
 		GXRDE_updateTextObjectData(gCurrentObjectSelected.id, gCurrentObjectSelected.firstChild.data);
 		gTextEditorNode.value = ''; 
 	}	
@@ -9534,7 +9523,7 @@ function GX_SetPropertyonUI(objNode){
 	var strokewidth = objNode.getAttribute('stroke-width'); 
 	WAL_setNumberInputValue('strokeWeightIP', strokewidth, false);    
 	
-	var fillopacity = objNode.getAttribute('fill-opacity');
+	var fillopacity = objNode.getAttribute('opacity');
 	if(!fillopacity)
 		fillopacity = 1.0; 
 	fillopacity = new Number(fillopacity);
@@ -9640,11 +9629,11 @@ function GX_OpacitySliderHandler(value, widgtNode){
 	var opacity = new Number(value);
 	opacity = opacity * .01; 
 	if(gbMultiSelection == true){
-		GX_ApplyPropertyToMultipleObjects('fill-opacity', opacity); 
-		GX_UpdatePropertyForMultipleObjects('fill-opacity', opacity); 
+		GX_ApplyPropertyToMultipleObjects('opacity', opacity); 
+		GX_UpdatePropertyForMultipleObjects('opacity', opacity); 
 	}
 	else{
-		GX_SetObjectAttribute(gCurrentObjectSelected, 'fill-opacity', opacity, true, false);
+		GX_SetObjectAttribute(gCurrentObjectSelected, 'opacity', opacity, true, false);
 	}	
 	
 	$('#fillopacityValue')[0].innerHTML = value; 
@@ -9847,4 +9836,9 @@ function GX_ShowTooltip(bFlag){
 		$('[data-toggle="tooltip"]').tooltip('destroy'); 
 	}
 	 
+}
+
+
+function GX_DownloadCurrentProject(){
+	GXRDE_downloadCurrentProject(); 
 }

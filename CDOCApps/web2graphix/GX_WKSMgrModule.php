@@ -2,6 +2,7 @@
 require_once "GX_CommonAPI.php"; 
 require_once __DIR__.'./../CommonPHP/fileexplorer.php';
 
+
 function GX_WKS_ProcessRequest($ReqID, &$responseData)
 {
 
@@ -57,6 +58,11 @@ function GX_WKS_ProcessRequest($ReqID, &$responseData)
 	{
 		$retval = GX_WKS_GetCurrentSessionFileName($responseData);
 		return $retval;
+	}
+	else if($ReqID == '109')
+	{
+		//$retval = GX_WKS_DowloadCurrentFile($responseData);
+		//return $retval;
 	}
 }
 
@@ -602,4 +608,24 @@ function GX_WKS_GetCurrentSessionFileName(&$respData){
 	else 
 		$respData = $_SESSION['current_svg_FileName']; 
 	return true; 
+}
+
+function GX_WKS_DowloadCurrentFile($responseData){
+	
+	if(!isset($_SESSION['svg_xml_FileName']))
+		$filename = 0;
+	else
+		$filename = $_SESSION['svg_xml_FileName'];
+	//DownloadFile($filename);
+	if (file_exists($file)) {
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="'.basename($filename).'"');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+		header('Content-Length: ' . filesize($filename));
+		readfile($filename);
+		exit;
+	}
 }
