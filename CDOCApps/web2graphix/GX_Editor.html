@@ -246,7 +246,7 @@
     			
     			
      			<div class='BTN_CONTAINER' title="My New shapes">		
-    				<input class='IMAGE_BUTTON'  type = "image" id='object_icon' value=''  src='../CommonCSS/icons/Version1/group.png'  />    				
+    				<input class='IMAGE_BUTTON'  type = "image" id='object_icon' value=''  src='../CommonCSS/icons/Version1/shapes.png'  />    				
     				<span class='TB_TEXT'>Shapes</span>
     			</div>
     			
@@ -257,6 +257,10 @@
     			<div class="BTN_CONTAINER"  style='display:inline-block' title="My New Image"> 
 	    			<input class='IMAGE_BUTTON'  type = "image" id='image_icon' value=''  src='../CommonCSS/icons/Version1/imageload.png'  />
 	    			<span class='TB_TEXT'>Image</span>
+	    		</div>
+	    		<div class="BTN_CONTAINER"  style='display:inline-block' title="Add New Group">
+	    			<input class='IMAGE_BUTTON'  type = "image" id='group_icon' value=''  src='../CommonCSS/icons/Version1/group.png'  data-tooltiptext='Group' data-helptext='Add a new Group'/>    			
+	    			<span class='TB_TEXT'>Group</span>
 	    		</div>
 	    		
 	    		<div class="BTN_CONTAINER"  style='display:inline-block' title="Import Button"> 
@@ -283,7 +287,7 @@
 	    		
 	    		<div class="BTN_CONTAINER"  style='display:inline-block' title="Download the SVG File"> 
 	    			<!-- <input class='IMAGE_BUTTON'  type = "image" id='download_icon' value=''  src='../CommonCSS/icons/Version1/download.png'  />-->
-	    			<a class="navbar-brand" href="http://localhost/CDOCApps/web2graphix/Download.php" style='margin-top:-15px'><img class="img-responsive" src="../CommonCSS/icons/Version1/download.png" width='50px' height='50px'></a>
+	    			<a class="navbar-brand" href="http://localhost/CDOCApps/web2graphix/Download.php" style='margin-top:-15px'><img class="IMAGE_BUTTON" src="../CommonCSS/icons/Version1/download.png" width='50px' height='50px'/></a>
 	    			<span class='TB_TEXT'>Download</span>
 	    		</div>
 	    		
@@ -622,8 +626,7 @@
  </div>
  <div id='widgettooltip' style='display:none'></div>
  <div id="shapes_popup" style='margin-top:20px; display:none'>
-    <div style="display:inline-block">
-         	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;'><input class='small_icon'  type = "image" id='group_icon' value=''  src='../CommonCSS/icons/Version1/group.png'  data-tooltiptext='Group' data-helptext='Add a new Group'/><span class='SMALL_TB_TEXT'>Group</span></div>
+    <div style="display:inline-block">         	
 	    	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;'><input class='small_icon'  type = "image" id='circle_icon' value=''  src='../CommonCSS/icons/Version1/circle.png'  data-tooltiptext='Circle' data-helptext='Using this draw a Circle'/><span class='SMALL_TB_TEXT'>Circle</span></div>
 	    	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;'><input class='small_icon'  type = "image" id='ellipse_icon' value=''  src='../CommonCSS/icons/Version1/ellipse.png'  data-tooltiptext='Ellipse' data-helptext='Using this draw an Ellipse'/><span class='SMALL_TB_TEXT'>Ellipse</span></div>
 	    	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;'><input class='small_icon'  type = "image" id='square_icon' value=''  src='../CommonCSS/icons/Version1/square.png' data-tooltiptext='Rectangle' data-helptext='Use this to draw a rectangle or a circle' /><span class='SMALL_TB_TEXT'>Rectangle</span></div>
@@ -649,12 +652,10 @@
  
 <div id="svgfileopendlg" style='display:none;z-index:18000'><div id="svglisttitle">My Workspace</div>
 		<div id="svgfileopendlgcontent" style="overflow:hidden">
-			<div id="svgfileopenlistbox"></div> 		
-      		
+			<div id="svgfileopenlistbox"></div> 	      		
       		<input type="button" id='SVGFO_LB_okbtn' value="Open" onclick="GX_LBOKHandler()"  style="margin-top:20px" title='Open a Project File'/>
-      		<input type="button" id='SVGFO_LB_cancelbtn' value="Cancel" onclick=""  style="margin-top:20px"/>
-      		
       		<input type="button" id='SVGFO_LB_deletebtn' value="Delete" onclick="GX_ToolbarHandler(event)"  style="margin-top:20px" title='Delete a Project File'/>
+      		<input type="button" id='SVGFO_LB_cancelbtn' value="Close" onclick=""  style="margin-top:20px; display:none"/>
 		</div>
 </div>
   
@@ -881,7 +882,7 @@
   
 	
       
-	<div id='jqxContextMenuWidget' style='vertical-align: middle; text-align: center;  background: #eee;
+	<div id='jqxContextMenuWidget' style='display:none; vertical-align: middle; text-align: center;  background: #eee;
             height: 400px; width: 400px;'>
             <div id='objectContextmenu'>
                 <ul style='font-size:12px;'>
@@ -896,11 +897,13 @@
 	     		</ul>
               </div>
      </div>
-      <div id="movetoGroupDlg" style="display:none; font-size:12px"><div id="Div2">Select Group</div>
+      <div id="movetoGroupDlg" style="display:none; font-size:12px"><div id="Div2">Move To</div>
         <div id='hfad' style="overflow: hidden; font-size:12px"> 
-        	<div><span style='margin-right:4px'>New Group</span><input  id='newgroupNameIP' type=text value="" placeholder='New Group Name' style='width:140px;'/></div>
+        <!-- 	<div><span style='margin-right:4px'>New Group</span><input  id='newgroupNameIP' type=text value="" placeholder='New Group Name' style='width:140px;'/></div>
         	<div style='margin-top:10px; border-bottom:1px solid #e5e5e5; text-align:center'><span>OR</span></div>
-            <div style='margin-top:10px'><span style='margin-right:4px'>Existing Group</span><div id='grouptoDDL' class='EDIT_BOX'  ></div></div>
+        	-->
+        	
+            <div style='margin-top:10px'><span style='margin-right:4px'>Select Group</span><div id='grouptoDDL' class='EDIT_BOX'  ></div></div>
             <div style='margin-top:20px; text-align:center'> 
                 <input type="button" id ='grouptoOK'     value="OK" />
                 <input type="button" id ='grouptoCancel' value="Cancel"  />
@@ -979,7 +982,7 @@
        </div>          
      </div>
     -->
-     <div id="waitwindow" ><div id="windowtitle">Wait......</div> 
+     <div id="waitwindow" style='display:none' ><div id="windowtitle">Wait......</div> 
        <div id='mycontent'style="overflow: hidden">                     
        </div>        
     </div>
