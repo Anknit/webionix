@@ -4326,7 +4326,7 @@ function GX_NewAnimPreview(event){
 	default:
 		break; 
 	}
-	GX_PreviewAnimation(animID, objID,animType ); 
+	GX_PreviewAnimation(animID); 
 	//get the reference object ID 
 	//make it visible 
 	//call the begin element and animate 
