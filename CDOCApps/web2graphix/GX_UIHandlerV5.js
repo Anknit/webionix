@@ -173,7 +173,7 @@ var gPreviousTreeNode =0;
 var gCurrentTreeNode = 0;
 var gPrevTreeItemSel = 0;
 var gCurrentTreeItemSel=0; 
-var gOpacityUnSelect = '1';
+var gOpacityUnSelect = '0.1';
 var gCurrLayerID=0; 
 var gCurrLayerNode=0; 
 var gCurrLayerTranslateValues = 0;
@@ -1989,7 +1989,7 @@ function OnShapeObjectSelection(evt) {
     	GX_SetSelection(node,true, true);    	
          return;                        
  }
-
+var gCurrentGroup = 0; 
 
 function GX_SetSelection(objNode, bFlag, bShowMarkers) {
 	if(!objNode)
@@ -2207,6 +2207,14 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
   
     gCurrentObjectSelected.setAttribute('pointer-events', 'none'); 
     GX_SetPropertyonUI(gCurrentObjectSelected); 
+    //Opacity control code here 
+    $('.GROUP').attr('opacity', gOpacityUnSelect);   
+    if(gCurrentObjectSelected.classList[0] == 'GROUP')
+    	gCurrentGroup = gCurrentObjectSelected;
+    else{
+    	gCurrentGroup = gCurrentObjectSelected.parentNode; 
+    }
+    $('#'+gCurrentGroup.id).attr('opacity', '1');     
     //set the tooltip here 
     /*
     if(nodeClass == 'SVG_TEXT_OBJECT')
@@ -2290,7 +2298,7 @@ function GX_ResetAllSelections()
 	 var JQSel = '.GROUP'; 
 	 
 	//restore the animation object
-	 
+	 $(JQSel).attr('opacity', '1'); 
 	if(gCurrentObjectSelected)
 	{
 		var nodeclass = gCurrentObjectSelected.classList[0] ;//('class'); 
@@ -3117,6 +3125,7 @@ function GX_MoveObjectNode(currobjID, beforeID, beforeParentID)
 		retNode = destparentNode.appendChild(clonedNode);
 	
 	GXRDE_MoveZIndex(currobjID, beforeID, beforeParentID);
+	gCurrObjID = currobjID; 
 	GX_UpdateTreeWidget();
 	//GX_SetSelection(retNode, true);
 	
