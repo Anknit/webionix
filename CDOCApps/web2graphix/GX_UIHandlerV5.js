@@ -8888,10 +8888,12 @@ function OnKeyDown(event){
 	case 'DOWN':
 		relY = 1; 
 		bMoveObject = true; 
-		break; 
-	case 'U+007F':
+		break;
+		//rM removing the Key baord delete option as it popsup with text editing
+	/*case 'U+007F':
 		 WAL_showModalWindow('deleteConfirmDlg','', ''); 
-		break; 
+		break;
+		*/ 
 	default:
 		break; 
 	}
