@@ -1436,6 +1436,8 @@ function GX_UpdateAnimInfoInList(animNode)
 			}
 			else if(animType == 'ANIMATE_PATH'){				
 				var nodelist = animNode.childNodes; 
+				if(!((nodelist) && (nodelist.length > 0)) )
+					return ; 
 				var numAnim = nodelist.length; 
 				var animNode1 = animNode.childNodes[0];
 				//var beginval = animNode1.getAttribute('begin'); 
@@ -1456,6 +1458,9 @@ function GX_UpdateAnimInfoInList(animNode)
 			}
 			else if(animType == 'ANIMATE_ZOOM'){				
 				var nodelist = animNode.childNodes; 
+				if(!((nodelist) && (nodelist.length > 0)) )
+					return ; 
+				
 				var numAnim = nodelist.length; 
 				var animNode1 = animNode.childNodes[0];
 				//var beginval = animNode1.getAttribute('begin');
@@ -1808,7 +1813,7 @@ function GX_RemoveAnimInfoFromList(animID)
  function GX_AddAnimationElement(animParams, bUpdateUI)
  {
 	 var animcodestr =""; 
-	 var attrArray = [];
+	 var commonAttrArray = [];
 	 var attrData; 	 
 	 //common 
 	 var titleIndex; 
@@ -1816,33 +1821,33 @@ function GX_RemoveAnimInfoFromList(animID)
 	 var containerGroupID = 'ANIMATION_GROUP';  
 	 if(animParams.animType != 'ANIMATE_PATH'){
 		 attrData = ['title',animParams.title];  
-		 attrArray.push(attrData);
+		 commonAttrArray.push(attrData);
 	 }
 	 else{
 		 attrData = ['title','none'];  
-		 attrArray.push(attrData);
+		 commonAttrArray.push(attrData);
 	 }
-	 titleIndex = attrArray.length-1; 
+	 titleIndex = commonAttrArray.length-1; 
 	 
 	 attrData = ['dur',animParams.duration+'s']; 
-	 attrArray.push(attrData);
+	 commonAttrArray.push(attrData);
 	 
 	 attrData = ['calcMode',animParams.calcMode];  
-	 attrArray.push(attrData); 
+	 commonAttrArray.push(attrData); 
 	    
 	 attrData = ['restart',animParams.restart];  
-	 attrArray.push(attrData);
+	 commonAttrArray.push(attrData);
 	    
 	 attrData = ['repeatCount',animParams.repeatCount];  
-	 attrArray.push(attrData);
+	 commonAttrArray.push(attrData);
 	 
 	 attrData = ['xmlns:xlink',"http://www.w3.org/1999/xlink"]; 
-	 attrArray.push(attrData); 
+	 commonAttrArray.push(attrData); 
 	 attrData = ['xlink:href',"#"+animParams.objectID]; 
-	 attrArray.push(attrData);
+	 commonAttrArray.push(attrData);
 	 
 //	 attrData = ['siblingID',animParams.siblingID];  
-//	 attrArray.push(attrData);
+//	 commonAttrArray.push(attrData);
 	    
 	 var beginval = ''; 
 	 if(animParams.startType == 'ON_TIME')
@@ -1860,109 +1865,129 @@ function GX_RemoveAnimInfoFromList(animID)
 	 }	 
 	 
 	 attrData = ['fill',animParams.endState];  
-	 attrArray.push(attrData);
+	 commonAttrArray.push(attrData);
 	 attrData = ['begin',beginval];  
-	 attrArray.push(attrData);
-	 var beginIndex = attrArray.length-1; 
+	 commonAttrArray.push(attrData);
+	 var beginIndex = commonAttrArray.length-1; 
 	 
 	if(animParams.animType == 'ANIM_MOTION')
 	{
 		//INDUCE A VISIBLE ANIMATION BEFORE 
 		//GX_AddNewAnimElementInDOM(newAnimID, 'ANIMATION_GROUP','ANIM_ATTRIBUTE', newAttr, bUpdateUI);
 		var classvalue = 'PATH_MOTION ' + animParams.title ; 
-		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue, 0); 
+		//var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue, 0); 
 		groupCallback = function(respStr){
 			//do nothing 
 		}
-		containerGroupID = animParams.animID ; 
-		var newAttr = []; 
-		var newAnimID = animParams.animID + '_V'; 
+		//creating the visible animation
+		motionAnimGroupID = animParams.animID ; 
+		var visAnimAttr = []; 
+		var newAnimID = motionAnimGroupID + '_V'; 
 		attrData = ['title','Invisible Animation'];  
-		newAttr.push(attrData); 		 
+		visAnimAttr.push(attrData); 		 
 		attrData = ['dur','0.5s'];  
-		newAttr.push(attrData);		 
+		visAnimAttr.push(attrData);		 
 		attrData = ['calcMode','linear'];  
-		newAttr.push(attrData);		    
+		visAnimAttr.push(attrData);		    
 	    attrData = ['restart','never'];  
-		newAttr.push(attrData);		    
+	    visAnimAttr.push(attrData);		    
 		attrData = ['repeatCount',0];  		
-		newAttr.push(attrData);
+		visAnimAttr.push(attrData);
 		
 		attrData = ['xmlns:xlink',"http://www.w3.org/1999/xlink"]; 
-		newAttr.push(attrData); 
+		visAnimAttr.push(attrData); 
 		attrData = ['xlink:href',"#"+animParams.objectID]; 
-		newAttr.push(attrData);
+		visAnimAttr.push(attrData);
 		
 		attrData = ['fill','freeze'];  
-		newAttr.push(attrData);
+		visAnimAttr.push(attrData);
 		attrData = ['begin',beginval];  
-		newAttr.push(attrData); 
+		visAnimAttr.push(attrData); 
 		attrData = ['from','hidden'];  
-		newAttr.push(attrData); 
+		visAnimAttr.push(attrData); 
 		attrData = ['to','visible'];  
-		newAttr.push(attrData); 
+		visAnimAttr.push(attrData); 
 		attrData = ['attributeType',"XML"];  
-		newAttr.push(attrData); 		
+		visAnimAttr.push(attrData); 		
 		attrData = ['attributeName',"visibility"]; 
-		newAttr.push(attrData); 
+		visAnimAttr.push(attrData); 
 		attrData = ['from',"hidden"]; 
-		newAttr.push(attrData); 
+		visAnimAttr.push(attrData); 
 		attrData = ['to',"visible"]; 
-		newAttr.push(attrData); 		
+		visAnimAttr.push(attrData); 		
 		attrData = ['onend',"GX_ChangeAnimateMotionSettings(evt.target);"]; 
-		newAttr.push(attrData); 
-		
-		var animstr = GXRDE_addNewAnimationObject(newAnimID, containerGroupID, 'ANIM_ATTRIBUTE', newAttr);
+		visAnimAttr.push(attrData); 		
+		//var animstr = GXRDE_addNewAnimationObject(newAnimID, motionAnimGroupID, 'ANIM_ATTRIBUTE', visAnimAttr);
 		//GX_AddNewAnimElementInDOM(newAnimID, containerGroupID,'ANIM_ATTRIBUTE', newAttr, bUpdateUI); 
 		
-		animParams.animID = animParams.animID + '_ANIM_MOTION'; 
+		//create a new array here 
+		var animMotionArr = []; 
+		for(var j=0; j <commonAttrArray.length; j++){
+			animMotionArr.push(commonAttrArray[j]); 
+		}
+		motionAnimID = motionAnimGroupID + '_ANIM_MOTION'; 
 		attrData = ['refpathid',animParams.refPathID];  
-		attrArray.push(attrData);	 
+		animMotionArr.push(attrData);	  
 		attrData = ['rotate','auto'];  
-		attrArray.push(attrData);			
+		animMotionArr.push(attrData);			
 		attrData = ['from',animParams.PathObjectOffset];  
-		attrArray.push(attrData);	
+		animMotionArr.push(attrData);	
 		attrData = ['to',animParams.originalPosition];  
-		attrArray.push(attrData);		
+		animMotionArr.push(attrData);		
 		attrData = ['begin', newAnimID + '.end'];  
-		attrArray.push(attrData);		
+		animMotionArr.push(attrData);		
 		animParams.visibleAnimID = newAnimID;		
-		var animstr = GXRDE_addNewAnimationObject(animParams.animID, containerGroupID, 'ANIM_MOTION', attrArray);
+		//var animstr = GXRDE_addNewAnimationObject(motionAnimID, motionAnimGroupID, 'ANIM_MOTION', animMotionArr);
 		
 		//now adding rolling motion 
-		attrArray = []; 
-		animParams.animID = containerGroupID + '_ROLLING_MOTION'; 
+		//create another new array for Rolling motion
+		rollingArray = []; 
+		rollinganimID = motionAnimGroupID + '_ROLLING_MOTION'; 
 		attrData = ['xmlns:xlink', 'http://www.w3.org/1999/xlink'];  
-		attrArray.push(attrData);
+		rollingArray.push(attrData);
 		attrData = ['attributeType','XML'];  		
-		attrArray.push(attrData);
+		rollingArray.push(attrData);
 		attrData = ['attributeName','transform'];  
-	    attrArray.push(attrData); 
+		rollingArray.push(attrData); 
 	    attrData = ['type','rotate'];  
-	    attrArray.push(attrData);	    
+	    rollingArray.push(attrData);	    
 	    attrData = ['xlink:href','#'+animParams.objectID];  
-	    attrArray.push(attrData);
+	    rollingArray.push(attrData);
 	    attrData = ['dur','1s'];  
-	    attrArray.push(attrData);		 
+	    rollingArray.push(attrData);		 
 		attrData = ['calcMode','linear'];  
-		attrArray.push(attrData);		    
+		rollingArray.push(attrData);		    
 	    attrData = ['restart','never'];  
-	    attrArray.push(attrData);		    
+	    rollingArray.push(attrData);		    
 		attrData = ['repeatCount',2];  		
-		attrArray.push(attrData);
+		rollingArray.push(attrData);
 		//attrData = ['fill','remove'];  	
 		attrData = ['fill','freeze'];  	
-		attrArray.push(attrData);
+		rollingArray.push(attrData);
 		//attrData = ['begin',containerGroupID + '_ANIM_MOTION.begin'];  	
 		attrData = ['begin',''];  	
-		attrArray.push(attrData);				
+		rollingArray.push(attrData);				
 		attrData = ['from','0 0 0'];  
-		attrArray.push(attrData);	
+		rollingArray.push(attrData);	
 		attrData = ['to','360 0 0'];  
-		attrArray.push(attrData);		
+		rollingArray.push(attrData);		
 		attrData = ['additive', 'sum'];  
-		attrArray.push(attrData);					
-		var animstr = GXRDE_addNewAnimationObject(animParams.animID, containerGroupID, 'ANIM_TRANSFORM', attrArray);
+		rollingArray.push(attrData);					
+		//var animstr = GXRDE_addNewAnimationObject(rollinganimID, motionAnimGroupID, 'ANIM_TRANSFORM', rollingArray);
+		
+		GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue, 'groupCallback');
+		groupCallback = function(respstr){
+			GXRDE_addNewAnimationObject(newAnimID, motionAnimGroupID, 'ANIM_ATTRIBUTE', visAnimAttr, 'visAnimCallback');
+			visAnimCallback = function(){
+				GXRDE_addNewAnimationObject(motionAnimID, motionAnimGroupID, 'ANIM_MOTION', animMotionArr, 'animmotionCallback');
+				animmotionCallback = function(respStr){
+					GXRDE_addNewAnimationObject(rollinganimID, motionAnimGroupID, 'ANIM_TRANSFORM', rollingArray, 'rollingCallback');
+					rollingCallback =  function(respStr){
+						GX_ReloadSVG(animParams.objectID, true);
+					}
+				}
+			}//visanimcallback		
+		}
 		
 		return ; 
 	}
@@ -2040,180 +2065,180 @@ function GX_RemoveAnimInfoFromList(animID)
 	    var attributenameIndex, fromIndex, toIndex; 
 		if(animParams.objectType == 'RECTANGLE'){			
 			attrData = ['attributeName','x'];  
-		    attrArray.push(attrData);	
-		    attributenameIndex = attrArray.length -1; 
+		    commonAttrArray.push(attrData);	
+		    attributenameIndex = commonAttrArray.length -1; 
 		   }
 			attrData = ['from', myarrS[0]];  			
-			attrArray.push(attrData);		
-			fromIndex = attrArray.length -1; 
+			commonAttrArray.push(attrData);		
+			fromIndex = commonAttrArray.length -1; 
 			
 			attrData = ['to', myarrE[0]];  			
-			attrArray.push(attrData);
-			toIndex = attrArray.length-1; 
+			commonAttrArray.push(attrData);
+			toIndex = commonAttrArray.length-1; 
 			
 			attrData = ['title', 'MoveX']; 
-			attrArray[titleIndex] = attrData; 
-			var animstr = GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_X', containerGroupID, 'ANIM_ATTRIBUTE', attrArray);
+			commonAttrArray[titleIndex] = attrData; 
+			var animstr = GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_X', containerGroupID, 'ANIM_ATTRIBUTE', commonAttrArray);
 			
 			if(animParams.objectType == 'RECTANGLE'){			
 				attrData = ['attributeName','y'];  
-			    attrArray[attributenameIndex] = attrData;		    
+			    commonAttrArray[attributenameIndex] = attrData;		    
 			   }
 			attrData = ['from', myarrS[1]];  			
-			attrArray[fromIndex] = attrData;			
+			commonAttrArray[fromIndex] = attrData;			
 			attrData = ['to', myarrE[1]];  			
-			attrArray[toIndex] = attrData;		
+			commonAttrArray[toIndex] = attrData;		
 			attrData = ['title', 'MoveY']; 
-			attrArray[titleIndex] = attrData; 
+			commonAttrArray[titleIndex] = attrData; 
 			attrData = ['begin', animParams.animID + '_MOVE_X.begin']; 
-			attrArray[beginIndex] = attrData; 
-			var animstr = GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_Y', containerGroupID, 'ANIM_ATTRIBUTE', attrArray);
+			commonAttrArray[beginIndex] = attrData; 
+			var animstr = GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_Y', containerGroupID, 'ANIM_ATTRIBUTE', commonAttrArray);
 			return; 
 	}
 	else if (animParams.animType == 'ANIMATE_ZOOM'){
-		//var dvalue = animParams.values; 
-		
+		//var dvalue = animParams.values; 		
 		var classvalue = 'ANIMATE_ZOOM ' + animParams.title;		
-		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue,0); 
-		containerGroupID = animParams.animID ;
-		var newAttr = []; 	
-		    
-	    attrData = ['restart',animParams.restart];  
-		newAttr.push(attrData);		    
-		attrData = ['repeatCount',0];  		
-		newAttr.push(attrData);				
-		attrData = ['fill',animParams.endState];  
-		newAttr.push(attrData);
-		
-		attrData = ['attributeType',"XML"];  
-		newAttr.push(attrData); 
-		attrData = ['xmlns:xlink', 'http://www.w3.org/1999/xlink'];  
-		newAttr.push(attrData);
-		attrData = ['xlink:href','#'+animParams.objectID];  
-		newAttr.push(attrData);		
-		
-		var subduration  = 	animParams.duration/animParams.numChildAnims;
-		subduration = '' + subduration + ''; 
-		var decimalIndex = subduration.indexOf('.'); 
-		subduration =  subduration.substring(0,decimalIndex+2);		
-		attrData = ['dur',subduration+'s'];  
-		newAttr.push(attrData);
-		
-		var animID = ''; 
-		
-		var arrLen = newAttr.length; 
-		var IDList = []; 
-		var objspecAttrList =[]; 
-		var rowentry = ''; 
-		var objspecAttrList = []; 
-		
-		for(var j=0; j < animParams.numChildAnims; j++ ){			
-			animID = animParams.animID + '_' + j; 
-			IDList.push(animID);			
-		}	
-		var objNode = document.getElementById(animParams.objectID); 
-		if(animParams.objectType == 'RECTANGLE'){
-			var origVal =  objNode.getAttribute('width'); 
-			var startVal = Math.round((origVal * animParams.startValue)/100 ); 
-			var valuestr = 'attributeName=width' ; 
-			valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + beginval; 
-			objspecAttrList.push(valuestr);
+		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue,"animGroupCallbackFn"); 
+		function animGroupCallbackFn(respData){
+			containerGroupID = animParams.animID ;
+			var newAttr = []; 	
+			    
+		    attrData = ['restart',animParams.restart];  
+			newAttr.push(attrData);		    
+			attrData = ['repeatCount',0];  		
+			newAttr.push(attrData);				
+			attrData = ['fill',animParams.endState];  
+			newAttr.push(attrData);
 			
-			//now height
-			 origVal =  objNode.getAttribute('height'); 
-			 startVal = Math.round((origVal * animParams.startValue)/100 ); 
-			 valuestr = 'attributeName=height' ; 
-			 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin' ;
-			 objspecAttrList.push(valuestr);
+			attrData = ['attributeType',"XML"];  
+			newAttr.push(attrData); 
+			attrData = ['xmlns:xlink', 'http://www.w3.org/1999/xlink'];  
+			newAttr.push(attrData);
+			attrData = ['xlink:href','#'+animParams.objectID];  
+			newAttr.push(attrData);		
 			
-			// x attribute
-			 var centerArr = animParams.center.split(','); 
-			 origVal =  objNode.getAttribute('x');		 
-			 startVal = centerArr[0]; 
-			 valuestr = 'attributeName=x' ; 
-			 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin';
-			 objspecAttrList.push(valuestr);
+			var subduration  = 	animParams.duration/animParams.numChildAnims;
+			subduration = '' + subduration + ''; 
+			var decimalIndex = subduration.indexOf('.'); 
+			subduration =  subduration.substring(0,decimalIndex+2);		
+			attrData = ['dur',subduration+'s'];  
+			newAttr.push(attrData);
+		
+			var animID = ''; 
+			
+			var arrLen = newAttr.length; 
+			var IDList = []; 
+			var objspecAttrList =[]; 
+			var rowentry = ''; 
+			var objspecAttrList = []; 
+			
+			for(var j=0; j < animParams.numChildAnims; j++ ){			
+				animID = animParams.animID + '_' + j; 
+				IDList.push(animID);			
+			}	
+			var objNode = document.getElementById(animParams.objectID); 
+			if(animParams.objectType == 'RECTANGLE'){
+				var origVal =  objNode.getAttribute('width'); 
+				var startVal = Math.round((origVal * animParams.startValue)/100 ); 
+				var valuestr = 'attributeName=width' ; 
+				valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + beginval; 
+				objspecAttrList.push(valuestr);
+			
+				//now height
+				 origVal =  objNode.getAttribute('height'); 
+				 startVal = Math.round((origVal * animParams.startValue)/100 ); 
+				 valuestr = 'attributeName=height' ; 
+				 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin' ;
+				 objspecAttrList.push(valuestr);
+				
+				// x attribute
+				 var centerArr = animParams.center.split(','); 
+				 origVal =  objNode.getAttribute('x');		 
+				 startVal = centerArr[0]; 
+				 valuestr = 'attributeName=x' ; 
+				 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin';
+				 objspecAttrList.push(valuestr);
 			 
-			// y attribute
-			 var centerArr = animParams.center.split(','); 
-			 origVal =  objNode.getAttribute('y');		 
-			 startVal = centerArr[1]; 
-			 valuestr = 'attributeName=y' ; 
-			 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin';
-			 objspecAttrList.push(valuestr);
-		}//if(animParams.objectType == 'RECTANGLE')		
-		else if(animParams.objectType == 'ELLIPSE'){
-			var origVal =  objNode.getAttribute('rx'); 
-			var startVal = Math.round((origVal * animParams.startValue)/100 ); 
-			var valuestr = 'attributeName=rx' ; 
-			valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + beginval; 
-			objspecAttrList.push(valuestr);
+				// y attribute
+				 var centerArr = animParams.center.split(','); 
+				 origVal =  objNode.getAttribute('y');		 
+				 startVal = centerArr[1]; 
+				 valuestr = 'attributeName=y' ; 
+				 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin';
+				 objspecAttrList.push(valuestr);
+			}//if(animParams.objectType == 'RECTANGLE')		
+			else if(animParams.objectType == 'ELLIPSE'){
+				var origVal =  objNode.getAttribute('rx'); 
+				var startVal = Math.round((origVal * animParams.startValue)/100 ); 
+				var valuestr = 'attributeName=rx' ; 
+				valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + beginval; 
+				objspecAttrList.push(valuestr);
 			
-			//now height
-			 origVal =  objNode.getAttribute('ry'); 
-			 startVal = Math.round((origVal * animParams.startValue)/100 ); 
-			 valuestr = 'attributeName=ry' ; 
-			 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin' ;
-			 objspecAttrList.push(valuestr);		
-		}//if(animParams.objectType == 'RECTANGLE')	
-		else if(animParams.objectType == 'CIRCLE'){
-			var origVal =  objNode.getAttribute('r'); 
-			var startVal = Math.round((origVal * animParams.startValue)/100 ); 
-			var valuestr = 'attributeName=r' ; 
-			valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + beginval; 
-			objspecAttrList.push(valuestr);				
-		}//if(animParams.objectType == 'RECTANGLE')		
-							
-		GXRDE_addMultipleAnimObjects(containerGroupID, 'ANIMATE_ZOOM', newAttr, IDList, objspecAttrList); 
+				//now height
+				 origVal =  objNode.getAttribute('ry'); 
+				 startVal = Math.round((origVal * animParams.startValue)/100 ); 
+				 valuestr = 'attributeName=ry' ; 
+				 valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + IDList[0] + '.begin' ;
+				 objspecAttrList.push(valuestr);		
+			}//if(animParams.objectType == 'RECTANGLE')	
+			else if(animParams.objectType == 'CIRCLE'){
+				var origVal =  objNode.getAttribute('r'); 
+				var startVal = Math.round((origVal * animParams.startValue)/100 ); 
+				var valuestr = 'attributeName=r' ; 
+				valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + beginval; 
+				objspecAttrList.push(valuestr);				
+			}//if(animParams.objectType == 'RECTANGLE')									
+			GXRDE_addMultipleAnimObjects(containerGroupID, 'ANIMATE_ZOOM', newAttr, IDList, objspecAttrList); 
+		}//callback Fn 
 		return ; 
 	}
 	else
 	{
 		 attrData = ['attributeType','XML'];  
-		 attrArray.push(attrData); 	  
+		 commonAttrArray.push(attrData); 	  
 		
 		 if(animParams.animType == 'ANIM_ATTRIBUTE')
 		 {
 			 
 			attrData = ['attributeName',animParams.attribute];  
-			attrArray.push(attrData);   
+			commonAttrArray.push(attrData);   
 		   
 		    attrData = ['from',animParams.startValue];  
-		    attrArray.push(attrData); 
+		    commonAttrArray.push(attrData); 
 		    
 		    attrData = ['to',animParams.endValue];  
-		    attrArray.push(attrData); 	    
+		    commonAttrArray.push(attrData); 	    
 		 }	  
 		    
 		 else if(animParams.animType == 'ANIM_TRANSFORM')
 		 {		 
 			 attrData = ['attributeName','transform'];  
-			 attrArray.push(attrData);   
+			 commonAttrArray.push(attrData);   
 			 
 			 attrData = ['type',animParams.attribute];  
-			 attrArray.push(attrData);
+			 commonAttrArray.push(attrData);
 			 
 			 var startval = animParams.startValue;
 			 var endval = animParams.endValue;			 
 			 if((animParams.attribute == 'rotate') || (animParams.attribute == 'translate')){
 				 attrData = ['values',startval + ';' + endval];  
-				 attrArray.push(attrData);
+				 commonAttrArray.push(attrData);
 				 
 				 attrData = ['keyTimes','0;1'];  
-				 attrArray.push(attrData);
+				 commonAttrArray.push(attrData);
 			 }
 			 else if( (animParams.attribute == 'scale') || (animParams.attribute == 'skewX')
 					 || (animParams.attribute == 'skewY') ){
 				 attrData = ['from',animParams.startValue];  
-				 attrArray.push(attrData); 
+				 commonAttrArray.push(attrData); 
 				    
 				 attrData = ['to',animParams.endValue];  
-				 attrArray.push(attrData);
+				 commonAttrArray.push(attrData);
 			 }
 		 }
 	}	 		 
 	//delete the existing node first 
-	GX_AddNewAnimElementInDOM(animParams.animID, containerGroupID,animParams.animType, attrArray, bUpdateUI); 
+	GX_AddNewAnimElementInDOM(animParams.animID, containerGroupID,animParams.animType, commonAttrArray, bUpdateUI); 
  }
  
  
@@ -3117,6 +3142,8 @@ function GX_RemoveAnimInfoFromList(animID)
   	//if animNode is animMotion type 
   	//get the previous Sibling 
   	//set that into animation mode 
+  	gRotAnimObjectNode = document.getElementById(objectID); 
+	gRotAnimTransfValue = gRotAnimObjectNode.getAttribute('transform');
   	if(animnode.nodeName == 'g'){
   		var animType = animnode.classList[1]; 
   		if(animType == 'PATH_MOTION'){
@@ -3149,7 +3176,7 @@ function GX_RemoveAnimInfoFromList(animID)
   			animNode1.beginElement();  			
   			return;   			
   		}
-  		else if(animType == 'ANIMATE_ZOOM'){
+  		else if(animType == 'ANIMATE_ZOOM'){  			 
   			var animNode1 = animnode.childNodes[0];
   			animNode1.setAttribute('restart', 'whenNotActive');
   			animNode1.setAttribute('fill', 'remove'); 
@@ -3159,10 +3186,10 @@ function GX_RemoveAnimInfoFromList(animID)
   	}
   	
   //	var animInfo = GX_GetAnimInfoByID(animID); 
-  	if(animType.toUpperCase()== 'ROTATE'){  		
+  //	if(animType.toUpperCase()== 'ROTATE'){  		
   		gRotAnimObjectNode = document.getElementById(objectID); 
   		gRotAnimTransfValue = gRotAnimObjectNode.getAttribute('transform'); 
-  	}
+  //	}
   	var restartval =  animnode.getAttribute('restart');
   	animnode.setAttribute('restart', 'whenNotActive');
     animnode.setAttribute('fill', 'remove'); 
@@ -3572,7 +3599,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			    var animNode = document.getElementById(gInitAnimParam.animID);			  
 			    GX_ReloadSVG(gInitAnimParam.objectID, true);	
 			    gCurrentTabIndex = 2; 
-			    gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 
+			    gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);  
 			    return ; 
 			}
 		}//if(attrtype == 'pathmotion')
@@ -3643,33 +3670,11 @@ function GX_RemoveAnimInfoFromList(animID)
 		    var animNode = document.getElementById(gInitAnimParam.animID);
 		    //if(gInitAnimParam.animType == 'ANIM_MOTION')
 		    	gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
-		    	GX_ReloadSVG(gInitAnimParam.objectID, true);	    
-		    	
-		    	/*setTimeout(function(){			
-						WAL_SetTabIndex('rightTabs', 2); 				
-						}, 500);*/	   		    
+		    	GX_ReloadSVG(gInitAnimParam.objectID, true);		    	   		    
 		}
-			    
-	   
-	    
-	 //then add it to the list 
  }
- /*
- function GX_UpdateAnimationListbox(){
-	// gObjectList = GX_PopulateObjectList('ALL_OBJECTS');
-	// gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);	
-	 var animlist=[]; 
-	 for(var i =0; i <gAnimList.length; i++){
-		 if(gAnimList[i][5] != 'Invisible Animation'){
-			 var attr = gReverseAttrList[gAnimList[i][2]]; 
-			 animlist.push(gAnimList[i][5] + '-<b>' + attr + '</<b>'); 
-		 }
-			 
-	 }	 
-	// WAL_ListBoxUpdateData('animationlist', animlist);
- }
- */
- 
+		
+		
  function GX_AnimListWidgetBtnHdlr(event){
 	 var nodeid =  event.target.id; 
 	// Debug_Message('BtnID = ' + nodeid); 	
@@ -3690,7 +3695,8 @@ function GX_RemoveAnimInfoFromList(animID)
 		    /*	
 			 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList); 	 
 			 GX_UpdateAnimationListbox();
-			 */ 		    
+			 */ 		
+			 GX_ResetAnimSelection(); 
 		 }
 		 break;
 	 case 'apply_anim_btn':	
@@ -4222,7 +4228,7 @@ function GX_UpdateAnimUIGrid(){
 		
 	
 	//gRefAnimListDDL.gRefAnimListDDL
-	
+	//Debug_Message("Update animgrid"); 
 }
 
 
