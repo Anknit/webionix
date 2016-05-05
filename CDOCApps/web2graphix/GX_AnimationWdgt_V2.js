@@ -2106,18 +2106,16 @@ function GX_RemoveAnimInfoFromList(animID)
 	else if (animParams.animType == 'ANIMATE_ZOOM'){
 		//var dvalue = animParams.values; 		
 		var classvalue = 'ANIMATE_ZOOM ' + animParams.title;		
-		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue,"animGroupCallbackFn"); 
-		function animGroupCallbackFn(respData){
-			containerGroupID = animParams.animID ;
-			var newAttr = []; 	
-			    
+		 //GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue,"animGroupCallbackFn"); 
+		
+			zoomGroupID = animParams.animID ;
+			var newAttr = []; 				    
 		    attrData = ['restart',animParams.restart];  
 			newAttr.push(attrData);		    
 			attrData = ['repeatCount',0];  		
 			newAttr.push(attrData);				
-			attrData = ['fill',animParams.endState];  
-			newAttr.push(attrData);
-			
+			attrData = ['fill',animParams.endState];
+			newAttr.push(attrData);			
 			attrData = ['attributeType',"XML"];  
 			newAttr.push(attrData); 
 			attrData = ['xmlns:xlink', 'http://www.w3.org/1999/xlink'];  
@@ -2195,9 +2193,17 @@ function GX_RemoveAnimInfoFromList(animID)
 				var valuestr = 'attributeName=r' ; 
 				valuestr += '#' + 'values=' +  startVal + ';' + origVal + '#' + 'begin=' + beginval; 
 				objspecAttrList.push(valuestr);				
-			}//if(animParams.objectType == 'RECTANGLE')									
-			GXRDE_addMultipleAnimObjects(containerGroupID, 'ANIMATE_ZOOM', newAttr, IDList, objspecAttrList); 
-		}//callback Fn 
+			}//if(animParams.objectType == 'RECTANGLE')	
+			
+			GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue,"zoomGroupCallbackFn");
+			zoomGroupCallbackFn = function(respstr){
+				GXRDE_addMultipleAnimObjects(zoomGroupID, 'ANIMATE_ZOOM', newAttr, IDList, objspecAttrList, 'reloadFnCB'); 
+				reloadFnCB= function(respstr){
+					GX_ReloadSVG(animParams.objectID, true);
+				}
+			}
+			
+		
 		return ; 
 	}
 	else
