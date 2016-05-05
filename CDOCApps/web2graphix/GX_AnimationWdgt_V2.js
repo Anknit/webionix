@@ -2002,8 +2002,8 @@ function GX_RemoveAnimInfoFromList(animID)
 				valstr += valueArr[j]; 
 		}
 		var classvalue = 'ANIMATE_PATH ' + animParams.title + ' ' + valstr; 
-		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue, 0); 
-		containerGroupID = animParams.animID ;
+		//var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue, 0); 
+		animpathGroupID = animParams.animID ;
 		var newAttr = []; 	
 		    
 	    attrData = ['restart',animParams.restart];  
@@ -2053,7 +2053,15 @@ function GX_RemoveAnimInfoFromList(animID)
 			}
 			objspecAttrList.push(rowentry); 
 		}				
-		GXRDE_addMultipleAnimObjects(containerGroupID, 'ANIMATE_PATH', newAttr, IDList, objspecAttrList); 
+		 
+		
+		 GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue, 'animPathCallback');
+		 animPathCallback = function(respStr){
+			 GXRDE_addMultipleAnimObjects(animpathGroupID, 'ANIMATE_PATH', newAttr, IDList, objspecAttrList, 'reloadcallback');
+			 reloadcallback = function(respStr){
+				 GX_ReloadSVG(animParams.objectID, true);
+			 }
+		 }
 		return ; 
 	}
 	else if(animParams.animType == 'ANIM_MOVE'){
