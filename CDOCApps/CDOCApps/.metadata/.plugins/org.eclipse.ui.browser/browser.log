@@ -1,0 +1,526 @@
+
+Oct 21, 2014 12:20:20.04 NEW SESSION
+Oct 21, 2014 12:20:20.04 field value: roger
+Oct 21, 2014 12:20:20.04 selectedLogin value: roger
+Oct 21, 2014 12:21:59.95 field value: roger
+Oct 21, 2014 12:21:59.95 selectedLogin value: roger
+Oct 21, 2014 15:00:21.18 field value: roger
+Oct 21, 2014 15:00:21.18 selectedLogin value: roger
+Oct 21, 2014 15:06:19.47 field value: roger
+Oct 21, 2014 15:06:19.47 selectedLogin value: roger
+Oct 21, 2014 15:07:51.33 field value: roger
+Oct 21, 2014 15:07:51.33 selectedLogin value: roger
+Oct 21, 2014 15:46:21.68 field value: roger
+Oct 21, 2014 15:46:21.68 selectedLogin value: roger
+
+Oct 21, 2014 16:03:14.05 NEW SESSION
+Oct 21, 2014 16:03:14.05 field value: roger
+Oct 21, 2014 16:03:14.10 selectedLogin value: roger
+Oct 21, 2014 16:07:21.03 field value: roger
+Oct 21, 2014 16:07:21.03 selectedLogin value: roger
+Oct 21, 2014 16:09:07.58 field value: roger
+Oct 21, 2014 16:09:07.60 selectedLogin value: roger
+Oct 21, 2014 21:12:13.25 field value: roger
+Oct 21, 2014 21:12:13.25 selectedLogin value: roger
+Oct 21, 2014 21:16:49.90 field value: roger
+Oct 21, 2014 21:16:49.91 selectedLogin value: roger
+
+Oct 21, 2014 22:00:14.38 NEW SESSION
+Oct 21, 2014 22:00:14.38 field value: roger
+Oct 21, 2014 22:00:14.38 selectedLogin value: roger
+
+Oct 21, 2014 22:03:25.57 NEW SESSION
+Oct 21, 2014 22:03:25.57 field value: roger
+Oct 21, 2014 22:03:25.57 selectedLogin value: roger
+Oct 21, 2014 22:04:43.20 field value: roger
+Oct 21, 2014 22:04:43.20 selectedLogin value: roger
+
+Oct 21, 2014 22:06:10.84 NEW SESSION
+Oct 21, 2014 22:06:10.84 field value: roger
+Oct 21, 2014 22:06:10.86 selectedLogin value: roger
+
+Oct 21, 2014 22:10:14.25 NEW SESSION
+Oct 21, 2014 22:10:14.25 field value: roger
+Oct 21, 2014 22:10:14.25 selectedLogin value: roger
+
+Oct 21, 2014 22:30:47.28 NEW SESSION
+Oct 21, 2014 22:30:47.28 field value: roger
+Oct 21, 2014 22:30:47.28 selectedLogin value: roger
+
+Oct 21, 2014 22:35:17.97 NEW SESSION
+Oct 21, 2014 22:35:17.97 field value: roger
+Oct 21, 2014 22:35:17.98 selectedLogin value: roger
+Oct 21, 2014 22:51:00.25 field value: roger
+Oct 21, 2014 22:51:00.26 selectedLogin value: roger
+Oct 21, 2014 22:53:27.47 field value: roger
+Oct 21, 2014 22:53:27.47 selectedLogin value: roger
+Oct 21, 2014 22:55:58.99 field value: roger
+Oct 21, 2014 22:55:58.99 selectedLogin value: roger
+Oct 21, 2014 23:04:42.16 field value: roger
+Oct 21, 2014 23:04:42.16 selectedLogin value: roger
+Oct 21, 2014 23:09:06.73 field value: roger
+Oct 21, 2014 23:09:06.73 selectedLogin value: roger
+
+Oct 21, 2014 23:16:01.46 NEW SESSION
+Oct 21, 2014 23:16:01.46 field value: roger
+Oct 21, 2014 23:16:01.48 selectedLogin value: roger
+Oct 21, 2014 23:18:19.39 field value: roger
+Oct 21, 2014 23:18:19.39 selectedLogin value: roger
+Oct 21, 2014 23:19:34.92 field value: roger
+Oct 21, 2014 23:19:34.92 selectedLogin value: roger
+
+Oct 27, 2014 17:33:35.73 NEW SESSION
+Oct 27, 2014 17:33:35.73 field value: roger
+Oct 27, 2014 17:33:35.73 selectedLogin value: roger
+
+Nov 11, 2014 16:34:35.88 NEW SESSION
+Nov 11, 2014 16:34:35.88 1415703875566	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 3310 seconds ago, minimum seconds: 86400
+Nov 11, 2014 16:34:35.88 1415703875566	GMPInstallManager.simpleCheckAndInstall	INFO	Will not check for updates.
+Nov 11, 2014 16:35:22.28 
+Nov 11, 2014 16:35:22.28 ###!!! [Child][DispatchAsyncMessage] Error: Route error: message sent to unknown actor ID
+Nov 11, 2014 16:35:22.28 
+Nov 11, 2014 16:35:22.29 
+Nov 11, 2014 16:35:22.29 ###!!! [Child][DispatchAsyncMessage] Error: Route error: message sent to unknown actor ID
+Nov 11, 2014 16:35:22.34 
+Nov 11, 2014 16:47:40.19 1415704660182	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 4094 seconds ago, minimum seconds: 86400
+Nov 11, 2014 16:47:40.19 1415704660182	GMPInstallManager.simpleCheckAndInstall	INFO	Will not check for updates.
+Nov 11, 2014 17:02:57.90 1415705577902	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 5012 seconds ago, minimum seconds: 86400
+Nov 11, 2014 17:02:57.90 1415705577902	GMPInstallManager.simpleCheckAndInstall	INFO	Will not check for updates.
+Nov 11, 2014 17:04:23.40 
+Nov 11, 2014 17:04:23.41 ###!!! [Child][DispatchAsyncMessage] Error: Route error: message sent to unknown actor ID
+Nov 11, 2014 17:04:23.41 
+Nov 11, 2014 17:04:23.41 
+Nov 11, 2014 17:04:23.41 ###!!! [Child][DispatchAsyncMessage] Error: Route error: message sent to unknown actor ID
+Nov 11, 2014 17:04:23.42 
+
+Nov 17, 2014 10:30:51.93 NEW SESSION
+Nov 17, 2014 10:30:51.93 1416200451858	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 64929 seconds ago, minimum seconds: 86400
+Nov 17, 2014 10:30:51.93 1416200451858	GMPInstallManager.simpleCheckAndInstall	INFO	Will not check for updates.
+Nov 17, 2014 10:33:28.16 
+Nov 17, 2014 10:33:28.16 ###!!! [Child][DispatchAsyncMessage] Error: Route error: message sent to unknown actor ID
+Nov 17, 2014 10:33:28.16 
+Nov 17, 2014 10:33:28.16 
+Nov 17, 2014 10:33:28.17 ###!!! [Child][DispatchAsyncMessage] Error: Route error: message sent to unknown actor ID
+Nov 17, 2014 10:33:28.17 
+
+Nov 28, 2014 11:44:59.86 NEW SESSION
+Nov 28, 2014 11:44:59.86 1417155299780	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 173159 seconds ago, minimum seconds: 86400
+Nov 28, 2014 11:44:59.86 1417155299781	GMPInstallManager._getURL	INFO	Using url: https://aus4.mozilla.org/update/3/GMP/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml
+Nov 28, 2014 11:44:59.86 1417155299784	GMPInstallManager._getURL	INFO	Using url (with replacement): https://aus4.mozilla.org/update/3/GMP/33.1/20141106120505/WINNT_x86-msvc/en-US/release/Windows_NT%206.3.0.0%20(x64)/default/default/update.xml
+Nov 28, 2014 11:44:59.86 1417155299788	GMPInstallManager.checkForAddons	INFO	sending request to: https://aus4.mozilla.org/update/3/GMP/33.1/20141106120505/WINNT_x86-msvc/en-US/release/Windows_NT%206.3.0.0%20(x64)/default/default/update.xml
+Nov 28, 2014 11:44:59.86 1417155299800	GMPInstallManager._getChannelStatus	INFO	request.status is: 0
+Nov 28, 2014 11:44:59.86 1417155299801	GMPInstallManager.onErrorXML	WARN	request.status: 0 (error)
+Nov 28, 2014 11:44:59.86 1417155299801	GMPInstallManager.simpleCheckAndInstall	ERROR	Could not check for addons
+Nov 28, 2014 11:46:40.67 
+Nov 28, 2014 11:46:40.68 ###!!! [Child][DispatchAsyncMessage] Error: Route error: message sent to unknown actor ID
+Nov 28, 2014 11:46:40.68 
+Nov 28, 2014 11:46:40.68 
+Nov 28, 2014 11:46:40.68 ###!!! [Child][DispatchAsyncMessage] Error: Route error: message sent to unknown actor ID
+Nov 28, 2014 11:46:40.69 
+
+Dec 16, 2014 10:29:30.88 NEW SESSION
+Dec 16, 2014 10:29:30.88 1418705970865	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 57269 seconds ago, minimum seconds: 86400
+Dec 16, 2014 10:29:30.89 1418705970865	GMPInstallManager.simpleCheckAndInstall	INFO	Will not check for updates.
+
+Dec 16, 2014 17:39:52.76 NEW SESSION
+Dec 16, 2014 17:39:52.76 1418731792696	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 83091 seconds ago, minimum seconds: 86400
+Dec 16, 2014 17:39:52.76 1418731792696	GMPInstallManager.simpleCheckAndInstall	INFO	Will not check for updates.
+Dec 16, 2014 17:44:28.07 
+Dec 16, 2014 17:44:28.07 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 16, 2014 17:44:28.09 
+Dec 16, 2014 17:44:28.09 
+Dec 16, 2014 17:44:28.09 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 16, 2014 17:44:28.09 
+
+Dec 19, 2014 10:53:52.81 NEW SESSION
+Dec 19, 2014 10:53:52.81 1418966632744	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 2080 seconds ago, minimum seconds: 86400
+Dec 19, 2014 10:53:52.81 1418966632744	GMPInstallManager.simpleCheckAndInstall	INFO	Will not check for updates.
+Dec 19, 2014 10:55:01.47 
+Dec 19, 2014 10:55:01.47 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 10:55:01.47 
+Dec 19, 2014 10:55:01.48 
+Dec 19, 2014 10:55:01.48 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 10:55:01.48 
+Dec 19, 2014 11:11:35.42 
+Dec 19, 2014 11:11:35.42 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 11:11:35.42 
+Dec 19, 2014 11:11:35.42 
+Dec 19, 2014 11:11:35.43 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 11:11:35.43 
+Dec 19, 2014 11:12:12.76 
+Dec 19, 2014 11:12:12.76 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 11:12:12.76 
+Dec 19, 2014 11:12:12.76 
+Dec 19, 2014 11:12:12.76 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 11:12:12.76 
+Dec 19, 2014 11:13:22.47 1418967802472	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 3249 seconds ago, minimum seconds: 86400
+Dec 19, 2014 11:13:22.47 1418967802472	GMPInstallManager.simpleCheckAndInstall	INFO	Will not check for updates.
+Dec 19, 2014 11:14:24.70 1418967864701	addons.update-checker	WARN	Request failed: http://pencil.evolus.vn/Downloads/update.rdf - 404: Not Found
+Dec 19, 2014 11:14:25.40 1418967865400	addons.update-checker	WARN	Update manifest for {972ce4c6-7e08-4474-a285-3208198ce6fd} did not contain an updates property
+Dec 19, 2014 11:14:25.60 1418967865593	addons.update-checker	WARN	onUpdateCheckComplete failed to parse RDF manifest: [Exception... "Update manifest for {E9A1DEE0-C623-4439-8932-001E7D17607D} does not contain a required signature"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://gre/modules/addons/AddonUpdateChecker.jsm :: parseRDFManifest :: line 276"  data: no] Stack trace: parseRDFManifest()@resource://gre/modules/addons/AddonUpdateChecker.jsm:276 < UP_onLoad()@resource://gre/modules/addons/AddonUpdateChecker.jsm:480 < loadEventListener()@resource://gre/modules/addons/AddonUpdateChecker.jsm:414 < <file:unknown>
+Dec 19, 2014 11:14:25.88 1418967865879	addons.update-checker	WARN	Update manifest for {82AF8DCA-6DE9-405D-BD5E-43525BDAD38A} did not contain an updates property
+Dec 19, 2014 11:18:26.15 
+Dec 19, 2014 11:18:26.16 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 11:18:26.16 
+Dec 19, 2014 11:18:26.16 
+Dec 19, 2014 11:18:26.16 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 11:18:26.16 
+Dec 19, 2014 11:19:40.43 1418968180434	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 3627 seconds ago, minimum seconds: 86400
+Dec 19, 2014 11:19:40.43 1418968180434	GMPInstallManager.simpleCheckAndInstall	INFO	Will not check for updates.
+Dec 19, 2014 11:21:55.21 
+Dec 19, 2014 11:21:55.21 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 11:21:55.21 
+Dec 19, 2014 11:21:55.21 
+Dec 19, 2014 11:21:55.21 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 11:21:55.21 
+Dec 19, 2014 11:25:04.49 
+Dec 19, 2014 11:25:04.49 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 11:25:04.49 
+Dec 19, 2014 11:25:04.49 
+Dec 19, 2014 11:25:04.49 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 11:25:04.49 
+Dec 19, 2014 11:25:59.78 
+Dec 19, 2014 11:25:59.78 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 11:25:59.78 
+Dec 19, 2014 11:25:59.78 
+Dec 19, 2014 11:25:59.78 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 11:25:59.78 
+Dec 19, 2014 12:19:17.07 1418971757074	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 7204 seconds ago, minimum seconds: 86400
+Dec 19, 2014 12:19:17.07 1418971757074	GMPInstallManager.simpleCheckAndInstall	INFO	Will not check for updates.
+Dec 19, 2014 12:19:22.12 
+Dec 19, 2014 12:19:22.12 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 12:19:22.12 
+Dec 19, 2014 12:19:22.12 
+Dec 19, 2014 12:19:22.12 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 12:19:22.13 
+Dec 19, 2014 12:21:06.23 1418971866239	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 7313 seconds ago, minimum seconds: 86400
+Dec 19, 2014 12:21:06.23 1418971866239	GMPInstallManager.simpleCheckAndInstall	INFO	Will not check for updates.
+Dec 19, 2014 12:21:12.12 
+Dec 19, 2014 12:21:12.12 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 12:21:12.12 
+Dec 19, 2014 12:21:12.12 
+Dec 19, 2014 12:21:12.12 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 12:21:12.12 
+Dec 19, 2014 12:22:18.09 1418971938090	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 7385 seconds ago, minimum seconds: 86400
+Dec 19, 2014 12:22:18.09 1418971938090	GMPInstallManager.simpleCheckAndInstall	INFO	Will not check for updates.
+Dec 19, 2014 12:22:35.10 
+Dec 19, 2014 12:22:35.10 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 12:22:35.10 
+Dec 19, 2014 12:22:35.10 
+Dec 19, 2014 12:22:35.10 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Dec 19, 2014 12:22:35.10 
+
+Jan 11, 2015 16:11:23.99 NEW SESSION
+Jan 11, 2015 16:11:23.99 1420972883919	GMPInstallManager.simpleCheckAndInstall	INFO	Last check was: 159339 seconds ago, minimum seconds: 86400
+Jan 11, 2015 16:11:23.99 1420972883919	GMPInstallManager._getURL	INFO	Using url: https://aus4.mozilla.org/update/3/GMP/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml
+Jan 11, 2015 16:11:24.01 1420972883922	GMPInstallManager._getURL	INFO	Using url (with replacement): https://aus4.mozilla.org/update/3/GMP/34.0.5/20141126041045/WINNT_x86-msvc/en-US/release/Windows_NT%206.3.0.0%20(x64)/default/default/update.xml
+Jan 11, 2015 16:11:24.01 1420972883925	GMPInstallManager.checkForAddons	INFO	sending request to: https://aus4.mozilla.org/update/3/GMP/34.0.5/20141126041045/WINNT_x86-msvc/en-US/release/Windows_NT%206.3.0.0%20(x64)/default/default/update.xml
+Jan 11, 2015 16:11:24.01 1420972883932	GMPInstallManager._getChannelStatus	INFO	request.status is: 0
+Jan 11, 2015 16:11:24.01 1420972883933	GMPInstallManager.onErrorXML	WARN	request.status: 0 (error)
+Jan 11, 2015 16:11:24.01 1420972883933	GMPInstallManager.simpleCheckAndInstall	ERROR	Could not check for addons
+Jan 11, 2015 16:11:32.22 
+Jan 11, 2015 16:11:32.23 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Jan 11, 2015 16:11:32.23 
+Jan 11, 2015 16:11:32.23 
+Jan 11, 2015 16:11:32.23 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xA20001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Jan 11, 2015 16:11:32.23 
+
+Feb 04, 2015 15:39:17.33 NEW SESSION
+Feb 04, 2015 15:39:17.33 
+Feb 04, 2015 15:39:17.33 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 15:39:17.36 
+Feb 04, 2015 15:39:17.36 
+Feb 04, 2015 15:39:17.36 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 15:39:17.36 
+Feb 04, 2015 15:43:20.29 
+Feb 04, 2015 15:43:20.29 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 15:43:20.29 
+Feb 04, 2015 15:43:20.29 
+Feb 04, 2015 15:43:20.29 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 15:43:20.29 
+Feb 04, 2015 15:46:22.82 
+Feb 04, 2015 15:46:22.82 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 15:46:22.82 
+Feb 04, 2015 15:46:22.82 
+Feb 04, 2015 15:46:22.82 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 15:46:22.83 
+Feb 04, 2015 16:02:32.50 
+Feb 04, 2015 16:02:32.50 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 16:02:32.50 
+Feb 04, 2015 16:02:32.51 
+Feb 04, 2015 16:02:32.51 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 16:02:32.51 
+Feb 04, 2015 16:04:21.28 
+Feb 04, 2015 16:04:21.28 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 16:04:21.28 
+Feb 04, 2015 16:04:21.28 
+Feb 04, 2015 16:04:21.28 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 16:04:21.28 
+Feb 04, 2015 16:05:57.52 
+Feb 04, 2015 16:05:57.52 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 16:05:57.52 
+Feb 04, 2015 16:05:57.52 
+Feb 04, 2015 16:05:57.53 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 16:05:57.53 
+Feb 04, 2015 16:16:29.72 
+Feb 04, 2015 16:16:29.74 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 16:16:29.74 
+Feb 04, 2015 16:16:29.74 
+Feb 04, 2015 16:16:29.74 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 16:16:29.74 
+Feb 04, 2015 16:17:47.57 
+Feb 04, 2015 16:17:47.57 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 16:17:47.57 
+Feb 04, 2015 16:17:47.57 
+Feb 04, 2015 16:17:47.57 ###!!! [Child][DispatchAsyncMessage] Error: (msgtype=0xAA0001,name=PTexture::Msg___delete__) Route error: message sent to unknown actor ID
+Feb 04, 2015 16:17:47.58 
+
+Jun 13, 2015 09:14:36.00 NEW SESSION
+Jun 13, 2015 09:14:36.00 console.error: skype_ff_extension: 
+Jun 13, 2015 09:14:36.00   DEPRECATED: The widget module is deprecated.  Please consider using the sdk/ui module instead.
+Jun 13, 2015 09:14:36.00 Traceback (most recent call last):
+Jun 13, 2015 09:14:36.02   File "resource://gre/modules/Promise-backend.js", line 867, in Handler.prototype.process
+Jun 13, 2015 09:14:36.02     nextValue = this.onResolve.call(undefined, nextValue);
+Jun 13, 2015 09:14:36.02   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 86, in startup/</<
+Jun 13, 2015 09:14:36.02     run(options);
+Jun 13, 2015 09:14:36.02   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 145, in run
+Jun 13, 2015 09:14:36.02     let program = main(options.loader, options.main);
+Jun 13, 2015 09:14:36.02   File "resource://gre/modules/commonjs/toolkit/loader.js", line 697, in main
+Jun 13, 2015 09:14:36.02     return loader.load(loader, module).exports;
+Jun 13, 2015 09:14:36.02   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:14:36.02     result = load(loader, module);
+Jun 13, 2015 09:14:36.02   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:14:36.02     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:14:36.02   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:14:36.02     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:14:36.02   File "resource://skype_ff_extension-at-jetpack/skype_ff_extension/lib/main.js", line 14, in null
+Jun 13, 2015 09:14:36.02     var widgets = require("sdk/widget");
+Jun 13, 2015 09:14:36.03   File "resource://gre/modules/commonjs/toolkit/loader.js", line 604, in require
+Jun 13, 2015 09:14:36.03     freeze(load(loader, module));
+Jun 13, 2015 09:14:36.03   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:14:36.03     result = load(loader, module);
+Jun 13, 2015 09:14:36.03   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:14:36.03     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:14:36.03   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:14:36.03     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:14:36.03   File "resource://gre/modules/commonjs/sdk/widget.js", line 59, in null
+Jun 13, 2015 09:14:36.03     require("./util/deprecate").deprecateUsage(
+Jun 13, 2015 09:14:36.03   File "resource://gre/modules/commonjs/sdk/util/deprecate.js", line 18, in deprecateUsage
+Jun 13, 2015 09:14:36.03     let stack = get().slice(2);
+Jun 13, 2015 09:23:44.96 console.error: skype_ff_extension: 
+Jun 13, 2015 09:23:44.96   DEPRECATED: The widget module is deprecated.  Please consider using the sdk/ui module instead.
+Jun 13, 2015 09:23:44.96 Traceback (most recent call last):
+Jun 13, 2015 09:23:44.96   File "resource://gre/modules/Promise-backend.js", line 867, in Handler.prototype.process
+Jun 13, 2015 09:23:44.97     nextValue = this.onResolve.call(undefined, nextValue);
+Jun 13, 2015 09:23:44.97   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 86, in startup/</<
+Jun 13, 2015 09:23:44.97     run(options);
+Jun 13, 2015 09:23:44.97   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 145, in run
+Jun 13, 2015 09:23:44.97     let program = main(options.loader, options.main);
+Jun 13, 2015 09:23:44.97   File "resource://gre/modules/commonjs/toolkit/loader.js", line 697, in main
+Jun 13, 2015 09:23:44.97     return loader.load(loader, module).exports;
+Jun 13, 2015 09:23:44.97   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:23:44.97     result = load(loader, module);
+Jun 13, 2015 09:23:44.97   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:23:44.97     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:23:44.97   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:23:44.97     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:23:44.97   File "resource://skype_ff_extension-at-jetpack/skype_ff_extension/lib/main.js", line 14, in null
+Jun 13, 2015 09:23:44.97     var widgets = require("sdk/widget");
+Jun 13, 2015 09:23:44.97   File "resource://gre/modules/commonjs/toolkit/loader.js", line 604, in require
+Jun 13, 2015 09:23:44.97     freeze(load(loader, module));
+Jun 13, 2015 09:23:44.97   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:23:44.97     result = load(loader, module);
+Jun 13, 2015 09:23:44.97   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:23:44.97     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:23:44.97   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:23:44.97     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:23:44.97   File "resource://gre/modules/commonjs/sdk/widget.js", line 59, in null
+Jun 13, 2015 09:23:44.97     require("./util/deprecate").deprecateUsage(
+Jun 13, 2015 09:23:44.97   File "resource://gre/modules/commonjs/sdk/util/deprecate.js", line 18, in deprecateUsage
+Jun 13, 2015 09:23:44.97     let stack = get().slice(2);
+Jun 13, 2015 09:26:26.00 console.error: skype_ff_extension: 
+Jun 13, 2015 09:26:26.00   DEPRECATED: The widget module is deprecated.  Please consider using the sdk/ui module instead.
+Jun 13, 2015 09:26:26.00 Traceback (most recent call last):
+Jun 13, 2015 09:26:26.00   File "resource://gre/modules/Promise-backend.js", line 867, in Handler.prototype.process
+Jun 13, 2015 09:26:26.00     nextValue = this.onResolve.call(undefined, nextValue);
+Jun 13, 2015 09:26:26.00   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 86, in startup/</<
+Jun 13, 2015 09:26:26.00     run(options);
+Jun 13, 2015 09:26:26.00   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 145, in run
+Jun 13, 2015 09:26:26.00     let program = main(options.loader, options.main);
+Jun 13, 2015 09:26:26.00   File "resource://gre/modules/commonjs/toolkit/loader.js", line 697, in main
+Jun 13, 2015 09:26:26.00     return loader.load(loader, module).exports;
+Jun 13, 2015 09:26:26.00   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:26:26.00     result = load(loader, module);
+Jun 13, 2015 09:26:26.00   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:26:26.00     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:26:26.00   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:26:26.00     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:26:26.00   File "resource://skype_ff_extension-at-jetpack/skype_ff_extension/lib/main.js", line 14, in null
+Jun 13, 2015 09:26:26.00     var widgets = require("sdk/widget");
+Jun 13, 2015 09:26:26.00   File "resource://gre/modules/commonjs/toolkit/loader.js", line 604, in require
+Jun 13, 2015 09:26:26.00     freeze(load(loader, module));
+Jun 13, 2015 09:26:26.00   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:26:26.00     result = load(loader, module);
+Jun 13, 2015 09:26:26.00   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:26:26.02     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:26:26.02   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:26:26.02     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:26:26.02   File "resource://gre/modules/commonjs/sdk/widget.js", line 59, in null
+Jun 13, 2015 09:26:26.02     require("./util/deprecate").deprecateUsage(
+Jun 13, 2015 09:26:26.02   File "resource://gre/modules/commonjs/sdk/util/deprecate.js", line 18, in deprecateUsage
+Jun 13, 2015 09:26:26.02     let stack = get().slice(2);
+Jun 13, 2015 09:26:31.81 console.error: skype_ff_extension: 
+Jun 13, 2015 09:26:31.81   DEPRECATED: The widget module is deprecated.  Please consider using the sdk/ui module instead.
+Jun 13, 2015 09:26:31.81 Traceback (most recent call last):
+Jun 13, 2015 09:26:31.81   File "resource://gre/modules/Promise-backend.js", line 867, in Handler.prototype.process
+Jun 13, 2015 09:26:31.81     nextValue = this.onResolve.call(undefined, nextValue);
+Jun 13, 2015 09:26:31.81   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 86, in startup/</<
+Jun 13, 2015 09:26:31.81     run(options);
+Jun 13, 2015 09:26:31.81   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 145, in run
+Jun 13, 2015 09:26:31.81     let program = main(options.loader, options.main);
+Jun 13, 2015 09:26:31.81   File "resource://gre/modules/commonjs/toolkit/loader.js", line 697, in main
+Jun 13, 2015 09:26:31.81     return loader.load(loader, module).exports;
+Jun 13, 2015 09:26:31.81   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:26:31.81     result = load(loader, module);
+Jun 13, 2015 09:26:31.81   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:26:31.81     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:26:31.81   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:26:31.81     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:26:31.81   File "resource://skype_ff_extension-at-jetpack/skype_ff_extension/lib/main.js", line 14, in null
+Jun 13, 2015 09:26:31.81     var widgets = require("sdk/widget");
+Jun 13, 2015 09:26:31.81   File "resource://gre/modules/commonjs/toolkit/loader.js", line 604, in require
+Jun 13, 2015 09:26:31.81     freeze(load(loader, module));
+Jun 13, 2015 09:26:31.81   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:26:31.81     result = load(loader, module);
+Jun 13, 2015 09:26:31.83   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:26:31.83     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:26:31.83   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:26:31.83     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:26:31.83   File "resource://gre/modules/commonjs/sdk/widget.js", line 59, in null
+Jun 13, 2015 09:26:31.83     require("./util/deprecate").deprecateUsage(
+Jun 13, 2015 09:26:31.83   File "resource://gre/modules/commonjs/sdk/util/deprecate.js", line 18, in deprecateUsage
+Jun 13, 2015 09:26:31.83     let stack = get().slice(2);
+Jun 13, 2015 09:42:43.15 console.error: skype_ff_extension: 
+Jun 13, 2015 09:42:43.15   DEPRECATED: The widget module is deprecated.  Please consider using the sdk/ui module instead.
+Jun 13, 2015 09:42:43.15 Traceback (most recent call last):
+Jun 13, 2015 09:42:43.15   File "resource://gre/modules/Promise-backend.js", line 867, in Handler.prototype.process
+Jun 13, 2015 09:42:43.15     nextValue = this.onResolve.call(undefined, nextValue);
+Jun 13, 2015 09:42:43.15   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 86, in startup/</<
+Jun 13, 2015 09:42:43.15     run(options);
+Jun 13, 2015 09:42:43.15   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 145, in run
+Jun 13, 2015 09:42:43.15     let program = main(options.loader, options.main);
+Jun 13, 2015 09:42:43.15   File "resource://gre/modules/commonjs/toolkit/loader.js", line 697, in main
+Jun 13, 2015 09:42:43.15     return loader.load(loader, module).exports;
+Jun 13, 2015 09:42:43.16   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:42:43.16     result = load(loader, module);
+Jun 13, 2015 09:42:43.16   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:42:43.16     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:42:43.16   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:42:43.16     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:42:43.16   File "resource://skype_ff_extension-at-jetpack/skype_ff_extension/lib/main.js", line 14, in null
+Jun 13, 2015 09:42:43.16     var widgets = require("sdk/widget");
+Jun 13, 2015 09:42:43.16   File "resource://gre/modules/commonjs/toolkit/loader.js", line 604, in require
+Jun 13, 2015 09:42:43.16     freeze(load(loader, module));
+Jun 13, 2015 09:42:43.16   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:42:43.16     result = load(loader, module);
+Jun 13, 2015 09:42:43.16   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:42:43.16     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:42:43.16   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:42:43.16     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:42:43.16   File "resource://gre/modules/commonjs/sdk/widget.js", line 59, in null
+Jun 13, 2015 09:42:43.16     require("./util/deprecate").deprecateUsage(
+Jun 13, 2015 09:42:43.16   File "resource://gre/modules/commonjs/sdk/util/deprecate.js", line 18, in deprecateUsage
+Jun 13, 2015 09:42:43.17     let stack = get().slice(2);
+Jun 13, 2015 09:43:56.12 console.error: skype_ff_extension: 
+Jun 13, 2015 09:43:56.12   DEPRECATED: The widget module is deprecated.  Please consider using the sdk/ui module instead.
+Jun 13, 2015 09:43:56.12 Traceback (most recent call last):
+Jun 13, 2015 09:43:56.12   File "resource://gre/modules/Promise-backend.js", line 867, in Handler.prototype.process
+Jun 13, 2015 09:43:56.12     nextValue = this.onResolve.call(undefined, nextValue);
+Jun 13, 2015 09:43:56.12   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 86, in startup/</<
+Jun 13, 2015 09:43:56.14     run(options);
+Jun 13, 2015 09:43:56.14   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 145, in run
+Jun 13, 2015 09:43:56.14     let program = main(options.loader, options.main);
+Jun 13, 2015 09:43:56.14   File "resource://gre/modules/commonjs/toolkit/loader.js", line 697, in main
+Jun 13, 2015 09:43:56.14     return loader.load(loader, module).exports;
+Jun 13, 2015 09:43:56.14   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:43:56.14     result = load(loader, module);
+Jun 13, 2015 09:43:56.14   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:43:56.14     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:43:56.14   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:43:56.14     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:43:56.14   File "resource://skype_ff_extension-at-jetpack/skype_ff_extension/lib/main.js", line 14, in null
+Jun 13, 2015 09:43:56.14     var widgets = require("sdk/widget");
+Jun 13, 2015 09:43:56.14   File "resource://gre/modules/commonjs/toolkit/loader.js", line 604, in require
+Jun 13, 2015 09:43:56.14     freeze(load(loader, module));
+Jun 13, 2015 09:43:56.14   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:43:56.14     result = load(loader, module);
+Jun 13, 2015 09:43:56.14   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:43:56.14     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:43:56.14   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:43:56.14     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:43:56.14   File "resource://gre/modules/commonjs/sdk/widget.js", line 59, in null
+Jun 13, 2015 09:43:56.14     require("./util/deprecate").deprecateUsage(
+Jun 13, 2015 09:43:56.14   File "resource://gre/modules/commonjs/sdk/util/deprecate.js", line 18, in deprecateUsage
+Jun 13, 2015 09:43:56.14     let stack = get().slice(2);
+Jun 13, 2015 09:46:17.04 console.error: skype_ff_extension: 
+Jun 13, 2015 09:46:17.04   DEPRECATED: The widget module is deprecated.  Please consider using the sdk/ui module instead.
+Jun 13, 2015 09:46:17.04 Traceback (most recent call last):
+Jun 13, 2015 09:46:17.04   File "resource://gre/modules/Promise-backend.js", line 867, in Handler.prototype.process
+Jun 13, 2015 09:46:17.04     nextValue = this.onResolve.call(undefined, nextValue);
+Jun 13, 2015 09:46:17.04   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 86, in startup/</<
+Jun 13, 2015 09:46:17.04     run(options);
+Jun 13, 2015 09:46:17.04   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 145, in run
+Jun 13, 2015 09:46:17.04     let program = main(options.loader, options.main);
+Jun 13, 2015 09:46:17.04   File "resource://gre/modules/commonjs/toolkit/loader.js", line 697, in main
+Jun 13, 2015 09:46:17.04     return loader.load(loader, module).exports;
+Jun 13, 2015 09:46:17.04   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:46:17.04     result = load(loader, module);
+Jun 13, 2015 09:46:17.04   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:46:17.04     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:46:17.04   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:46:17.04     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:46:17.04   File "resource://skype_ff_extension-at-jetpack/skype_ff_extension/lib/main.js", line 14, in null
+Jun 13, 2015 09:46:17.04     var widgets = require("sdk/widget");
+Jun 13, 2015 09:46:17.04   File "resource://gre/modules/commonjs/toolkit/loader.js", line 604, in require
+Jun 13, 2015 09:46:17.04     freeze(load(loader, module));
+Jun 13, 2015 09:46:17.06   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:46:17.06     result = load(loader, module);
+Jun 13, 2015 09:46:17.06   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:46:17.06     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:46:17.06   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:46:17.06     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:46:17.06   File "resource://gre/modules/commonjs/sdk/widget.js", line 59, in null
+Jun 13, 2015 09:46:17.06     require("./util/deprecate").deprecateUsage(
+Jun 13, 2015 09:46:17.06   File "resource://gre/modules/commonjs/sdk/util/deprecate.js", line 18, in deprecateUsage
+Jun 13, 2015 09:46:17.06     let stack = get().slice(2);
+Jun 13, 2015 09:48:12.21 console.error: skype_ff_extension: 
+Jun 13, 2015 09:48:12.21   DEPRECATED: The widget module is deprecated.  Please consider using the sdk/ui module instead.
+Jun 13, 2015 09:48:12.21 Traceback (most recent call last):
+Jun 13, 2015 09:48:12.21   File "resource://gre/modules/Promise-backend.js", line 867, in Handler.prototype.process
+Jun 13, 2015 09:48:12.21     nextValue = this.onResolve.call(undefined, nextValue);
+Jun 13, 2015 09:48:12.21   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 86, in startup/</<
+Jun 13, 2015 09:48:12.23     run(options);
+Jun 13, 2015 09:48:12.23   File "resource://gre/modules/commonjs/sdk/addon/runner.js", line 145, in run
+Jun 13, 2015 09:48:12.23     let program = main(options.loader, options.main);
+Jun 13, 2015 09:48:12.23   File "resource://gre/modules/commonjs/toolkit/loader.js", line 697, in main
+Jun 13, 2015 09:48:12.23     return loader.load(loader, module).exports;
+Jun 13, 2015 09:48:12.23   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:48:12.23     result = load(loader, module);
+Jun 13, 2015 09:48:12.23   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:48:12.23     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:48:12.23   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:48:12.23     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:48:12.23   File "resource://skype_ff_extension-at-jetpack/skype_ff_extension/lib/main.js", line 14, in null
+Jun 13, 2015 09:48:12.23     var widgets = require("sdk/widget");
+Jun 13, 2015 09:48:12.23   File "resource://gre/modules/commonjs/toolkit/loader.js", line 604, in require
+Jun 13, 2015 09:48:12.23     freeze(load(loader, module));
+Jun 13, 2015 09:48:12.23   File "resource://gre/modules/commonjs/sdk/loader/cuddlefish.js", line 79, in CuddlefishLoader/options<.load
+Jun 13, 2015 09:48:12.23     result = load(loader, module);
+Jun 13, 2015 09:48:12.23   File "resource://gre/modules/commonjs/toolkit/loader.js", line 323, in load
+Jun 13, 2015 09:48:12.23     evaluate(sandbox, module.uri);
+Jun 13, 2015 09:48:12.23   File "resource://gre/modules/commonjs/toolkit/loader.js", line 271, in evaluate
+Jun 13, 2015 09:48:12.23     : loadSubScript(uri, sandbox, encoding);
+Jun 13, 2015 09:48:12.23   File "resource://gre/modules/commonjs/sdk/widget.js", line 59, in null
+Jun 13, 2015 09:48:12.23     require("./util/deprecate").deprecateUsage(
+Jun 13, 2015 09:48:12.23   File "resource://gre/modules/commonjs/sdk/util/deprecate.js", line 18, in deprecateUsage
+Jun 13, 2015 09:48:12.23     let stack = get().slice(2);

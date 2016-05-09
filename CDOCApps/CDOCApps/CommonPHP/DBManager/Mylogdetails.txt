@@ -1,0 +1,5 @@
+
+
+--------------------
+-Tue, 17 Nov 15 13:10:39 +0000 : query: --UPDATE exportedassetinfo SET title = 'New fhsfhs Hexagon' WHERE filename=myhexagon.svg -- Error: --Unknown column 'myhexagon.svg' in 'where clause'
+--------------------

@@ -1,0 +1,84 @@
+/*#div_selection .ui-selecting { background: #FECA40; }
+#div_selection .ui-selected { background: #2222ee; color: white; }
+#div_selection { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+#div_selection div { margin: 0px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+*/
+
+
+.ui-draggable, .ui-droppable {
+	background-position: top;
+}
+div.OBJECT_CONTAINER:hover{border:dashed thin grey}
+div.OBJECT_CONTAINER:
+p.HTMLOBJECT{margin: 1px; padding:0px; }
+
+ /*  Resize specfic */
+
+.ui-resizable-helper { border: 1px dotted green; }
+
+div.EDIT_BOX{display:inline-block; margin-left:2px; style:font-weight:bold;}
+
+.TREEMENU {
+	font-size:x-small;
+	font-weight:normal; 
+}
+
+ .IMAGE_BUTTON:hover{width:24px; height:24px; 
+         border:inset 1px grey;  
+         border-radius:3px;  box-shadow: 5px 8px 7px #888888; 
+ 		 transition-property:width,height;
+         transition-duration:200ms;                          
+                           } 
+ .IMAGE_BUTTON{width:24px; height:24px;}       
+ .IMG_BTN_ACTIVE:active {width:26px; height:26px; border:outset 1px grey;}
+  div.BTN_CONTAINER
+  {
+        /*	box-sizing:border-box;*/
+          
+            width:24px;          
+            float:left;
+  }
+  /*
+  div.PROPERTY_INTERFACE{
+  	border:outset 1px #e0e9f5; border-radius:3px; 
+  }
+  */
+  
+  .KEY_PAD:hover{   
+  				   width:24px; height:24px; 
+         		   border:inset 2px grey; 	 
+                   box-shadow: 5px 8px 7px #888888;                           
+                   transition-property:width,height;
+                   transition-duration:200ms; 
+                                                   
+                           } 
+   .KEY_PAD{width:24px; height:24px;
+               /* border:outset 2px rgb(12, 12, 12);*/                 
+                font-size:xx-small;  
+                }       
+                
+   .KEY_PAD:active {width:24px; height:24px; border:outset 1px grey;}
+   
+   div.KEY_CONTAINER
+   {
+        box-sizing:border-box;          
+        width:32px;           
+        float:left;   
+        /*margin-top:2px;*/   
+                  
+   }        
+        
+   span.MATH_EQUATION:hover
+   {   	
+   	 border:inset 1px grey; 
+   }
+   .LINK_TYPES
+   {
+   	 cursor:pointer; 
+   }
+  div#splitterContainer{
+  	border:solid 1 px blue; 
+  }
+  
+  div#sel_gripper{ width: 20px; height: 20px; padding: 1px; float: left; margin: 0 1px 1px 0; visibility:hidden }
+  

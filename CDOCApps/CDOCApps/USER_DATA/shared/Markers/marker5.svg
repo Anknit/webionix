@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg SYSTEM "svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" x="10px" y="10px" width="50px" height="50px" viewBox="0 0 200 200" version="1.1">
+      <title>Cross</title>
+<path  d="m20,80 l60,-60 m0,60 l-60,-60" fill='black'  stroke='black' stroke-width='12'/>  
+</svg>
+
+
+ 

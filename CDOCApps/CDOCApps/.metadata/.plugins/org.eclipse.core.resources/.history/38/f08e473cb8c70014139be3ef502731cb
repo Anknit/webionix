@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title id="filename">Web2.0 Graphics Editor :</title>
+ <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.base.css" type="text/css" /> 
+ <!-- <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.energyblue.css" type="text/css" />-->
+ <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="../ThirdParty/jqwidget_ver3.7/jqwidgets/styles/jqx.black.css" type="text/css" />
+ <link rel="stylesheet" href="../CommonCSS/CDOCStyle.css">   
+ <script type="text/javascript" src="../ThirdParty/jqwidget_ver3.7/scripts/jquery-1.11.1.min.js"></script>    
+ <script type="text/javascript" src="../ThirdParty/jqwidget_ver3.7/jqwidgets/jqxcore.js"></script> 
+ <script type="text/javascript" src="../ThirdParty/jqwidget_ver3.7/jqwidgets/jqx-all.js"></script>
+ <script type="text/javascript" src="../CommonJS/gettheme.js"></script>
+ <script type="text/javascript" src="../CommonJS/Utilities.js"></script>
+ <script type="text/javascript" src="../CommonJS/CDOCWAL_V2.js"></script> 
+ <script type="text/javascript" src="GX_AnimationWdgt.js"></script>
+  <script type="text/javascript" src="GX_UIHandler.js"></script>
+  <script type="text/javascript" src="GX_RemoteDataExchange.js"></script>
+  <script type="text/javascript" src="Editlistmanager.js"></script>
+
+  
+ <script type="text/javascript">
+  $(document).ready(function() { 	   
+	  GX_Initialize();
+        });
+  
+  </script> 
+  
+</head>
+<body onscroll="OnWindowScroll(event)">
+	  <!-- #e0e9f5, #cde6f9 -->
+    <div id="splitterContainer" width="600px" height="600px" style='border:none;' > 
+  	    
+   
+  <!-- <div id="toolbar" style= "background-image: linear-gradient(0deg, #c6d6ec 80%,  #e0e9f5 100%)">-->    
+   <div id="toolbar" style= "background-image: linear-gradient(0deg, #f5f5f5 80%,  #f0f0f0 100%)">
+   
+   <div id="GXmenu" style='visibility: hidden; float: left; margin-left:0px; font-variant:small-caps; font-weight: bold; border:none'>
+	   <ul>
+	       <li id="file"> <a href="#File">File</a>
+	       	<ul>
+	       		<li id="new" title='A New File is created'><a href="#New">New File</a>
+	       		<li id="open"><a href="#Open">Open File</a>
+	       		<li id="import"><a href="#Import">Import</a>
+	       		<li id="export"><a href="#Export">Export</a>
+	       		<li id="publish"><a href="#Publish">Publish</a>
+	       		<li id="remove"><a href="#Remove">Remove</a>	
+	       		<li id="close"><a href="#Close">Close File</a>  
+	       		<li id="exit"><a href="#Exite">Exit</a>          		
+	       	</ul>
+	       </li>
+	       <li id='edit'><a href="#Edit">Edit</a>
+	       	<ul>
+	       		<li id="copy"><a href="#Copy">Copy</a></li>
+	       		<li id="paste"><a href="#Paste">Paste</a></li>
+	       		<li id="removenode"><a href="#removenode">Delete</a></li>
+	       		<li id="group"><a href="#Group">Group</a></li>
+	       		<li id="undo"><a href="#Undo">Undo</a></li>
+	       		<li id="redo"><a href="#Redo">Redo</a></li>	       		
+	       	</ul>
+	       </li>	       
+	       <li id='object'><a href="#Object">Object</a></li>
+	       <li id="properties"><a href="#Properties">Properties</a></li>
+	       <li id="layout"><a href="#Layout">Layout</a></li>	       
+	       <li id="animate"><a href="#Animate">Animate</a></li>	       
+	       <li id="filters"><a href="#Filters">Filters</a></li>	      
+	       <li id="preview"><a href="#Preview">Preview</a></li>
+	       <li id="help"><a href="#Help">Help</a></li>
+	    </ul>
+	  </div>  	
+   	<div id='usermessage' style='display:inline-block; width:300px; height:40px; position:relative; left:350px; border:none'>
+   		<div id='welcome'>Welcome <span id='username' style='font-weight:bold'></span> | <span id='logout' class="LINK_TYPES" onclick="OnLogoutButton(event)" style="color:#404040; font-weight:bold">Logout</span>
+   		| <span id='about' class="LINK_TYPES" onclick="OnLogoutButton(event)" style="color:#404040; font-weight:bold">About</span></div>
+   		
+   	</div>	
+   		<!-- <div id='toolbar_icons' style='border-bottom:solid 2px #e0e9f5;'>-->
+   		<div id='toolbar_icons' style='border:solid 2px #00000;'>
+   		  
+   		  <div id='layout_interface' style="display: none; position:absolute; left:10px; top: 40px;" class='PROPERTY_INTERFACE'>
+   		    <div class="BTN_CONTAINER"><input class='dimaligngroup'  type = "image" id='svgdim_icon' value=''  src='../CommonCSS/icons/Version1/svgdim.png'  data-tooltiptext='Container Dimension' data-helptext='Modifies Dimensions of the Containing Rectangle'/></div>
+   		    
+   		    <div id='dimeditgroup'  style="display:inline-block; vertical-align: top; border:none; width:auto; height:32px; padding-top:3px; padding-right:3px">
+    			<div id='WidthEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Width' data-helptext='Width of the Tightest Rectangle'>Width<div id='widthIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+    			<div  id='HeightEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Height' data-helptext='Height of the Tightest Rectangle' >Height<div id='heightIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+    			
+    		</div>    		
+    		<div id='dimaligngroup' style="display:inline-block; width:auto; height:32px; border-right: ridge 2px #c6d6ec;" >
+    			<div class="BTN_CONTAINER"><input class='dimaligngroup'  type = "image" id='alignwidth_icon' value=''  src='../CommonCSS/icons/Version1/alignwidth.png' data-tooltiptext='Align Width' data-helptext='Select Multiple Objects using Ctrl+click  to </br> Align Width of the Objects'/></div>
+   <div class="BTN_CONTAINER"><input class='dimaligngroup'  type = "image" id='alignheight_icon' value=''  src='../CommonCSS/icons/Version1/alignheight.png' data-tooltiptext='Align Height' data-helptext='Select Multiple Objects using Ctrl+click  to </br> Align Height of the Objects'/></div>    			
+    		</div>    		
+    		<div id='poseditgroup'  style="display:inline-block; vertical-align: top; border:none; width:auto; padding-top:3px; padding-right:3px"> 		
+   				<div id='LPosEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Left Position' data-helptext='Left Edge Position'>Left-Position<div id='lposIP' class='EDIT_BOX group7' type='DIMENSION'></div></div>
+    			<div  id='TPosEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Top Position' data-helptext='Top Edge Position' >Top-Position<div id='tposIP' class='EDIT_BOX group7' type='DIMENSION'></div></div>
+    		</div>
+    		<div id='posaligngroup' style="display:inline-block; width:auto; height:32px; border-right: ridge 2px #c6d6ec;" >
+    			<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='alignleft_icon' value=''  src='../CommonCSS/icons/Version1/alignleft.png' data-tooltiptext='Left Alignment' data-helptext='Select Multiple Objects to </br>Align all Objects to Left Edge of the First Selection'/></div>
+    			<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='aligntop_icon' value=''  src='../CommonCSS/icons/Version1/aligntop.png' data-tooltiptext='Top Alignment' data-helptext='Select Multiple Objects to </br>Align all Objects to Top Edge of the First Selection'/></div>    			
+    			<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='alignright_icon' value=''  src='../CommonCSS/icons/Version1/alignright.png' data-tooltiptext='Right Alignment' data-helptext='Select Multiple Objects to </br>Align all Objects to Right Edge of the First Selection'/></div>
+    			<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='alignbottom_icon' value=''  src='../CommonCSS/icons/Version1/alignbottom.png' data-tooltiptext='Bottom Alignment' data-helptext='Select Multiple Objects to </br>Align all Objects to Bottom Edge of the First Selection'/></div>
+    			<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='alignhorcenter_icon' value=''  src='../CommonCSS/icons/Version1/alignhorcenter.png' data-tooltiptext='Horizontal Alignment' data-helptext='Select Multiple Objects to </br>Align all Objects to Horizontal Center of the First Selection'/></div>
+    			<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='alignvertcenter_icon' value=''  src='../CommonCSS/icons/Version1/alignvertcenter.png' data-tooltiptext='Vertical Alignment' data-helptext='Select Multiple Objects to </br>Align all Objects to Vertical Center of the First Selection'/></div>    		
+    		</div>
+    		
+    	</div> <!-- layout_interface -->
+    	<div id='zoompan_interface' style="display: none; position:absolute; left:10px; top: 40px;" class='PROPERTY_INTERFACE'>
+    		<div id='snapeditgroup'  style="display:inline-block; vertical-align: top; border:none; width:auto; height:32px; padding-top:1px; padding-right:3px; border-right: ridge 2px #c6d6ec;">
+   		    	<div id='snaptogrid' style="display:inline-block; margin-left:1px; margin-top:1px;" data-tooltiptext='Snap to Grid' data-helptext='Snaps to the Grid when Object is moved or resized' >Snap-To-Grid</div>
+   		    	<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='grid_icon' value=''  src='../CommonCSS/icons/Version1/grid.png' data-tooltiptext='Show/Hide Grid' data-helptext='Shows or Hides the Grid'/></div>
+   			</div>
+    		<div id='zoomgroup' style="display:inline-block; height:32px; vertical-align: top; border-right: ridge 2px #c6d6ec;">
+    		   <div id='zoomp' style= 'display:inline-block; margin-left:2px; margin-right:3px'><div id='zoomDDL' class='EDIT_BOX' type='Zoom' ></div></div>
+			   <div class="BTN_CONTAINER"><input type="image"  id="zoom_icon" value="" src="../CommonCSS/icons/Version1/zoom.png" data-tooltiptext='Zoom' data-helptext='Zoom in/out to desired resolution'></div>
+			   <div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='panright_icon' value=''  src='../CommonCSS/icons/Version1/panright.png' data-tooltiptext='Pan to Right' data-helptext='Pans to the Right'/></div>
+    	  	<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='panleft_icon' value=''  src='../CommonCSS/icons/Version1/panleft.png' data-tooltiptext='Pan to Left' data-helptext='Pans to the Left'/></div>
+    	  	<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='panup_icon' value=''  src='../CommonCSS/icons/Version1/panup.png' data-tooltiptext='Pan Up' data-helptext='Pans in the Upward direction'/></div>
+    	  	<div class="BTN_CONTAINER"><input class='posaligngroup'  type = "image" id='pandown_icon' value=''  src='../CommonCSS/icons/Version1/pandown.png' data-tooltiptext='Pan Down' data-helptext='Pans in the Downward direction'/></div>
+    	  	
+		     </div>   	  
+	<div>		
+		</div id='pangroup' style="display:inline-block; height:36px; vertical-align: top; ">    	
+    	</div>
+    	
+    	<div id='modify_interface' style="display: none; position:absolute; left:295px; top: 40px;" class='PROPERTY_INTERFACE'>
+    		<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='erase_icon' value=''  src='../CommonCSS/icons/Version1/erase.png' data-tooltiptext='Erase' data-helptext='Move the mouse cursor on the intended area to be erased frm free hand drawing object'/></div>
+    		<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='modify_icon' value=''  src='../CommonCSS/icons/Version1/modify.png' data-tooltiptext='Modify' data-helptext='Move the mouse cursor to redraw portion of the free hand drawing object'/></div>
+    		<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='addpoint_icon' value=''  src='../CommonCSS/icons/Version1/addpoints.png' data-tooltiptext='Add Point' data-helptext='Select any node on the path and then add a point next to it'/></div>
+    		<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='deletepoint_icon' value=''  src='../CommonCSS/icons/Version1/deletepoints.png' data-tooltiptext='Delete Point' data-helptext='Select a point and then Delete it'/></div>
+    		   		
+    	  <div id='pathclosegroup'  style="display:inline-block; vertical-align: top; border:none; width:auto; height:32px; padding-top:6px; padding-right:3px; border-right: ridge 2px #c6d6ec;">
+   		    	<div id='pathclose' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Closed/Open Path' data-helptext='Toggle between a Closed and Open path'>Close Path</div>
+   		   </div>  
+   		   <div id='rotateEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Rotate' data-helptext='Rotate the Object by given angle'>Rotate<div id='rotateIP' class='EDIT_BOX group6' type='ROTATION'></div></div>  	
+   		   <div id='lengthEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Length of Sides' data-helptext='Change the length of the sides of Polygon object'>Length<div id='lengthIP' class='EDIT_BOX group6' type='LENGTH' ></div></div>	
+   		   <div id='radiusXEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Horizontal Radius' data-helptext='Modify the Horizontal Radius'>Radius-X<div id='radiusXIP' class='EDIT_BOX group6' type='RADIUSX' ></div></div>	
+   		   <div id='radiusYEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Vertical Radius' data-helptext='Modify the Vertical Radius'>Radius-Y<div id='radiusYIP' class='EDIT_BOX group6' type='RADIUSY'></div></div>
+   		   <div id='largearcCheckBox' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Large Arc' data-helptext='Check to Enable Large arc'>Large-Arc</div>
+   		   <div id='sweepCheckBox' style="display:inline-block; margin-left:1px; margin-top: 2px;" data-tooltiptext='Sweep' data-helptext='Check to Enable Sweep'>Sweep-Flag</div>
+    	</div>
+    
+    <div id='stroke_interface' style="display: none; position:absolute; left:295px; top: 40px;" class='PROPERTY_INTERFACE'>
+    	<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='stroke_color_icon' value=''  src='../CommonCSS/icons/Version1/bordercolor.png' data-tooltiptext='Stroke Color' data-helptext='Select any color from the pallete to apply as stroke color'/></div>
+    	<div id='strokeweightEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Stroke Width' data-helptext='Select value to modify the stroke width'>Thickness<div id='strokeWeightIP' class='EDIT_BOX group6' type='STROKE_WEIGHT' ></div></div>
+    	<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='stroke_dash_icon' value=''  src='../CommonCSS/icons/Version1/stroke_dash.png' data-tooltiptext='Dash Pattern' data-helptext='Select stroke pattern'/></div>
+    	<div id='strokedashdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><div id='strokedashDDL' class='EDIT_BOX' type='STROKE_DASH'></div></div>
+    	<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='stroke_linjoin_icon' value=''  src='../CommonCSS/icons/Version1/stroke_linejoin.png' data-tooltiptext='Line Joining Values' data-helptext='Select value to modify the stroke line joining values'/></div>
+    	<div id='strokelinejoindiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'><div id='strokeLinejoinDDL' class='EDIT_BOX' type='STROKE_LINEJOIN'></div></div>
+    	<div id='strokeOpacityEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Stroke Opacity' data-helptext='Modify the Opacity of the stroke'>Stroke Opacity<div id='strokeOpacityIP' class='EDIT_BOX group6' type='STROKE_OPACITY' ></div></div>
+    </div>
+    
+    <div id='animate_interface' style="display: none; position:absolute; left:10px; top: 40px;" class='PROPERTY_INTERFACE'>    	
+    	<div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='anim_new_icon' value=''  src='../CommonCSS/icons/Version1/anim_new.png' data-tooltiptext='New Animation' data-helptext='Define Animation on Selected Object'/></div>
+    	<div style= 'display:inline-block;'>
+    		<div id='animlistdiv' style= 'display:inline-block; margin-left:2px; margin-right:1px'>Animation List<div id='listanimDDL' class='EDIT_BOX' type='STROKE_DASH'></div></div>
+    		<div style= 'display:inline-block;margin-left:1px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='anim_edit_icon' value='' style='margin-left:1px;' src='../CommonCSS/icons/Version1/graphics.png' data-tooltiptext='Edit Animation' data-helptext='Edit Animation Properties' /></div></div>
+    		
+    	</div>
+    	
+    	<div id='animbtngroup' style="display:inline-block; height:36px; vertical-align: top; margin-left:5px; border-left: ridge 2px #c6d6ec;">
+    		<div style= 'display:inline-block;margin-left:5px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='anim_preview_icon' value=''  src='../CommonCSS/icons/Version1/preview.png' data-tooltiptext='Preview Animation' data-helptext='Preview Animation'/></div></div>
+    		<div style= 'display:inline-block;margin-left:5px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='anim_delete_icon' value=''  src='../CommonCSS/icons/Version1/delete.png' data-tooltiptext='Delete Animation' data-helptext='Delete Animation'/></div></div>
+    		
+    	</div> 	
+    </div>
+    
+       	
+    	<div id='texteditinterface' style=" display:none; position:absolute; left:10px; top: 40px;" class='PROPERTY_INTERFACE'>
+    		<div id='group10'  style="display:inline-block; width:265px; height:36px; vertical-align: top; padding-top:3px; padding-right:1px;">
+    		    <div id='fontname' style= 'display:inline-block; margin-left:2px; margin-right:0px' >Font Name<div id='fontNameDDL' class='EDIT_BOX' type='fontFamily' ></div></div>			
+			 </div> 	
+			
+			  
+			<div id='fontsizegroup'  style="display:inline-block;  height:36px; vertical-align: top; border:none; margin-top:2px; border-right: ridge 2px #c6d6ec;">	
+			  <!-- 
+			   <div id='fontsizeEdit' style= 'display:inline-block; position:absolute; left:200px; margin-left:2px; margin-right:5px;'><div id='fontsizeDDL' class='EDIT_BOX' type='fontSize'></div></div>
+			   <div class="BTN_CONTAINER"><input type="image" id="fontsize_icon" value=""  src="../CommonCSS/icons/Version1/fontsize.png" title="Font Size"></div>
+			  -->
+			   <div id='fontSizeEdit' style='display:inline-block; margin-left:5px;'>Font Size<div id='fontSizeIP' class='EDIT_BOX group6' type='STROKE_OPACITY'></div></div>			 	
+			</div>
+			
+				 	
+			<div id='fontstylegroup' style="display:inline-block; height:36px; width:auto" data-type='buttonGroup'>
+				<div class="BTN_CONTAINER"><input type = "image" id='bold_icon'   value=''  src='../CommonCSS/icons/Version1/bold.png' data-tooltiptext='Bold' data-helptext='Set the Text Object as Bold'/></div> 			
+	    		<div class="BTN_CONTAINER"><input type = "image" id='italic_icon'   value=''  src='../CommonCSS/icons/Version1/italic.png' data-tooltiptext='Italic' data-helptext='Set the Text Object as Italic'/></div>
+	    		<div class="BTN_CONTAINER"><input type = "image" id='underline_icon'  value=''  src='../CommonCSS/icons/Version1/underline.png' data-tooltiptext='Underline' data-helptext='Set the Text Object as Underline'/></div>
+	    		<div class="BTN_CONTAINER" style="display:inline-block;" ><input type = "image" id='strikethrough_icon'  value=''  src='../CommonCSS/icons/Version1/strikethrough.png' data-tooltiptext='Strikethrough' data-helptext='Set the Text Object as Strikethrough'/></div>
+	    		<div class="BTN_CONTAINER"><input type = "image" id='smallcaps_icon'  value=''  src='../CommonCSS/icons/Version1/uppercase.png' data-tooltiptext='Small-case' data-helptext='Set the Text Object as Small-case'/></div>    		
+	    	</div>
+	    	
+    	</div> <!-- text interface  -->
+    <div id='object_interface' style="display: none; position:absolute; left:280px; top: 40px;" class='PROPERTY_INTERFACE'>
+    	<div id='fill_interface' style="display:inline-block; top: 40px; border-right: ridge 2px #c6d6ec;">
+	    	<div id='fillopacityEdit' style='display:inline-block; margin-left:5px;' data-tooltiptext='Fill  Opacity' data-helptext='Modify the Opacity'>Fill-Opacity<div id='fillopacityIP' class='EDIT_BOX group6' type='FILLOPACITY'></div></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='fill_color_icon' value=''  src='../CommonCSS/icons/Version1/fillcolor.png'  data-tooltiptext='Solid Color' data-helptext='Puts Solid Color as the background fill'/></div>
+	    	<!-- <div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='linear_grad_icon' value=''  src='../CommonCSS/icons/Version1/grad_linear.png' data-tooltiptext='Linear Gradient' data-helptext='Puts Linear Gradient as the background fill' /></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='radial_grad_icon' value=''  src='../CommonCSS/icons/Version1/grad_radial.png' data-tooltiptext='Radial Gradient' data-helptext='Puts Radial Gradient as the background fill'/></div>
+	    	-->
+	    	<div id='gradlistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Select Gradient<div id='gradlistDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
+	    	<div style= 'display:inline-block;margin-left:1px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='edit_grad_icon' value=''  src='../CommonCSS/icons/Version1/linecolor.png' data-tooltiptext='Edit Gradient Properties' data-helptext='Edit Gradient Properties'/></div></div> 	
+	    	<div style= 'display:inline-block;margin-left:1px;'><div class="BTN_CONTAINER"><input class='modifygroup'  type = "image" id='delete_grad_icon' value=''  src='../CommonCSS/icons/Version1/delete.png' data-tooltiptext='Remove Gradient' data-helptext='Remove Gradient' /></div></div>
+    	</div> 
+        <div style="display:inline-block";>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='circle_icon' value=''  src='../CommonCSS/icons/Version1/circle.png'  data-tooltiptext='Circle' data-helptext='Using this draw a circle or an ellipse'/></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='square_icon' value=''  src='../CommonCSS/icons/Version1/square.png' data-tooltiptext='Rectangle' data-helptext='Use this to draw a rectangle or a circle' /></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='polygon_icon' value=''  src='../CommonCSS/icons/Version1/polygon.png' data-tooltiptext='Polygon' data-helptext='Draws a polygon'/></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='line_icon' value=''  src='../CommonCSS/icons/Version1/line.png' data-tooltiptext='Line' data-helptext='Use this to draw Lines'/></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='path_icon' value=''  src='../CommonCSS/icons/Version1/path.png' data-tooltiptext='Curve' data-helptext='Use this to draw different types of Curves'/></div>
+	    	<div class="BTN_CONTAINER" style='margin-right:5px;'><input class='modifygroup'  type = "image" id='text_icon' value=''  src='../CommonCSS/icons/Version1/textobject.png' data-tooltiptext='Text' data-helptext='Adds Text object'/></div>
+    	</div>	
+    	   	 	
+   </div>
+    	
+    
+  		</div> 
+    </div>
+       
+       <div>
+       <div id="dataContainerSplitter">  
+          <div id="objectdata_panel" class="splitter-panel" >     
+          	<!-- <div id='texteditableDiv' style='position:absolute; border:solid grey 3px; top:0px; left:0px; width:1000px; height:80px; display:none' contenteditable='true'><svg id='texteditablesvg' version="1.1" width='100%' height='100%' viewBox='0 0 1000  20' xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ><text id='tempText' font-family="Verdana" font-size="20" fill="blue" x='0' y='0'>Default Text</text></svg></div>-->
+          	<div id='texteditableDiv' style='position:absolute; left:0px; display:none' contenteditable='false'>
+          		<textarea id='texteditor' value='Hello world' onblur='OnTextEditFocusOut(event)' onkeypress='OnTextEditKeyPress(event)'></textarea>
+          	</div>
+          	       
+    		<svg id="SVGContainer" x="0px" y="0px" width="1000px" height="1000px" version="1.1"  viewBox="0 0 1000 1000" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" 
+     				xmlns="http://www.w3.org/2000/svg"  cursor="auto">
+
+			<svg id="background" width="100%" height="100%" visibility="visible" >
+				<defs>
+				 <pattern id="gridpattern" patternUnits="userSpaceOnUse"  x="0" y="0" width="10" height="10"  viewBox="0 0 10 10" >
+				  <rect x="0" y="0" width="10" height="10" stroke="grey" stroke-width="0.5" fill="none"/>
+				 </pattern>
+				 <pattern id="bigrectpattern" patternUnits="userSpaceOnUse"  x="0" y="0" width="100" height="100"  viewBox="0 0 100 100" >
+				     <rect x="0" y="0" width="100" height="100" stroke="black" stroke-width="1" fill="url(#gridpattern)"/>
+				  </pattern>      
+				  <marker id="circmarker"  viewBox="0 0 10 10" refX="5" refY="5"  markerUnits="strokeWidth"  markerWidth="4" markerHeight="3" orient="auto">
+				       <circle cx="5" cy="5" r="5" fill="black" />
+				   </marker>  				    
+				 </defs>   
+			<rect id="gridpattern" x="0" y="0" width="100%" height="100%" fill="url(#bigrectpattern)" onclick="OnSVGParentClick(evt)" pointer-events="fill" onmousemove="OnObjectMove(evt)" />
+		<!-- <rect id="svgborder" x="0" y="0" width="800" height="800" stroke="red" stroke-width="6" fill="none" visibility="visible"/>-->
+		  </svg>
+		<svg id="objectcontainer" width="100%" height="100%"  visibility="visible"></svg>
+		<svg id="editingassets_orig" width="100%" height="100%" visibility="visible">
+		   <circle id="pathmarker" cx="0" cy="0" r="5" stroke="black" stroke-width="2"  fill="blue" fill-opacity="1.0" pointer-event="visible"  visibility="hidden" data-index="" 
+        onmousemove="OnPathMarkerMouseMove(evt)" onclick="OnPathMarkerMouseDown(evt)" onmouseout="OnPathMarkerMouseOut(evt)"/>
+        	<path id="indicatorpath" visibility="hidden" class='INDICATOR_PATH LINE_PATH' stroke="grey" stroke-width="2" stroke-opacity="1" stroke-dasharray="4 2" fill="none" d="M50 130 L200 100 L300 150" />   	  
+        	<path id="erasepath" visibility="hidden" class='ERASE_PATH' stroke="white" stroke-width="4" fill="none" d="" />
+        	<rect id='eraser1_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
+        	<rect id='eraser2_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
+			<rect id="gripper_orig" x="10" y="10" width="50" height="50" stroke="blue" stroke-width="3" fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible" onmousemove="OnObjectMove(evt)" onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)"></rect>
+			
+			<circle id="markerTL_orig" class="CUSTOM_MARKER_ORIG" cx="0" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="nw-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+	        <circle id="markerTM_orig" class="CUSTOM_MARKER_ORIG" cx="25" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="n-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+	        <circle id="markerTR_orig" class="CUSTOM_MARKER_ORIG" cx="50" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="ne-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+	        <circle id="markerMR_orig" class="CUSTOM_MARKER_ORIG" cx="75" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="e-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+	        <circle id="markerBR_orig" class="CUSTOM_MARKER_ORIG" cx="100" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="se-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+	        <circle id="markerBM_orig" class="CUSTOM_MARKER_ORIG" cx="125" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="s-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+	        <circle id="markerBL_orig" class="CUSTOM_MARKER_ORIG" cx="150" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="sw-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+	        <circle id="markerML_orig" class="CUSTOM_MARKER_ORIG" cx="170" cy="0" r="6" stroke="blue" stroke-width="2" stroke-dasharray="1 1" fill="red" fill-opacity="1" visibility="hidden" data-direction="w-resize" onmousemove="OnMarkerMouseMove(evt)" onmousedown="OnMarkerMouseDown(evt)" onmouseout="OnMarkerMouseOut(evt)"></circle>
+	        <rect id="freedraw_orig" x="10" y="10" width="250" height="150" stroke="green" stroke-width="1" stroke-opacity='0.9' fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible" onmousemove="OnFreeDraw(evt)" onmousedown="OnFreeDrawClick(evt)" ></rect>
+       </svg>
+        
+	</svg>
+  </div> 
+  	  <div style= "background-image: linear-gradient(0deg, #eeeeee 80%,  #efefef 100%)">
+  	 
+  	  	<div id="filename" style="font-weight:bold">File Name: <span id='fname'></span></div>
+  	  	<div id="node_panel" >Node Panel</div>
+  	  </div>   
+           
+      </div>   
+    </div> 	
+  </div> 	
+  
+  <div id="svgfileopendlg" style='display:none'><div id="svglisttitle">Open SVG Files from my Workspace</div>
+		<div id="svgfileopendlgcontent" style="overflow:hidden">
+			<div id="svgfileopenlistbox"></div> 		
+      		
+      		<input type="button" id='SVGFO_LB_okbtn' value="OK" onclick="GX_LBOKHandler()"  style="margin-top:20px"/>
+      		<input type="button" id='SVGFO_LB_cancelbtn' value="Cancel" onclick=""  style="margin-top:20px"/>
+		</div>
+  </div>
+  
+  <div id="newSVGFileNameDlg" style="display:none"><div id="Div2">Enter File Name</div>
+        <div id='Div3' style="overflow: hidden"> 
+            <input  id='pageNameIP' type=text value="" />
+            <div> 
+                <input type="button" id ='pageOK'     value="OK" />
+                <input type="button" id ='pageCancel' value="Cancel"  />
+            </div>
+       </div>          
+  </div>
+  
+  <div id="svgfiledeletedlg" style='display:none'><div id="svglisttitle">Delete SVG Files from my Workspace</div>
+		<div id="svgfiledeletedlgcontent" style="overflow:hidden">
+			<div id="svgfiledeletelistbox"></div>   
+			<input type="button" id='SVGFO_LB_deletebtn' value="Delete" onclick="GX_LBDeleteItem()"  style="margin-top:20px"/>    		
+      		<input type="button" id='SVGFD_LB_cancelbtn' value="Close" onclick=""  style="margin-top:20px"/>
+		</div>
+  </div>
+  <div id="svgdimensiondlg" style='display:none'><div id="svgdimtitle">Dimension of SVG Image</div>
+    <div id="svgfiledeletedlgcontent" style="overflow:hidden">
+		 <div id='svgWidthEdit' style='display:inline-block; margin-left:5px;'>Width<div id='svgwidthIP' class='EDIT_BOX' type='DIMENSION' ></div></div>
+		 <div id='svgHeightEdit' style='display:inline-block; margin-left:5px;'>Height<div id='svgheightIP' class='EDIT_BOX' type='DIMENSION' ></div></div>		
+            <div> 
+                <input type="button" id ='svgDimOK'     value="OK" />
+                <input type="button" id ='svgDimCancel' value="Cancel"  />
+           </div>
+     </div>
+  </div>
+  <div id="polygonipdlg" style='display:none'><div id="svgdimtitle">Inputs for Polygon</div>
+    <div id="svgfiledeletedlgcontent" style="overflow:hidden">
+		 <div id='polynSidesedit' style='display:inline-block; margin-left:5px;'>Number of Sides<div id='polynSidesIP' class='EDIT_BOX' type='POLY_DIMENSION' ></div></div>
+		 <div id='polyLengthEdit' style='display:inline-block; margin-left:5px;'>Length<div id='polyLengthIP' class='EDIT_BOX' type='POLY_DIMENSION' ></div></div>		
+            <div> 
+                <input type="button" id ='polynSidesOK'     value="OK" />
+                <input type="button" id ='polyLengthCancel' value="Cancel" />
+           </div>
+     </div>
+  </div>
+  
+  <div id='colorpickwidget' style='display:none'>
+            <div id='colorhdr'>Choose Color</div>
+            <div id='colorcontent' style="overflow: hidden">
+                <div id="colorpicker"></div> 
+                	<input type="button" id='okbtn' value="Ok" onclick="GX_ColorWidgetOK(event)"/>  
+                	<input type="button" id='cancelbtn'  value="Cancel" onclick="GX_ColorWidgetCANCEL(event)"/>                	
+            </div>        
+  </div>       
+   
+ 
+ <div id='gradientDlg'style="overflow: hidden; display:none"><div id="LGtitle">Linear Gradient Settings</div>       
+       <div id="linearcontent" style="overflow:hidden">
+        
+              <div style= 'margin-left:2px; margin-top:10px;'>Title of Gradient<input  id='gradTitleIP' style= 'margin-left:4px;' type=text value="Default" onblur='OnEditBoxFocusOut(event)'/>
+              	
+              </div>
+                 <div id='linSpreaddiv' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Spread-Method<div id='LinearSpreadDDL' class='EDIT_BOX' type='Spread Method to Apply' style='margin-top:8px' ></div></div>
+                 <input type="button" id ='animTotalPreviewBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)'/>           
+                                        
+                 
+         <div id='LGSpecific' style='display:block'>       
+                 <div style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:15px; margin-bottom:20px; margin-right:5px; width: auto'>
+                      <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Gradient Start</div>
+                      <div id='GradStartXEdit' style='margin-left:5px;margin-top:10px;'>X-Pos(%)<div id='GradStartXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                      <div id='GradStartYEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Y-Pos(%)<div id='GradStartYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                      <div style='display:inline-block; position:relative; top:-20px'>	                      
+	                      <div id='animateStartPos' style="display:inline-block;margin-left:10px; margin-top: 5px;">Animate</div>	                      
+	                      <div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>Dur(s)<div id='durStartPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+	                      <input type="button" id ='apply_StartPos' style='display:inline-block; margin-left:12px; position:relative; top:-6px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                      <input type="button" id ='animPreviewStartBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />	                                          
+                      </div>     
+                 </div>
+                 <div style='border:solid 1px grey;border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:10px; margin-bottom:20px; margin-right:5px; width: auto; '>
+                    <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px; '>Gradient Stop</div>
+                    <div id='GradStopXEdit' style='margin-left:5px;margin-top:10px;'>X-Pos(%)<div id='GradStopXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                    <div id='GradStopYEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Y-Pos(%)<div id='GradStopYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+                      <div style='display:inline-block; position:relative; top:-25px;'>                          
+	                      <div id='animateStopPos' style="display:inline-block;margin-left:10px; margin-top: 5px;">Animate</div>                       
+	                      <div  class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>Dur(s)<div id='durStopPosIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+	                      <input type="button" id ='apply_StopPos' style='display:inline-block; margin-left:12px; position:relative; top:-6px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                      <input type="button" id ='animPreviewStopBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
+	                  </div>
+	                  
+                 </div>
+          </div>
+        <div id='RGSpecific' style='display:none'>
+          	 <div style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:15px; margin-bottom:20px; margin-right:5px; width: auto '>
+          	  	<div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Center Parameters</div>
+          	  	           	  	      	
+          	  	<div id='centerXEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>CX(%)<div id='centerXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+          	  		<div style='display:inline-block; position:relative; top:15px; left: 10px'>           			
+	          			<div id='animatecenterPos' style="display:inline-block;margin-left:5px; margin-top: 5px;">Animate</div>
+			            <label style='margin-left:25px'>Dur(s)<div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'><div id='durCenterIP' class='CENTER_ANIM_PROP' type='DIMENSION' style='margin-top:2px' ></div></div></label>
+			             <input type="button" id ='apply_CenterPos' style='display:inline-block; margin-left:12px; position:relative; top:-6px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' class='CENTER_ANIM_PROP_BTN'/>
+			             <input type="button" id ='animPreviewCenterBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' class='CENTER_ANIM_PROP_BTN'/>
+		             </div>	
+		         <div id='centerYEdit' style=' margin-left:5px;margin-top:5px;'>CY(%)<div id='centerYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+          			
+          		
+          		  <div style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; margin-left:5px; margin-top:15px;margin-right:5px;margin-bottom:5px;'>	
+          			<div id='radiusEdit' style='display:inline-block; margin-left:5px;margin-top:10px;'>Radius(%)<div id='radiusIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+          			
+	          			 <div id='animateRadius' style="display:inline-block;margin-left:10px; margin-top: 5px;">Animate</div>
+		                <label style='margin-left:25px;'>Dur(s)<div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-top:10px;'><div id='durRadiusIP' class='RADIUS_ANIM_PROP' type='DIMENSION' style='margin-top:2px' ></div></div></label>
+		                 <input type="button" id ='apply_Radius' style='display:inline-block; margin-left:12px; position:relative; top:-6px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+		                 <input type="button" id ='animPreviewRadiusBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)'/>
+          			
+				  </div>	          			
+          	</div>
+          	<div style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:15px; margin-bottom:20px; margin-right:5px; width: auto; '>
+          	  	<div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Focal Parameters</div>
+          	  		<div style="display:inline-block;">
+          				<div id='focusXEdit' style='margin-left:5px;margin-top:5px;'>Focus-X(%)<div id='focusXIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+          				<div id='focusYEdit' style='margin-left:5px;margin-top:5px;'>Focus-Y(%)<div id='focusYIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>
+          			</div>   
+          			<div style="display:inline-block; position:relative; top:-20px; left: 5px">
+          				 <div id='animateFocus' style="display:inline-block;margin-left:5px; margin-top: 5px;">Animate</div>
+		                 
+		                 <label style='margin-left:25px;'>Dur(s)<div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:10px;'><div id='durFocusIP' class='FOCUS_ANIM_PROP' type='DIMENSION' style='margin-top:2px' ></div></div></label>
+		                 <input type="button" id ='apply_Focus' style='display:inline-block; margin-left:12px; position:relative; top:-6px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+		                 <input type="button" id ='animPreviewFocusBtn' style='display:inline-block; margin-left:1px; position:relative; top:-6px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)'/>
+          			</div>       			
+          	</div>	
+          		
+       </div>      
+         
+                  <div style='border:solid 1px grey;border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:10px; margin-bottom:5px; margin-right:5px; width: auto; '>
+                    <div style='position:absolute; top:-10px; left:20px; z-index:1;background-color:white; margin-bottom:20px;margin-top:1px; '>Color Offsets</div>
+                   <div> 
+                    	<div id='stop0_CB' style="display:inline-block; margin-top: 5px;">Stop-1</div>
+                    	<div id='stop0_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop0_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    	<div style='display:inline-block; position:relative; top:-5px; margin-left:5px;'><button id='stop0_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>           	
+                  
+	               
+	               </div>
+                    
+                    <div style='display:inline-block;'>
+                    	<div id='stop1_CB' style="display:inline-block; margin-top: 5px;">Stop-2</div>
+                    	<div id='stop1_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop1_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    	<div style='display:inline-block; position:relative; top:-5px; margin-left:5px;'><button id='stop1_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                     </div>
+                    <div style='display:inline-block; position:relative; top:-26px;'>	
+                    	<div id='animateStop_col' style="display:inline-block;margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
+                      	<div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:25px;margin-top:10px;'>Dur(s)<div id='durStopColIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	               
+	                	<input type="button" id ='apply_Stop_Col' style='display:inline-block; margin-left:12px; position:relative; top:-7px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                	<input type="button" id ='animPreviewStop' style='display:inline-block; margin-left:1px; position:relative; top:-7px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
+	                </div> 
+                   
+                    
+                    <div style='display:none'>
+                   		<div id='stop2_CB' style="display:inline-block; margin-top: 5px;">Stop-3</div>
+                    	<div id='stop2_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop2_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:5px;'><button id='stop2_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                    	
+                    	<div id='animateStop_col2' style="display:inline-block;margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:20px;'>From<button id='stop_color_from2' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:#440000; width:32px; height:32px;margin-top:0px'></button></div>                    	
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:5px;'>To<button id='stop_color_to2' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='position:relative; top:0px; background-color:grey; width:32px; height:32px;margin-top:-20px'></button></div>	               
+	                	<input type="button" id ='apply_Stop_Col2' style='display:inline-block; margin-left:12px; position:relative; top:0px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                	<input type="button" id ='animPreviewStop2' style='display:inline-block; margin-left:1px; position:relative; top:0px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
+                    </div>
+                    
+                    <div style='display:none'> 
+                    	<div id='stop3_CB' style="display:inline-block; margin-top: 5px;">Stop-4</div>
+                    	<div id='stop3_Offset_edit' style='display:inline-block; margin-left:25px;margin-top:5px;'>Offset(%)<div id='stop3_Offset' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:5px;'><button id='stop3_color' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
+                    	                    	
+                  		<div id='animateStop_col3' style="display:inline-block;margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:20px;'>From<button id='stop_color_from3' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:#440000; width:32px; height:32px;margin-top:0px'></button></div>                    	
+                    	<div style='display:inline-block; position:relative; top:0px; margin-left:5px;'>To<button id='stop_color_to3' type='BACKGROUND_COLOR'   onclick="GX_GradColorButtonHandler(event)" style='position:relative; top:0px; background-color:grey; width:32px; height:32px;margin-top:-20px'></button></div>	               
+	                	<input type="button" id ='apply_Stop_Col3' style='display:inline-block; margin-left:12px; position:relative; top:0px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
+	                	<input type="button" id ='animPreviewStop3' style='display:inline-block; margin-left:1px; position:relative; top:0px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
+	              
+                    </div>
+                   
+                  </div>
+                  <div id='gradpreview' style='position:absolute; top:35px; left:490px; width:auto;'>
+                    <?xml version="1.0"?><!DOCTYPE svg SYSTEM "svg11.dtd">
+                    <svg xmlns="http://www.w3.org/2000/svg" id="GRAD_PREVIEW_SVG" x="0px" y="0px" width="75px" height="75px" viewBox="0 0 75 75" version="1.1">
+		            <title>New SVG File</title>
+                    <defs>    
+                    </defs>
+                    <rect id="GRAD_PREVIEW_RECTANGLE" x="0" y="0" width="75" height="75" fill="green" stroke="black" stroke-width="2" opacity="1.0"/>
+                    <line id="LG_INDICATOR_LINE" class="LG_MARKERS" x1='1' y1='1' x2='74' y2='74' stroke="black" stroke-width="3" stroke-dasharray="4,2" stroke-linejoin="miter" stroke-opacity="1" fill="none"/>
+                    <circle id='START_POINT' class="LG_MARKERS" cx='7' cy='7' r='5' stroke='black'  stroke-width='2' fill='none' fill-opacity='0.5' pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
+                    <circle id='END_POINT' class="LG_MARKERS" cx='70' cy='70' r='5' stroke='black' stroke-width='2' fill='none' fill-opacity='0.5'pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
+                    
+                    <circle id='RG_CIRCLE' class= 'RG_MARKERS' cx='38' cy='38' r='36' fx='38' fy='38' fill='none' stroke="black" stroke-width="3" stroke-dasharray="4,2"  pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)"/>
+                    <circle id='RG_CENTER' class= 'RG_MARKERS' cx='38' cy='38' r='3' fill='black' stroke="black" stroke-width="3" />
+                    <line id="RG_RADIUS_LINE" class="RG_MARKERS" x1='38' y1='38' x2='73' y2='38' stroke="black" stroke-width="3" stroke-dasharray="4,2" stroke-linejoin="miter" stroke-opacity="1" fill="none"/>
+                    <circle id='RG_RADIUS_END_POINT' class="RG_MARKERS" cx='70' cy='38' r='5' stroke='black' stroke-width='2' fill='none' fill-opacity='0.5' pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
+                    <circle id='RG_FOCUS_POINT' class="RG_MARKERS" cx='38' cy='38' r='10' stroke='black' stroke-width='2' fill='black' fill-opacity='0.5' pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
+                    
+                    </svg>
+                  </div>
+                    <div style='margin-top:3px'> 
+                        <input type="button" id ='myOK'     value="OK"  onclick='GX_GradDlgOK()'/>
+                        <input type="button" id ='myCancel' value="Cancel" onclick='GX_GradDlgCancel()' />
+                    </div>
+                 </div>
+                 
+    </div>        	
+    <div id='gradcolorpickwidget' style='display:none'>
+                <div id='gradcolorhdr'>Choose Color</div>
+                <div id='gradcolorcontent' style="overflow: hidden">
+                    <div id="gradcolorpicker"></div> 
+                	    <input type="button" id='gradokbtn' value="Ok" onclick="GX_GradColorWidgetOK(event)"/>  
+                	    <input type="button" id='gradcancelbtn'  value="Cancel" onclick="GX_GradColorWidgetCANCEL(event)"/>                	
+                </div>        
+     </div> 
+     
+      <div id='animcolorpickwidget' style='display:none'>
+            <div id='animcolorhdr'>Animate Color</div>
+            <div id='animcolorcontent' style="overflow: hidden">
+                <div id="animcolorpicker"></div> 
+                	<input type="button" id='animokbtn' value="Ok" onclick="GX_AnimColorWidgetOK(event)"/>  
+                	<input type="button" id='animcancelbtn'  value="Cancel" onclick="GX_AnimColorWidgetCANCEL(event)"/>                	
+            </div>        
+      </div>  
+   <div id='animationwidget' style="overflow: hidden; display:none">
+    <div id='animhdr' style='font-weight:bold; font-size:medium'>Animation Settings</div>
+    <div id='animcontent' style="overflow: hidden">
+       
+    	<div>
+	    	<div style= 'display:inline-block;margin-left:2px; margin-top:10px;'>Animation ID<input  id='animIDIP' style= 'margin-left:4px;' type='text' /></div>
+	    	<div style= 'display:inline-block; margin-left:2px; margin-top:10px;'>Object ID<input  id='objectIDIP' style= 'margin-left:4px;' type='text' /></div>
+	    	<div class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-top:14px;'>Title<input  id='animtitleIP' style= 'margin-left:4px;' type='text' value=" "/></div>	    	
+	    	<div id='durEdit' style='display:inline-block; margin-left:2px; margin-top:10px'>Duration(sec)<div id='durationIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+    	</div>
+    	
+    	
+    	<div id='animTabContent' style='margin-top:8px'>
+           <ul>
+              <li id='animparamTab' style="margin-left: 15px;">Animation Parameters</li>
+              <li id='animtimeTab'>Timing Parameters</li>               
+           </ul>
+           <div id="animparamcontent">
+           <div id='attrvalbtn' style='position:relative; top:10px; left:20px; z-index:1;background-color:white; margin-bottom:1px;margin-top:1px;'>Animate Attribute</div>
+             <div id='animattrgroup' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:2px; margin-bottom:20px; margin-right:5px; width: 352px; height: 120px'>                
+           	  <div id='animattrDivlist' class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Select Attribute<div id='animAttrDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+           	  	<div id='COLORATTR_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
+           		   <div class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-top:14px;'>Start Value<input  id='startColValIP' style= 'margin-left:4px;' type='text' value=" "/></div>
+                   <div class='ANIMATTR' style= 'display:inline-block;'><input type="button" id ='startanimcolbtn' value="Color"  onclick='GX_ColBtnHdlr(event)'/></div>	
+                   <div class='ANIMATTR' style= 'display:inline-block; margin-left:2px; margin-top:8px;'>End Value<input  id='endColValIP' style= 'margin-left:13px;' type='text' value=" "/></div>
+                   <div class='ANIMATTR' style='display:inline-block'><input type="button" id ='endanimcolbtn' value="2-Color"  onclick='GX_ColBtnHdlr(event)'/></div>
+                </div>
+                
+                <div id='OPACITY_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
+                	<div id='startfracEdit' style='margin-left:2px; margin-top:10px'>Start Value<div id='startOpacityValueIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                	<div id='endfracEdit' style='margin-left:2px; margin-top:10px'>End Value<div id='endOpacityValueIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-left:11px;' ></div></div>                	
+                </div>
+                
+                 <div id='VISIBLE_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
+                	<div id='startcomboEdit' style='margin-left:2px; margin-top:10px'>Start Value<div id='startVisibilityValueDDL' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                	<div id='endcomboEdit' style='margin-left:2px; margin-top:10px'>End Value<div id='endVisibilityValueDDL' class='EDIT_BOX group6' type='DIMENSION' style='margin-left:11px;' ></div></div>                	
+                </div>
+                
+                 <div id='STROKE_WIDTH_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
+                	<div  style='margin-left:2px; margin-top:10px'>Start Value<div id='startStrokeWidthValueIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                	<div  style='margin-left:2px; margin-top:10px'>End Value<div id='endStrokeWidthValueIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-left:11px;' ></div></div>                	
+                 </div>
+                
+                <div id='TRANSLATE_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
+                	<div  style='display:inline-block; margin-left:2px; margin-top:10px'>Start-X Pos<div id='startPosXIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                	<div  style='display:inline-block; margin-left:2px; margin-top:10px'>Start-Y Pos <div id='startPosYIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                	
+                	<div>
+                		<div  style='display:inline-block;margin-left:2px; margin-top:10px'>End-X Pos<div id='endPosXIP' style='margin-left:12px;' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                		<div  style='display:inline-block; margin-left:2px; margin-top:10px'>End-Y Pos<div id='endPosYIP' style='margin-left:17px;' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                	</div>                	                	
+                </div>
+                
+                <div id='ANGLE_UI_GROUP' class='ATTR_UI_GROUP' style='display:none'>
+                	<div  style='margin-left:2px; margin-top:10px'>Start Value(deg)<div id='startAngleValueIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                	<div  style='margin-left:2px; margin-top:10px'>End Value(deg)<div id='endAngleValueIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-left:11px;' ></div></div>                	
+                </div>
+                             	
+           	 </div> <!-- anim attribute group box -->	
+           	 <div id='motionvalbtn' style='position:relative; top:1px; left:20px; z-index:1;background-color:white; margin-bottom:5px;margin-top:1px;'>Animate Motion</div>
+           	 <div id='animmotiongroup' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:-13px; margin-bottom:20px; margin-right:5px; width: 352px; height:140px'>
+           	 	<div style='margin-top:8px; margin-left:15px; font-style:italic'>Animates the Object Along the Selected Path</div>
+           	    <div id='pathDivlist' style= 'display:inline-block; margin-left:2px; margin-right:3px'>Select Path<div id='pathlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+           	    <div id='pathvisibilityCB' style='display:inline-block; margin-left:2px; margin-top:-16px'>Path Visible</div>
+           	    
+           	  <!-- <div id='dada' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:0px; margin-bottom:5px; margin-right:5px; width: 340px; height:48px'>-->
+           	    	<!-- <div style='margin-top:-10px; margin-left:15px; font-style:italic';>Motion Offset from Path </div>-->
+           	    	<div style='display:inline-block; margin-left:2px; margin-top:0px'>X-OffsetFromPath<div id='offsetFromPathX' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+           	   		<div style='display:inline-block; margin-left:2px; margin-top:5px'>Y-OffsetFromPath<div id='offsetFromPathY' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+           	   <!-- </div>-->
+           	    
+           	 </div>
+          </div> <!-- id="animparamcontent" -->
+          <div id="animtimecontent">
+             <div id='starttext' style='position:relative; top:10px; left:20px; z-index:1; width:42px; background-color:white; margin-bottom:1px;margin-top:1px;'>Starts</div>
+             <div id='timingparamrgroup' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:2px; margin-bottom:20px; margin-right:5px; width: 352px; height: 218px'>
+             	<div id='timeRB' style='display:inline-block; margin-bottom:5px;margin-top:5px;margin-left:8px;'>At Time(sec)</div>
+             	<div id='startimeEdit' style='display:inline-block; margin-left:1px; margin-top:5px'><div id='startTimeIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+                         
+             	<div id='uieventRB' style='position:relative; top:14px; left:1px; z-index:1;background-color:white; margin-bottom:5px;margin-top:1px;margin-left:8px;'>On Mouse Click</div>
+             	<div id='uieventgroup' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:2px; margin-bottom:20px; margin-right:5px; width: 340px; height: 46px'>
+             		<!-- <div id='uieventlist' style= 'display:inline-block; margin-left:8px; '>Event<div id='uieventlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>-->
+             		<div id='objectlist' style= 'display:inline-block; margin-left:8px; '>On Object<div id='objectlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+             	</div>
+             	
+             	<div id='animeventRB' style='position:relative; top:16px; left:1px; z-index:1;background-color:white; margin-bottom:5px;margin-top:1px;margin-left:8px;'>On Animation Event</div>
+             	<div id='animeventgroup' style='border:solid 1px grey; border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:2px; margin-bottom:20px; margin-right:5px; width: 340px; height: 46px'>
+             		<div id='animeventlist' style= 'display:inline-block; margin-left:8px;'>Event<div id='animeventlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+             		<div id='animlist' style= 'display:inline-block; margin-left:8px;'>Animation<div id='animlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+             	</div>
+             	
+             	<div id='calcmodelist' style= 'display:inline-block; margin-left:8px;'>Mode<div id='calcmodelistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+             	<div id='restartlist' style= 'display:inline-block; margin-left:8px;'>Restart<div id='restartlistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+             	             	
+             	<div id='repeatcountEdit' style='display:inline-block; margin-left:1px; margin-top:5px'>Repeat Count<div id='repeatcountIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div>
+             	<div id='endstatelist' style= 'display:inline-block; margin-left:8px;'>End State<div id='endstatelistDDL' class='EDIT_BOX' type='ANIMATTR' style='margin-top:12px' ></div></div>
+             
+             </div> <!--timingparamrgroup  -->
+           
+           
+           </div> <!-- animtimecontent -->
+           </div>    	
+    	       	    	
+	   <div style= 'margin-top:6px;' >
+	   		 <input type="button" id ='newanimAddBtn'     value="Add"  onclick='GX_AnimDlgOK()'/> 
+	   		 <input type="button" id ='showlistbtn' value="Apply"  onclick='GX_ApplyBtnHdlr(event)'/>
+    		 <input type="button" id ='previewbtn' value="Preview"  onclick='GX_PreviewBtnHdlr(event)'/>
+	   	  	 <input type="button" id ='myOK'     value="OK"  onclick='GX_AnimDlgOK()'/>
+	    	<input type="button" id ='myCancel' value="Cancel" onclick='GX_AnimDlgCANCEL()' />
+	   </div> 	
+                        	
+    </div> 
+           
+ </div>
+     <div id="fillcolorDlg" style='display:none'><div id="fillcoldlg">Fill Solid Color</div>
+	    <div id="fillcolcontent" style="overflow:hidden">
+			 	<label>Choose Color<button id='fill_colorbtn' type='BACKGROUND_COLOR'   onclick="GX_FillColorHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></label>
+			 	<div id='animateFillColor' style="display:inline-block;margin-left:10px; margin-top: 5px;margin-right:10px;">Animate</div>
+			 	<input type="button" id ='fillcolAnimAddBtn'  value="Apply"  onclick='GX_FillBtnHandler(event)'/>
+			 	<input type="button" id ='fillcolAnimPreviewBtn'  value="Preview"  onclick='GX_FillBtnHandler(event)'/>	
+	            <div style='position:relative; top: 10px'> 
+	                <input type="button" id ='fillcolOK'     value="OK" />
+	                <input type="button" id ='fillcolCancel' value="Cancel" />
+	           </div>
+	     </div>
+ 	 </div>  
+ 	 
+ 	
+  <div id='dummyNode' style='display:none'></div>
+  <div id='widgettooltip' style='display:none'></div>
+   <div id='selectortooltip' style='display:none'>Hello World</div>
+	
+  
+</body>
+</html>

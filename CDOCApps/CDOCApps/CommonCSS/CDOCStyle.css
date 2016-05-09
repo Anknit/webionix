@@ -1,0 +1,246 @@
+/*#div_selection .ui-selecting { background: #FECA40; }
+#div_selection .ui-selected { background: #2222ee; color: white; }
+#div_selection { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+#div_selection div { margin: 0px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+*/
+
+
+.ui-draggable, .ui-droppable {
+	background-position: top;
+}
+div.OBJECT_CONTAINER:hover{border:dashed thin grey}
+div.OBJECT_CONTAINER:
+p.HTMLOBJECT{margin: 1px; padding:0px; }
+
+ /*  Resize specfic */
+
+.ui-resizable-helper { border: 1px dotted green; }
+
+div.EDIT_BOX{display:inline-block; margin-left:2px; font-weight:bold;}
+.EDIT_BOX{ font-size:10px; }
+
+.TREEMENU {
+	font-size:x-small;
+	font-weight:normal; 
+}
+
+ /*.IMAGE_BUTTON:hover{ 		
+         border:inset 1px grey;  
+         border-radius:3px;  box-shadow: 5px 8px 7px #888888; 
+ 		                    
+                           } 
+                           */
+ .BTN_CONTAINER_SMALL:hover, .BTN_CONTAINER:hover{       
+        
+       /*  box-shadow:-1px -1px 10px 10px #e0e0e0;*/         
+         border: 1px solid #666;
+         -webkit-animation: haloanim 1s; /* Chrome, Safari, Opera */
+    	 animation: haloanim 1s;   
+    	 animation-fill-mode: forwards; 
+    	 -webkit-animation-fill-mode: forwards; 
+    	 cursor:pointer; 		              
+   }   
+   
+  div.BTN_CONTAINER
+  {
+        /*	box-sizing:border-box;*/
+          /* border: 1px solid #666;*/
+           border-radius:3px;  
+           width: 45px; 
+           height: 45px;       
+           float:left;
+           display:inline-block;
+           text-align:center;  
+           margin-left:15px;          
+  }
+ 
+  .BTN_CONTAINER_SMALL {
+  	border-radius:3px;  
+    width: 36px; 
+    height: 40px;       
+    float:left;
+    display:inline-block;
+    text-align:center;  
+    margin-left:8px;  
+    font-size:10px;
+  }
+  .btn {
+  	font-size:10px; 
+  }
+  /* Chrome, Safari, Opera */
+@-webkit-keyframes haloanim {
+	from {box-shadow:none;}
+    to {box-shadow:-1px -1px 10px 10px #e0e0e0;}
+}
+
+/* Standard syntax */
+@keyframes haloanim {
+    from {box-shadow:none;}
+    to {box-shadow:-1px -1px 10px 10px #e0e0e0;}
+}
+
+
+.TB_TEXT{
+   		position:relative;
+   		top:6px;
+   		left: 2px;
+   } 
+   
+  .SMALL_TB_TEXT{
+  	position:relative;
+   	top:-5px;
+   	left: 2px;
+   	font-size:10px; 
+   	margin-bottom:10px; 
+  }
+ .IMAGE_BUTTON{
+ width:32px; 
+ height:32px;
+ position: relative;
+ top: 3px; 
+ }   
+ 
+ .small_icon{
+ width:24px; 
+ height:24px;
+ position: relative;
+ top: 1px; 
+ }    
+ 
+  
+ /*.IMG_BTN_ACTIVE:active {width:26px; height:26px; border:outset 1px grey;}*/
+ 
+  
+  .KEY_PAD:hover{   
+  				   width:24px; height:24px; 
+         		   border:inset 2px grey; 	 
+                   box-shadow: 5px 8px 7px #888888;                           
+                   transition-property:width,height;
+                   transition-duration:200ms; 
+                                                   
+                           } 
+   .KEY_PAD{width:24px; height:24px;
+               /* border:outset 2px rgb(12, 12, 12);*/                 
+                font-size:xx-small;  
+                }       
+                
+   .KEY_PAD:active {width:24px; height:24px; border:outset 1px grey;}
+   
+   div.KEY_CONTAINER
+   {
+        box-sizing:border-box;          
+        width:32px;           
+        float:left;   
+        /*margin-top:2px;*/                    
+   }        
+        
+   span.MATH_EQUATION:hover
+   {   	
+   	 border:inset 1px grey; 
+   }
+   div#sel_gripper{ width: 20px; height: 20px; padding: 1px; float: left; margin: 0 1px 1px 0; 
+   /*visibility:hidden;*/
+   display:none; 
+   background-color:transparent;
+   border:2px solid #EF4D02; 
+  /* box-shadow: 10px 10px 5px grey;*/
+ 
+   }
+  
+  #DivPathMarker {
+  			 border-radius: 25px;
+   			 background-color: yellow;
+   			 border:solid blue 1px; 
+    		 padding: 1px;
+    		 width: 25px;
+    		 height: 25px;
+	}
+
+  div.LG_MARKER_POINTS:hover{
+  			 border-radius: 15px;
+  			 width: 15px;
+    		 height: 15px;
+    		 
+  }
+   .jqx-grid-cell
+	{
+	    border: none;
+	}
+	
+	.jqx-input{	
+		font-size:10px;
+		font-weight:bold;
+	}
+#propertyTab, {
+	font-size:10px; 
+}
+
+#animationTab{
+	font-size:10px; 
+}
+
+.propertyRow, .animpropertyRow{
+	border-bottom:1px ridge #c7c7c7; 
+	margin-top:5px; 
+	/*height:40px;*/ 
+}
+.animpropertyRow{
+	margin-left:10px; 
+	margin-top:5px; 
+}
+ 
+.propertyName{
+	font-weight: bold; 
+	width:15%; 
+	margin-left:10px; 
+	position:relative;
+	top:-5px;
+	display:inline-block;
+}
+.propertyValues{
+	
+}
+.myLabel{
+	position:relative;
+	top:-5px; 
+	margin-right:5px; 
+}
+
+.propertyBtn{
+	background-color:#666; 
+	color:#e0e0e0; 
+}
+
+.propertyBtn:hover{
+	background-color:#222; 
+	color:#fff;
+	border-color:#0000de;  
+}
+
+#contenttablejqxAnimgrid{
+	font-size:10px;
+	font-weight:bold; 
+}
+
+.jqx-tabs-titleContentWrapper{
+	font-size:12px; 
+	font-weight:bold; 
+}
+
+/* Tooltip */
+ 
+  .tooltip > .tooltip-inner {
+      background-color: #F4FF26; 
+      color: #222; 
+      border: 1px solid #444; 
+      border-radius: 5px;
+      padding: 5px;
+      font-size: 12px;
+      opacity:1; 
+     /* font-weight:bold;*/
+  }
+  
+  .jqx-window-header{
+  	font-size:12px;
+  	font-weight:bold; 
+   }
