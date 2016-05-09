@@ -2066,8 +2066,8 @@ function GX_RemoveAnimInfoFromList(animID)
 	}
 	else if(animParams.animType == 'ANIM_MOVE'){
 		var classvalue = 'ANIM_MOVE ' + animParams.title + '  0;0' ; 
-		var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue,0); 
-		containerGroupID = animParams.animID ; 
+		//var retval = GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue,0); 
+		moveGroupID = animParams.animID ; 
 		var myarrS = animParams.startPos.split(','); 
 	    var myarrE = animParams.endPos.split(',');
 	    var attributenameIndex, fromIndex, toIndex; 
@@ -2086,21 +2086,33 @@ function GX_RemoveAnimInfoFromList(animID)
 			
 			attrData = ['title', 'MoveX']; 
 			commonAttrArray[titleIndex] = attrData; 
-			var animstr = GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_X', containerGroupID, 'ANIM_ATTRIBUTE', commonAttrArray);
+			//var animstr = GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_X', moveGroupID, 'ANIM_ATTRIBUTE', commonAttrArray);
 			
-			if(animParams.objectType == 'RECTANGLE'){			
-				attrData = ['attributeName','y'];  
-			    commonAttrArray[attributenameIndex] = attrData;		    
-			   }
-			attrData = ['from', myarrS[1]];  			
-			commonAttrArray[fromIndex] = attrData;			
-			attrData = ['to', myarrE[1]];  			
-			commonAttrArray[toIndex] = attrData;		
-			attrData = ['title', 'MoveY']; 
-			commonAttrArray[titleIndex] = attrData; 
-			attrData = ['begin', animParams.animID + '_MOVE_X.begin']; 
-			commonAttrArray[beginIndex] = attrData; 
-			var animstr = GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_Y', containerGroupID, 'ANIM_ATTRIBUTE', commonAttrArray);
+			
+			GXRDE_addNewSVGGroupObject(animParams.animID, containerGroupID, 'ANIM_GROUP', classvalue,'movexCB'); 
+			movexCB = function(respstr){
+				GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_X', moveGroupID, 'ANIM_ATTRIBUTE', commonAttrArray, 'moveyCB');
+				moveyCB = function(respstr){
+					if(animParams.objectType == 'RECTANGLE'){			
+						attrData = ['attributeName','y'];  
+					    commonAttrArray[attributenameIndex] = attrData;		    
+					   }
+					attrData = ['from', myarrS[1]];  			
+					commonAttrArray[fromIndex] = attrData;			
+					attrData = ['to', myarrE[1]];  			
+					commonAttrArray[toIndex] = attrData;		
+					attrData = ['title', 'MoveY']; 
+					commonAttrArray[titleIndex] = attrData; 
+					attrData = ['begin', animParams.animID + '_MOVE_X.begin']; 
+					commonAttrArray[beginIndex] = attrData; 
+					var animstr = GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_Y', moveGroupID, 'ANIM_ATTRIBUTE', commonAttrArray, 'reloadCBFn');
+					reloadCBFn = function(respstr){
+						GX_ReloadSVG(animParams.objectID, true);
+					}
+				}
+			}
+			
+			
 			return; 
 	}
 	else if (animParams.animType == 'ANIMATE_ZOOM'){
@@ -2201,9 +2213,7 @@ function GX_RemoveAnimInfoFromList(animID)
 				reloadFnCB= function(respstr){
 					GX_ReloadSVG(animParams.objectID, true);
 				}
-			}
-			
-		
+			}		
 		return ; 
 	}
 	else
@@ -2315,22 +2325,24 @@ function GX_RemoveAnimInfoFromList(animID)
 	 
  }
  function GX_AddNewAnimElementInDOM(animID, parentID, animType, attrArray, bUIUpdate)
- {
-	 
-	 var animstr = GXRDE_addNewAnimationObject(animID, parentID, animType, attrArray); 
+ {	 
+	 var animstr = GXRDE_addNewAnimationObject(animID, parentID, animType, attrArray,'newAnimCallback' ); 
+	 newAnimCallback = function(respstr){
+		 var animNode = document.getElementById(animID); 
+		 if(animNode)
+		 {
+			 var parentNode = animNode.parentNode; 
+			 parentNode.removeChild(animNode); 
+		 }	
+	 	GX_AddNewNodeFromXMLString(parentID, animstr);	 
+	 	animNode = document.getElementById(animID); 	
+	 	if(bUIUpdate == true)
+	 	{
+	 		GX_UpdateAnimParamOnUI(animNode);
+	 	}
+	 }
 	
-	 var animNode = document.getElementById(animID); 
-	 if(animNode)
-	 {
-		 var parentNode = animNode.parentNode; 
-		 parentNode.removeChild(animNode); 
-	 }	
- 	GX_AddNewNodeFromXMLString(parentID, animstr);	 
- 	animNode = document.getElementById(animID); 	
- 	if(bUIUpdate == true)
- 	{
- 		GX_UpdateAnimParamOnUI(animNode);
- 	}
+	 
  	
  	
  }
@@ -3436,6 +3448,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		return ;				
 		
 	gCurrAnimParam = GX_GetAnimParamFromNode(animNode); 
+	var currObjNode = document.getElementById(gCurrentAnimInfo[1]);  
 		//GX_SetAnimParamOnUI(gCurrAnimParam); 		
 	if(gCurrAnimParam.animType == 'ANIM_MOTION'){			
 		var refPathNode = document.getElementById(gCurrAnimParam.refPathID); 
@@ -3443,6 +3456,12 @@ function GX_RemoveAnimInfoFromList(animID)
 		var objectType = refPathNode.classList[1]; 
 	   	GX_ShowObjectPropertyInterface(objectType, true);				
 	}
+	else{
+		if(currObjNode)
+			GX_SetSelection(currObjNode, true, false);
+	}
+		
+	/*
 		//animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval]; 
 	else if(gCurrentAnimInfo[2] == 'rotate'){
 			//var objNode = document.getElementById(gCurrentAnimInfo[3]);
@@ -3450,6 +3469,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	}
 	else 		
 		GX_SetSelection(animNode.targetElement, true, false);
+		*/
 	//rm to be done later 
 	GX_SetAnimParamOnUI(gCurrAnimParam); 	
  }

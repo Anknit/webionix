@@ -414,9 +414,11 @@ function GX_WKS_OpenSVGFile(&$respData)
 						$animType = strtok($animType, ' ');
 						$animType = strtok(' ');
 						if( ($animType == 'PATH_MOTION') || ($animType == 'ANIMATE_PATH') || ($animType == 'ANIMATE_ZOOM') ) {
-							$childAnimNode = $animChildNode->firstChild;						
-							$begval = $childAnimNode->getAttribute('begin'); 
-							$childAnimNode->setAttribute('begin', '');							
+							$childAnimNode = $animChildNode->firstChild;	
+							if(isset($childAnimNode))	{
+								$begval = $childAnimNode->getAttribute('begin');
+								$childAnimNode->setAttribute('begin', '');
+							}															
 						}						
 					}
 				}//for($j=0; $j < $nodeList->length; $j++)			

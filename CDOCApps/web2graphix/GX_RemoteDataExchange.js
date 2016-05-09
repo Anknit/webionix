@@ -116,10 +116,11 @@ function GXRDE_addNewAnimationObject(animID, parentID, animType, attrArray,callb
 		var attrstr = "&ATTRNAME[]=" +  attrArray[j][0] + "&ATTRVAL[]="+ attrArray[j][1];
 		reqbody += attrstr; 			
 	}
-	AJX_RequestWithNoReponseData("text", "OBJM", "309", reqbody);	
+	//AJX_RequestWithNoReponseData("text", "OBJM", "309", reqbody);
+	AJX_RequestWithReponseCallback("text", "OBJM", "309", reqbody, callbackFn);
 }
 
-function GXRDE_addMultipleAnimObjects(parentID, animType, commonAttrList, animIDList, objAttrList){
+function GXRDE_addMultipleAnimObjects(parentID, animType, commonAttrList, animIDList, objAttrList, callback){
 	var len = commonAttrList.length; 
 	var attrstr = ''; 
 	var reqBody = '&ANIMTYPE=' + animType + '&PARENTID=' + parentID  + '&COMMONATTRLEN=' + commonAttrList.length; 
@@ -133,7 +134,7 @@ function GXRDE_addMultipleAnimObjects(parentID, animType, commonAttrList, animID
 		attrstr = '&ANIMID[]=' + animIDList[i] + '&NAMEVALUEPAIR[]=' + objAttrList[i]; 
 		reqBody += attrstr; 
 	}
-	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "315", reqBody);
+	var respstring = AJX_RequestWithReponseCallback("text", "OBJM", "315", reqBody,callback );
 	if(respstring)
 		return respstring;
 	else
