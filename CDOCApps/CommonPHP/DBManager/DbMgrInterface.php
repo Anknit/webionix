@@ -36,8 +36,8 @@ function getDBConfig($config = ''){
 	$config['servername']	=	$config['host'];
 	$config['Port']			=	$config['port'];
 	$config['userName']		=	$config['username'];
-	$config['passWord']		=	$config['password'];
-	$config['DatabaseName']	=	$config['database'];
+	$config['passWord']		=	$config['passWord'];
+	$config['DatabaseName']	=	$config['DatabaseName'];
 	
 	return $config;
 }

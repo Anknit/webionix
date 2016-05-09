@@ -132,6 +132,7 @@ function  sBookMetaInfo(){
 	    	//bookmark 
 	    	gBookmarkInfo = GX_GetBookmarkArray(bmStr); 
 	    	var bmNode = document.getElementById('bookmarkList'); 
+	    	
 	    	var nodeList = CreateElementList(bmNode, gBookmarkInfo.length, 'li', 'OnBookmarkHandler(event)');
 	    	for(var i=0 ; i < nodeList.length; i++){
 	    		var node = nodeList[i]; 				

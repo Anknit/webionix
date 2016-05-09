@@ -1,21 +1,41 @@
 <?php
 require_once "ABM_AssetManager.php";
 
-
-$modid = $_REQUEST['modid'];
-$reqid = $_REQUEST['reqid'];
-$dataType = $_REQUEST['type'];
-
-$respdata = $HTTP_RAW_POST_DATA ;
-if($reqid == '100'){
-	$retval = GX_ImportMetaData();
+session_name('ABM');
+//get the session id
+session_cache_limiter("private_no_expire ");
+$retval = session_start();
+if($retval == False)
+	return $retval;
+/*$debugsession = $_REQUEST['XDEBUG_SESSION_START'];
+if($debugsession == 'ECLIPSE_DBGP'){
+	http_myresponse_code('200');
+	echo 0;
 }
-else if($reqid == '101'){
-	$retval = GX_GetAudioMetadata($respdata); 
-}
+*/
+	
+	
 
-http_myresponse_code('200');
-echo $retval;
+if(isset($_REQUEST['modid'])){
+	$modid = $_REQUEST['modid'];
+	$reqid = $_REQUEST['reqid'];
+	$dataType = $_REQUEST['type'];
+	
+	$respdata = $HTTP_RAW_POST_DATA ;
+	if($reqid == '100'){
+		$retval = GX_ImportMetaData();
+	}
+	else if($reqid == '101'){
+		$retval = GX_GetAudioMetadata($respdata);
+	}
+	else if($reqid == '102'){
+		$retval = GX_UpdateBookmarkData($respdata);
+	}		
+	http_myresponse_code('200');
+	echo $retval;
+}
+	
+
 
 
 

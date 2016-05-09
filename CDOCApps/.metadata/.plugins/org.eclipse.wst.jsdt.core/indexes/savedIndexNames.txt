@@ -1,0 +1,1 @@
+INDEX VERSION 1.122+C:\Program Files\MYPROGRAMS\wamp\www\CDOCApps\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes

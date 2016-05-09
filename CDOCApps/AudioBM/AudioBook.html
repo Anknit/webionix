@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <!-- audio book app Demo -->
-  <title>Bootstrap Theme The Band</title>
+  <title>Audio bookmarker</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="../CommonJS/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -30,7 +30,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
-      <a class="navbar-brand" href="#myPage">Logo</a>
+      <a class="navbar-brand" href="#myPage">ABM</a>
     </div>
     <!-- 
     <div class="collapse navbar-collapse" id="myNavbar">
@@ -93,10 +93,34 @@
 	<div id='audioplayercontainer'>		
 		<audio id='myaudioPlayer' controls autoplay src="" preload='none' ontimeupdate='OnABMTimeUpdate(event)'></audio>	
 	</div>
-	<div id='bookmarkList'></div>
+	<div id='bookmarkList'>
+	<div class="container">
+	  <div class='col-sm-4'></div>                                                                               
+	  <div class="table-responsive" class='col-sm-4' style='height:230px;' >    
+	  <button id='addBtn' type="button" class="btn btn-primary btn-sm" style='display:block' onclick="OnBtnClickHandler(event)"><span class="glyphicon glyphicon-plus">Add</span></button>  
+	  <button id='saveBtn' type="button" class="btn btn-primary btn-sm" style='display:none' onclick="OnBtnClickHandler(event)"><span class="glyphicon glyphicon-save">Save</span></button>
+	  <div id='bmInput' class="panel panel-default" style='display:none'><div class="panel-body"><div class="form-group">
+	  <input id='bmText' type="text" class="form-control" id="usr" placeholder="Enter title of Bookmark">
+  
+		</div></div></div>
+
+	  <table id='bmTable' class="table" style='text-align:left'>
+	    <thead>
+	      <tr >       
+	        <th>Bookmark</th>
+	        <th>Start Time</th>        
+	      </tr>
+	    </thead>
+	    <tbody id='bookmarklist'></tbody>
+	  </table>
+	  </div>
+	  </div>
+	</div>
+	</div>
+</div>
   	
-</div>
-</div>
+
+
 
 </body>
 </html>

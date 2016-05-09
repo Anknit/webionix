@@ -43,6 +43,11 @@ function AJX_RequestWithPureXMLReponse( RespDataType, ModID, RequestId, RequestB
 function BlockUIinAjax(bFlag) {
 
     if (bFlag == true){        	
+    	setTimeout(function(){			
+    		$.unblockUI();  
+    		//alert("Some Error Encountered, Try to Reload the Project"); 
+			}, 10000); 
+    	
     	$.blockUI({ message: '<p><img src="../CommonCSS/ajax-loader.gif" />Wait..</p>' });         
     }
     else if(bFlag == false){    	

@@ -3247,7 +3247,7 @@ function WAL_createTab(ID,  Height, fnSelectHandler)
 	var JQSel = "#"+ID; 	
 	
 	$(JQSel).jqxTabs({ width: '98%', height: Height, position: 'top', theme: gTheme, animationType: 'fade',
-        selectionTracker: true, enableDropAnimation: false, keyboardNavigation: true });
+        selectionTracker: true, enableDropAnimation: false, keyboardNavigation: false });
 
     $(JQSel).on('selected', function(event) {
     	if(fnSelectHandler)
@@ -3511,7 +3511,7 @@ function WAL_ShowNotification(ID,type, msgString, timeout){
 	if(type)
 		$(JQSel).jqxNotification({template: type}); 
 	if(timeout)
-		$(JQSel).jqxNotification(autoCloseDelay: timeout});
+		$(JQSel).jqxNotification({autoCloseDelay: timeout});
 	
 	$(JQSel).jqxNotification('refresh');
 	$(JQSel).jqxNotification('open'); 
