@@ -9628,11 +9628,18 @@ function GX_RightTabHandler(tabIndex){
 
 function GX_EditorTabHandler(tabIndex){
 	if(tabIndex == 0){
-		gViewMode = 'EDITOR_MODE'; 
+		gViewMode = 'EDITOR_MODE';
+		$("#myNavbar").removeClass("disabledState");
+		$("#rightTabs").removeClass("disabledState");
+		$("#statusinfo").removeClass("disabledState");		
 		GX_ShowEditor(); 
 	}		
 	else{
-		gViewMode = 'PREVIEW_MODE';
+		gViewMode = 'PREVIEW_MODE';		
+		//$('#myNavbar').attr('disabled', 'disabled'); 	
+		$("#myNavbar").addClass("disabledState");
+		$("#rightTabs").addClass("disabledState");
+		$("#statusinfo").addClass("disabledState");		
 		GX_ShowPreview(); 
 	} 
 }
