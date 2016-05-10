@@ -1034,7 +1034,7 @@ function GX_Initialize()
  	 	
     WAL_createButton('SVGFO_LB_deletebtn', '', '70', '24', false); 
     WAL_createWindow(gSVGFileOpenDlg,"Asset List", true, '282', '350', false,	true, false, false, false, "", 'SVGFO_LB_okbtn', 'SVGFO_LB_cancelbtn');
-    WAL_createModalWindow(gSVGFileNameDlgID, '250', '150', 'pageOK', 'pageCancel', false);
+    WAL_createModalWindow(gSVGFileNameDlgID, '150', '90', 'pageOK', 'pageCancel', false);
     WAL_createModalWindow(gSVGExportDlgID, '320', '180', 'exportOK', 'exportCancel', false);
     WAL_createModalWindow(gImageNameDlgID, '350', '100', 'imageOK', 'imageCancel', true);
     
@@ -1558,14 +1558,18 @@ function GX_SVGFileDlgNameOK()
 
 function NewFileCallback(respStr){   		
 		
-		if(respStr == "ALREADY_EXISTS"){
-	   		Debug_Message("This File Name Already Exists");
+	var index =  respStr.indexOf("ALREADY_EXISTS");
+		if(index != -1){	   		
+	   		WAL_ShowNotification('messageNotification','info', "This File already exists, Please try another name", 3000);
+	   		var JQSel = '#pageNameIP'; 
 	   		$(JQSel).val("");
-	    	WAL_showModalWindow(gSVGFileNameDlgID,"GX_SVGFileDlgNameOK", "" );
-	    	return; 
+	    	WAL_showModalWindow(gSVGFileNameDlgID,"GX_SVGFileDlgNameOK", "" );	    	
 	   	}
-		WAL_ShowNotification('messageNotification','info', "Your New Project has been created Successfully</br>You can now Add Shapes/Images/Text to your project", 3000); 
-		OpenfileCallback(respStr); 
+		else{
+			WAL_ShowNotification('messageNotification','info', "Your New Project has been created Successfully</br>You can now Add Shapes/Images/Text to your project", 3000); 
+			OpenfileCallback(respStr); 
+		}
+		
 }
 
 function GX_LBOKHandler(){
