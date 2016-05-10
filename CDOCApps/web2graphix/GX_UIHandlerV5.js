@@ -173,7 +173,7 @@ var gPreviousTreeNode =0;
 var gCurrentTreeNode = 0;
 var gPrevTreeItemSel = 0;
 var gCurrentTreeItemSel=0; 
-var gOpacityUnSelect = '0.1';
+var gOpacityUnSelect = '0.2';
 var gCurrLayerID=0; 
 var gCurrLayerNode=0; 
 var gCurrLayerTranslateValues = 0;
@@ -6775,7 +6775,8 @@ function OnFreeDrawDrag(evt, ui)
 		//gCurrSelectedObjectDim.height = Y - gCurrSelectedObjectDim.y;
 		gCurrSelectedObjectDim.width = newWidth; 
 		gCurrSelectedObjectDim.height = newHeight;
-		GX_SetRectObjectDim(gCurrentObjectSelected, gCurrSelectedObjectDim); 
+		if((gCurrSelectedObjectDim.width > 0) && (gCurrSelectedObjectDim.height >0 ) )
+			GX_SetRectObjectDim(gCurrentObjectSelected, gCurrSelectedObjectDim); 
 		return ;		
 	}
 	 
