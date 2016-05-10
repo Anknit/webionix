@@ -17,7 +17,7 @@
 		<section name="HISTORY6">
 			<item value="true" key="ignoreCase"/>
 			<item value="3" key="scope"/>
-			<item value="GX_InitializeDocument" key="textPattern"/>
+			<item value="window.open" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.html"/>
@@ -29,7 +29,7 @@
 		<section name="HISTORY7">
 			<item value="true" key="ignoreCase"/>
 			<item value="3" key="scope"/>
-			<item value="gRotAnimTransfValue" key="textPattern"/>
+			<item value="OnLogoutButton" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.html"/>
@@ -41,7 +41,7 @@
 		<section name="HISTORY10">
 			<item value="true" key="ignoreCase"/>
 			<item value="3" key="scope"/>
-			<item value="GX_UpdateAnimUIGrid" key="textPattern"/>
+			<item value="editorTabs" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.html"/>
@@ -52,20 +52,19 @@
 		</section>
 		<section name="HISTORY4">
 			<item value="true" key="ignoreCase"/>
-			<item value="3" key="scope"/>
-			<item value="setTimeout" key="textPattern"/>
+			<item value="0" key="scope"/>
+			<item value="GX_Editor.html" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.html"/>
-				<item value="*.js"/>
+				<item value="*.php"/>
 			</list>
 			<list key="workingSets">
 			</list>
 		</section>
 		<section name="HISTORY5">
 			<item value="true" key="ignoreCase"/>
-			<item value="3" key="scope"/>
-			<item value="setInterval" key="textPattern"/>
+			<item value="0" key="scope"/>
+			<item value=".open" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.html"/>
@@ -88,7 +87,7 @@
 		<section name="HISTORY11">
 			<item value="true" key="ignoreCase"/>
 			<item value="3" key="scope"/>
-			<item value="jqxAnimgrid" key="textPattern"/>
+			<item value="preview_div" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.html"/>
@@ -100,7 +99,7 @@
 		<section name="HISTORY8">
 			<item value="true" key="ignoreCase"/>
 			<item value="3" key="scope"/>
-			<item value="GX_ResetAnimSelection" key="textPattern"/>
+			<item value="dropdown-toggle" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.html"/>
@@ -112,7 +111,7 @@
 		<section name="HISTORY9">
 			<item value="true" key="ignoreCase"/>
 			<item value="3" key="scope"/>
-			<item value="GX_PreviewAnimation" key="textPattern"/>
+			<item value="welcomeMsg" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.html"/>
@@ -123,8 +122,8 @@
 		</section>
 		<section name="HISTORY2">
 			<item value="true" key="ignoreCase"/>
-			<item value="3" key="scope"/>
-			<item value="function()" key="textPattern"/>
+			<item value="0" key="scope"/>
+			<item value="GX_OpenFile" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.html"/>
@@ -136,11 +135,10 @@
 		<section name="HISTORY3">
 			<item value="true" key="ignoreCase"/>
 			<item value="3" key="scope"/>
-			<item value="GXRDE_addNewSVGGroupObject" key="textPattern"/>
+			<item value="pathHTMLFile" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.html"/>
-				<item value="*.js"/>
+				<item value="*.php"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -148,7 +146,7 @@
 		<section name="HISTORY0">
 			<item value="true" key="ignoreCase"/>
 			<item value="3" key="scope"/>
-			<item value="GX_SetAnimParamOnUI" key="textPattern"/>
+			<item value="gSVGFileNameDlgID" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.html"/>
@@ -160,7 +158,7 @@
 		<section name="HISTORY1">
 			<item value="true" key="ignoreCase"/>
 			<item value="3" key="scope"/>
-			<item value="GX_AddAnimationElement" key="textPattern"/>
+			<item value="newSVGFileNameDlg" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.html"/>

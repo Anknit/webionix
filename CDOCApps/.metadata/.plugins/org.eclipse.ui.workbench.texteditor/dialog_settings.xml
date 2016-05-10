@@ -6,20 +6,20 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="attrArray" key="selection"/>
+		<item value="GXRDE_getPageURL" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="GXRDE_getPageURL"/>
+			<item value="function GX_ShowPreview"/>
+			<item value="GX_ShowPreview"/>
+			<item value="Logout"/>
+			<item value="cursor"/>
+			<item value="hover"/>
+			<item value="AJX_RequestWithReponseCallback"/>
 			<item value="attrArray"/>
-			<item value="gAJXTimerValue"/>
-			<item value="End"/>
-			<item value="SVG_319"/>
-			<item value="SVGDEFINITION"/>
-			<item value="mylinear"/>
-			<item value="Preview"/>
-			<item value="gOpacity"/>
 		</list>
 		<list key="replacehistory">
 			<item value="commonAttrArray"/>

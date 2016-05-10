@@ -244,3 +244,12 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; font-weight:bold;}
   	font-size:12px;
   	font-weight:bold; 
    }
+   
+   .disabledState {
+    pointer-events: none;
+    opacity: 0.6;
+	}
+	
+	.pointerCursor{
+		cursor:pointer;
+	 }

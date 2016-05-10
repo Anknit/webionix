@@ -248,6 +248,7 @@ function AJX_RequestWithReponseCallback(RespDataType, ModID, RequestId, RequestB
     		
     		// var fnstr = callbackFn + '("' + xhr.responseText + '");'
     		var respStr = xhr.responseText;
+    		respStr = respStr.trim(); 
     		if(callbackFn){
     			var fnstr = callbackFn + "(respStr)"; 
        		 	eval(fnstr);  

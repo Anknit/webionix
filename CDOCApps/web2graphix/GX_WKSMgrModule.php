@@ -343,13 +343,9 @@ function GX_WKS_CreateSVGFile(&$respData)
 	$root = $_SESSION['svg_xml_dom']->documentElement; //->getElementById('workspace');
 	$root = $root->firstChild;	
 	$svgNode = $_SESSION['svg_xml_dom']->getElementById('SVGOBJECTCONTAINER'); 	
-	$respData = "";	
-	
-	
-	
+	$respData = "";		
 	$respData = $_SESSION['svg_xml_dom']->save($_SESSION['svg_xml_FileName']);
-	$respData = $_SESSION['svg_xml_dom']->saveXML($svgNode);
-	
+	$respData = $_SESSION['svg_xml_dom']->saveXML($svgNode);	
 	return true;
 }
 

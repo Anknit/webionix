@@ -1085,15 +1085,7 @@ function GX_Initialize()
     var groupList = ['group1', 'group2', 'group3']; 
     WAL_createDropdownList('grouptoDDL', '140', '22', false, groupList, "GX_DDLHandler", '80', 0);
     WAL_createModalWindow('movetoGroupDlg', '250', '170', 'grouptoOK', 'grouptoCancel', false);
-    //GX_MenuDisable(true);
-    /*
-     * remove for the time being as it results into buggy behaviour
-    var currFileName =  GXRDE_getCurrentSessionFileName(); 
-    if(currFileName){
-    	GX_MenuDisable(false);
-    	GX_OpenFile(currFileName);    	
-    }
-   */
+    
     //create the draggable drawing pen  here 
    	var JQSel = "#drawingpen" ;
 	$(JQSel).draggable({ cursor: "crosshair", cursorAt:{top: 2, left: 2} });	
@@ -1566,8 +1558,9 @@ function NewFileCallback(respStr){
 	    	WAL_showModalWindow(gSVGFileNameDlgID,"GX_SVGFileDlgNameOK", "" );	    	
 	   	}
 		else{
-			WAL_ShowNotification('messageNotification','info', "Your New Project has been created Successfully</br>You can now Add Shapes/Images/Text to your project", 3000); 
-			OpenfileCallback(respStr); 
+			WAL_ShowNotification('messageNotification','info', "Your New Project has been created Successfully</br>You can now Add Shapes/Images/Text to your project", 3000);
+			GX_OpenFile(gCurrfName); 
+			//OpenfileCallback(respStr); 
 		}
 		
 }
@@ -8260,8 +8253,9 @@ function OnLogoutButton(event)
 	var nodeid = event.target.id; 	
 	if(nodeid == 'logout')
 	{
-		GXRDE_sessionEnd(); 
-		window.close(); 
+		GXRDE_sessionEnd();
+		var url = '../web2graphix/WNX_Home.php' ;
+		window.open(url, '_self', ''); 
 	}
 	else if(nodeid == 'about')
 	{

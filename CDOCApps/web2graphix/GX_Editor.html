@@ -291,39 +291,19 @@
 	    			<span class='TB_TEXT'>Download</span>
 	    		</div>
 	    		
-    		 </div>  
-     <!-- 
-      <ul class="nav navbar-nav navbar-left" style='padding-left:45px; color:red'>  
-     
-	    <li class='dropdown'><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">File<span class="caret"></span></a>
-	       <ul id='filemenu' class="dropdown-menu dropdown-menu-center" >
-	    	  <li><a id='new'  href="#" onclick='GX_MenuItemHandler(event)'>New</a></li>
-	    	  <li><a id='open' href="#" onclick='GX_MenuItemHandler(event)'>Open</a></li>  
-	    	  <li><a id='cose'  href="#" onclick='GX_MenuItemHandler(event)'>Close</a></li>   			
-	  	  </ul>
-	    </li>  
-	    <li class='dropdown'><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">Edit<span class="caret"></span></a>
-          <ul id='editmenu' class="dropdown-menu dropdown-menu-center" >
-    		<li><a id='copy'  href="#" onclick='GX_MenuItemHandler(event)'>Copy</a></li>
-    		<li><a id='paste' href="#" onclick='GX_MenuItemHandler(event)'>Paste</a></li>  
-    		<li><a id='delete' href="#" onclick='GX_MenuItemHandler(event)'>Delete</a></li>  			
-  		  </ul>
-        </li>      
-        <li><a id='animate' href="#animate" onclick='GX_MenuItemHandler(event)'>Animate</a></li>       
-      </ul>
-      --> 
+    		 </div>
     </div>	
     
        <div style='margin-top:10px; position:relative; left:-10px'> 
 		      <ul id='userMsg' class='nav navbar-nav navbar-right' style='display:block'>        	    	
-		      	<p  id="userInfoMenu" class="navbar-text dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+		      	<p  id="userInfoMenu" class="navbar-text dropdown-toggle pointerCursor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 		      	Hi <span id='welcomeMsg'>Guest kumar</span>
 		    	<span class="caret"></span>
 		    	</p>
 		    	<ul id='accountinfomenu' class="dropdown-menu dropdown-menu-center" aria-labelledby="dropdownMenu1" >
-		    		<li><a href="#">My Account</a></li>
-		    		<li><a href="#">My Workspace</a></li>
-		    		<li><a href="#">Log-Out</a></li>    		
+		    		<li><a id='myaccount' href="#" class='pointerCursor'>My Account</a></li>
+		    		<li><a id='myworkspace' href="#" class='pointerCursor'>My Workspace</a></li>
+		    		<li><a id='logout' href="#" onclick='OnLogoutButton(event)' class='pointerCursor'>Sign-Out</a></li>    		
 		  		</ul>
 		      </ul>
 		      <!-- 

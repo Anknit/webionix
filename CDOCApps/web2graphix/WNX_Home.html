@@ -70,7 +70,8 @@ function MySSOCallback(optype, status){
 	case 'signin':
 		if(obj['success'] == 'true'){
 			$('#loginModal').modal("hide");
-			var URLstr = 'http://localhost/CDOCApps/web2graphix/GX_Editor.html';
+			//var URLstr = 'http://localhost/CDOCApps/web2graphix/GX_Editor.html';
+			var URLstr = 'GX_Editor.html';
 			if(!URLstr)
 					return;			
 				    //open a new window with page title
