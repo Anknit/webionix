@@ -4401,6 +4401,8 @@ function GX_ToolbarHandler(event)
 		// GX_StartFreeDraw('DRAW_MODE');
 		break;	
 	case 'polygon_icon':
+		WAL_setNumberInputValue("polynSidesIP", '3', false);
+	    WAL_setNumberInputValue("polyLengthIP", '50', false);
 		WAL_showModalWindow(gPolyInputDlg,"GX_PolyInputDlgOK", "" );
 		break; 
 	
