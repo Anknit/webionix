@@ -1103,7 +1103,7 @@ function GX_Initialize()
 	JQSel = '#sel_gripper'; 
 	//create the selection gripper here 
 	$(gCurrGripperSel).draggable({ cursor: "move" });	
-	$(gCurrGripperSel).resizable();	
+	$(gCurrGripperSel).resizable({handles: "all"});	
 	
 	$(gCurrGripperSel).on( "resizestop", function( event, ui ) {
 		OnObjectResizeStop(event, ui); 		
@@ -2175,6 +2175,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	var maxdim = GX_GetObjectMaxDimensionToResize(gGrabberDim); 
     	$(gCurrGripperSel).resizable( "option", "maxWidth", maxdim.width );
     	$(gCurrGripperSel).resizable( "option", "maxHeight", maxdim.height );
+    	$(gCurrGripperSel).resizable("option", "handles", "all");    	
     }
     if(nodeClass == 'SVG_PATH_OBJECT')
     {    	
@@ -2965,15 +2966,22 @@ function OnObjectDragStop(evt,ui){
 
 function OnObjectResizing(event, ui){
 	var relW, relH; 
+	var relLeft, relTop; 
 	var objectType = gCurrentObjectSelected.classList[0]; 
 	var newObjDim = new sDimension(); 
 	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
-		relW = new Number(ui.size.width - ui.originalSize.width); 
-		relH = new Number(ui.size.height - ui.originalSize.height);		 
-		relW = Math.round(relW / gZoomFactor); 
+		relW = new Number(ui.size.width - ui.originalSize.width);
+		relH = new Number(ui.size.height - ui.originalSize.height);		
+		relW = Math.round(relW / gZoomFactor);
 		relH = Math.round(relH /gZoomFactor);
-		newObjDim.x = gCurrSelectedObjectDim.x ; 
-	    newObjDim.y = gCurrSelectedObjectDim.y ; 
+		
+		relLeft = new Number(ui.position.left - ui.originalPosition.left);	
+		relTop = new Number(ui.position.top - ui.originalPosition.top);		
+		relLeft = Math.round(relLeft / gZoomFactor); 
+		relTop = Math.round(relTop /gZoomFactor);
+		
+		newObjDim.x = gCurrSelectedObjectDim.x + relLeft; 
+	    newObjDim.y = gCurrSelectedObjectDim.y + relTop; 
 	    newObjDim.width = gCurrSelectedObjectDim.width + relW; 
 	    newObjDim.height =  gCurrSelectedObjectDim.height + relH; 	    
 		GX_SetRectObjectDim(gCurrentObjectSelected,newObjDim);
@@ -2981,17 +2989,21 @@ function OnObjectResizing(event, ui){
 }
 function OnObjectResizeStop(event, ui){
 	var relW, relH; 
+	var relLeft, relTop; 
 	var objectType = gCurrentObjectSelected.classList[0]; 
 	var newObjDim = new sDimension(); 
 	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
 		relW = new Number(ui.size.width - ui.originalSize.width); 
 		relH = new Number(ui.size.height - ui.originalSize.height); 
-		//relW = new Number(ui.size.width - ui.originalSize.width -10 ); 
-		//relH = new Number(ui.size.height - ui.originalSize.height - 10); 
 		relW = Math.round(relW / gZoomFactor); 
 		relH = Math.round(relH /gZoomFactor);
-		newObjDim.x = gCurrSelectedObjectDim.x ; 
-	    newObjDim.y = gCurrSelectedObjectDim.y ; 
+		
+		relLeft = new Number(ui.position.left - ui.originalPosition.left);	
+		relTop = new Number(ui.position.top - ui.originalPosition.top);		
+		relLeft = Math.round(relLeft / gZoomFactor); 
+		relTop = Math.round(relTop /gZoomFactor);
+		newObjDim.x = gCurrSelectedObjectDim.x + relLeft; 
+	    newObjDim.y = gCurrSelectedObjectDim.y + relTop;		
 	    newObjDim.width = gCurrSelectedObjectDim.width + relW; 
 	    newObjDim.height =  gCurrSelectedObjectDim.height + relH; 
 	    if(gSnapToGrid == true){
