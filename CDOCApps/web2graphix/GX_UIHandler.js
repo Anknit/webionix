@@ -1227,7 +1227,7 @@ function GX_InitializeDocument(svgFileName)
 	}
 	
 	GX_updateEditAttributes(); 
-	
+	WAL_SetItemInDropDownList('zoomDDL', 0, true);
 	gZoomFactor = new Number(1.0); 
 	gCurrentObjectSelected=0; 
 	gCurrSelectedObjectDim = new sDimension();

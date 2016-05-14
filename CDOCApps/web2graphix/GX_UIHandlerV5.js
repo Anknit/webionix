@@ -1266,13 +1266,10 @@ function GX_InitializeDocument(svgFileName)
 	}
 	gSVGDimInfoHolder.innerHTML = canvasWidth + ' x ' + canvasHeight; 
 	
-	WAL_SetItemInDropDownList('zoomDDL', 0, true);
-	//set the file name to title etc. 
-	
-	
 	GX_updateEditAttributes(); 
 	
 	gZoomFactor = new Number(1.0); 
+	WAL_SetItemInDropDownList('zoomDDL', 0, false);
 	gCurrentObjectSelected=0; 
 	gCurrSelectedObjectDim = new sDimension();
 	gGrabberDim = new sDimension(); 
@@ -3863,14 +3860,16 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     		var tolerance = 5; 
     		var YOffset =  0;// round(gCurrentCanvasDim.y +  gClientYOffset - tolerance) ;//gCanvround(gClientYOffset);// * gInvZoomFactor);     		
     		var XOffset = 0 ; //round(gCurrentCanvasDim.x - 10); 
-    		
-    		var scrollLeft = $('#editor_div').scrollLeft(); 
-    		var scrollTop = $('#editor_div').scrollTop(); 
-    		modDim.x = round(modDim.x - (scrollLeft/gZoomFactor)); 
-    		modDim.y = round(modDim.y - (scrollTop/gZoomFactor));   
+    		//_rm looks like we dont need it anymore
+    		//var scrollLeft = $('#editor_div').scrollLeft(); 
+    		//var scrollTop = $('#editor_div').scrollTop(); 
+    		//modDim.x = round(modDim.x - (scrollLeft/gZoomFactor)); 
+    		//modDim.y = round(modDim.y - (scrollTop/gZoomFactor));   
     		var tolerance = new Number(5);//round(10 * gInvZoomFactor); 
-    		modDim.x = round((modDim.x + gPanX) * gInvZoomFactor + XOffset); 
-    		modDim.y = round( (modDim.y + gPanY) * gInvZoomFactor + YOffset);
+    		//modDim.x = round((modDim.x + gPanX) * gInvZoomFactor + XOffset); 
+    		//modDim.y = round( (modDim.y + gPanY) * gInvZoomFactor + YOffset);
+    		modDim.x = round((modDim.x ) * gInvZoomFactor + XOffset); 
+    		modDim.y = round( (modDim.y) * gInvZoomFactor + YOffset);
     		  	    
     		modDim.width = round(modDim.width * gInvZoomFactor );
     		modDim.height = round(modDim.height * gInvZoomFactor);
@@ -4112,12 +4111,14 @@ function GX_EditBoxValueChange(value, widgetnode)
 				DimValue.width = new Number(value);		
 				if(nodeClass == 'SVG_SHAPE_OBJECT'){
 					retVal = GX_SetObjectAttribute(currnodeSel, "DIMENSION", DimValue, true, false);
+					 GX_SetRectObjectDim(gCurrGrabber,DimValue);
 				}
 				break; 
 			case 'heightIP':
 				DimValue.height = new Number(value);		
 				if(nodeClass == 'SVG_SHAPE_OBJECT'){
 					retVal = GX_SetObjectAttribute(currnodeSel, "DIMENSION", DimValue, true, false);
+					GX_SetRectObjectDim(gCurrGrabber,DimValue);
 				}
 				break;
 			default:
@@ -5498,6 +5499,7 @@ function GX_ApplyZoom(zoomFactor)
 function GX_DDLHandler(Node, value)
 {
 	var wdgtId  = Node.id; 
+	
 	//var objectType = gCurrentObjectSelected.classList[0]; 
 	if(gCurrentObjectSelected)
 		var objectType =  gCurrentObjectSelected.classList[0];
@@ -7048,6 +7050,7 @@ function GX_FindAnchorPointIndex(pathArray, boundary, pointX, pointY, startIndex
 
 function OnWindowScroll(event)
 {	
+	
 	var windowID = event.currentTarget.id; 
 	if(windowID == 'editor_div'){
 		gPanX = event.currentTarget.scrollLeft 
@@ -8988,9 +8991,9 @@ function GX_MoveSelectedObject(relX, relY){
     if(objectType == 'SVG_TEXT_OBJECT')
     	GX_MakeTextEditable(gCurrentObjectSelected); 
 
-    gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected); 
+    gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected);
+    GX_SetRectObjectDim(gCurrGrabber,gCurrSelectedObjectDim);
     gGrabberDim = GX_GetRectObjectDim(gCurrGrabber);
-    
    
 }
 
