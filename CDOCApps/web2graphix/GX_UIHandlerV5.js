@@ -919,7 +919,7 @@ function GX_GradDlgOK() {
 	        $(JQSel).val('');
     		Debug_Message("Please Assign a Title to the Gradient");		
     		setTimeout(function(){			
-    			WAL_showModalWindow('gradientDlg', "OnclickInputOK", "");	
+    			WAL_showModalWindow('gradientDlg', "GX_GradDlgOK", "");	
     			}, 250); 
     		return ; 
     	} 	
@@ -951,7 +951,7 @@ function GX_GradDlgOK() {
         	        $(JQSel).val('');
             		Debug_Message("Title already Exists");		
             		setTimeout(function(){			
-            			WAL_showModalWindow('gradientDlg', "OnclickInputOK", "");	
+            			WAL_showModalWindow('gradientDlg', "GX_GradDlgOK", "");	
             			}, 250); 
             		return ;             		
         	}        	
@@ -4864,6 +4864,7 @@ function GX_SetObjectAttribute(ObjNode, AttrName, AttrValue, bListStore, bUpdate
 }
 
 function GX_ConvertArrayToPathData(pathID, inputpathParam) {
+	
     var pathNode = document.getElementById(pathID);
     var pathParam = "";  
     var pathType = pathNode.classList[1];
@@ -4962,6 +4963,9 @@ function GX_GetPathDimension(pathNode)
 
 function GX_ConvertPathDataToArray(pathNode)
 {
+	if(!pathNode)
+		return 0; 
+	
 	var pathType = pathNode.classList[1]; 
 	var newArr = []; 
 	var dvalue = pathNode.getAttribute('d');
@@ -6500,6 +6504,8 @@ function OnEraseClick(evt)
 function OnEraserPenClick(event){		
 	var nodeid = event.target.id; 
 	var node = event.target;
+	if(!gCurrentObjectSelected)
+		return ; 
 	var pathType = gCurrentObjectSelected.classList[1]; 
 	if(pathType != 'FREEDRAW_PATH')
 		return ; 	
@@ -7740,7 +7746,7 @@ function GX_ShowGradWindow(gradID, gradType)
  	 pos.top = pos.top + fillpos.top; 
  	 pos.left = pos.left - 50 + Math.round(width/2); 
      WAL_setWindowAtPos('gradientDlg', pos.left, pos.top); 
-     WAL_showModalWindow('gradientDlg', "OnclickInputOK", "");    
+     WAL_showModalWindow('gradientDlg', "GX_GradDlgOK", "");    
      gGradientObj.UpdateUI(gGradientObj.GradParam);
      
   /*   JQSel = '#LinearGradpreview'; 
@@ -9539,7 +9545,7 @@ function GX_SetPropertyonUI(objNode){
 	}	
 	WAL_setNumberInputValue('rotateIP', dim.rotate, false); 
 	if( (objectType == 'VERT_LINE_PATH')|| (objectType == 'HOR_LINE_PATH') 
-			|| (objectType == 'FREEDRAW_PATH') || (objectType == 'CIRCLE')){
+			|| (objectType == 'FREEDRAW_PATH') || (objectType == 'CIRCLE') || (objectType == 'TEXT')){
 		WAL_disableWidget('rotateIP', 'data-jqxNumberInput', false, true); 
 	}
 	else
