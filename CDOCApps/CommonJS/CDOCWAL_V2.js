@@ -54,6 +54,8 @@ var gCurrentTooltipOwnerID = 0;
 var gCurrTooltipID = 0; 
 var gContextTooltip =  true; 
 var gbContextMenuShow = false; 
+var gCMLeftPos = 0; 
+var gCMTopPos = 0; 
 function WAL_Initialize() {
     if(!gTheme)
       gTheme = getTheme();   
@@ -3341,7 +3343,9 @@ function WAL_createContextMenu(ID, containerID,  HandlerMenuItemClick, width, he
         if (rightClick) {
             var scrollTop = $(window).scrollTop();
             var scrollLeft = $(window).scrollLeft();
-            contextMenu.jqxMenu('open', parseInt(event.clientX) + 5 + scrollLeft, parseInt(event.clientY) + 5 + scrollTop);
+            gCMLeftPos = parseInt(event.clientX) + 5 + scrollLeft; 
+            gCMTopPos  = parseInt(event.clientY) + 5 + scrollTop; 
+            contextMenu.jqxMenu('open', gCMLeftPos, gCMTopPos);
             gbContextMenuShow = true; 
             return false;
         }              
