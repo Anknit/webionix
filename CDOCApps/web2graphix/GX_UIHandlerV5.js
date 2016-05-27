@@ -2070,7 +2070,12 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     //gCurrGrabber.setAttribute("stroke-opacity", "1.0");
     var x,y, w, h; 
     x = y = w = h = 0;
-    
+    if(nodeClass == 'GROUP'){
+    	$('#sel_gripper')[0].style.border = '2px dashed #333';
+    	
+    }else{
+    	$('#sel_gripper')[0].style.border = '2px solid #EF4D02';    	
+    }
     if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT'))
     {
     	 gCurrSelectedObjectDim = GX_GetObjectAttribute(node, 'DIMENSION');
@@ -2252,7 +2257,10 @@ function OnSVGParentClick(evt)
 	var ID = node.id; 
 	if(ID!= 'gridpattern')
 		return ;
-	
+	if(!gCurrentObjectSelected)
+		return ; 
+	var nodeclass = gCurrentObjectSelected.classList[0] ;//('class'); 
+	var parentNode = gCurrentObjectSelected.parentNode; 
 	//if it is text node then do the needful 
 	//if( (gCurrentObjectSelected) && (gCurrentObjectSelected.nodeName.toUpperCase() == 'TEXT') && (gObjectEditMode == 'MODIFY_TEXT_MODE') )
 		//GX_SaveText(gCurrentObjectSelected); 
@@ -2281,7 +2289,7 @@ function OnSVGParentClick(evt)
 	var selItemID ; 
 	
 	GX_ResetAllSelections();
-	
+	//WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+selItemID); 
 	selItemID = 'SVGOBJECTCONTAINER'; 
 	WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+selItemID); 	
 	
@@ -5284,7 +5292,11 @@ function GX_SelectObjectInMultiMode(Node)
 		WAL_disableWidget('alignwidth_icon', 'data-customButton', false, true);
 		WAL_disableWidget('alignheight_icon', 'data-customButton', false, true);		
 	}
-			
+	if(gbMultiSelection == true){
+		WAL_disableWidget('objectContextmenu', 'data-jqxMenu', false, true); 
+	}		
+	
+		
 	//add iD woith ObjectID + 'gripper'
 	//add a class = 'CLONE_GRIPPER' 
 	
@@ -5307,6 +5319,7 @@ function GX_DeselectObjectFromMultiMode()
 	}
 	
 	gMultiNodeArray.splice(0, gMultiNodeArray.length); 
+	WAL_disableWidget('objectContextmenu', 'data-jqxMenu', false, false); 
 }
 
 function GX_AlignDimension(alignType)
@@ -5421,11 +5434,13 @@ function GX_CopyObject(objNode)
 function GX_PasteObject()
 {
 	//determine the current Layer selected
-	if( (!gCurrentObjectSelected) || (gCurrentObjectSelected.classList[0] != 'GROUP')){
+	/*if( (!gCurrentObjectSelected) || (gCurrentObjectSelected.classList[0] != 'GROUP')){
 		Debug_Message("Choose a Group to Paste the object"); 
 		return ; 
-	}		
+	}*/
+	
 	gCurrLayerID = gCurrLayerNode.id;	
+	WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+gCurrLayerID);
 	//check if the object exist
 	var objNodeToCopy =  document.getElementById(gObjectIDToCopy); 
 	if(!objNodeToCopy)
@@ -5433,25 +5448,55 @@ function GX_PasteObject()
 		Debug_Message("Object to copy does not exist anymore"); 
 		return ; 
 	}	
-	
+	var objectShapeType = objNodeToCopy.classList[1]; 
 	//generate an Unique Id 
 	var newObjID =  GXRDE_GetUniqueID('SVG_');
-	GXRDE_CopyShapeObject(gObjectIDToCopy, gCurrLayerID, newObjID, 'copyCallbackFn');	
+	var attrArray = 0; 
+	var offsetPos = $('#canvas').offset(); 
+	var newX = new Number(gCMLeftPos - offsetPos.left); 
+	var newY = new Number(gCMTopPos - offsetPos.top); 
+	var oldDim = GX_GetRectObjectDim(objNodeToCopy); 
+	var transX = new Number(newX - oldDim.x); 
+	var transY = new Number(newY - oldDim.y);  
+	transX = transX/gZoomFactor;
+	transY = transY/gZoomFactor;
+	if (objectShapeType == 'IMAGE' ) {		
+		var newX = new Number(gCMLeftPos - offsetPos.left); 
+		var newY = new Number(gCMTopPos - offsetPos.top); 
+		var attrArray = [['x', newX],['y',newY]]; 
+	}
+	/*
+	if ( (objectShapeType == 'IMAGE') || (objectShapeType == 'RECTANGLE') || (objectShapeType == 'TEXT') ) {		
+		var newX = new Number(gCMLeftPos - offsetPos.left); 
+		var newY = new Number(gCMTopPos - offsetPos.top); 
+		var attrArray = [['x', newX],['y',newY]]; 
+	}	
+	else if( (objectShapeType == 'ELLIPSE')|| (objectShapeType == 'CIRCLE') ) {		
+		var newX = new Number(gCMLeftPos - offsetPos.left); 
+		var newY = new Number(gCMTopPos - offsetPos.top); 
+		var attrArray = [['cx', newX],['cy',newY]]; 
+	}
+	*/ 	
+	GXRDE_CopyShapeObject(gObjectIDToCopy, gCurrLayerID, newObjID, attrArray, 'copyCallbackFn');	
 	copyCallbackFn = function(retVal){
+		if(objectShapeType == 'IMAGE'){
+			GX_ReloadSVG(newObjID, true); 
+			return ; 
+		}
 		 GX_AddNewNodeFromXMLString(gCurrLayerID, retVal); 
 		 var newNode = document.getElementById(newObjID);
 		 var newdim = GX_GetRectObjectDim(newNode); 
-		 newdim.x += 10; 
-		 newdim.y += 20; 
+		 newdim.x = transX; 
+		 newdim.y = transY; 		 
+		 newdim.rotCentreX = newdim.rotCentreX +transX ;
+		 newdim.rotCentreY = newdim.rotCentreY + transY; 
 		 var objecttype = newNode.classList[0]; 
-		 if(objecttype == 'SVG_PATH_OBJECT')
-			  GX_SetTransformProperty(newNode, 'translate',newdim);
-		 else if(objecttype == 'SVG_SHAPE_OBJECT')
-			 GX_SetObjectAttribute(newNode, 'DIMENSION', newdim, false, true); 
-		 else if(objecttype == 'SVG_TEXT_OBJECT')
-			 GX_SetObjectAttribute(newNode, 'DIMENSION', newdim, false, true); 
+		 if( (objecttype == 'SVG_PATH_OBJECT') || (objecttype == 'SVG_SHAPE_OBJECT') || (objecttype == 'SVG_TEXT_OBJECT') )
+			 GX_SetTransformProperty(newNode, 'translate',newdim);
+			// GX_SetObjectAttribute(newNode, 'DIMENSION', newdim, false, true);		 
 		 if(!newNode)
 			 return ; 
+		 GX_UpdatePosFromTranslation(newNode); 
 		  var nodename  = newNode.nodeName.toUpperCase(); 
 		  myobjType = 'OBJECT';
 		  nodeTitle = nodename; 

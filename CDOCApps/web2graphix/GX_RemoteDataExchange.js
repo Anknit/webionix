@@ -100,9 +100,19 @@ function GXRDE_DeleteObject(currobjID)
 	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "307", reqbody);	
 }
 
-function GXRDE_CopyShapeObject(objectID, groupID, newID, callbackFn)
+function GXRDE_CopyShapeObject(objectID, groupID, newID, attrArray, callbackFn)
 {
 	var reqbody = "&OBJECTID=" + objectID + "&NEWOBJDID=" + newID + "&GROUPID=" + groupID ;
+	var length = 0; 
+	if(attrArray)
+		length = attrArray.length; 		
+	reqbody += "&LENGTH=" + length;	 
+	
+	for(var j=0; j < length; j++)
+	{
+		var attrstr = "&ATTRNAME[]=" +  attrArray[j][0] + "&ATTRVALUE[]="+ attrArray[j][1];
+		reqbody += attrstr; 			
+	}	
 	AJX_RequestWithReponseCallback("text", "OBJM", "308", reqbody, callbackFn);	
 }
 

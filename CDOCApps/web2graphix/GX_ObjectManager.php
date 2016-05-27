@@ -590,9 +590,15 @@ function GX_OBJ_CopyObject(&$respData)
 	parse_str($respData) ;
 	$objIDToCopy  = $OBJECTID; 
 	$newObjId	  = $NEWOBJDID; 
-	$layerID 	  =	$GROUPID;
-
+	$layerID 	  =	$GROUPID;	
 	
+	$listlen = strtoupper($LENGTH);	
+	/*for($i = 0 ; $i < $listlen; $i++){		
+		$attrname	   = $ATTRNAME[$i];
+		$attrval       = $ATTRVALUE[$i];
+	}*/ 
+	
+	$left = 
 	$respData =''; 
 	$ObjNode = $_SESSION['svg_xml_dom']->getElementById($objIDToCopy);
 	if(!$ObjNode)
@@ -600,7 +606,10 @@ function GX_OBJ_CopyObject(&$respData)
 	$clonednode = $ObjNode->cloneNode(true); 
 	if(!$clonednode)
 		return false;
-	$clonednode->setAttribute('id',$newObjId ); 
+	$clonednode->setAttribute('id',$newObjId );
+	for($i = 0 ; $i < $listlen; $i++){
+		$clonednode->setAttribute($ATTRNAME[$i],$ATTRVALUE[$i]);
+	} 	
 	$layerNode = $_SESSION['svg_xml_dom']->getElementById($layerID);
 	if(!$layerNode)
 		return false; 
