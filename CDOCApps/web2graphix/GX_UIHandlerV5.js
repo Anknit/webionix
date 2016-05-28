@@ -2257,11 +2257,12 @@ function OnSVGParentClick(evt)
 	var node = evt.target;
 	var ID = node.id; 
 	if(ID!= 'gridpattern')
-		return ;
-	if(!gCurrentObjectSelected)
-		return ; 
-	var nodeclass = gCurrentObjectSelected.classList[0] ;//('class'); 
-	var parentNode = gCurrentObjectSelected.parentNode; 
+		return ;	
+	if(gCurrentObjectSelected){
+		var nodeclass = gCurrentObjectSelected.classList[0] ;//('class'); 
+		var parentNode = gCurrentObjectSelected.parentNode; 
+	}
+	
 	//if it is text node then do the needful 
 	//if( (gCurrentObjectSelected) && (gCurrentObjectSelected.nodeName.toUpperCase() == 'TEXT') && (gObjectEditMode == 'MODIFY_TEXT_MODE') )
 		//GX_SaveText(gCurrentObjectSelected); 
