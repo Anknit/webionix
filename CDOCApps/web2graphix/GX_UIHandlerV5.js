@@ -2205,7 +2205,8 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	$(gCurrGripperSel).css({opacity:'1'});
     } 		
   
-    gCurrentObjectSelected.setAttribute('pointer-events', 'none'); 
+    //_rm trying out if an object can be selected even from a group selection
+    //gCurrentObjectSelected.setAttribute('pointer-events', 'none'); 
     GX_SetPropertyonUI(gCurrentObjectSelected); 
     //Opacity control code here 
     $('.GROUP').attr('opacity', gOpacityUnSelect);   
