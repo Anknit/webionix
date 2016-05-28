@@ -8439,7 +8439,7 @@ function GX_ContextMenuClick(menuID){
 	switch(menuItemID)
 	{
 	case 'groupmenu':
-		if(gbMultiSelection == true){	
+		if(gbMultiSelection != true){	
 			WAL_SetTabIndex('rightTabs', 0);
 			GX_UpdateGroupList();
 			var mygrpList = GX_GetGroupList('NAME'); 
@@ -8477,7 +8477,7 @@ function GX_ContextMenuClick(menuID){
 function GX_MovetoGroupDlgOK(){	
 	
 	//if new group selected 
-	var groupName = $('#newgroupNameIP').val(); 
+	/*var groupName = $('#newgroupNameIP').val(); 
 	if(groupName.length > 0){
 		//needs to be handled properly 
 		GX_AddNewSVGObject('GROUP', groupName, 'newSVGGroupCallback'); 
@@ -8492,11 +8492,14 @@ function GX_MovetoGroupDlgOK(){
 			return ; 
 		}		
 	}
-	else{
+	else*/
+	{
 		groupName = WAL_getDropdownListSelection('grouptoDDL'); 
+		gMultiNodeArray = []; 
+		gMultiNodeArray.push(gCurrentObjectSelected.id);
 		var groupID = GX_GetGroupIDfromList(groupName); 
 		for(var i=0; i <gMultiNodeArray.length; i++)
-			 GX_MoveObjectToGroup(gMultiNodeArray[i], groupID);
+			 GX_MoveObjectToGroup(gMultiNodeArray[i], groupID);		
 		GXRDE_MoveObjectToGroup(groupID,gMultiNodeArray);
 		GX_UpdateTreeWidget();	
 	}
