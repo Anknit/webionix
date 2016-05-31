@@ -174,7 +174,7 @@ gAnimItemDisabledList['SVG_SHAPE_OBJECT'] = [0];
 gAnimItemDisabledList['SVG_PATH_OBJECT'] = [0,3,8];
 gAnimItemDisabledList['GROUP'] = [0,3,8];
 //NEED TO CHECK FURTEHR FOR TEXT AND IMAGES 
-gAnimItemDisabledList['SVG_TEXT_OBJECT'] = [0,3,8];
+gAnimItemDisabledList['SVG_TEXT_OBJECT'] = [0,2,3,5,8];
 var gCurrDisabledAnimItemArr = 0; 
 //var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
 var gPathTypeList = []; 
@@ -556,7 +556,8 @@ function GX_SetAnimParamOnUI(animParam) {
 		var value = new Number(animParam.startValue); 		
 		value = value*100.0; 
 		value -= 100.0; 
-		WAL_setNumberInputValue('startValueIP', value, false);	
+		WAL_setNumberInputValue('startValueIP', value, false);		
+		WAL_disableWidget('endValueIP', 'data-jqxNumberInput', false, true);
 		break;	
 	case 'ANIMATE_ZOOM':
 		$('.ValueProperty').show(); 
@@ -665,8 +666,11 @@ function GX_GetAnimParamsFromUI(inputParam)
 	
 	//get the grid data first 
 	var  gridrowData = WAL_getGridSelectedRowData('jqxAnimgrid');
-	if(!gridrowData)
+	if(!gridrowData){
+		Debug_Message("Select an Animation Item"); 
 		return ; 
+	}
+		
 	var itemValue = gridrowData.trigger;
 	var refAnimTitle = gridrowData.refanimID;
 	if((refAnimTitle) && (refAnimTitle.length > 0) )
@@ -1077,6 +1081,7 @@ function GX_InitializeAnimationTab(){
     $("#jqxAnimgrid").on('rowselect', function (event){
     	var animName = event.args.row.title;
     	GX_UpdateAnimInfoOnUI(animName); 
+    	WAL_disableWidget('animOpBtn', '', true, false);
     }); 
     
     //other controls
@@ -4258,9 +4263,8 @@ function GX_UpdateAnimUIGrid(){
  		animList.push(gAnimInfoList[j].title); 
  	}	
 	if(gRefAnimListDDL)
-		WAL_UpdateDropDownList(gRefAnimListDDL.id, animList);
-		
-	
+		WAL_UpdateDropDownList(gRefAnimListDDL.id, animList);	
+	WAL_disableWidget('animOpBtn', '', true, true);	
 	//gRefAnimListDDL.gRefAnimListDDL
 	//Debug_Message("Update animgrid"); 
 }
@@ -4300,6 +4304,9 @@ function GX_OnAnimationEndHandler(evt)
 function GX_ResetAnimSelection(){
 	WAL_ClearGridSelection('jqxAnimgrid');
 	gCurrentAnimInfo = 0; 
+	WAL_disableWidget('animOpBtn', '', true, true);	
+	//$('.animOpBtn').attr('disabled', 'disabled'); 
+	
 }
 
 function GX_HideNewAnimPreview(bFlag){
