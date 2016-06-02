@@ -1759,7 +1759,7 @@ function NewGradObjectDefaultFn(respStr){
 	}
 	else if(gCurrentObjectSelected){
 		var objectType = gCurrentObjectSelected.classList[0]; 
-		if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
+		if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_IMAGEOBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
 		{
 			var fillurl = 'url(#' + gNewObjectID + ')';				
 			GX_SetObjectAttribute(gCurrentObjectSelected, "fill", fillurl, true, false);				
@@ -1900,7 +1900,7 @@ function callbackSVGAddDefualtFn(retval){
 			//hence in between while new object is createdthe list should not be recreated
 			var objNode = document.getElementById(ObjID); 
 			var objType = objNode.classList[0]; 
-			if( (objType == 'SVG_SHAPE_OBJECT') || (objType == 'SVG_PATH_OBJECT' ) || (objType == 'SVG_TEXT_OBJECT' ) )
+			if( (objType == 'SVG_SHAPE_OBJECT') || (objType == 'SVG_IMAGEOBJECT') || (objType == 'SVG_PATH_OBJECT' ) || (objType == 'SVG_TEXT_OBJECT' ) )
 				gObjectList.push([ObjID, objType]); 
 		}
 	}
@@ -1996,7 +1996,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     var initPoint;   
     var nodeClass = objNode.classList[0];  
     //play around witth the opacity of objects 
-    if( (nodeClass == 'SVG_SHAPE_OBJECT')  || (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT') )
+    if( (nodeClass == 'SVG_SHAPE_OBJECT')  || (nodeClass == 'SVG_IMAGE_OBJECT') || (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT') )
     {
     	gCurrLayerNode = objNode.parentNode;    	
     	gCurrLayerID = gCurrLayerNode.id; 
@@ -2076,7 +2076,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     }else{
     	$('#sel_gripper')[0].style.border = '2px solid #EF4D02';    	
     }
-    if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT'))
+    if( (nodeClass == 'SVG_SHAPE_OBJECT')|| (nodeClass == 'SVG_IMAGE_OBJECT') ||  (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT'))
     {
     	 gCurrSelectedObjectDim = GX_GetObjectAttribute(node, 'DIMENSION');
     	 if(gCurrSelectedObjectDim)
@@ -2172,7 +2172,7 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     
     $(gCurrGripperSel).resizable( "enable" );
     $(gCurrGripperSel).resizable( "option", "containment", "parent" );    
-    if(nodeClass == 'SVG_SHAPE_OBJECT'){
+    if( (nodeClass == 'SVG_SHAPE_OBJECT')|| (nodeClass == 'SVG_IMAGE_OBJECT')){
     	//set the maxDimension here 
     	var maxdim = GX_GetObjectMaxDimensionToResize(gGrabberDim); 
     	$(gCurrGripperSel).resizable( "option", "maxWidth", maxdim.width );
@@ -2247,7 +2247,11 @@ function GX_updateEditAttributes()
 	$(JQSel).attr('onclick','OnShapeObjectSelection(evt)' ); 		
 	$(JQSel).attr('pointer-events','all' );
 	
-	var JQSel = ".SVG_TEXT_OBJECT"; 
+	JQSel = ".SVG_TEXT_OBJECT"; 
+	$(JQSel).attr('onclick','OnShapeObjectSelection(evt)' ); 		
+	$(JQSel).attr('pointer-events','visible' ); 
+	
+	JQSel = ".SVG_IMAGE_OBJECT"; 
 	$(JQSel).attr('onclick','OnShapeObjectSelection(evt)' ); 		
 	$(JQSel).attr('pointer-events','visible' ); 
 	
@@ -2494,7 +2498,7 @@ function OnObjectMouseDown(evt,ui) {
 	gGrabberDim = GX_GetObjectAttribute(gCurrGrabber, 'DIMENSION');
 	
 	//Debug_Message("x=" + gGrabberDim.x + "y=" +gGrabberDim.y); 
-	if(objectType == 'SVG_SHAPE_OBJECT') 
+	if((objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_IMAGE_OBJECT') ) 
 		gCurrSelectedObjectDim = GX_GetObjectAttribute(gCurrentObjectSelected, 'DIMENSION');
 	else if(objectType == 'SVG_TEXT_OBJECT')
 	{
@@ -2635,7 +2639,7 @@ function OnObjectMove(evt,ui) {
        // if(objectType == 'SVG_SHAPE_OBJECT')	
         //	GX_UpdateMarkers(newObjDim, true, false); 
          
-        if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
+        if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_IMAGE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
         {
         	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
             newObjDim.y = gCurrSelectedObjectDim.y + relY; 
@@ -2672,7 +2676,7 @@ function OnObjectMove(evt,ui) {
     		newObjDim.y = relY ;// gCurrSelectedObjectDim.y+relY;          
     		GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
     	}
-        if(objectType == 'SVG_SHAPE_OBJECT')
+        if((objectType == 'SVG_SHAPE_OBJECT')|| (objectType == 'SVG_IMAGE_OBJECT') )
         	GX_UpdatePropertyOnUI('DIMENSION', newObjDim); 
     }
     else
@@ -2800,7 +2804,7 @@ function OnObjectMove(evt,ui) {
                    // retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "DIMENSION", newObjDim, false, true);
                     if(retVal == false)
                     	return ; 
-                    if(objectType == 'SVG_SHAPE_OBJECT')
+                    if((objectType == 'SVG_SHAPE_OBJECT')|| (objectType == 'SVG_IMAGE_OBJECT') )
                     	GX_UpdatePropertyOnUI('DIMENSION', newObjDim); 
 			}
             
@@ -2846,7 +2850,7 @@ function OnObjectDragStart(evt, ui){
 	//gGrabberDim = GX_GetObjectAttribute(gCurrGrabber, 'DIMENSION');
 	
 	//Debug_Message("x=" + gGrabberDim.x + "y=" +gGrabberDim.y); 
-	if(objectType == 'SVG_SHAPE_OBJECT') 
+	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_IMAGE_OBJECT') ) 
 		gCurrSelectedObjectDim = GX_GetObjectAttribute(gCurrentObjectSelected, 'DIMENSION');
 	else if(objectType == 'SVG_TEXT_OBJECT')
 	{
@@ -2976,7 +2980,7 @@ function OnObjectResizing(event, ui){
 	var relLeft, relTop; 
 	var objectType = gCurrentObjectSelected.classList[0]; 
 	var newObjDim = new sDimension(); 
-	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
+	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_IMAGE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
 		relW = new Number(ui.size.width - ui.originalSize.width);
 		relH = new Number(ui.size.height - ui.originalSize.height);		
 		relW = Math.round(relW / gZoomFactor);
@@ -2999,7 +3003,7 @@ function OnObjectResizeStop(event, ui){
 	var relLeft, relTop; 
 	var objectType = gCurrentObjectSelected.classList[0]; 
 	var newObjDim = new sDimension(); 
-	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
+	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_IMAGE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
 		relW = new Number(ui.size.width - ui.originalSize.width); 
 		relH = new Number(ui.size.height - ui.originalSize.height); 
 		relW = Math.round(relW / gZoomFactor); 
@@ -3358,7 +3362,7 @@ function GX_GetLayerDimension(layerID)
 		objClass = childNode.classList[0]; 
 		
 		
-		if ( (objClass == 'SVG_SHAPE_OBJECT')|| (objClass == 'SVG_PATH_OBJECT') || (objClass == 'SVG_TEXT_OBJECT') )
+		if ( (objClass == 'SVG_SHAPE_OBJECT')|| (objClass == 'SVG_IMAGE_OBJECT') || (objClass == 'SVG_PATH_OBJECT') || (objClass == 'SVG_TEXT_OBJECT') )
 		{
 			 
 			objDim = GX_GetObjectAttribute(childNode, 'DIMENSION');			
@@ -3451,7 +3455,7 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 			transfDim.x = GX_ConvertToMultipleOf(transfDim.x, 10);
 			transfDim.y = GX_ConvertToMultipleOf(transfDim.y, 10); 
 		}
-		if( (objectType == 'SVG_PATH_OBJECT') || (objectType == 'GROUP') || (objectType == 'SVG_SHAPE_OBJECT') 
+		if( (objectType == 'SVG_PATH_OBJECT')|| (objectType == 'SVG_IMAGE_OBJECT') || (objectType == 'GROUP') || (objectType == 'SVG_SHAPE_OBJECT') 
 				|| (objectType == 'SVG_TEXT_OBJECT')){
 			//str = 'translate(' + transfDim.x + delimiter + transfDim.y +')'; 
 			gTransfArray[0] = 'translate(' + transfDim.x; 
@@ -3507,7 +3511,7 @@ function GX_UpdateLayerChildElements(layerNode)
 		node = childnodes.item(j);	
 		var nodeclass = node.classList[0];		
 		//if( (nodeclass == 'SVG_SHAPE_OBJECT')  || (nodeclass == 'SVG_TEXT_OBJECT') )
-		if(nodeclass == 'SVG_SHAPE_OBJECT')
+		if( (nodeclass == 'SVG_SHAPE_OBJECT')|| (nodeclass == 'SVG_IMAGE_OBJECT'))
 		{	
 			nodeDim = GX_GetObjectAttribute(node, 'DIMENSION');
 			nodeDim.x = nodeDim.x + transprop.x; 
@@ -4099,7 +4103,7 @@ function GX_EditBoxValueChange(value, widgetnode)
 				break; 
 		}
 	}
-	if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT') || (nodeClass == 'SVG_PATH_OBJECT') )
+	if( (nodeClass == 'SVG_SHAPE_OBJECT')|| (nodeClass == 'SVG_IMAGE_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT') || (nodeClass == 'SVG_PATH_OBJECT') )
 	{
 		if(wdgtType == 'DIMENSION')
 		{
@@ -4119,14 +4123,14 @@ function GX_EditBoxValueChange(value, widgetnode)
 				break;
 			case 'widthIP':
 				DimValue.width = new Number(value);		
-				if(nodeClass == 'SVG_SHAPE_OBJECT'){
+				if( (nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_IMAGE_OBJECT') ){
 					retVal = GX_SetObjectAttribute(currnodeSel, "DIMENSION", DimValue, true, false);
 					 GX_SetRectObjectDim(gCurrGrabber,DimValue);
 				}
 				break; 
 			case 'heightIP':
 				DimValue.height = new Number(value);		
-				if(nodeClass == 'SVG_SHAPE_OBJECT'){
+				if( (nodeClass == 'SVG_SHAPE_OBJECT')|| (nodeClass == 'SVG_IMAGE_OBJECT') ){
 					retVal = GX_SetObjectAttribute(currnodeSel, "DIMENSION", DimValue, true, false);
 					GX_SetRectObjectDim(gCurrGrabber,DimValue);
 				}
@@ -4143,7 +4147,7 @@ function GX_EditBoxValueChange(value, widgetnode)
 	if(currnodeSel)
 		var objType = currnodeSel.classList[1]; 
 	
-	if( (nodeClass == 'SVG_SHAPE_OBJECT')||(nodeClass == 'SVG_PATH_OBJECT')|| (nodeClass == 'SVG_TEXT_OBJECT') || (nodeClass == 'MULTIOBJECTS' ) )
+	if( (nodeClass == 'SVG_SHAPE_OBJECT')|| (nodeClass == 'SVG_IMAGE_OBJECT') || (nodeClass == 'SVG_PATH_OBJECT')|| (nodeClass == 'SVG_TEXT_OBJECT') || (nodeClass == 'MULTIOBJECTS' ) )
 	{
 		if(nodeClass == 'SVG_PATH_OBJECT'){
 			if(widgetnode.id == 'marker_strokeWeightIP'){
@@ -4829,7 +4833,7 @@ function GX_SetObjectAttribute(ObjNode, AttrName, AttrValue, bListStore, bUpdate
 				ObjNode.setAttribute('class', classvalue); 
 				//GX_UpdatePathMarker(ObjNode.id, gPathDataArray, true);				
 			}
-			else if(objectType == 'SVG_SHAPE_OBJECT')
+			else if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_IMAGE_OBJECT') )
 			{
 				retVal = GX_SetTransformProperty(ObjNode, 'rotate',AttrValue);
 				gCurrSelectedObjectDim.rotate = AttrValue.rotate; 
@@ -5257,7 +5261,7 @@ function GX_SelectObjectInMultiMode(Node)
 	//check if the node is SCG_SHAPE_OBJECT TYPE 
 	var nodeClass= Node.classList[0];
 	var multiNodeArrLen = gMultiNodeArray.length; 
-	if(! ((nodeClass == 'SVG_SHAPE_OBJECT')|| (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT')) )
+	if(! ((nodeClass == 'SVG_SHAPE_OBJECT') || (nodeClass == 'SVG_IMAGE_OBJECT')|| (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'SVG_TEXT_OBJECT')) )
 		return ; 
 	
 	var objDim = GX_GetRectObjectDim(Node); 
@@ -5425,7 +5429,7 @@ function GX_AlignDimension(alignType)
 function GX_CopyObject(objNode)
 {
 	var nodeclass = objNode.classList[0]; 
-	if(! ((nodeclass == 'SVG_SHAPE_OBJECT')||(nodeclass == 'SVG_PATH_OBJECT') || (nodeclass == 'SVG_TEXT_OBJECT')) )
+	if(! ((nodeclass == 'SVG_SHAPE_OBJECT')|| (nodeclass == 'SVG_IMAGE_OBJECT') || (nodeclass == 'SVG_PATH_OBJECT') || (nodeclass == 'SVG_TEXT_OBJECT')) )
 	{
 		Debug_Message("Select an Object to Copy"); 
 		return ; 
@@ -5493,7 +5497,7 @@ function GX_PasteObject()
 		 newdim.rotCentreX = newdim.rotCentreX +transX ;
 		 newdim.rotCentreY = newdim.rotCentreY + transY; 
 		 var objecttype = newNode.classList[0]; 
-		 if( (objecttype == 'SVG_PATH_OBJECT') || (objecttype == 'SVG_SHAPE_OBJECT') || (objecttype == 'SVG_TEXT_OBJECT') )
+		 if( (objecttype == 'SVG_PATH_OBJECT') || (objecttype == 'SVG_IMAGE_OBJECT') || (objecttype == 'SVG_SHAPE_OBJECT') || (objecttype == 'SVG_TEXT_OBJECT') )
 			 GX_SetTransformProperty(newNode, 'translate',newdim);
 			// GX_SetObjectAttribute(newNode, 'DIMENSION', newdim, false, true);		 
 		 if(!newNode)
@@ -5677,7 +5681,7 @@ function GX_DDLHandler(Node, value)
 		}
 		if(gCurrentObjectSelected) 
 		{		
-			if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
+			if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_IMAGE_OBJECT') || (objectType == 'SVG_PATH_OBJECT') || (objectType == 'SVG_TEXT_OBJECT'))
 			{							
 				GX_SetObjectAttribute(gCurrentObjectSelected, "fill", fillurl, true, false);				
 			}			
@@ -8992,7 +8996,7 @@ function GX_MoveSelectedObject(relX, relY){
 	
 	var objectType =  gCurrentObjectSelected.classList[0];
     var newObjDim = new sDimension();   
-    if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
+    if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_IMAGE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
     {
     	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
         newObjDim.y = gCurrSelectedObjectDim.y + relY; 
@@ -9136,7 +9140,7 @@ function GX_PopulateObjectList(ObjectType)
 	 	 } 	 	
 	 	 
 	 	 //text object 
-	 	JQSel = '.SVG_TEXT_OBJECT'; 
+	 	 JQSel = '.SVG_TEXT_OBJECT'; 
 	 	 var size = $(JQSel).size(); 
 	     var num = $(JQSel).size();
 	 	 var DOMArr1 = $(JQSel).toArray(); 
@@ -9159,7 +9163,34 @@ function GX_PopulateObjectList(ObjectType)
 	 			childNode = childNode.nextSibling; 
 	 			
 	 		} 	//while
-	 	 } 	 			
+	 	 } 	 
+	 	 
+	 	 
+	 	 //image object 
+	 	 JQSel = '.SVG_IMAGE_OBJECT'; 
+	 	 var size = $(JQSel).size(); 
+	     var num = $(JQSel).size();
+	 	 var DOMArr1 = $(JQSel).toArray(); 
+	 	 for(var k=0; k < DOMArr1.length; k++)
+	 	 {
+	 		var objID = DOMArr1[k].getAttribute('id'); 	
+	 		var objDim = GX_GetRectObjectDim($('#'+objID)[0]);
+			var left = new Number(objDim.x); 
+			var top = new Number(objDim.y); 
+			var right = new Number(left + objDim.width); 
+			var bottom = new Number(top + objDim.height); 
+			
+	 		var objarr = [objID, 'SVG_IMAGE_OBJECT', left, top, right, bottom]; 		 
+	 		ObjectList.push(objarr); 
+	 		
+	 		var childNode = DOMArr1[k].firstElementChild;  		
+	 		while(childNode)
+	 		{
+	 			GX_UpdateAnimInfoInList(childNode);	
+	 			childNode = childNode.nextSibling; 
+	 			
+	 		} 	//while
+	 	 }
 	} 		
 	
 	return ObjectList;  	 	

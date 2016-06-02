@@ -175,6 +175,7 @@ gAnimItemDisabledList['SVG_PATH_OBJECT'] = [0,3,8];
 gAnimItemDisabledList['GROUP'] = [0,3,8];
 //NEED TO CHECK FURTEHR FOR TEXT AND IMAGES 
 gAnimItemDisabledList['SVG_TEXT_OBJECT'] = [0,2,3,5,8];
+gAnimItemDisabledList['SVG_IMAGE_OBJECT'] = [0,3,8];
 var gCurrDisabledAnimItemArr = 0; 
 //var pathList = ['Line', 'Cubic Bezier','Quadratic Bezier','Elliptic']; 
 var gPathTypeList = []; 
@@ -563,6 +564,7 @@ function GX_SetAnimParamOnUI(animParam) {
 		$('.ValueProperty').show(); 
 		var value = animParam.startValue; 			
 		WAL_setNumberInputValue('startValueIP', value, false);	
+		WAL_disableWidget('endValueIP', 'data-jqxNumberInput', false, true);
 		break;
     case 'translate':
 		//get the currentobject selected 		
@@ -4229,8 +4231,8 @@ function GX_GetAnimInfoList(){
 	    		animInfo.type = gReverseAttrList[gAnimList[i][2]];
 	    		animInfo.trigger = gRevTriggerList[gAnimList[i][9]];
 	    		animInfo.duration = gAnimList[i][8];
-	    		if(gAnimList[i][6]){
-	    			var info  = GX_GetAnimInfoByID(gAnimList[i][6]);
+	    		if(gAnimList[i][7]){
+	    			var info  = GX_GetAnimInfoByID(gAnimList[i][7]);
 	    			animInfo.refanimID = info[5];
 	    		}	    			
 	    		else

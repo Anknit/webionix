@@ -150,7 +150,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'rect',$objectIDVal,0, $parentIDVal, $attrdefinition,''); 
 			break; 
 		case 'IMAGE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT IMAGE ROTATE,0', 'x'=> '20','y'=>'20', 'width'=>'100', 'height'=>'100', 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'xlink:href'=>$imageURL, 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0', 'fill'=>'none');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_IMAGE_OBJECT IMAGE ROTATE,0', 'x'=> '20','y'=>'20', 'width'=>'100', 'height'=>'100', 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'xlink:href'=>$imageURL, 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0', 'fill'=>'none');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'image',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'ELLIPSE':
