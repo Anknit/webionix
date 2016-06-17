@@ -1168,7 +1168,7 @@ function GX_Initialize()
         usernameNode.innerHTML = gUsername; 
     }
     
-    WAL_createModelessWindow('helpDlg', '350', '450', 'helpOK', 'helpCancel');    
+    WAL_createModelessWindow('helpDlg', '450', '550', 'helpOK', 'helpCancel');    
     WAL_CreateNotification('messageNotification', 10000, 'auto')  ; 
 }
 
@@ -8987,7 +8987,7 @@ function OnKeyDown(event){
 		top = top + relY; 
 		$(gCurrGripperSel).css({left : left +'px', top : top + 'px'}); 
 		GX_MoveSelectedObject(relX, relY); 
-		 GX_UpdatePropertyOnUI('POSITION', gCurrSelectedObjectDim);
+		GX_UpdatePropertyOnUI('POSITION', gCurrSelectedObjectDim);
 	}
 	event.stopPropagation(); 
 }
@@ -8996,10 +8996,12 @@ function GX_MoveSelectedObject(relX, relY){
 	
 	var objectType =  gCurrentObjectSelected.classList[0];
     var newObjDim = new sDimension();   
-    if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_IMAGE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') )
+    if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_IMAGE_OBJECT'))
     {
+    	
+    	
     	newObjDim.x = gCurrSelectedObjectDim.x + relX; 
-        newObjDim.y = gCurrSelectedObjectDim.y + relY; 
+        newObjDim.y = gCurrSelectedObjectDim.y + relY;   	
         if(gSnapToGrid == true){
         	newObjDim.x = GX_ConvertToMultipleOf(newObjDim.x, 10); 
         	newObjDim.y = GX_ConvertToMultipleOf(newObjDim.y, 10); 
@@ -9019,13 +9021,25 @@ function GX_MoveSelectedObject(relX, relY){
         	//newObjDim.x = newObjDim.rotCentreX;
            // newObjDim.y = newObjDim.rotCentreY; 
         }  
-        retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "DIMENSION", newObjDim, false, false);
+        if(objectType == 'SVG_TEXT_OBJECT'){
+        	GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
+        }
+        else
+        	retVal = GX_SetObjectAttribute(gCurrentObjectSelected, "DIMENSION", newObjDim, false, false);
         if(newObjDim.rotate != 0)
         	GX_SetTransformProperty(gCurrentObjectSelected, 'rotate', newObjDim);
         	
-    }        	
-	else if(objectType == 'GROUP')
-	{    		
+    }  
+    else if(objectType == 'SVG_TEXT_OBJECT'){    		
+            newObjDim.x = relX ;//gCurrSelectedObjectDim.x+relX;
+    	    newObjDim.y = relY ;// gCurrSelectedObjectDim.y+relY;  
+    	    newObjDim.rotate = gCurrSelectedObjectDim.rotate;//.
+    	    newObjDim.rotCentreX = gCurrSelectedObjectDim.rotCentreX +relX ;
+    	    newObjDim.rotCentreY = gCurrSelectedObjectDim.rotCentreY + relY; 
+        	GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
+        	GX_UpdatePosFromTranslation(gCurrentObjectSelected);
+    }    
+	else if(objectType == 'GROUP'){    		
 		newObjDim.x = gCurrSelectedObjectDim.x+relX; 
         newObjDim.y = gCurrSelectedObjectDim.y+relY;  
         if(gSnapToGrid == true){
@@ -9942,11 +9956,13 @@ function GX_ShowTooltip(bFlag){
 		$('[data-toggle="tooltip"]').tooltip({html:true, trigger:'hover'}); 
 		  $("[data-toggle='tooltip']").on('shown.bs.tooltip', function(){
 			var mytext = $(".tooltip-inner").html(); 
-			var XMLDoc =  loadXMLString(mytext);
-			var objNode = XMLDoc.firstElementChild.firstElementChild;		
-			if(objNode.nodeName == 'a'){
-				gTooltipSrc = 	objNode.getAttribute('href'); 
-			}			
+			if(mytext){
+				var textarr = mytext.split('='); 
+				textarr = textarr[1].split('>'); 
+				var ref = textarr[0];
+				ref = ref.substring(1, ref.length-1);			
+				gTooltipSrc = ref; 
+			}									
 		});	
 		  $("[data-toggle='tooltip']").on(' hidden.bs.tooltip', function(){
 			  gTooltipSrc = 0; 
