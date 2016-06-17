@@ -216,7 +216,18 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; font-weight:bold;}
 	color:#fff;
 	border-color:#0000de;  
 }
+ 
+ .propertyBtnAnim{
+	background-color:#666; 
+	color:#e0e0e0; 
+}
 
+.propertyBtnAnim:hover{
+	background-color:#222; 
+	color:#fff;
+	border-color:#0000de;  
+}
+ 
 #contenttablejqxAnimgrid{
 	font-size:10px;
 	font-weight:bold; 
