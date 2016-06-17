@@ -2971,7 +2971,7 @@ function OnObjectDragStop(evt,ui){
     if(gCurrentObjectSelected.classList[0] == 'SVG_TEXT_OBJECT'){
     	//set the bounading rectange     	    	 
     	GX_SetRectObjectDim(gCurrGrabber, gCurrSelectedObjectDim);
-    	GX_MakeTextEditable(gCurrentObjectSelected);
+    	//GX_MakeTextEditable(gCurrentObjectSelected);
     }
 }
 
@@ -4480,6 +4480,9 @@ function GX_ToolbarHandler(event)
 		 else
 			 Prop = 'small-caps'; 
 		 GX_SetObjectAttribute(gCurrentObjectSelected, "font-variant", Prop, true, false);
+		 break; 
+	 case 'editTextBtn':
+		 GX_MakeTextEditable(gCurrentObjectSelected);
 		 break; 
 	case 'add_marker_btn':
 		var markerType = WAL_getDropdownListSelection('markerTypeListDDL');
