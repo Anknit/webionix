@@ -4431,8 +4431,7 @@ function GX_ToolbarHandler(event)
 		WAL_setNumberInputValue("polynSidesIP", '3', false);
 	    WAL_setNumberInputValue("polyLengthIP", '50', false);
 		WAL_showModalWindow(gPolyInputDlg,"GX_PolyInputDlgOK", "" );
-		break; 
-	
+		break; 	
 	case 'freehand_icon':
 		GX_AddNewSVGObject('freedraw_path','', 'callbackSVGAddDefualtFn'); 		
 		break; 
@@ -4440,6 +4439,12 @@ function GX_ToolbarHandler(event)
 		 var JQSel = "#" + "imageURLIP";	
 		 $(JQSel).val("");				
 		 WAL_showModalWindow(gImageNameDlgID,"GX_ImageDlgOK", "" );			
+		break; 
+	case 'apply_urlBtn':
+		if( (gCurrentObjectSelected) && (gCurrentObjectSelected.classList[0] == 'SVG_IMAGE_OBJECT')){
+			var urlStr = $('#imgURLValueIP').val(); 
+			gCurrentObjectSelected.setAttribute('xlink:href', urlStr); 
+		}
 		break; 
 	case 'boldBtn':
 		 var Prop = gCurrentObjectSelected.getAttribute('font-weight'); 
@@ -9619,6 +9624,7 @@ function GX_SetDefualtPropOnUI(){
 	$('.pathProperty').hide();
 	$('.fontProperty').hide(); 	
 	$('.markerProperty').hide(); 
+	$('.imageProperty').hide(); 
 	WAL_SetItemInDropDownList('markerTypeListDDL', 0, false);
 }
 
@@ -9715,6 +9721,12 @@ function GX_SetPropertyonUI(objNode){
 	else if(shapeType == 'SVG_TEXT_OBJECT'){
 		$('.fontProperty').show(); 
 	}
+	else if(shapeType == 'SVG_IMAGE_OBJECT'){
+		$('.imageProperty').show(); 
+		var urlStr = objNode.getAttribute('xlink:href');
+		$('#imgURLValueIP').val(urlStr); 		
+	}
+	
 }
 
 function GX_RightTabHandler(tabIndex){
