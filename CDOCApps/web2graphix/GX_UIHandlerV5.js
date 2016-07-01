@@ -120,7 +120,7 @@ var gWidgetHeight = '22';
 var gInitFillColor = 0; 
 var gInitFillValue = 0; 
 var bNewObjectAdding = false; 
-
+var bFileLoaded =  false; 
 
 
 var gttHeight = 30; 
@@ -1170,6 +1170,23 @@ function GX_Initialize()
     
     WAL_createModelessWindow('helpDlg', '450', '550', 'helpOK', 'helpCancel');    
     WAL_CreateNotification('messageNotification', 10000, 'auto')  ; 
+    
+    //now reload the page 
+    if(bFileLoaded == false){
+    	//get the URL
+    	var url = window.location.href; 
+    	
+    	//extract the file name 
+    	arr = url.split('?'); 
+    	var filename = arr[arr.length-1]; 
+    	var index = filename.indexOf('.svg'); 
+    	if(index != -1){
+    		GX_OpenFile(filename);
+    		bFileLoaded = true; 
+    	}   	
+    	
+    	
+    }
 }
 
 function GX_MenuDisable(bFlag)
@@ -4359,6 +4376,9 @@ function GX_ToolbarHandler(event)
 		break; 
 	case 'reloadPreviewBtn':
 		GX_ReloadPreview(); 
+		break; 
+	case 'reloadBtn':
+		GX_ReloadWorkspace(); 
 		break; 
 	case 'stroke_color_icon':
 		WAL_hideWidget('colorpickwidget', true); 
@@ -7761,7 +7781,9 @@ function GX_ShowGradWindow(gradID, gradType)
  	 }
      if(gradType == 'LINEAR_GRADIENT')
      {
-    	 $(JQSel).jqxWindow('setTitle', 'Linear Gradient Settings');    	 
+    	 JQSel = '#gradientDlg'; 
+    	 $(JQSel).jqxWindow('setTitle', 'Linear Gradient Settings');    	
+    	 
      	 rgnode.style.display = 'none'; 
      	 lgnode.style.display = 'block';            	
      	 JQSel = '.RG_MARKERS';
@@ -7786,6 +7808,7 @@ function GX_ShowGradWindow(gradID, gradType)
      }
      else if(gradType == 'RADIAL_GRADIENT')
      {
+    	 JQSel = '#gradientDlg'; 
     	 $(JQSel).jqxWindow('setTitle', 'Radial Gradient Settings');    	 
      	 rgnode.style.display = 'block'; 
      	 lgnode.style.display = 'none';            	
@@ -9560,7 +9583,7 @@ function GX_InitializePropertyTab(){
 	 WAL_createCheckBox('snaptogrid', 'GX_CheckValueChange', '110', '20' , '13', false, false);
 	 WAL_setCheckBoxValue('snaptogrid', false);
 	 
-	 WAL_createCheckBox('tooltipBtn', 'GX_CheckValueChange', '110', '20' , '13', false, false);
+	 WAL_createCheckBox('tooltipBtn', 'GX_CheckValueChange', '75', '20' , '13', false, false);
 	 WAL_setCheckBoxValue('tooltipBtn', true);
 	 
 	 
@@ -9993,4 +10016,9 @@ function GX_ShowTooltip(bFlag){
 
 function GX_DownloadCurrentProject(){
 	GXRDE_downloadCurrentProject(); 
+}
+
+function GX_ReloadWorkspace(){
+	var urlStr = 'GX_Editor.html?'+ gSVGFilename; 
+	window.open(urlStr, '_self',''); 	
 }
