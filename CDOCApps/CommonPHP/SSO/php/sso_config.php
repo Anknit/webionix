@@ -76,6 +76,7 @@ $sso_c_encryption_key	=	"09334c83bf0d34e2029f7a477cb767f4ed437c175f165e9a752a392
 /*
  * $sso_mail_verify_setting contains the smtp settings through which verification and reset password links will be sent
  */
+/*
 $sso_mail_verify_setting	=	array(
 					'smtpHostName'	=>	'mail.veneratech.com',
 					'smtpPort'		=>	'25',
@@ -83,6 +84,16 @@ $sso_mail_verify_setting	=	array(
 					'smtpPassword'	=>	'#Roger',
 					'sender'		=>	'',
 			);
+			
+			*/
+
+$sso_mail_verify_setting	=	array(
+		'smtpHostName'	=>	'smtp.gmail.com',
+		'smtpPort'		=>	'587',
+		'smtpUsername'	=>	'administrator@webionix.com',
+		'smtpPassword'	=>	'#Mouni123',
+		'sender'		=>	'Administrator',
+);
 /*
 if(!function_exists('get_DbConfig')){
 	function get_DbConfig(){
