@@ -2218,7 +2218,10 @@ function GX_SetSelection(objNode, bFlag, bShowMarkers) {
     	*/     	
     }
     if( (nodeClass == 'SVG_PATH_OBJECT') || (nodeClass == 'GROUP') || (nodeClass == 'SVG_TEXT_OBJECT')){
-    	$(gCurrGripperSel).resizable( "disable" );
+    	//$(gCurrGripperSel).resizable( "disable" );    	
+    	//$(gCurrGripperSel).resizable( "option", "cancel", ".cancel" );    	
+    	$(gCurrGripperSel).resizable( "option", "maxWidth",  $(gCurrGripperSel).width() );
+    	$(gCurrGripperSel).resizable( "option", "maxHeight",  $(gCurrGripperSel).height() );
     	$(gCurrGripperSel).css({opacity:'1'});
     } 		
   
@@ -3014,12 +3017,18 @@ function OnObjectResizing(event, ui){
 	    newObjDim.height =  gCurrSelectedObjectDim.height + relH; 	    
 		GX_SetRectObjectDim(gCurrentObjectSelected,newObjDim);
 	}
+	else{
+			ui.element.width(ui.originalSize.width);
+	        ui.element.height(ui.originalSize.height);
+		
+	}
 }
 function OnObjectResizeStop(event, ui){
 	var relW, relH; 
 	var relLeft, relTop; 
 	var objectType = gCurrentObjectSelected.classList[0]; 
 	var newObjDim = new sDimension(); 
+	
 	if( (objectType == 'SVG_SHAPE_OBJECT') || (objectType == 'SVG_IMAGE_OBJECT') || (objectType == 'SVG_TEXT_OBJECT') ){
 		relW = new Number(ui.size.width - ui.originalSize.width); 
 		relH = new Number(ui.size.height - ui.originalSize.height); 
@@ -3044,13 +3053,24 @@ function OnObjectResizeStop(event, ui){
 		gGrabberDim = GX_GetRectObjectDim(gCurrGrabber); 
 		GX_UpdatePropertyOnUI('DIMENSION', gCurrSelectedObjectDim);
 	}
+	else{	
+			ui.element.width(ui.originalSize.width);
+	        ui.element.height(ui.originalSize.height);
+		
+	}
 	
 }
 
 
 function OnObjectResizeStart(event, ui){	
 	relW = new Number(ui.size.width - ui.originalSize.width); 
-	relH = new Number(ui.size.height - ui.originalSize.height); 
+	relH = new Number(ui.size.height - ui.originalSize.height);
+	var nodeclass = gCurrentObjectSelected.classList[0]; 
+	if(nodeclass == 'SVG_PATH_OBJECT'){
+		ui.element.width(ui.originalSize.width);
+        ui.element.height(ui.originalSize.height);
+	}
+	
 }
 
 function OnObjectMouseOut(evt)

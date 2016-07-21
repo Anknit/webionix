@@ -254,7 +254,7 @@ function sso_google($token)//if(isset($_POST['idtoken']))
 	{
 		$ott	=	sha1(uniqid("",true));
 		//$wksname = 'Folder_' . getTimeBasedString();
-		$wksname = $first_name . '_' . getTimeBasedString();
+		$wksname = $firstname . '_' . getTimeBasedString();
 		$d_data    =    array('Table'=>'userinfo','Fields'=>array('sso_ott'=>$ott,'regAuthorityId'=>0,'usertype'=>'normal','username'=>$name,'firstname'=>$firstname, 'lastname'=>$lastname, 'emailid'=>$email,'status'=>"verified", 'workspacename'=>$wksname));
 		if(!$mysqlObj->Insert($d_data))
 		{

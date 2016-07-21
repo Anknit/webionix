@@ -13,7 +13,7 @@ $mailString	=	'<html>
               <tr>
                 <td style="width:300px; padding:8px 0 0 0; text-align:center; ">
                   <a href="" target="_blank" style="text-decoration:none; color:#010101;">
-                    <img src="104.130.134.216/beta/widget_factory/framework/image/corona-logo.jpg" alt="Webionix" style="margin:0 auto;" height="37" border="0" width="128" />
+                    <img src="http://webionix.com/CommonCSS/icons/Version1/SiteIcons/wnxnotextlogo.png" alt="Webionix" style="margin:0 auto;" height="37" border="0" width="128" />
                   </a>
                 </td>
               </tr>
@@ -24,7 +24,7 @@ $mailString	=	'<html>
                   <table cellpadding="0" cellspacing="0" style="width:600px;  margin:0; padding:15px 10px; float:left; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#565656;">
                     <tr>
                       <td colspan="2">
-										Click on this link to Verify your email address  !
+										Click on the link below to Verify your email address  !
 										</td>
                     </tr>
                     <tr>
@@ -45,7 +45,7 @@ $mailString	=	'<html>
                       <td colspan="2" height="10" />
                     </tr>
                     <tr>
-                      <td>NOT YOU? Report misuse at:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rajarshi@veneratech.com</td>
+                      <td>NOT YOU? Report misuse at:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;administrator@webionix.com</td>
 	
                     </tr>
                     <tr>

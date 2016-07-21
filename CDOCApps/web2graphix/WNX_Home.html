@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="google-signin-client_id" content="42338840257-9ll1lip2eqc6dg2p00ntl94njnb39d1r.apps.googleusercontent.com">
+<meta name="google-signin-client_id" content="258000566940-thqh5n9qqq5dfp5ge7najjtbhaa145hg.apps.googleusercontent.com">
 <title>Webionix</title>
 <link rel="stylesheet" href="http://localhost/CDOCApps/CommonJS/Bootstrap/css/bootstrap.min.css">
 <script src="http://localhost/CDOCApps/CommonJS/jquery-1.10.2.min.js"></script>
@@ -88,7 +88,8 @@ function MySSOCallback(optype, status){
 	case 'googleverify':
 		if(obj['success'] == 'true'){
 			$('#loginModal').modal("hide");
-			var URLstr = 'http://localhost/CDOCApps/web2graphix/GX_Editor.html';
+			//var URLstr = 'http://localhost/CDOCApps/web2graphix/GX_Editor.html';
+			var URLstr = 'GX_Editor.html';
 			if(!URLstr)
 					return;			
 				    //open a new window with page title

@@ -257,7 +257,7 @@ function MySSOCallback(optype, status){
 				  </div>
 				  <div id='signupSuccessMessage' class="alert alert-success sso_message text-center" style='display:none'>
     					<strong>Congratulations! </strong><span>You have been successfully Registered.</span> 
-    					<a href="/CDOCApps/web2graphix/WNX_Home.php" class="btn btn-info btn-success" role="button">Click Here</a>
+    					<a href="../../../web2graphix/WNX_Home.php" class="btn btn-info btn-success" role="button">Click Here</a>
     					<!-- <button id='linkBtn' class='btn btn-default btn-link' onclick='' >Take me to Main site</button>-->
   				  </div>
   				  <div id='signupErrorMessage' class="alert alert-danger sso_message text-center" style='display:none'>

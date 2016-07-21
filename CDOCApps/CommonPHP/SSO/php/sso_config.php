@@ -85,15 +85,19 @@ $sso_mail_verify_setting	=	array(
 					'sender'		=>	'',
 			);
 			
-			*/
+	*/
+	
 
-$sso_mail_verify_setting	=	array(
-		'smtpHostName'	=>	'smtp.gmail.com',
-		'smtpPort'		=>	'587',
+$sso_mail_verify_setting	=	array(	
+		'smtpAuth' => 'true',
+		'smtpHostName'	=>	'ssl://smtp.gmail.com',		
+		'smtpPort'		=>	'465',
 		'smtpUsername'	=>	'administrator@webionix.com',
 		'smtpPassword'	=>	'#Mouni123',
-		'sender'		=>	'Administrator',
+		'sender'		=>	'Administrator'
 );
+
+
 /*
 if(!function_exists('get_DbConfig')){
 	function get_DbConfig(){

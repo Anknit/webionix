@@ -2,10 +2,10 @@
 $SESSION_NAME ="GXAPP";
 $PATH_SEPARATOR ="/";
 $SERVER_LOCATION ="LOCAL";  
-$BASE_WKSURI="http://localhost/CDOCApps/USER_DATA"; 
+$BASE_WKSURI="http://localhost/CDOCApps_LocalSVN/USER_DATA"; 
 $USER_DATA_PATH="../USER_DATA";
-$SCRIPT_PATH="http://localhost/CDOCApps/CommonJS";
-$IMAGE_PATH="http://localhost/CDOCApps/CommonCSS";
+$SCRIPT_PATH="http://localhost/CDOCApps_LocalSVN/CommonJS";
+$IMAGE_PATH="http://localhost/CDOCApps_LocalSVN/CommonCSS";
 $DUMMY="."; 
 $DBAUTHOR = 'rajarshi';
 $DBUSER = 'cdocuser'; //'cdocadmin';
