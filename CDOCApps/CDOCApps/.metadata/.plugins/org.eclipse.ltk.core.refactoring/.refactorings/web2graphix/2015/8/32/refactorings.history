@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring accessors="true" comment="Delete 1 element(s) from project &apos;web2graphix&apos;&#x0D;&#x0A;- Original project: &apos;web2graphix&apos;&#x0D;&#x0A;- Original element: &apos;GX_AnimationWdgt.js.bak&apos;" description="Delete element" element1="GX_AnimationWdgt.js.bak" elements="0" flags="589830" id="org.eclipse.wst.jsdt.ui.delete" resources="1" stamp="1438668399268" subPackages="false" version="1.0"/>
-</session>

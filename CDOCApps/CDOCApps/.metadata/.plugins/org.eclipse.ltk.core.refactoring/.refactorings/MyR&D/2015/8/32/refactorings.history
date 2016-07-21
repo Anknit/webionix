@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Copy 1 elements(s) to &apos;Filters&apos;&#x0D;&#x0A;- Original project: &apos;MyR&amp;D&apos;&#x0D;&#x0A;- Destination element: &apos;Filters&apos;&#x0D;&#x0A;- Original element: &apos;SVGExample_Filter.svg&apos;" description="Copy file" element1="SVGExample_Filter.svg" files="1" flags="589830" folders="0" id="org.eclipse.wst.jsdt.ui.copy" log="SVGExample_Filter.svg&#x09;true&#x09;false" policy="org.eclipse.wst.jsdt.ui.copyResources" stamp="1439032163509" target="/MyR&amp;D/Filters" units="0" version="1.0"/>
-</session>
