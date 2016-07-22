@@ -49,8 +49,21 @@ function CDOC_Session_Init(&$name, &$id, $workspacename)
 	$_SESSION['ProjectName']=0; 
 	$_SESSION['projXMLDOM'] = 0;
 	$_SESSION['projXMLfilename']=0; 
-	$_SESSION['baseWKSURI']=$GLOBALS['BASE_WKSURI'] ; 
-	$_SESSION['projectServerPath'] = rtrim($_SESSION['baseWKSURI'], 'USER_DATA'); //rtrim($_SESSION['baseWKSURI'], 'USER_DATA'); 
+	//$_SESSION['baseWKSURI']=$GLOBALS['BASE_WKSURI'] ; 
+	$urlOrig = $_SERVER['HTTP_ORIGIN'];
+	$reqURI = 	$_SERVER['REQUEST_URI']; 
+	$strArr = explode('/', $reqURI);
+	$tempstr = $urlOrig . '/';  
+	for($i =0; $i < sizeof($strArr); $i++){
+		if($strArr[$i] == 'web2graphix'){			
+			break;
+		}else if(strlen($strArr[$i]) != 0){
+			$tempstr = $tempstr . $strArr[$i] . '/';
+		}			
+	}  
+	$_SESSION['baseWKSURI'] = $tempstr; 
+	
+	$_SESSION['projectServerPath'] = $_SESSION['baseWKSURI'] . 'USER_DATA'; //rtrim($_SESSION['baseWKSURI'], 'USER_DATA'); 
 	$_SESSION['projDataPath'] = 0; 
 	$_SESSION['projHTMLDOM'] = 0;
 	$_SESSION['projHTMLFilename']=0;
@@ -63,8 +76,8 @@ function CDOC_Session_Init(&$name, &$id, $workspacename)
 	$_SESSION['currPageID'] = 0;
 	$_SESSION['currProjID'] = 0; 
 	$_SESSION['$serverloc'] = $GLOBALS['SERVER_LOCATION'];
-	$_SESSION['script_path'] = $GLOBALS['SCRIPT_PATH']; 
-	$_SESSION['image_path'] = $GLOBALS['IMAGE_PATH'];
+	$_SESSION['script_path'] = $_SESSION['baseWKSURI'] . 'CommonJS';//$GLOBALS['SCRIPT_PATH']; 
+	$_SESSION['image_path'] = $_SESSION['baseWKSURI'] . 'CommonCSS'; //$GLOBALS['IMAGE_PATH'];
 	$_SESSION['user_data_path'] = $GLOBALS['USER_DATA_PATH'];
 	$_SESSION['svg_xml_dom'] = 0;
 	$_SESSION['svg_xml_FileName'] = 0;
