@@ -84,18 +84,21 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; font-weight:bold;}
    		position:relative;
    		top:6px;
    		left: 2px;
+   		color:#EEE;
+   		/*font-weight:600;*/
+   		/*font-family:"georgia";*/
    } 
    
   .SMALL_TB_TEXT{
   	position:relative;
-   	top:-5px;
-   	left: 2px;
+   	top:0px;
+   	left: -2px;
    	font-size:10px; 
    	margin-bottom:10px; 
   }
  .IMAGE_BUTTON{
- width:32px; 
- height:32px;
+ width:24px; 
+ height:24px;
  position: relative;
  top: 3px; 
  }   
