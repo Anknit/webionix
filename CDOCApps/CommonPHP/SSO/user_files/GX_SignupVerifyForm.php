@@ -192,7 +192,7 @@ function MySSOCallback(optype, status){
         <span class="icon-bar"></span>                        
       </button>-->
       <a class="navbar-brand" href="#myPage" style='margin-top:-15px'><img class="img-responsive" src="../CommonCSS/icons/Version1/SiteIcons/wnxnotextlogo.png" width='50px' height='50px'></a>
-      <p class="navbar-brand logotext" style='color:#f4511e;'>Noxta</p>
+      <p class="navbar-brand logotext" style='color:#f4511e;'>Webionix</p>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav navbar-left" style='padding-left:45px'>
