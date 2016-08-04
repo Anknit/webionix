@@ -137,8 +137,8 @@ function GX_WKS_Initialize($wksname)
 	$_SESSION['projDataPath'] = $_SESSION['wksdir'].$_SESSION['pathSeparator'].'SVG';
 	
 	//$_SESSION['wksdir']  = $_SESSION['user_data_path'].$_SESSION['pathSeparator'].$wksname; ;
-	$_SESSION['baseWKSURI'] = $_SESSION['baseWKSURI']."/".$wksname; 
-	$_SESSION['userProjectDataPath'] = $_SESSION['baseWKSURI'] . "/" . "SVG/" ; 
+	//$_SESSION['baseWKSURI'] = $_SESSION['baseWKSURI'].'USER_DATA/' . $wksname; 
+	$_SESSION['userProjectDataPath'] = $_SESSION['baseWKSURI'] . "USER_DATA/" . $wksname . "/SVG/" ; 
 	//checks whether the director already exists
 	$retval = 0;
 	if(!is_dir($_SESSION['wksdir']))
@@ -316,10 +316,18 @@ function GX_WKS_CreateSVGFile(&$respData)
 				               	    {
 				               	  	  objNode.setAttribute("x", fromval[0]); 
 				               	      objNode.setAttribute("y", fromval[1]);   	  
-				               	    }
-				               	    
-				               	    			
-			                   }                 
+				               	    }			               	    			
+			                   }     
+
+			              function OnBeginAnimation(evt){
+			                	   var node = evt.target;
+			                	   node.targetElement.setAttribute("visibility", "visible");			                	   
+			                   }
+			                   
+			              function OnEndAnimation(evt){
+			                	   var node = evt.target;
+			                	   node.targetElement.setAttribute("visibility", "hidden");			                	   
+			                   }
 							
 					  ]]>
 	          </script>
@@ -423,7 +431,8 @@ function GX_WKS_OpenSVGFile(&$respData)
 	}
 	
 	$respData = $_SESSION['svg_xml_dom']->saveXML($svgNode);
-	$_SESSION['pathHTMLFile'] = $_SESSION['baseWKSURI'] . '/' . 'SVG' . '/' . $svgFileName; 
+	//$_SESSION['pathHTMLFile'] = $_SESSION['baseWKSURI'] . 'USER_DATA/' . 'SVG' . '/' . $svgFileName;
+	$_SESSION['pathHTMLFile'] = $_SESSION['userProjectDataPath'] . $svgFileName; 
 	return true;
 }
 

@@ -4078,7 +4078,7 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('square_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('polygon_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('freehand_icon', 'GX_ToolbarHandler');    
-    WAL_CreatePopOver('shapes_popup', 'object_icon', 'Objects', false, 'auto', 'auto', true);
+    WAL_CreatePopOver('shapes_popup', 'object_icon_div', 'Objects', false, 'auto', 'auto', true);
     var lineTypes = ['Horizontal','Vertical','Normal']; 
     WAL_createDropdownListwithButton("lineDDL", '0','0',lineTypes, "GX_DDLHandler", '140', '80','line_icon', gButtonWidth, gButtonHeight);
     
@@ -4089,13 +4089,13 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('open_icon', 'GX_ToolbarHandler');  
     WAL_createCustomButton('close_icon', 'GX_ToolbarHandler'); 
     
-    WAL_CreatePopOver('project_popup', 'file_icon','Projects', false, 'auto', 'auto', true);
+    WAL_CreatePopOver('project_popup', 'file_icon_div','Projects', false, 'auto', 'auto', true);
     
     //create aloign pop-up 
     
     
     
-    WAL_CreatePopOver('align_popup', 'align_icon','Alignment', false, '90', 'auto', false);
+    WAL_CreatePopOver('align_popup', 'align_icon_div','Alignment', false, '90', 'auto', false);
     WAL_createCustomButton('alignwidth_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('alignheight_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('alignleft_icon', 'GX_ToolbarHandler');
@@ -9157,6 +9157,8 @@ function GX_PopulateObjectList(ObjectType)
 	 }		 
     var size = $(JQSel).size(); 
     var num = $(JQSel).size();
+    $(JQSel).attr('visibility', 'visible'); 
+    var visiValue = ''; 
 	 var DOMArr = $(JQSel).toArray(); 
 	 for(var k=0; k < DOMArr.length; k++)
 	 {
@@ -9166,6 +9168,7 @@ function GX_PopulateObjectList(ObjectType)
 		var top = new Number(objDim.y); 
 		var right = new Number(left + objDim.width); 
 		var bottom = new Number(top + objDim.height); 
+		
 		var objarr = [objID, 'SVG_SHAPE_OBJECT', left, top, right, bottom ]; 	
 		ObjectList.push(objarr); 
 		
@@ -9183,6 +9186,7 @@ function GX_PopulateObjectList(ObjectType)
 		 JQSel = '.SVG_PATH_OBJECT'; 
 	 	 var size = $(JQSel).size(); 
 	     var num = $(JQSel).size();
+	     $(JQSel).attr('visibility', 'visible'); 
 	 	 var DOMArr1 = $(JQSel).toArray(); 
 	 	 for(var k=0; k < DOMArr1.length; k++)
 	 	 {
@@ -9208,6 +9212,7 @@ function GX_PopulateObjectList(ObjectType)
 	 	 JQSel = '.SVG_TEXT_OBJECT'; 
 	 	 var size = $(JQSel).size(); 
 	     var num = $(JQSel).size();
+	     $(JQSel).attr('visibility', 'visible'); 
 	 	 var DOMArr1 = $(JQSel).toArray(); 
 	 	 for(var k=0; k < DOMArr1.length; k++)
 	 	 {
@@ -9235,6 +9240,7 @@ function GX_PopulateObjectList(ObjectType)
 	 	 JQSel = '.SVG_IMAGE_OBJECT'; 
 	 	 var size = $(JQSel).size(); 
 	     var num = $(JQSel).size();
+	     $(JQSel).attr('visibility', 'visible'); 
 	 	 var DOMArr1 = $(JQSel).toArray(); 
 	 	 for(var k=0; k < DOMArr1.length; k++)
 	 	 {

@@ -375,7 +375,7 @@ function OnBtnclick(event){
         <span class="icon-bar"></span>                        
       </button>-->
       <a class="navbar-brand" href="#myPage" style='margin-top:-15px'><img class="img-responsive" src="../CommonCSS/icons/Version1/SiteIcons/wnxnotextlogo.png" width='50px' height='50px'></a>
-      <p class="navbar-brand logotext" style='color:#f4511e;'>Noxta</p>
+      <p class="navbar-brand logotext" style='color:#f4511e;'>Webionix</p>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav navbar-left" style='padding-left:45px'>
@@ -462,7 +462,7 @@ function OnBtnclick(event){
 	<div class='rows'>
 		<div class='col-sm-8' style='border-right:2px inset #eee; padding-right:20px'>
 			 <p>
-			   <strong>Noxta</strong> is a web based application, to allow designers create graphics and animations assets for usage on Web. Allows one to create Web 2.0 based assets in the form of SVG(Scalar Vector Graphics) which takes only a fraction of disk space compared to equivalent assets in form of JPG/PNG and .swf files.  SVG is now supported in almost all the popular browsers as well as mobile phones.  The Noxta UI allows any new user to ramp up the application in few minutes.  All your work is stored on the cloud and you can access them from anywhere, anytime.             
+			   <strong>Webionix</strong> is a web based application, to allow designers create graphics and animations assets for usage on Web. Allows one to create Web 2.0 based assets in the form of SVG(Scalar Vector Graphics) which takes only a fraction of disk space compared to equivalent assets in form of JPG/PNG and .swf files.  SVG is now supported in almost all the popular browsers as well as mobile phones.  The application allows any new user to ramp up the application in few minutes.  All your work is stored on the cloud and you can access them from anywhere, anytime.             
 			 </p>
 			 <div class="panel panel-default">
 				  <div class="panel-heading text-center"><strong>Features</strong></div>

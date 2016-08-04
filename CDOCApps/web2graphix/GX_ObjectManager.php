@@ -146,27 +146,28 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 	switch($objectTypeVal)
 	{
 		case 'RECTANGLE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT RECTANGLE ROTATE,0', 'x'=> '10','y'=>'10', 'width'=>'0', 'height'=>'0', 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT RECTANGLE ROTATE,0', 'x'=> '10','y'=>'10', 'width'=>'0', 'height'=>'0', 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0', 'visibility'=>'visible');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'rect',$objectIDVal,0, $parentIDVal, $attrdefinition,''); 
 			break; 
 		case 'IMAGE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_IMAGE_OBJECT IMAGE ROTATE,0', 'x'=> '20','y'=>'20', 'width'=>'100', 'height'=>'100', 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'xlink:href'=>$imageURL, 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0', 'fill'=>'none');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_IMAGE_OBJECT IMAGE ROTATE,0', 'x'=> '20','y'=>'20', 'width'=>'100', 'height'=>'100', 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'xlink:href'=>$imageURL, 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0', 'fill'=>'none', 'visibility'=>'visible');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'image',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'ELLIPSE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT ELLIPSE ROTATE,0', 'cx'=> '0','cy'=>'0', 'rx'=>'0', 'ry'=>'0', 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'opacity'=>'1.0');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT ELLIPSE ROTATE,0', 'cx'=> '0','cy'=>'0', 'rx'=>'0', 'ry'=>'0', 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'opacity'=>'1.0', 'visibility'=>'visible');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'ellipse',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'CIRCLE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT CIRCLE ROTATE,0', 'cx'=> '0','cy'=>'0','r'=>'0', 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'opacity'=>'1.0');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT CIRCLE ROTATE,0', 'cx'=> '0','cy'=>'0','r'=>'0', 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none','stroke-linejoin'=>'miter', 'stroke-opacity'=>'1', 'opacity'=>'1.0', 'visibility'=>'visible');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'circle',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
-		case 'IMAGE':
+		/*case 'IMAGE':
 			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT IMAGE ROTATE,0', 'x'=> '20','y'=>'20', 'width'=>'100', 'height'=>'100', 'xlink:href'=>'', 'opacity'=>'1.0');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'image',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;
+			*/
 		case 'GROUP':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'GROUP '. $groupName, 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'opacity'=>'1.0');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'GROUP '. $groupName, 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'opacity'=>'1.0', 'visibility'=>'visible');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'g',$objectIDVal,0, $parentIDVal, $attrdefinition,'');
 			break;	
 		case 'ANIM_GROUP':

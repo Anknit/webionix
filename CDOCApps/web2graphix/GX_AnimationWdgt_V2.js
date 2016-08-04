@@ -38,6 +38,8 @@ sAnimParams.prototype.endPos = 0;
 sAnimParams.prototype.values=0; 
 sAnimParams.prototype.keytimes=0; 
 sAnimParams.prototype.numChildAnims = 0; 
+sAnimParams.prototype.bHideBeforeAnim = false; 
+sAnimParams.prototype.bHideAfterAnim = false; 
 
 function sAnimParams() {	
 	sAnimParams.prototype.animID = 0;
@@ -79,6 +81,8 @@ function sAnimParams() {
 	sAnimParams.prototype.values=0; 
 	sAnimParams.prototype.keytimes=0; 
 	sAnimParams.prototype.numChildAnims = 0; 
+	sAnimParams.prototype.bHideBeforeAnim = false; 
+	sAnimParams.prototype.bHideAfterAnim = false; 
 }
 
 //will be used in the animinfo table population
@@ -224,256 +228,6 @@ function sBeginParams(){
 	//sBeginParams.prototype.containerID = 0;
 	sBeginParams.prototype.refContainerID = 0; 
 }
-/*
-function GX_SetAnimParamOnUI(animParam) {  
-      
-	//first filter out the entries here 
-	var objectList=[]; 
-	for(var j=0; j <gObjectList.length; j++)
-	{
-		objectList.push(gObjectList[j][0]); 
-	}	
-    WAL_UpdateDropDownList('objectlistDDL', objectList);
-    //update the path list 
-    var pathList=[]; 
-    for(var k=0; k < gObjectList.length; k++)
-    {
-    	if(gObjectList[k][1] == 'SVG_PATH_OBJECT')
-    		pathList.push(gObjectList[k][0]); 
-    }
-    WAL_UpdateDropDownList('pathlistDDL', pathList);
-    
-    var animlist=[]; 
-    for(var i =0; i <gAnimList.length; i++)
-	 {
-    	//if( (animParam.title  !=  gAnimList[i][5]) && (gAnimList[i][5] != 'Invisible Animation') )
-    	if(animParam.title  !=  gAnimList[i][5])
-    		animlist.push(gAnimList[i][5]); 
-	 }
-    WAL_UpdateDropDownList('animlistDDL', animlist);
-    
-	//modify for rotate attribute 
-    if(animParam.attribute == 'rotate')
-    {
-    	var valarr  = animParam.startValue.split(" "); 
-    	animParam.startValue = valarr[0];     	
-    	valarr  = animParam.endValue.split(" "); 
-    	animParam.endValue = valarr[0];     	
-    }
-    WAL_setTextInputValue('animIDIP', animParam.animID, false);
-    // animParam.objectID = 0;
-    WAL_setTextInputValue('objectIDIP', animParam.objectID, false);
-    //animParam.duration = 0;
-    WAL_setNumberInputValue('durationIP', animParam.duration, false);
-    
-    WAL_setTextInputValue('animtitleIP', animParam.title, false);
-
-    //animParam.animType = ''; //ATTRIBUTE, MOTION,TRANSFORM
-    if ((animParam.animType == 'ANIM_ATTRIBUTE') || (animParam.animType == 'ANIM_TRANSFORM')) {
-        WAL_setradioButtonCheck('attrvalbtn', true); 
-        //animParam.attribute = '';
-        var itemvalue = gReverseAttrList[animParam.attribute]; 
-        WAL_SetItemByValueInList('animAttrDDL', itemvalue, false);
-        //animParam.startValue
-        
-      //here should be the switch statement
-		switch(animParam.attribute)
-		{		
-		
-		case 'fill-opacity':			
-			WAL_setNumberInputValue('startOpacityValueIP', animParam.startValue, false);
-			//WAL_setNumberInputValue('endOpacityValueIP', animParam.endValue, false);	
-			//continue from here next time			
-			break; 
-		 
-		case 'stroke-width':
-			WAL_setNumberInputValue('startStrokeWidthValueIP', animParam.startValue, false); 
-				
-			break;		
-		case 'rotate':			
-			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);					
-			break; 
-		case 'skewX':
-			
-			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);	
-			break;
-		case 'skewY':
-			
-			WAL_setNumberInputValue('endAngleValueIP', animParam.endValue, false);		
-			break;
-		default:
-			break; 			
-		}
-		 WAL_setNumberInputValue('offsetFromPathX', 0, true);
-	     WAL_setNumberInputValue('offsetFromPathY',0, true); 
-        
-        //WAL_setTextInputValue('startColValIP', animParam.startValue, false);
-        // animParam.endValue = '';
-        //WAL_setTextInputValue('endColValIP', animParam.endValue, false);    
-    }
-    else if (animParam.animType == 'ANIM_MOTION') {
-        WAL_setradioButtonCheck('motionvalbtn', true); 
-        //animParam.refPathID = 0;
-        WAL_SetItemByValueInList('pathlistDDL', animParam.refPathID, true);
-        // animParam.bPathVisible = true;
-        WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible);   
-        
-        var mystr = animParam.PathObjectOffset; 
-        var splitstring = mystr.split(',');
-        WAL_setNumberInputValue('offsetFromPathX', splitstring[0], true);
-        WAL_setNumberInputValue('offsetFromPathY', splitstring[1], true);         
-      
-    }
-    else if (animParam.startType == 'ON_UIEVENT') {
-        WAL_setradioButtonCheck('uieventRB', true);       
-        // animParam.UIEventType = 'M_CLICK';
-        var evtType;
-        if (animParam.UIEventType == 'M_CLICK') {
-            evtType = "Mouse Click";         
-        }
-        else if(animParam.UIEventType == 'M_MOVE') 
-        {
-            evtType = "Mouse Move"; 
-        }       
-        WAL_SetItemByValueInList('objectlistDDL', animParam.UIObjectID, true);             
-    }
-    else if (animParam.startType == 'ON_ANIMEVENT') {
-        WAL_setradioButtonCheck('animeventRB', true);    
-        
-        WAL_SetItemByValueInList('animeventlistDDL', animParam.AnimEventType, true);
-        //animParam.AnimID = 0;
-        var animInfo = GX_GetAnimInfoByID(animParam.refAnimID); 
-        if(!animInfo)
-        	return;        
-        WAL_SetItemByValueInList('animlistDDL', animInfo[5], true);   
-    }
-   
-    
-    // animParam.repeatCount = 0;
-    WAL_setNumberInputValue('repeatcountIP', animParam.repeatCount, false);
-    // animParam.endState = 'freeze'; //FREEZE, REMOVE
-    WAL_SetItemByValueInList('endstatelistDDL', animParam.endState, true);   
-}
-
-
-function GX_GetAnimParamsFromUI()
-{
-
-	var animParam = new sAnimParams(); 
-	//animParam.animID = 0;	
-	animParam.animID = WAL_getInputValue('animIDIP');	
-	animParam.title = WAL_getInputValue('animtitleIP');
-	
-    // animParam.objectID = 0;
-	animParam.objectID = WAL_getInputValue('objectIDIP');
-	
-    //animParam.duration = 0;
-	animParam.duration = WAL_getMaskedInputValue('durationIP');	
-	
-
-	var bRBState = WAL_getradioButtonCheckState('attrvalbtn');
-	if(bRBState ==  true)
-	{
-	  animParam.animType = 'ANIM_ATTRIBUTE';		
-	}
-	bRBState = WAL_getradioButtonCheckState('motionvalbtn');
-	if(bRBState ==  true)
-	{
-		animParam.animType = 'ANIM_MOTION';		
-	}
-	if(animParam.animType == 'ANIM_ATTRIBUTE')
-	{
-		var itemval = WAL_getDropdownListSelection('animAttrDDL');		
-		itemval = gAttrList[itemval]; 
-		//Debug_Message('itemval='+ itemval); 
-		
-		
-		if( (itemval == 'translate')|| (itemval == 'scale') || (itemval == 'rotate')
-				|| (itemval == 'skewX') || (itemval == 'skewY') )
-		{
-			animParam.animType = 'ANIM_TRANSFORM'; 
-		}
-		animParam.attribute = itemval;		
-		
-		
-		//here should be the switch statement
-		switch(itemval)
-		{		
-		
-		case 'fill-opacity':
-			animParam.startValue = WAL_getMaskedInputValue('startOpacityValueIP'); 
-			animParam.endValue ='1.0';// WAL_getMaskedInputValue('endOpacityValueIP');
-			break; 
-		
-		case 'stroke-width':
-			animParam.startValue = WAL_getMaskedInputValue('startStrokeWidthValueIP'); 
-				
-			break; 
-		
-		case 'rotate':			
-			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');			
-			break; 
-		case 'skewX':			
-			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
-			break;
-		case 'skewY':			
-			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
-			break;
-		default:
-			break; 			
-		}		
-		if(itemval == 'rotate')
-		{
-			var rectdim = GX_GetRectObjectDim(gCurrentObjectSelected);
-			var centreX = rectdim.x + rectdim.width/2; 
-			var centreY = rectdim.y + rectdim.height/2;
-			animParam.center = centreX + ' ' + centreY;			
-		}
-	}  
-    else if (animParam.animType == 'ANIM_MOTION') {       
-        //animParam.refPathID = 0;
-    	animParam.refPathID = WAL_getDropdownListSelection('pathlistDDL');
-    	// animParam.bPathVisible = true;    	
-    	animParam.bPathVisible = WAL_getCheckBoxValue('pathvisibilityCB');
-    	var pos = GX_CalculateMotionAnimPathOffset(animParam.objectID, animParam.refPathID);
-    	var splitArr = pos.split(';'); 
-    	animParam.PathObjectOffset = splitArr[0]; 
-    	animParam.originalPosition = splitArr[1];    	
-    	//insert here the checks for path offset CB
-    }
-
-	//timing params 
-	 
-	 bRBState = WAL_getradioButtonCheckState('uieventRB');
-	 if(bRBState == true)
-	 {
-		 animParam.startType = 'ON_UIEVENT'; 
-		 var evtType = 'Mouse Click'  ; //WAL_getDropdownListSelection('uieventlistDDL');
-		 if(evtType == 'Mouse Click' )
-			 animParam.UIEventType = 'M_CLICK'; 
-		 else  if(evtType == 'Mouse Move' )
-			 animParam.UIEventType = 'M_MOVE'; 
-		 animParam.UIObjectID = WAL_getDropdownListSelection('objectlistDDL');
-	 }
-	 bRBState = WAL_getradioButtonCheckState('animeventRB');
-	 if(bRBState == true)
-	 {
-		 animParam.startType = 'ON_ANIMEVENT'; 
-		 animParam.AnimEventType = WAL_getDropdownListSelection('animeventlistDDL');
-		 var animtitle = WAL_getDropdownListSelection('animlistDDL'); 
-		 var animInfo = GX_GetAnimInfoByTitle(animtitle);
-		 if(!animInfo)
-			 return ; 
-		 animParam.refAnimID = animInfo[0]; 
-	 }	
-	
-	
-	 animParam.repeatCount = WAL_getMaskedInputValue('repeatcountIP');
-	 animParam.endState = WAL_getDropdownListSelection('endstatelistDDL');	 
-	 return animParam; 
-}
-
-*/
 
 //_rm these are new Get and Set functions with new UI for animations
 function GX_SetAnimParamOnUI(animParam) {      
@@ -490,11 +244,20 @@ function GX_SetAnimParamOnUI(animParam) {
 	
 	//showin common property first
 	$('#commonAnim').show();// = 'table-row'; 
+	WAL_hideWidget('hideafterCBContainer', false);
+	WAL_hideWidget('endValueIPDiv', true);
+	
 	WAL_setNumberInputValue('repeatcountIP', animParam.repeatCount, false);    
 	WAL_SetItemByValueInList('endstatelistDDL', animParam.endState, false);
+	WAL_setCheckBoxValue("hidebeforeCB", animParam.bHideBeforeAnim);
+	WAL_setCheckBoxValue("hideafterCB", animParam.bHideAfterAnim);
 	
 	switch(animParam.attribute)
 	{	
+	case 'ANIMATE_PATH':
+		//WAL_disableWidget('hideafterCBContainer', '', false, true);
+		WAL_hideWidget('hideafterCBContainer', true); 
+		break; 
 	case 'rotate':		   	
     	
 		$('.RotateProperty').show(); 
@@ -525,6 +288,8 @@ function GX_SetAnimParamOnUI(animParam) {
 		break; 		
 	case 'pathmotion':				
 		$('.MotionPathProperty').show();		
+		//WAL_disableWidget('hideafterCBContainer', '', false, true);
+		WAL_hideWidget('hideafterCBContainer', true); 
 		WAL_setCheckBoxValue('pathvisibilityCB', animParam.bPathVisible); 
 		if( (animParam.objectType == 'ELLIPSE') || (animParam.objectType == 'CIRCLE') )  
 			WAL_disableWidget('rollingmotionCB', 'data-jqxCheckBox', false, false);
@@ -550,21 +315,29 @@ function GX_SetAnimParamOnUI(animParam) {
 		break; 
 	case 'opacity':
 		$('.OpacityAnimProperty').show(); 
-		WAL_setNumberInputValue('startOpacityValueIP', animParam.startValue, false);	
+		WAL_setNumberInputValue('startOpacityValueIP', animParam.startValue, false);
+		WAL_setNumberInputValue('endOpacityValueIP', animParam.endValue, false);
 		break;
 	case 'scale':
 		$('.ValueProperty').show();
 		var value = new Number(animParam.startValue); 		
-		value = value*100.0; 
-		value -= 100.0; 
-		WAL_setNumberInputValue('startValueIP', value, false);		
-		WAL_disableWidget('endValueIP', 'data-jqxNumberInput', false, true);
+		value = Math.round(value*100.0); 
+		//value -= 100.0; 	
+		WAL_setNumberInputValue('startValueIP', value, false);
+		//end values 
+		WAL_hideWidget('endValueIPDiv', false);
+		value = new Number(animParam.endValue); 		
+		value = Math.round(value*100.0); 
+		//value -= 100.0; 		
+		WAL_setNumberInputValue('endValueIP', value, false);	
+		//WAL_disableWidget('endValueIP', 'data-jqxNumberInput', false, true);
 		break;	
 	case 'ANIMATE_ZOOM':
 		$('.ValueProperty').show(); 
 		var value = animParam.startValue; 			
-		WAL_setNumberInputValue('startValueIP', value, false);	
-		WAL_disableWidget('endValueIP', 'data-jqxNumberInput', false, true);
+		WAL_setNumberInputValue('startValueIP', value, false);
+		WAL_hideWidget('hideafterCBContainer', true); 
+		//WAL_disableWidget('endValueIP', 'data-jqxNumberInput', false, true);
 		break;
     case 'translate':
 		//get the currentobject selected 		
@@ -650,6 +423,8 @@ function GX_CopyAnimParam(srcParam, destParam){
 	destParam.calcMode= srcParam.calcMode;
 	destParam.restart = srcParam.restart;
 	destParam.repeatCount= srcParam.repeatCount;
+	destParam.bHideBeforeAnim= srcParam.bHideBeforeAnim;
+	destParam.bHideAfterAnim= srcParam.bHideAfterAnim;
 	destParam.endState = srcParam.endState;
 	destParam.center = srcParam.center;
 	destParam.title = srcParam.title;
@@ -783,13 +558,21 @@ function GX_GetAnimParamsFromUI(inputParam)
 		break; 		
 	case 'opacity':
 		animParams.startValue = WAL_getMaskedInputValue('startOpacityValueIP');	
+		animParams.endValue = WAL_getMaskedInputValue('endOpacityValueIP');	
 		break;
 	case 'scale':
 		var value = WAL_getMaskedInputValue('startValueIP');
 		value =  new Number(value); 
-		value += 100.0; 
+		//value += 100.0; 
 		value /= 100.0; 
 		animParams.startValue = value; 
+		
+		//end value
+		value = WAL_getMaskedInputValue('endValueIP');
+		value =  new Number(value); 
+		//value += 100.0; 
+		value /= 100.0; 
+		animParams.endValue = value; 
 		break; 
 	case 'ANIMATE_ZOOM':
 		var value = WAL_getMaskedInputValue('startValueIP');
@@ -849,127 +632,12 @@ function GX_GetAnimParamsFromUI(inputParam)
 	//duration 
 	//animParams.duration = WAL_getMaskedInputValue('durationIP');	
 	animParams.repeatCount = WAL_getMaskedInputValue('repeatcountIP');
-	animParams.endState = WAL_getDropdownListSelection('endstatelistDDL');	 
+	animParams.endState = WAL_getDropdownListSelection('endstatelistDDL');	
+	animParams.bHideBeforeAnim = WAL_getCheckBoxValue('hidebeforeCB');
+	animParams.bHideAfterAnim = WAL_getCheckBoxValue('hideafterCB');
 	
 	return animParams; 
-	//GETTING START PARAMETERS 
-	
-	
-	 
-	//get the 
-	//[animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval]; 
-	/*
-	var animParam = new sAnimParams(); 
-	//animParam.animID = 0;	
-	animParam.animID = WAL_getInputValue('animIDIP');	
-	animParam.title = WAL_getInputValue('animtitleIP');
-	
-    // animParam.objectID = 0;
-	animParam.objectID = WAL_getInputValue('objectIDIP');
-	
-    //animParam.duration = 0;
-	animParam.duration = WAL_getMaskedInputValue('durationIP');	
-	
-
-	var bRBState = WAL_getradioButtonCheckState('attrvalbtn');
-	if(bRBState ==  true)
-	{
-	  animParam.animType = 'ANIM_ATTRIBUTE';		
-	}
-	bRBState = WAL_getradioButtonCheckState('motionvalbtn');
-	if(bRBState ==  true)
-	{
-		animParam.animType = 'ANIM_MOTION';		
-	}
-	if(animParam.animType == 'ANIM_ATTRIBUTE')
-	{
-		var itemval = WAL_getDropdownListSelection('animAttrDDL');		
-		itemval = gAttrList[itemval]; 
-		//Debug_Message('itemval='+ itemval); 
-		
-		
-		if( (itemval == 'translate')|| (itemval == 'scale') || (itemval == 'rotate')
-				|| (itemval == 'skewX') || (itemval == 'skewY') )
-		{
-			animParam.animType = 'ANIM_TRANSFORM'; 
-		}
-		animParam.attribute = itemval;		
-		
-		
-		//here should be the switch statement
-		switch(itemval)
-		{		
-		
-		case 'fill-opacity':
-			animParam.startValue = WAL_getMaskedInputValue('startOpacityValueIP'); 
-			animParam.endValue ='1.0';// WAL_getMaskedInputValue('endOpacityValueIP');
-			break; 
-		
-		case 'stroke-width':
-			animParam.startValue = WAL_getMaskedInputValue('startStrokeWidthValueIP'); 
-				
-			break; 
-		
-		case 'rotate':			
-			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');			
-			break; 
-		case 'skewX':			
-			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
-			break;
-		case 'skewY':			
-			animParam.endValue = WAL_getMaskedInputValue('endAngleValueIP');	
-			break;
-		default:
-			break; 			
-		}		
-		if(itemval == 'rotate')
-		{
-			var rectdim = GX_GetRectObjectDim(gCurrentObjectSelected);
-			var centreX = rectdim.x + rectdim.width/2; 
-			var centreY = rectdim.y + rectdim.height/2;
-			animParam.center = centreX + ' ' + centreY;			
-		}
-	}  
-    else if (animParam.animType == 'ANIM_MOTION') {       
-        //animParam.refPathID = 0;
-    	//animParam.refPathID = WAL_getDropdownListSelection('pathlistDDL');
-    	// animParam.bPathVisible = true;    	
-    	animParam.bPathVisible = WAL_getCheckBoxValue('pathvisibilityCB');
-    	var pos = GX_CalculateMotionAnimPathOffset(animParam.objectID, animParam.refPathID);
-    	var splitArr = pos.split(';'); 
-    	animParam.PathObjectOffset = splitArr[0]; 
-    	animParam.originalPosition = splitArr[1];    	
-    	//insert here the checks for path offset CB
-    }
-
-	//timing params 
-	 
-	 bRBState = WAL_getradioButtonCheckState('uieventRB');
-	 if(bRBState == true)
-	 {
-		 animParam.startType = 'ON_UIEVENT'; 
-		 var evtType = 'Mouse Click'  ; //WAL_getDropdownListSelection('uieventlistDDL');
-		 if(evtType == 'Mouse Click' )
-			 animParam.UIEventType = 'M_CLICK'; 
-		 else  if(evtType == 'Mouse Move' )
-			 animParam.UIEventType = 'M_MOVE'; 
-		 animParam.UIObjectID = WAL_getDropdownListSelection('objectlistDDL');
-	 }
-	 bRBState = WAL_getradioButtonCheckState('animeventRB');
-	 if(bRBState == true)
-	 {
-		 animParam.startType = 'ON_ANIMEVENT'; 
-		 animParam.AnimEventType = WAL_getDropdownListSelection('animeventlistDDL');
-		 var animtitle = WAL_getDropdownListSelection('animlistDDL'); 
-		 var animInfo = GX_GetAnimInfoByTitle(animtitle);
-		 if(!animInfo)
-			 return ; 
-		 animParam.refAnimID = animInfo[0]; 
-	 }	
-	 animParam.repeatCount = WAL_getMaskedInputValue('repeatcountIP');
-	 animParam.endState = WAL_getDropdownListSelection('endstatelistDDL');	 
-	 return animParam; 
-	 */
+	//GETTING START PARAMETERS 	
 }
 
 
@@ -1084,6 +752,8 @@ function GX_InitializeAnimationTab(){
     	var animName = event.args.row.title;
     	GX_UpdateAnimInfoOnUI(animName); 
     	WAL_disableWidget('animOpBtn', '', true, false);
+    	WAL_hideWidget('animParamdiv', false);
+    	
     }); 
     
     //other controls
@@ -1096,6 +766,8 @@ function GX_InitializeAnimationTab(){
     WAL_createDropdownList('offsetParamDDL', '100', gInputHeight, false, gOffsetList, "", '100', 0);
     
     WAL_createNumberInput("repeatcountIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, 0, 1);
+    WAL_createCheckBox('hidebeforeCB', 'GX_AnimDlgCBHdlr', gInputHeight, gInputHeight, '14', false, true);
+    WAL_createCheckBox('hideafterCB', 'GX_AnimDlgCBHdlr', gInputHeight, gInputHeight, '14', false, true);
     var endstatelist = ['freeze', 'remove']; 
     WAL_createDropdownList('endstatelistDDL', '80', gInputHeight, false, endstatelist, "GX_AnimAttrListHandler", '50', '80');
     
@@ -1108,12 +780,16 @@ function GX_InitializeAnimationTab(){
     WAL_createNumberInput("endRotationValueIP", '54px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, -360, 1);
     WAL_setNumberInputValue('endRotationValueIP', 90, false);
     
-    WAL_createNumberInput("startValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, -100, 1);
-    WAL_createNumberInput("endValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 100, -100, 1);
+    WAL_createNumberInput("startValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 500, 0, 1);
+    WAL_createNumberInput("endValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 500, 0, 1);
     WAL_createCheckBox('autoRotateReverseCB', 'GX_AnimDlgCBHdlr', gInputHeight, gInputHeight, '14', false, true);
     
+    WAL_createDecimalNumberInput("endOpacityValueIP", '80px', gInputHeight, "",true, 1.0,0.0,0.1);
+    WAL_setNumberInputValue('endOpacityValueIP', 1.0, false); 
+    
     WAL_createDecimalNumberInput("startOpacityValueIP", '80px', gInputHeight, "",true, 1.0,0.0,0.1);
-    WAL_setNumberInputValue('startOpacityValueIP', 1.0, false); 
+    WAL_setNumberInputValue('startOpacityValueIP', 1.0, false);
+    
     
     WAL_createNumberInput("endAngleValueIP", '58px', gInputHeight, "GX_AnimDlgEditHdlr",true, 360, -360, 1);
     WAL_setNumberInputValue('endAngleValueIP', 0, false);  
@@ -1211,128 +887,7 @@ function GX_InitializeAnimationTab(){
                                
  }
  
- /*
-function GX_PopulateObjectList(ObjectType)
- {
-	 var ObjectList = new Array(); 
-	 var animInfo; 
-	 var JQSel = '';
-	 if(ObjectType == 'SHAPE_OBJECT')
-		 JQSel = '.SVG_SHAPE_OBJECT'; 
-	 else  if(ObjectType == 'PATH_OBJECT')
-		 JQSel = '.SVG_PATH_OBJECT'; 
-	 else if(ObjectType == 'ALL_OBJECTS')
-	 {
-		 JQSel = '.SVG_SHAPE_OBJECT';	 
-		// gAnimList = new Array(); 
-	 }		 
-     var size = $(JQSel).size(); 
-     var num = $(JQSel).size();
- 	 var DOMArr = $(JQSel).toArray(); 
- 	 for(var k=0; k < DOMArr.length; k++)
- 	 {
- 		var objID = DOMArr[k].getAttribute('id'); 	
- 		var objarr = [objID, 'SVG_SHAPE_OBJECT']; 		 
- 		ObjectList.push(objarr); 
- 		
- 		//now find animation object child 
- 		var childNode = DOMArr[k].firstElementChild;  		
- 		while(childNode)
- 		{
- 			GX_UpdateAnimInfoInList(childNode);	
- 			childNode = childNode.nextSibling; 
- 			
- 		} 	//while		
- 	 }
- 	if(ObjectType == 'ALL_OBJECTS')
- 	{
- 		 JQSel = '.SVG_PATH_OBJECT'; 
- 	 	 var size = $(JQSel).size(); 
- 	     var num = $(JQSel).size();
- 	 	 var DOMArr1 = $(JQSel).toArray(); 
- 	 	 for(var k=0; k < DOMArr1.length; k++)
- 	 	 {
- 	 		var objID = DOMArr1[k].getAttribute('id'); 		
- 	 		var objarr = [objID, 'SVG_PATH_OBJECT']; 		 
- 	 		ObjectList.push(objarr); 
- 	 		
- 	 		var childNode = DOMArr1[k].firstElementChild;  		
- 	 		while(childNode)
- 	 		{
- 	 			GX_UpdateAnimInfoInList(childNode);	
- 	 			childNode = childNode.nextSibling; 
- 	 			
- 	 		} 	//while
- 	 	 } 	 	
- 	 	 
- 	 	 //text object 
- 	 	JQSel = '.SVG_TEXT_OBJECT'; 
-	 	 var size = $(JQSel).size(); 
-	     var num = $(JQSel).size();
-	 	 var DOMArr1 = $(JQSel).toArray(); 
-	 	 for(var k=0; k < DOMArr1.length; k++)
-	 	 {
-	 		var objID = DOMArr1[k].getAttribute('id'); 		
-	 		var objarr = [objID, 'SVG_TEXT_OBJECT']; 		 
-	 		ObjectList.push(objarr); 
-	 		
-	 		var childNode = DOMArr1[k].firstElementChild;  		
-	 		while(childNode)
-	 		{
-	 			GX_UpdateAnimInfoInList(childNode);	
-	 			childNode = childNode.nextSibling; 
-	 			
-	 		} 	//while
-	 	 } 	 			
- 	} 		
- 	
- 	return ObjectList;  	 	
- }
- */
- 
-/*
-function GX_SortAnimListInDisplayOrder(animList){
-	
-	var myanimList =[]; 	
-	//get the anim item which is independent. 
-	//animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval];
-	//place it at the top of the stack. 
-	//set the ref animID to be this
-	//get the animitems which are referring to this refAnimId
-	//now push them on the stack one by one  
-	//continue doing this till there are no animitems left referring to this animID 
-}
 
- * var mylist=[]; 
-		for(var j=0; j <  srcAnimArr.length; j++)
-		{
-			if ( (srcAnimArr[j][0] ==  refanimID) && (srcAnimArr[j][2]  == ''.begin'') 
-				 mylist.splice(0, 0,srcAnimArr[j][0] ) ; 
-			else
-				 mylist.push(srcAnimArr[j][0] ); 
-		}
-		if( mylist.length > 0 )
-			return mylist;
-		else
-			return 0; 
-
-
-function GX_GetAnimItemWithRefAnimID(animList, refAnimID){
-	var myList=[]; 
-	for(var j=0;  j <animList.length; j++){
-		var animItem = animList[j]; 
-		var dotpos =  animItem[3].indexOf('.'); 		
-		var animIDRef = animItem[3].substring(0,dotpos+1); 
-		var animEvent = animItem[3].substring(dotpos,animItem[3].length); 
-		if(animIDRef == refAnimID){
-			if(animEvent == 'begin')
-				mylist.splice(0, 0,animList[j] ) ; 
-			else if(animEvent == 'end')
-				mylist.push(animList[j]); 
-		}
-	}
-}
-  */
 function GX_RemoveObjectFromList(objectID)
 {
 		//first check the animIDs corresponding to the objectID 
@@ -1392,32 +947,31 @@ function GX_UpdateAnimInfoInList(animNode)
 			else if(nodename == 'ANIMATETRANSFORM')
 			{
 				attr = animNode.getAttribute('type');  	 	 				
-			}
-			/*
-			else if(nodename == 'ANIMATEMOTION')
-			{
-				attr = 'pathmotion';  	 	 				
-			}
-			*/
-			//
+			}			
 			var beginval = GX_GetBeginValue(animNode); 
-			var beginParam = GX_GetAnimBeginParameters(beginval);			
-						
+			var beginParam = GX_GetAnimBeginParameters(beginval);		
+			var endVal = animNode.getAttribute('onend'); 
+			var bHideAfterAnim= false; 
+			if( (endVal) && (endVal.length > 0)){
+				bHideAfterAnim = true; 
+			}else
+				bHideAfterAnim = false; 
 			//if there is a reference node then check if the reference node is a group animation type of node 
 			//in which case add the group id as the reference ID. 
 			var endval = animNode.getAttribute('fill');			
 			var titleval = GX_GetAnimTitle(animNode); 
 			var duration = animNode.getAttribute('dur');
 			duration = duration.substring(0,duration.length-1); 
+			/*var animInfo = [animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, beginParam.refAnimID,
+			                beginParam.refContainerID, duration,beginParam.AnimEvent];*/
 			var animInfo = [animNode.id,animNode.targetElement.id, attr, beginval, endval, titleval, beginParam.refAnimID,
-			                beginParam.refContainerID, duration,beginParam.AnimEvent];
+			                beginParam.refContainerID, duration,beginParam.AnimEvent, bHideAfterAnim];
 			animNode.setAttribute('begin', ''); 			
 			animNode.setAttribute('fill', 'remove'); 	
 			animNode.setAttribute('onend', 'GX_OnAnimationEndHandler(evt)'); 			
 			//_rm first remove the existing entry and then add
 			GX_RemoveAnimInfoFromList(animNode.id); 
-			gAnimList.push(animInfo); 	
-						
+			gAnimList.push(animInfo); 							
 		}
 		else if (nodename == 'G'){
 			var animType = animNode.classList[1]; 
@@ -1427,13 +981,24 @@ function GX_UpdateAnimInfoInList(animNode)
 				attr = 'pathmotion';  
 				var beginval = GX_GetBeginValue(visibleAnimNode); 				
 				//var beginval = visibleAnimNode.getAttribute('begin');
-				var beginParams  = GX_GetAnimBeginParameters(beginval);				
-				var endval = motionAnimNode.getAttribute('fill');			
+				var beginParams  = GX_GetAnimBeginParameters(beginval);	
+				
+				var endval = motionAnimNode.getAttribute('fill');		
+				
+				var endVal = motionAnimNode.getAttribute('onend'); 
+				var bHideAfterAnim= false; 
+				if( (endVal) && (endVal.length > 0) ){
+					bHideAfterAnim = true; 
+				}else
+					bHideAfterAnim = false;
+				
 				var titleval = animNode.classList[2]; 
 				var duration = motionAnimNode.getAttribute('dur');
 				duration = duration.substring(0,duration.length-1);
+				/*var animInfo = [animNode.id, motionAnimNode.targetElement.id, attr, beginval, endval, titleval, beginParams.refAnimID, 
+				                beginParams.refContainerID, duration,beginParams.AnimEvent];*/
 				var animInfo = [animNode.id, motionAnimNode.targetElement.id, attr, beginval, endval, titleval, beginParams.refAnimID, 
-				                beginParams.refContainerID, duration,beginParams.AnimEvent];
+				                beginParams.refContainerID, duration,beginParams.AnimEvent, bHideAfterAnim];
 				//visibleAnimNode.setAttribute('begin', '');
 				motionAnimNode.setAttribute('begin', '');
 				
@@ -1451,6 +1016,15 @@ function GX_UpdateAnimInfoInList(animNode)
 				var beginval = GX_GetBeginValue(animNode1);
 				animNode1.setAttribute('begin', ''); 
 				var beginParams  = GX_GetAnimBeginParameters(beginval);
+				
+				var lastanimNode = animNode.childNodes[numAnim-1];
+				var endVal = lastanimNode.getAttribute('onend'); 
+				var bHideAfterAnim= false; 
+				if( (endVal) && (endVal.length > 0) ){
+					bHideAfterAnim = true; 
+				}else
+					bHideAfterAnim = false;
+				
 				var endval = 'freeze';
 				var duration = animNode1.getAttribute('dur');
 				duration = duration.substring(0,duration.length-1);
@@ -1459,15 +1033,14 @@ function GX_UpdateAnimInfoInList(animNode)
 				}				
 				var titleval = animNode.classList[2]; 
 				var animInfo = [animNode.id, animNode1.targetElement.id, 'ANIMATE_PATH', beginval, endval, titleval, beginParams.refAnimID,
-				                beginParams.refContainerID, duration, beginParams.AnimEvent];
+				                beginParams.refContainerID, duration, beginParams.AnimEvent, bHideAfterAnim];
 				GX_RemoveAnimInfoFromList(animNode.id); 
 				gAnimList.push(animInfo);
 			}
 			else if(animType == 'ANIMATE_ZOOM'){				
 				var nodelist = animNode.childNodes; 
 				if(!((nodelist) && (nodelist.length > 0)) )
-					return ; 
-				
+					return ; 				
 				var numAnim = nodelist.length; 
 				var animNode1 = animNode.childNodes[0];
 				//var beginval = animNode1.getAttribute('begin');
@@ -1619,6 +1192,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			 JQSel = '#FROM_UI_GROUP';
 			 $(JQSel)[0].style.display='inline-block';		
 			WAL_setNumberInputValue('startValueIP', 30, false);	
+			WAL_setNumberInputValue('endValueIP', 100, false);	
 		 }
 		 
 		 if(itemval == 'translate'){
@@ -1848,6 +1422,9 @@ function GX_RemoveAnimInfoFromList(animID)
 	 attrData = ['repeatCount',animParams.repeatCount];  
 	 commonAttrArray.push(attrData);
 	 
+	 attrData = ['onbegin',''];  
+	 commonAttrArray.push(attrData);
+	 
 	 attrData = ['xmlns:xlink',"http://www.w3.org/1999/xlink"]; 
 	 commonAttrArray.push(attrData); 
 	 attrData = ['xlink:href',"#"+animParams.objectID]; 
@@ -1942,7 +1519,9 @@ function GX_RemoveAnimInfoFromList(animID)
 		attrData = ['to',animParams.originalPosition];  
 		animMotionArr.push(attrData);		
 		attrData = ['begin', newAnimID + '.end'];  
-		animMotionArr.push(attrData);		
+		animMotionArr.push(attrData);	
+		attrData = ['onbegin',''];  
+		animMotionArr.push(attrData);
 		animParams.visibleAnimID = newAnimID;		
 		//var animstr = GXRDE_addNewAnimationObject(motionAnimID, motionAnimGroupID, 'ANIM_MOTION', animMotionArr);
 		
@@ -2028,6 +1607,8 @@ function GX_RemoveAnimInfoFromList(animID)
 		newAttr.push(attrData);
 		attrData = ['attributeName',"d"];  
 		newAttr.push(attrData);
+		attrData = ['onbegin',""];  
+		newAttr.push(attrData);
 		var dvalArr = GX_GetPathValuesForAnimation(animParams.values); 
 		animParams.numChildAnims = dvalArr.length; 
 		var subduration  = 	animParams.duration/animParams.numChildAnims;
@@ -2082,7 +1663,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			attrData = ['attributeName','x'];  
 		    commonAttrArray.push(attrData);	
 		    attributenameIndex = commonAttrArray.length -1; 
-		   }
+		   }		
 			attrData = ['from', myarrS[0]];  			
 			commonAttrArray.push(attrData);		
 			fromIndex = commonAttrArray.length -1; 
@@ -2093,6 +1674,10 @@ function GX_RemoveAnimInfoFromList(animID)
 			
 			attrData = ['title', 'MoveX']; 
 			commonAttrArray[titleIndex] = attrData; 
+			
+			attrData = ['onbegin',""];  
+			commonAttrArray.push(attrData);
+			
 			//var animstr = GXRDE_addNewAnimationObject(animParams.animID + '_MOVE_X', moveGroupID, 'ANIM_ATTRIBUTE', commonAttrArray);
 			
 			
@@ -2446,6 +2031,12 @@ function GX_RemoveAnimInfoFromList(animID)
 		
 		var value;			
 		animParam.objectID = animNode.targetElement.id;		
+		var onbegVal = animNode.getAttribute('onbegin'); 
+		if( (onbegVal) &&(onbegVal.length > 0))
+			animParam.bHideBeforeAnim = true;
+		else
+			animParam.bHideBeforeAnim = false;
+		
 		var object = document.getElementById(animParam.objectID); 
 		animParam.objectType = object.classList[1]; 		
 		value = animNode.getAttribute('dur'); 
@@ -2530,7 +2121,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		animParam.refAnimID = beginParams.refAnimID; 
 		animParam.AnimEventType  = beginParams.AnimEvent; 
 		animParam.refContainerID = beginParams.refContainerID; 
-		
+		animParam.bHideAfterAnim = animInfo[10]; 
 		if(value.length < 1)
 		{
 			//Debug_Message("Begin Value is NULL"); 
@@ -2739,6 +2330,30 @@ function GX_RemoveAnimInfoFromList(animID)
 		 attrData = ['repeatCount',AnimParam2.repeatCount];  
 		 attrArray.push(attrData); 
 	 }
+	 if(AnimParam1.bHideBeforeAnim != AnimParam2.bHideBeforeAnim)
+	 {
+		 //now update the clas value here right away so that the same  is reflected back 
+		 if(AnimParam2.bHideBeforeAnim == true){
+			 attrData = ['onbegin','OnBeginAnimation(evt)'];  
+			 attrArray.push(attrData); 
+		 }
+		 else{
+			 attrData = ['onbegin',''];  
+			 attrArray.push(attrData); 
+		 }		 
+	 }
+	 if(AnimParam1.bHideAfterAnim != AnimParam2.bHideAfterAnim)
+	 {
+		 //now update the clas value here right away so that the same  is reflected back 
+		 if(AnimParam2.bHideAfterAnim == true){
+			 attrData = ['onend','OnEndAnimation(evt)'];  
+			 attrArray.push(attrData); 
+		 }
+		 else{
+			 attrData = ['onend',''];  
+			 attrArray.push(attrData); 
+		 }		 
+	 }
 	 if(AnimParam1.endState != AnimParam2.endState)
 	 {
 		 attrData = ['fill',AnimParam2.endState];  
@@ -2922,7 +2537,17 @@ function GX_RemoveAnimInfoFromList(animID)
 					 //attrArray.splice(i,1); 
 				 }else{
 					 motionNodeAttr.push(attrArray[i]);
-					 motionNode.setAttribute(attrArray[i][0], attrArray[i][1]);					 
+					 if( (attrArray[i][0] == 'onbegin')|| (attrArray[i][0] == 'onend') ){
+						 //get the object ID 
+						var objID = motionNode.targetElement.id; 
+						if(attrArray[i][1] == 'OnBeginAnimation(evt)')
+							var objattrArray = [['visibility', 'hidden']]; 
+						else
+							var objattrArray = [['visibility', 'visible']];						
+						var retval =  GXRDE_updateSVGObject(objID, objattrArray); 						 
+					 }
+					 motionNode.setAttribute(attrArray[i][0], attrArray[i][1]);	
+					 GX_UpdateAnimInfoInList(animNode); 
 					 removeIndex.push(i);	
 					 if(attrArray[i][0] == 'from'){
 						 var fromVal = '0 ' + attrArray[i][1]; 
@@ -2943,7 +2568,7 @@ function GX_RemoveAnimInfoFromList(animID)
 						 rollAttrArr.push(['repeatCount',repeatCountVal ]); 
 						// var respStr = GXRDE_updateAnimationObject(rollingnode.id, rollAttrArr);
 						 rollingnode.setAttribute('repeatCount', repeatCountVal); 
-					 }					 
+					 }		 
 						 
 			 }	
 				 if(i == attrArray.length-1){
@@ -2954,8 +2579,7 @@ function GX_RemoveAnimInfoFromList(animID)
 						 var respStr = GXRDE_updateAnimationObject(rollingnode.id, rollAttrArr);
 					 
 					 if(visibleNodeAttr.length > 0 )
-						 var respStr = GXRDE_updateAnimationObject(visibleNode.id, visibleNodeAttr);
-					
+						 var respStr = GXRDE_updateAnimationObject(visibleNode.id, visibleNodeAttr);					
 					 return; 																 
 				 }				
 			 }//(animtype =='PATH_MOTION')	
@@ -2972,7 +2596,7 @@ function GX_RemoveAnimInfoFromList(animID)
 					 IDList.push(parentAnimNode.childNodes[k].id); 
 				//update the duration value if changed 
 				 if(attrArray[i][0] == 'dur'){
-					 var durationvalue = attrArray[i][1].substring(0, attrArray[i][1].length-1); 
+					var durationvalue = attrArray[i][1].substring(0, attrArray[i][1].length-1); 
 					var subduration  = 	new Number(durationvalue / numChild);
 					subduration = '' + subduration + ''; 
 					var decimalIndex = subduration.indexOf('.'); 
@@ -3015,9 +2639,20 @@ function GX_RemoveAnimInfoFromList(animID)
 						GXRDE_updateSVGObject(parentAnimNode.id, myarr); 
 						parentAnimNode.setAttribute('class', classvalue);					 
 				 }
-				 else if(attrArray[i][0] == 'begin'){					 
+				 else if( (attrArray[i][0] == 'begin')|| (attrArray[i][0] == 'onbegin') || (attrArray[i][0] == 'onend') ){					 
 					 //set attribute of local animNode
 					 var animNode1 = parentAnimNode.childNodes[0]; 
+					 if(attrArray[i][0] == 'onbegin'){
+						var objID = animNode1.targetElement.id; 
+						if(attrArray[i][1] == 'OnBeginAnimation(evt)')
+							var objattrArray = [['visibility', 'hidden']]; 
+						else
+							var objattrArray = [['visibility', 'visible']]; 
+						var retval =  GXRDE_updateSVGObject(objID, objattrArray);
+					 }
+					 if(attrArray[i][0] == 'onend'){
+						 animNode1 = parentAnimNode.childNodes[numChild-1]; 
+					 }
 					 animNode1.setAttribute(attrArray[i][0], attrArray[i][1]); 
 					 GX_UpdateAnimInfoInList(parentAnimNode);
 					 var attrList1=[]; 
@@ -3078,9 +2713,22 @@ function GX_RemoveAnimInfoFromList(animID)
 					 }//for 
 					    GXRDE_updateMultipleAnimObjects(IDList, valattrArray); 									 
 				 }//if(attrArray[i][0] == 'values')
-				 else if(attrArray[i][0] == 'begin'){					 
+				 else if( (attrArray[i][0] == 'begin') || (attrArray[i][0] == 'onbegin')
+						 || (attrArray[i][0] == 'onend')){					 
 					 //set attribute of local animNode
 					 var animNode1 = parentAnimNode.childNodes[0]; 
+					 
+					 if(attrArray[i][0] == 'onbegin'){
+						var objID = animNode1.targetElement.id; 
+						if(attrArray[i][1] == 'OnBeginAnimation(evt)')
+							var objattrArray = [['visibility', 'hidden']]; 
+						else
+							var objattrArray = [['visibility', 'visible']]; 
+						var retval =  GXRDE_updateSVGObject(objID, objattrArray);
+					}
+					 if(attrArray[i][0] == 'onend'){
+						 animNode1 = parentAnimNode.childNodes[numChild-1]; 
+					 }
 					 animNode1.setAttribute(attrArray[i][0], attrArray[i][1]); 
 					 GX_UpdateAnimInfoInList(parentAnimNode);
 					 var attrList1=[]; 
@@ -3097,8 +2745,16 @@ function GX_RemoveAnimInfoFromList(animID)
 		 }//if(animNode.nodeName =='g'
 		 else{
 			
-			 if(attrArray[i][0] == 'begin'){
+			 if( (attrArray[i][0] == 'begin') || (attrArray[i][0] == 'onbegin') || (attrArray[i][0] == 'onend') ){
 				 var prevValue = animNode.getAttribute('begin');
+				 if(attrArray[i][0] == 'onbegin'){
+						var objID = animNode.targetElement.id; 
+						if(attrArray[i][1] == 'OnBeginAnimation(evt)')
+							var objattrArray = [['visibility', 'hidden']]; 
+						else
+							var objattrArray = [['visibility', 'visible']]; 
+						var retval =  GXRDE_updateSVGObject(objID, objattrArray);
+				}
 				 animNode.setAttribute(attrArray[i][0], attrArray[i][1]); 
 				 GX_UpdateAnimInfoInList(animNode); 
 				 //now verify if there are unreferred indep anim node 
@@ -3117,13 +2773,11 @@ function GX_RemoveAnimInfoFromList(animID)
 			 //get the animlist index 
 			 var index = GX_GetAnimInfoListIndexByID(animID);
 			 gAnimList[index][4] = attrArray[i][1];			 
-		 }
-		 
+		 }		 
 		 
 	 }//for loop 
 		 if(attrArray.length > 0)
-			 	var respStr = GXRDE_updateAnimationObject(animID, attrArray); 
-		 
+			 	var respStr = GXRDE_updateAnimationObject(animID, attrArray); 		 
 		
  }
  
@@ -3551,6 +3205,7 @@ function GX_RemoveAnimInfoFromList(animID)
 	    gInitAnimParam.calcMode = 'linear';
 	    gInitAnimParam.restart = 'never';
 	    gInitAnimParam.repeatCount = 0;
+	    gInitAnimParam.bHideBeforeAnim = false; 
 	    gInitAnimParam.endState = 'freeze'; //FREEZE, REMOVE
 	    gInitAnimParam.PathObjectOffset=0;
 	    gInitAnimParam.PathStartPoint=new sPoint();
@@ -4307,6 +3962,7 @@ function GX_ResetAnimSelection(){
 	WAL_ClearGridSelection('jqxAnimgrid');
 	gCurrentAnimInfo = 0; 
 	WAL_disableWidget('animOpBtn', '', true, true);	
+	WAL_hideWidget('animParamdiv', true);
 	//$('.animOpBtn').attr('disabled', 'disabled'); 
 	
 }
