@@ -39,16 +39,22 @@ function AJX_RequestWithPureXMLReponse( RespDataType, ModID, RequestId, RequestB
 	gAJXObj.send(RequestBody); 		
 	return gAJXObj.responseXML;
 }
-
+var maxTimeout = 30000; 
 function BlockUIinAjax(bFlag) {
 
     if (bFlag == true){        	
     	setTimeout(function(){			
     		$.unblockUI();  
     		//alert("Some Error Encountered, Try to Reload the Project"); 
-			}, 10000); 
+			}, maxTimeout); 
+    	$.blockUI({ message: 'Please Wait..' }); 
+    	//$.blockUI({ message: '<p><img src="../CommonCSS/ajax-loader.gif" />Wait..</p>' }); 
+    	//blockUI({ message: '<p><img src="../CommonCSS/UIblockerImage.svg" /> Wait..</p>' }); 
     	
-    	$.blockUI({ message: '<p><img src="../CommonCSS/ajax-loader.gif" />Wait..</p>' });         
+    	
+ 
+       // setTimeout($.unblockUI, 2000); 
+    	
     }
     else if(bFlag == false){    	
     	$.unblockUI();      

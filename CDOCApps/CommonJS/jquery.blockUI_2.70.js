@@ -129,9 +129,9 @@
 				top:		'40%',
 				left:		'35%',
 				textAlign:	'center',
-				color:		'#000',
+				color:		'#fff',
 				border:		'3px solid #aaa',
-				backgroundColor:'#fff',
+				backgroundColor:'#333',
 				cursor:		'wait'
 			},
 
