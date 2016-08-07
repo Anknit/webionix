@@ -16,12 +16,12 @@ sso.reset	=	function(e, callbackfn)
 	});
 }
 		
-sso.signin	=	function(e,p, callbackfn)
+sso.signin	=	function(e,p, callbackfn,c)
 {
 	var optype = 'signin'; 
 	$.ajax({url:this.u,
 		type: 'POST',
-		data:{'type':'signin_verify','email':e,'password':p},
+		data:{'type':'signin_verify','email':e,'password':p,'captcha_code':c},
 		async:true,		
 		success:function(data)
 		{			

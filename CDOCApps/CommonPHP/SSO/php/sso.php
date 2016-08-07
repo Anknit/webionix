@@ -2,6 +2,7 @@
 require_once __DIR__.'./verify-sign-up.php';
 require_once __DIR__.'./../../../web2graphix/GX_SessionMgr.php';
 require_once __DIR__.'./../../../web2graphix/GX_WKSMgrModule.php';
+require_once __DIR__.'./../../../securimage/securimage.php'; 
 
 //require_once __DIR__.'./../../DBManager/DbMgrInterface.php';
 /*
@@ -39,14 +40,18 @@ if(isset($_POST['type'])	&&	$_POST['type']	==	'redirect_url'	){
 }
 if(isset($_POST['type'])	&&	$_POST['type']	==	'signin_verify'	)
 {
-	
+	$securimage = new Securimage();
+    if ($securimage->check($_POST['captcha_code']) == false) {
+		echo json_encode(array("success"=>"false","reason"=>"captcha mismatch"));
+        exit();
+    }
 	$retval = sso_signin_verify($_POST['email'],$_POST['password']);	
 	//now the code for 
 	$retarray = json_decode($retval, true ); 
 	//echo $retval;
 	if($retarray['success'] == 'true'){
-		InitializeSession($retarray['ott']); 
-		echo $retval; 
+		InitializeSession($retarray['ott']);
+		echo $retval;
 	}
 	//
 }

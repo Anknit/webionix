@@ -1063,15 +1063,16 @@ function GX_COMMON_updateSCNodeTitle($XMLDOM,$XMLFile, $NodeID, $nodetitle)
 	{
 		$oldtextNode = $spanNode->firstChild;
 		$nodename = strtoupper($oldtextNode->nodeName);
-		if($nodename != '#TEXT')
-			return false;
+		if($nodename != '#TEXT'){
+            return false;
+        }
 		$newtextNode = $XMLDOM->createTextNode($nodetitle);
-		if(!$newtextNode)
+		if(!$newtextNode){
 			return false;
+        }
 		$spanNode->replaceChild($newtextNode,$oldtextNode);
 		$XMLDOM->save($XMLFile);
 		return true;
-		break;
 	}
 	return false; 
 	//get all child nodes 

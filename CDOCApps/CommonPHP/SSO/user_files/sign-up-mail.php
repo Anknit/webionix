@@ -1,70 +1,62 @@
 <?php
-$mailString	=	'<html>
-  <head>
-    <title>sign-up-confirmation</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  </head>
-  <body style="background:#fefefe;">
-    <table cellpadding="0" cellspacing="0" style="width:600px; margin:0 auto; padding:0px; font-family:Arial, Helvetica, sans-serif; font-size:12px;" id="Table_01">
-      <tr>
-        <td style="width:600px;">
-          <div style="width:600px; float:left;">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="font-size:12px; background-color:"white"; padding:15px 15px;">
-              <tr>
-                <td style="width:300px; padding:8px 0 0 0; text-align:center; ">
-                  <a href="" target="_blank" style="text-decoration:none; color:#010101;">
-                    <img src="http://webionix.com/CommonCSS/icons/Version1/SiteIcons/wnxnotextlogo.png" alt="Webionix" style="margin:0 auto;" height="37" border="0" width="128" />
-                  </a>
-                </td>
-              </tr>
-            </table>
-            <table cellpadding="0" cellspacing="0" style="width:600px; margin:0; padding:0px; float:left; background:#ffffff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#565656;">
-              <tr>
-                <td style="width:600px; vertical-align:top;">
-                  <table cellpadding="0" cellspacing="0" style="width:600px;  margin:0; padding:15px 10px; float:left; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#565656;">
-                    <tr>
-                      <td colspan="2">
-										Click on the link below to Verify your email address  !
-										</td>
-                    </tr>
-                    <tr>
-                      <td colspan="2" height="10" />
-                    </tr>
-                    <tr>
-                      <td>
-                        <a id="sign-up-link" href="'.$MailBody.'" style="font-size:14px; text-decoration:none; color:#60ABE4;">
-                    						  Click to Sign up
-											</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2" height="10" />
-                    </tr>
-	
-                    <tr>
-                      <td colspan="2" height="10" />
-                    </tr>
-                    <tr>
-                      <td>NOT YOU? Report misuse at:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;administrator@webionix.com</td>
-	
-                    </tr>
-                    <tr>
-                      <td colspan="2" height="10" />
-                    </tr>
-                    <tr>
-                      <td colspan="2" height="10" />
-                    </tr>
-                    <tr>
-                      <td colspan="2"><strong style="color:#000000;">Webionix Team</strong></td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </td>
-      </tr>
-    </table>
+$mailString = '<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Noxta</title>
+    </head>
+    <body style="width:90%; margin:auto;">
+        <div style="font-size:13px;">
+            <div>
+                <div style="text-align:center; background-color:#444; padding:15px 0px;">
+                    <a href="http://webionix.com" style="text-decoration: none; color: #fff; font-size: 32px;">
+                        <img style="width:64px; height:auto; vertical-align: middle" src="http://webionix.com/CommonCSS/icons/Version1/SiteIcons/wnxnotextlogo.png" alt="Webionix" />
+                        <span style="margin-left:15px; vertical-align: middle">Webionix</span>
+                    </a>
+                </div>
+            </div>
+            <div style="padding:15px 0px">
+                <div>
+                    <div>
+                        Hi, there
+                    </div>
+                    <div style="padding:10px 0px;">
+                        <p>
+                            This email is to confirm that you have sign up on Webionix. Clicking on the following link will take you to Webionix where you can set password for your Webionix account.
+                        </p>
+                    </div>
+                    <div style="text-align:center; background-color:#efefef; padding:15px 0px;">
+                        <p>
+                            To complete your registration on Webionix, click here 
+                        </p>
+                        <div style="margin: 30px 0px 25px 0px;">
+                            <a href="'.$MailBody.'" style="text-decoration:none; background-color:#00b0ff; border:none; padding:15px 25px; font-size:16px; box-shadow:0px 3px 8px #aaa; color:#fff">
+                                Complete registration
+                            </a>
+                        </div>
+                    </div>
+                    <div style="padding:15px 0px;">
+                        <p>
+                            If you are having trouble clicking on the above "Complete registration" button, please copy and paste <a style="word-break: break-word;" href="'.$MailBody.'">'.$MailBody.'</a> into your web browser.
+                        </p>
+                    </div>
+                    <div>
+                        If you did not sign up on Webionix, please ignore this email.
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top:20px;">
+                <div>
+                    <div>
+                    Thanks,<br/>
+                    Team Webionix<br/>
+                    <a href="http://webionix.com">Webionix.com</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </body>
 </html>';
 ?>
 	

@@ -23,20 +23,41 @@ $(document).ready(function () {
 });
 
 function OnClickSSOButtons(event) {
+    $('#login-message,#signup-message').html('');
     var btnID = event.target.id;
     switch (btnID) {
     case 'signupBtn':
         email = $("#sign-up-email").val();
+        if(email.trim() == "") {
+            $('#signup-message').html('Email cannot be blank');
+            return false;
+        }
         sso.signup(email, 'MySSOCallback');
-
         break;
     case 'signinBtn':
         email = $("#sign-in-email").val();
         pass = $("#sign-in-password").val();
-        var retval = sso.signin(email, pass, gcallbackFn);
+        var captcha = $('#captcha_code').val();
+        if(email.trim() == "") {
+            $('#login-message').html('Email cannot be blank');
+            return false;
+        }
+        if(pass.trim() == "") {
+            $('#login-message').html('Password cannot be blank');
+            return false;
+        }
+        if(captcha.trim() == ''){
+            $('#login-message').html('Enter valid captcha');
+            return false;
+        }
+        var retval = sso.signin(email, pass, gcallbackFn, captcha);
         break;
     case 'resetBtn':
         email = $("#sign-in-email").val();
+        if(email.trim() == "") {
+            $('#login-message').html('Email cannot be blank');
+            return false;
+        }
         var retval = sso.reset(email, 'MySSOCallback');
         break;
     default:
@@ -65,13 +86,18 @@ function MySSOCallback(optype, status) {
             name = obj['firstname'];
             $('#loginModal').modal("hide");
             $('#signinBtn').hide();
-            $('#signoutBtn').show();
+            $('#signupBtn').hide();
+//            $('#signoutBtn').show();
             $('#welcomeMsg')[0].innerHTML = 'Hi ' + name;
             JQSel = '#userMsg';
             $(JQSel).show();
             bSignedIn = true;
         } else {
-            $('#signinErrorMessage').show();
+            if(obj['reason'] == 'captcha mismatch') {
+                $('#login-message').html('Wrong captcha code');
+            } else {
+                $('#signinErrorMessage').show();
+            }
         }
         break;
 
