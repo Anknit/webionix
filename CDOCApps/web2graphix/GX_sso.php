@@ -19,7 +19,7 @@ if(isset($_REQUEST['type'])){
 			break;
 		case 'signin_verify':
             $securimage = new Securimage();
-            if ($securimage->check($_POST['captcha_code']) == false) {
+            if ((isset($_POST['captcha_code'])) && $securimage->check($_POST['captcha_code']) == false) {
                 echo json_encode(array("success"=>"false","reason"=>"captcha mismatch"));
                 exit();
             }
