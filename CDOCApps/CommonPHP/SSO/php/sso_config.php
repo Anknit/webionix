@@ -22,6 +22,8 @@ $sso_signup_form_link	=	"/GX_SignupVerifyForm.php" ;   ///signupform.php"; ///GX
  */
 $sso_signup_mail_subject	=	"Verification link from Webionix Labs !!!";
 
+$sso_welcome_mail_subject    =   "Welcome to Webionix";
+$sso_welcome_mail_cc_address = "rajarshi@webionix.com";
 $sso_signup_body_path	=	"/sign-up-mail.php";
 
 /*

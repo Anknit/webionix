@@ -127,6 +127,16 @@ function sso_signup_verify($user_cipher)//if(isset($_GET['signup']))
 			return  json_encode(array("success"=>"false","reason"=>"Data Update Failed"));
 			//exit();
 		}
+    	$config		=	$GLOBALS['sso_mail_verify_setting'];
+        $mailSubject	=	$GLOBALS['sso_welcome_mail_subject'];
+        $ccMailAdd = $GLOBALS['sso_welcome_mail_cc_address'];
+        require_once __DIR__.'./../user_files/welcome-mail.php';
+        if(!send_Email($text, $mailSubject, $mailString, $ccMailAdd,'', $config))
+        {
+            ErrorLogging("mail sending failed during signup "."at line no. ".__LINE__." at file ".__FILE__." content: email:".$email);//mail sending failed
+            exit();
+        }
+ 
 		
 		$d_data	=	"delete from verify_link where emailid='".$text."'";
 		$d_id     =     $mysqlObj->Query($d_data,"result","");
@@ -261,6 +271,18 @@ function sso_google($token)//if(isset($_POST['idtoken']))
 			//insert failed error
 			exit();
 		}
+        
+    	$config		=	$GLOBALS['sso_mail_verify_setting'];
+        $mailSubject	=	$GLOBALS['sso_welcome_mail_subject'];
+        $ccMailAdd = $GLOBALS['sso_welcome_mail_cc_address'];
+        require_once __DIR__.'./../user_files/welcome-mail.php';
+        if(!send_Email($email, $mailSubject, $mailString, $ccMailAdd,'', $config))
+        {
+            ErrorLogging("mail sending failed during signup "."at line no. ".__LINE__." at file ".__FILE__." content: email:".$email);//mail sending failed
+            exit();
+        }
+        
+        
 		//$d_data    =    $mysqlObj->Read($query);
 		
 	}	
