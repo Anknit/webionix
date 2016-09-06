@@ -11,5 +11,5 @@ $feedback_mail_setting = array(
 );
 
 $feedback_mail_subject = 'New feedback at Webionix';
-$feedback_mail_recipient = 'ankitakkii24@gmail.com';
+$feedback_mail_recipient = 'rajarshi@webionix.com';
 ?>
