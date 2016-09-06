@@ -163,12 +163,26 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; font-weight:bold;}
     		 height: 25px;
 	}
 
-  div.LG_MARKER_POINTS:hover{
-  			 border-radius: 15px;
-  			 width: 15px;
-    		 height: 15px;
-    		 
+.LG_MARKER_POINTS, .RG_MARKER_POINTS{
+	border-radius: 10px;
+	background-color:#eee; 
+	border:solid grey 1px;
+	padding: 1px; 
+	width:10px; 
+	height:10px;
+}
+  div.LG_MARKER_POINTS:hover, div.RG_MARKER_POINTS:hover {
+  			 border-radius: 25px;
+  			 width: 25px;
+    		 height: 25px;  
+    		 opacity: 0.6;  	
+    		 cursor:move;
   }
+  
+  
+  
+  
+  
    .jqx-grid-cell
 	{
 	    border: none;
@@ -246,18 +260,22 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; font-weight:bold;}
 }
 
 /* Tooltip */
- 
+ .tooltip{
+ 	opacity:1.0; 
+ }
   .tooltip > .tooltip-inner {
-      background-color: #F4FF26; 
-      color: #222; 
+      background-color: #f1c981; 
+      color: #000; 
       border: 1px solid #444; 
       border-radius: 5px;
       padding: 5px;
       font-size: 12px;
-      opacity:1; 
+      
      /* font-weight:bold;*/
   }
-  
+  .tooltip.in{
+   opacity:1.0; 
+  }
   .jqx-window-header{
   	font-size:12px;
   	font-weight:bold; 
@@ -270,4 +288,17 @@ div.EDIT_BOX{display:inline-block; margin-left:2px; font-weight:bold;}
 	
 	.pointerCursor{
 		cursor:pointer;
+	 }
+	 
+	 .URLCELL{
+	 position:relative;
+	 top:16px;
+	 }
+	 
+	 .URLCELL:hover{
+		cursor:pointer;
+	 }
+	 
+	 .custom_anchor{
+	 cursor:pointer;
 	 }
