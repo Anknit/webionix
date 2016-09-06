@@ -1,0 +1,141 @@
+body{
+    font-family: 'Roboto', sans-serif;
+}
+.width-sm{
+    max-width:500px;
+    margin: auto;
+}
+.width-md{
+    max-width:700px;
+    margin:auto;
+}
+.padding-md-all{
+    padding: 15px;
+}
+.brand-logo{
+    margin:0px 5px;
+}
+.text-grey{
+    color:#999;
+}
+.text-white{
+    color:#fff;
+}
+.how-it-works{
+    padding: 10px 15px 25px;
+}
+.navbar-theme .navbar-nav>li>a.btn-link{
+    color:#00b0ff;
+}
+#welcomeMsg {
+    color: #bbb;
+}
+.carousel-indicators li{
+    border-color: #00b0ff;
+}
+img.works-img {
+    max-width: 80%;
+    margin: auto;
+}
+.text-white-light{
+    color:#f5f5f5;
+}
+.width-xs{
+    max-width:300px;
+    margin:auto;
+}
+.bg-info{
+    background-color: #5BC0DE;
+}
+.bg-grey{
+    background-color: #eeeff1;
+}
+.navbar-theme{
+    background-color: #444;
+    border:none;
+    padding-top: 10px;
+    margin-bottom:0px;
+}
+.navbar-theme .navbar-nav>li>a {
+    color: #fff;
+}
+
+
+.navbar-brand.logotext {
+	   color: #d1d1d1; 
+	   /*font-variant:small-caps;*/
+	   font-size:1.1em;    
+	   font-family:'Verdana,sans-serif';
+	   margin-top:25px; 
+	   position:relative;
+	   top:-5px;
+	   left:10px;
+	   }
+	 
+	 
+.navbar-theme .nav>li>a:focus, .navbar-theme .nav>li>a:hover{
+    background-color: transparent;
+    color:#ccc;
+}
+.features-highlight {
+    padding: 15px 15px;
+}
+.contact-section{
+    padding: 60px 25px;
+}
+.feature-item {
+    width: 75%;
+    margin: auto;
+    padding: 15px 20px;
+    height: 250px;
+    background: none;
+    box-shadow: 5px 6px 6px #888;
+    border:3px solid #e99e15; 
+    border-radius:10px;
+    margin-top: 30px;
+    color:#666;
+}
+.glyph-container {
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    font-size: 32px;
+    color: #fff;
+    background: #5BC0DE;
+    border-radius: 100px;
+    padding-top: 30px;
+    text-align: center;
+    box-shadow: 3px 3px 10px #ddd;
+}
+.top-section{
+/*
+    background-image: url(bg-hero.jpg);
+    min-height:700px;
+    background-size: cover;
+*/
+    padding-top: 40px;
+}
+
+.features-section{   
+   
+    padding-top: 25px;
+    background-repeat: no-repeat;
+    background-color:#ddd; 
+    color:
+}
+ 
+ .carousel-caption{
+ 	color: #333; 
+ }
+ 
+ .about-text{
+  color:#999;
+  font-size:1.3em; 
+ }
+ footer{
+ border-top:1px solid #ddd; 
+ }
+ .feature-content{
+ position:relative;
+ top:10%; 
+ }
