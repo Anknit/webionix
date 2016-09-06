@@ -62,9 +62,7 @@ function getassetfilelist($directoryPath, $type)
 				}
 			}
 			else
-				$newlist = ""; 
-			
-			
+				$newlist = ""; 	
 				
 		}		
 	}

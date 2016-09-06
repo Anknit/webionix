@@ -18,7 +18,7 @@ sDimension.prototype.rotCentreY = 0;
 //scaling param incase of transform property
 sDimension.prototype.scaleX = 0; 
 sDimension.prototype.scaleY = 0; 
-
+sDimension.prototype.radius = 0;
 function sDimension() {
     sDimension.prototype.x = new Number(0);
     sDimension.prototype.y = new Number(0);
@@ -38,6 +38,7 @@ function sDimension() {
     sDimension.prototype.centerY =  new Number(0);       
     sDimension.prototype.scaleX = 0; 
     sDimension.prototype.scaleY = 0; 
+    sDimension.prototype.radius = 0; //for rectangles corner  
 }
 var gTreeWidgetID = 'node_panel'; 
 var gTreeNodeID = 'node_container'; 
@@ -334,7 +335,7 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
         var objProp =  gradProp.gradAnimList['x1']; 
         //linear specific indicator UIs\
         var indNode = document.getElementById('LG_INDICATOR_LINE');
-        var markerNode = document.getElementById('START_POINT');
+        var markerNode = document.getElementById('LG_START_POINT');
         var value = gradProp.LGGradStart.x; 
         value = value.substring(0, value.length-1); 
         value = new Number(value); 
@@ -348,16 +349,14 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
         value = gradProp.LGGradStart.y; 
         value = value.substring(0, value.length-1); 
         value = new Number(value); 
-        value = Math.round((value * gGradHeight)/100); 
-        //indNode.setAttribute('y1',value+'' ); 
-        var y = new Number(value); 
-        //markerNode.setAttribute('cy',value+5+'' ); 
+        value = Math.round((value * gGradHeight)/100);        
+        var y = new Number(value);      
         indNode.setAttribute('y1',value ); 
        // markerNode.setAttribute('cy',value+5 );
-        var JQSel = '#START_POINT'; 
+        var JQSel = '#LG_START_POINT'; 
        // $(JQSel).css({left: x +'px', top: y + 'px'}); 
         //END_POINT
-        this.SetGradMarkerPosition('START_POINT', x,y);
+        this.SetGradMarkerPosition('LG_START_POINT', x,y);
         //markerNode = document.getElementById('END_POINT');
         var value = gradProp.LGGradStop.x; 
         value = value.substring(0, value.length-1); 
@@ -376,9 +375,9 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
        // markerNode.setAttribute('cy',(value-5)+'' ); 
         indNode.setAttribute('y2',value ); 
         var y2 = new Number(value); 
-        var JQSel = '#END_POINT'; 
+        var JQSel = '#LG_END_POINT'; 
        // $(JQSel).css({left: x2 +'px', top: y2 + 'px'});
-        this.SetGradMarkerPosition('END_POINT', x2,y2);
+        this.SetGradMarkerPosition('LG_END_POINT', x2,y2);
        // markerNode.setAttribute('cy',(value-5) );
         
     }
@@ -404,8 +403,10 @@ sGradientWidget.prototype.UpdateUI = function(gradProp) {
        // var titlenode = document.getElementById('gradTitleIP'); 
     	//titlenode.setAttribute('value',gradProp.Title); 
     	var JQSel = "#" + 'gradTitleIP';    
-        $(JQSel).val(gradProp.Title);
-        
+    	if(gbNewGradObject == false)
+    		$(JQSel).val(gradProp.Title);
+    	else
+    		$(JQSel).val(''); 
         var index = -1;
         var spreadValueDisplay = ['pad', 'reflect', 'repeat'];
         for (var j = 0; j < 3; j++) {
@@ -458,16 +459,16 @@ sGradientWidget.prototype.SetGradMarkerPosition =  function(ID, x, y){
 	var top  = new Number(pos.top); 
 	newX += left; 
 	newY += top; 
-	if(ID == 'START_POINT'){
-		var JQSel = '#START_POINT'; 
+	if(ID == 'LG_START_POINT'){
+		var JQSel = '#LG_START_POINT'; 
 		var xOff = new Number(0) ; 
 		var yOff = new Number(0); 
 		newX += xOff; 
 		newY += yOff; 
 		$(JQSel).css({left: newX + 'px', top: newY + 'px'}); 
 	}
-	else if(ID == 'END_POINT'){
-		var JQSel = '#END_POINT'; 
+	else if(ID == 'LG_END_POINT'){
+		var JQSel = '#LG_END_POINT'; 
 		var xOff = new Number(-10) ; 
 		var yOff = new Number(-10); 
 		newX += xOff; 
@@ -808,11 +809,11 @@ function GX_GradColorButtonHandler(event) {
 
 function GX_CreateGradientWidget(wdgtID)
 {
-        WAL_createModelessWindow(wdgtID, '310', '440', 'myOK', 'myCancel');
+        WAL_createModelessWindow(wdgtID, '310', '360', 'myOK', 'myCancel');
         //WAL_createButton('animTotalPreviewBtn', '', '60', 25, true);
-        WAL_CreateTextInput('gradTitleIP', '100', gInputHeight,false, '');
+        WAL_CreateTextInput('gradTitleIP', '110', gInputHeight,false, '');
    	    var spreadValueDisplay = ['pad', 'reflect', 'repeat'];
-        WAL_createDropdownList('gradSpreadDDL', '110', '24', false, spreadValueDisplay, "GX_SpreadDDLHandler", '50', 0);
+        WAL_createDropdownList('gradSpreadDDL', '110', '22', false, spreadValueDisplay, "GX_SpreadDDLHandler", '80', 0);
        
        // WAL_createNumberInput("stop0_Offset", '45px', '24', "GradientEditBoxValueChange", true, 100, 0, 1);       
         
@@ -825,7 +826,7 @@ function GX_CreateGradientWidget(wdgtID)
         //WAL_createButton('apply_Stop_Col', '', '55', 25, true);
         //WAL_createButton('animPreviewStop', '', '70', 25, true);  
         
-        var JQSel = '#START_POINT'; 
+        var JQSel = '#LG_START_POINT'; 
         $(JQSel).draggable({ cursor: "move" });
         $(JQSel).on( "drag", function( event, ui ) {
         	OnGradMouseMove(event); 		
@@ -839,7 +840,7 @@ function GX_CreateGradientWidget(wdgtID)
         
         $(JQSel).hide(); 
         
-        var JQSel = '#END_POINT'; 
+        var JQSel = '#LG_END_POINT'; 
         $(JQSel).draggable({ cursor: "move" });
         $(JQSel).on( "drag", function( event, ui ) {
         	OnGradMouseMove(event); 		
@@ -999,7 +1000,7 @@ function OnEditBoxFocusOut(event) {
         //now update the List Box as well 
     }   
     */
-	
+		
 }
 function GX_Initialize()
 {
@@ -1086,6 +1087,39 @@ function GX_Initialize()
     WAL_createDropdownList('grouptoDDL', '140', '22', false, groupList, "GX_DDLHandler", '80', 0);
     WAL_createModalWindow('movetoGroupDlg', '250', '170', 'grouptoOK', 'grouptoCancel', false);
     
+    
+    //creating published list grid here 
+    WAL_createModalWindow('publishedListDlg', '525', '350', 'pubOK', 'pubCancel', true);    
+   /* var imagerenderer = function (row, datafield, value) {
+        return '<img style="margin-left: 5px; margin-top:5px; margin-bottom:5px" height="40" width="40" src="../USER_DATA/shared/shapes/' + value + '"/>';
+    }*/   
+    var colArray = [					
+					{ text: 'ID', datafield: 'ID', width: 25, groupable:false},
+					{ text: 'Date', datafield: 'pubdate', width: 80, groupable:false},
+					{ text: 'Title', datafield:'title', width:170, groupable:false},														
+					{ text: 'URL', datafield: 'publishedURL', width: 'auto', groupable:false,
+						cellsrenderer: function (row, columnfield, value, defaulthtml, columnproperties) {
+			              // Debug_Message("Value=" + value);
+							var filename = value.split('/'); 
+							filename = filename[filename.length-1]; 
+			               var str='<a data-href=' + value + ' class="URLCELL" + onclick="OnGridURLClick(event)">' + filename + '</a>'; 
+			               return str;
+			            } //function					
+					}					
+           		]; 
+    /*
+     * { text: 'Quantity', datafield: 'quantity', width: 70, cellsalign: 'right', columntype: 'numberinput',
+      cellsrenderer: function (row, columnfield, value, defaulthtml, columnproperties) {
+                if (value < 20) {
+                    return '' + value + '';
+                }
+                else {
+                    return '' + value + '';
+                }
+            }   
+}
+     */
+    WAL_createGrid('publistgrid', '520', '280', 'OnGridRowSelection', 50, true, 10, colArray, 'file'); 
     //create the draggable drawing pen  here 
    	var JQSel = "#drawingpen" ;
 	$(JQSel).draggable({ cursor: "crosshair", cursorAt:{top: 2, left: 2} });	
@@ -1566,15 +1600,24 @@ function NewFileCallback(respStr){
 		
 	var index =  respStr.indexOf("ALREADY_EXISTS");
 		if(index != -1){	   		
-	   		WAL_ShowNotification('messageNotification','info', "This File already exists, Please try another name", 3000);
+	   		//WAL_ShowNotification('messageNotification','info', "This File already exists, Please try another name", 3000);
+			
+			setTimeout(function(){		    	
+				WAL_ShowNotification('messageNotification','error', "This File already exists, Please try another name",5000,
+						0, -550, 'bottom-left', false);			 
+			 			}, 
+			 	200);
 	   		var JQSel = '#pageNameIP'; 
 	   		$(JQSel).val("");
 	    	WAL_showModalWindow(gSVGFileNameDlgID,"GX_SVGFileDlgNameOK", "" );	    	
 	   	}
 		else{
-			WAL_ShowNotification('messageNotification','info', "Your New Project has been created Successfully</br>You can now Add Shapes/Images/Text to your project", 3000);
+			//WAL_ShowNotification('messageNotification','info', "Your New Project has been created Successfully</br>You can now Add Shapes/Images/Text to your project", 3000);
+			
 			GX_OpenFile(gCurrfName); 
 			//OpenfileCallback(respStr); 
+			GX_ManageUIState('NEW_FILE_CREATED');
+			
 		}
 		
 }
@@ -1609,7 +1652,7 @@ function OpenfileCallback(respStr){
 	   	 GX_InitializeDocument(gCurrfName);     	 
     }	   
     var xmlstr = GXRDE_GetSVGMetaXML(gCurrfName, 'xmlFileCallback'); 
-   
+    GX_ManageUIState('FILE_OPENED'); 
 }
 
 function  xmlFileCallback(xmlstr){
@@ -1841,10 +1884,11 @@ function GX_AddNewSVGObject(Type, name, callbackFn)
 	}	
 	//change the tab only when SVG_shape/path/image objects being added as the object need to be added to the tree
 	WAL_SetTabIndex('rightTabs', 0);
+	
 	var currNodeType = gCurrentTreeNode.getAttribute('type');
 	if ( (Type != 'GROUP') && (currNodeType != 'GROUP')){
-		WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+gCurrLayerNode.id); 
-		currNodeType = gCurrentTreeNode.getAttribute('type');
+	//	WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+gCurrLayerNode.id); 
+	//	currNodeType = gCurrentTreeNode.getAttribute('type');
 	}	
 	
 	if(objectType == 'GROUP')
@@ -1852,8 +1896,18 @@ function GX_AddNewSVGObject(Type, name, callbackFn)
 		parentID = 'SVGOBJECTCONTAINER'; 
 		WAL_setTreeItemSelection(gTreeNodeID, 'TM_'+parentID);
 	}
-	else
-		parentID = gCurrentTreeNode.getAttribute('dataid');
+	else{
+		//_rm directly sets the parent here 
+		//unselect any item selected now 
+		if(gCurrentObjectSelected)
+			GX_SetSelection(gCurrentObjectSelected, false, false); 
+		if(gCurrLayerNode){
+			parentID = gCurrLayerNode.id;
+		}else{
+			Debug_Message("Group node not set"); 
+			return ; 
+		}
+	}	
 	
 	gNewObjectID = ObjID; 
 	gNewObjType = objectType;
@@ -1890,12 +1944,14 @@ function callbackSVGAddDefualtFn(retval){
 		 if(!newNode)
 			 return ; 
 		  var nodename  = newNode.nodeName.toUpperCase(); 
+		  var parentTreeID = 0;//gCurrLayerNode.id;
 		  if(objectType == 'GROUP')
 		  {
 			  myobjType = 'GROUP';
 			  var classval = newNode.getAttribute('class'); 
 			  nodeTitle = classval.split(' '); 
 			  nodeTitle = 'Group:' + nodeTitle[1];  
+			  parentTreeID =  'SVGOBJECTCONTAINER';
 		  }			  
 		  else
 		  {
@@ -1904,9 +1960,13 @@ function callbackSVGAddDefualtFn(retval){
 			  var classval = newNode.getAttribute('class'); 
 			  nodeTitle = classval.split(' '); 
 			  nodeTitle = nodeTitle[1]; 
+			  parentTreeID = gCurrLayerNode.id;
 		  }	 
 		 var newXMLStr = '<li id="TM_'+ ObjID + '"  type="' + myobjType+ '" class="TREEMENU" level="3" dataid="' +ObjID + '"  data-type="' + nodename +'"  name="'+ nodeTitle+'"></li>';
-		 WAL_AddTreeItem(gTreeWidgetID, newXMLStr, gCurrentTreeNode, "", true);		 
+		 var groupID; 
+		 var groupItem = WAL_getTreeItem(gTreeNodeID, 'TM_'+ parentTreeID); 
+		 WAL_AddTreeItem(gTreeWidgetID, newXMLStr, groupItem, "", true);	
+		 //WAL_AddTreeItem(gTreeWidgetID, newXMLStr, gCurrentTreeNode, "", true);		 
 	}	
 	if(gSVGFilename)
 	{		
@@ -1929,6 +1989,11 @@ function callbackSVGAddDefualtFn(retval){
 	if( (objectType != 'GROUP') && (objectType != 'POLYGON') && (objType != 'SVG_TEXT_OBJECT')&& (objType != 'IMAGE') ){
 		GX_StartFreeDraw('DRAW_MODE');	
 	}
+	else{
+	
+		GX_ManageUIState('NEW_OBJECT_ADDED'); 
+	}
+	
 	//best is to reload the entire file 
 	//if(objectType == 'GROUP')
 	//	GX_ReloadSVG(ObjID, true); 			
@@ -2915,6 +2980,7 @@ function OnObjectDrag(evt, ui){
 	    newObjDim.rotate = gCurrSelectedObjectDim.rotate;//.
 	    newObjDim.rotCentreX = gCurrSelectedObjectDim.rotCentreX +relX ;
 	    newObjDim.rotCentreY = gCurrSelectedObjectDim.rotCentreY + relY; 
+	    newObjDim.radius = gCurrSelectedObjectDim.radius;
     	GX_SetTransformProperty(gCurrentObjectSelected, 'translate',newObjDim);
     	/*if(gCurrSelectedObjectDim.rotate != 0){
     		newObjDim.rotate = gCurrSelectedObjectDim.rotate;          
@@ -3014,7 +3080,8 @@ function OnObjectResizing(event, ui){
 		newObjDim.x = gCurrSelectedObjectDim.x + relLeft; 
 	    newObjDim.y = gCurrSelectedObjectDim.y + relTop; 
 	    newObjDim.width = gCurrSelectedObjectDim.width + relW; 
-	    newObjDim.height =  gCurrSelectedObjectDim.height + relH; 	    
+	    newObjDim.height =  gCurrSelectedObjectDim.height + relH; 	
+	    newObjDim.radius = gCurrSelectedObjectDim.radius; 
 		GX_SetRectObjectDim(gCurrentObjectSelected,newObjDim);
 	}
 	else{
@@ -3043,6 +3110,7 @@ function OnObjectResizeStop(event, ui){
 	    newObjDim.y = gCurrSelectedObjectDim.y + relTop;		
 	    newObjDim.width = gCurrSelectedObjectDim.width + relW; 
 	    newObjDim.height =  gCurrSelectedObjectDim.height + relH; 
+	    newObjDim.radius = gCurrSelectedObjectDim.radius; 
 	    if(gSnapToGrid == true){
         	newObjDim.width = GX_ConvertToMultipleOf(newObjDim.width, 10); 
         	newObjDim.height = GX_ConvertToMultipleOf(newObjDim.height, 10); 
@@ -3425,21 +3493,65 @@ function GX_GetLayerDimension(layerID)
 	return layerDim; 
 }
 
+function GX_PutDefaultTransformValue(gNode){
+	gNode.setAttribute('transform', 'translate(0 0) scale(1 1) rotate(0 0 0)'); 
+}
+function GX_ValidateTransformValue(gNode){
+	var transfDim =  new sDimension(); 
+	var str = gNode.getAttribute('transform'); 
+	//validate the transform string parameter
+	var arr = str.split(" "); 
+	var subarr; 
+	var innerArr; 
+	var	delimiter = ' '; //_rm this can be , or ' ' because of chrome issue it is now ' '	
+	if(arr.length != 7){
+		//then put in proper values and return
+		GX_PutDefaultTransformValue(gNode); 
+		return ; 
+	}
+	else if((arr[0].indexOf('translate')== -1) || (arr[2].indexOf('scale')== -1) || (arr[4].indexOf('rotate')== -1) ){
+		GX_PutDefaultTransformValue(gNode);  
+		return ; 
+	}
+	//translate param
+	x = arr[0].split('(')[1]; 
+	y = arr[1].substring(0,arr[1].length-1); 
+	if( (isNaN(x) == true) || (isNaN(y) == true) ){
+		GX_PutDefaultTransformValue(gNode); 
+		return; 
+	}	
+	//scale param 
+	x = arr[2].split('(')[1]; 
+	y = arr[3].substring(0,arr[3].length-1); 
+	if( (isNaN(x) == true) || (isNaN(y) == true) ){
+		GX_PutDefaultTransformValue(gNode); 
+		return; 
+	}	
+	
+	//rotate param 
+	var rot = arr[4].split('(')[1];	
+	var rotX = arr[5] ;//x.substring(0, x.length-1);
+	var rotY = arr[6].substring(0, arr[6].length-1);
+	if( (isNaN(rot) == true) || (isNaN(rotX) == true) || (isNaN(rotY) == true) ){
+		GX_PutDefaultTransformValue(gNode); 
+		return; 
+	}
+}
+
+
 function GX_GetTransformProperty(gNode, transfType)
 {
+	GX_ValidateTransformValue(gNode); 
 	var transfDim =  new sDimension(); 
 	var str = gNode.getAttribute('transform'); 
 	if(!str)
 		return transfDim;
 	
+	//validate the transform string parameter
 	var arr = str.split(" "); 
 	var subarr; 
 	var innerArr; 
 	var	delimiter = ' '; //_rm this can be , or ' ' because of chrome issue it is now ' '
-	/*if(arr.length < 1){
-		Debug_Message("GX_GetTransformProperty : Transform String is : " +str ); 
-		return 0; 
-	}*/
 	
 	var x, y; 	
 	//translate param
@@ -3450,7 +3562,7 @@ function GX_GetTransformProperty(gNode, transfType)
 	
 	//scale param 
 	x = arr[2].split('(')[1]; 
-	y = arr[3].substring(0,arr[1].length-1); 
+	y = arr[3].substring(0,arr[3].length-1); 
 	transfDim.scaleX = new Number(x); 
 	transfDim.scaleY = new Number(y);
 	
@@ -3466,6 +3578,7 @@ function GX_GetTransformProperty(gNode, transfType)
 function GX_SetTransformProperty(gNode, transfType, transfDim)
 {
 	//var transfDim =  new sDimension(); 
+	GX_ValidateTransformValue(gNode);
 	var Transfstr = gNode.getAttribute('transform'); 
 	if(!Transfstr)
 		Transfstr = "";
@@ -3476,6 +3589,17 @@ function GX_SetTransformProperty(gNode, transfType, transfDim)
 		return ; 
 	}
 	*/
+	//if transform string not proper then set it to default value and move on _rm
+	//override everything because of Chrome's way of behaving 
+	if(transfType == 'all'){		
+		Transfstr =''; 
+		Transfstr += 'translate(' + transfDim.x + ' ' + transfDim.y + ') '; 
+		Transfstr += 'scale(' + transfDim.scaleX + ' ' + transfDim.scaleY + ') '; 
+		Transfstr += 'rotate(' + transfDim.rotate + ' ' + transfDim.rotCentreX + ' ' + transfDim.rotCentreY + ')';	
+		gNode.setAttribute('transform', Transfstr); 
+		return ; 
+	}
+	
 	var str=""; 
 	var objectType = gNode.classList[0]; 
 	var shapeType = gNode.classList[1]; 
@@ -3674,6 +3798,7 @@ function GX_UpdatePosFromTranslation(objNode){
     newObjDim.rotate = gCurrSelectedObjectDim.rotate;          
     newObjDim.rotCentreX = Math.round(newObjDim.x + newObjDim.width/2);
     newObjDim.rotCentreY = Math.round(newObjDim.y + newObjDim.height/2); 
+    newObjDim.radius = gCurrSelectedObjectDim.radius; 
     /*
     if(objNode.classList[1]== 'ELLIPSE')
     {
@@ -3713,7 +3838,9 @@ function GX_GetRectObjectDim(ObjNode)
 		     mypoint.height = new Number(ObjNode.getAttribute('height'));	
 		     mypoint.height += 0; 
 		     mypoint.centerX = mypoint.x + mypoint.width /2; 
-		     mypoint.centerY = mypoint.y + mypoint.height /2; 		     
+		     mypoint.centerY = mypoint.y + mypoint.height /2; 	
+		     if(nodename == 'rect')
+		    	 mypoint.radius =  new Number(ObjNode.getAttribute('rx')); 
 	    }	
 	    else if(nodename == 'svg'){
 	    	mypoint.x =  ObjNode.getAttribute('x');
@@ -3815,6 +3942,7 @@ function GX_SetRectObjectDim(ObjNode, newDim)
     modDim.y = Math.round(newDim.y);
     modDim.y =  Math.abs(modDim.y);
     
+    modDim.radius = newDim.radius; 
     modDim.width = Math.round(newDim.width);
     modDim.height = Math.round(newDim.height);    
     var objectType = ObjNode.classList[1];        
@@ -3866,7 +3994,12 @@ function GX_SetRectObjectDim(ObjNode, newDim)
             ObjNode.setAttribute('x', modDim.x);
             ObjNode.setAttribute('y', modDim.y);
             ObjNode.setAttribute('width', modDim.width);
-            ObjNode.setAttribute('height', myheight);              
+            ObjNode.setAttribute('height', myheight);  
+            if(nodename == 'rect'){
+            	ObjNode.setAttribute('rx', modDim.radius);  
+            	ObjNode.setAttribute('ry', modDim.radius);  
+            }
+            	
     }  
     else if(nodename == 'svg'){    		
     		var viewBoxstr = ObjNode.getAttribute('viewBox'); 
@@ -4054,13 +4187,11 @@ function GX_InitializeToolbar()
 {
 	//INITALIZING LAYOUT INTERFACE
 	//second row item layout_interface
-	//WAL_createTooltip('widgettooltip', 'div', 1000); 
-	
-	
+	//WAL_createTooltip('widgettooltip', 'div', 1000); 	
 	WAL_createCustomButton('object_icon', 'GX_ToolbarHandler');
 	WAL_createCustomButton('text_icon', 'GX_ToolbarHandler');   
     WAL_createCustomButton('image_icon', 'GX_ToolbarHandler');
-    WAL_createCustomButton('import_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('publish_icon', 'GX_ToolbarHandler');
     
     WAL_createCustomButton('grid_icon', 'GX_ToolbarHandler');
     
@@ -4091,10 +4222,6 @@ function GX_InitializeToolbar()
     
     WAL_CreatePopOver('project_popup', 'file_icon_div','Projects', false, 'auto', 'auto', true);
     
-    //create aloign pop-up 
-    
-    
-    
     WAL_CreatePopOver('align_popup', 'align_icon_div','Alignment', false, '90', 'auto', false);
     WAL_createCustomButton('alignwidth_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('alignheight_icon', 'GX_ToolbarHandler');
@@ -4106,7 +4233,52 @@ function GX_InitializeToolbar()
     WAL_createCustomButton('alignhorcenter_icon', 'GX_ToolbarHandler');
     WAL_createCustomButton('alignvertcenter_icon', 'GX_ToolbarHandler'); 
     
-    WAL_createCustomButton('download_icon', 'GX_ToolbarHandler');
+    WAL_createCustomButton('download_icon', 'GX_ToolbarHandler');    
+    GX_ManageUIState('APP_LAUNCHED'); 
+}
+//rm Manage the UI state through this function so that this function can be resued 
+//a multiple places 
+function GX_ManageUIState(stateType){
+	
+	
+	switch(stateType){
+	//here the app is launched but no project is opened yet 
+	case 'APP_LAUNCHED':
+		var JQSel = '.TOOLBAR'; 
+		$(JQSel).addClass('disabledState'); 
+		JQSel = '#file_icon_div'; 
+		$(JQSel).removeClass('disabledState');
+		$('#DivPathMarker').hide();
+		//$('#drawingpen').hide();
+		$('#drawingpen').css({visibility:'hidden' });
+		WAL_ShowPopover('project_popup', true); 
+		break;
+		//here a project file is opened whetehr new or old 
+	case 'FILE_OPENED':
+		var JQSel = '.TOOLBAR'; 
+		$(JQSel).removeClass('disabledState');
+		break; 
+	case 'NEW_OBJECT_ADDED':
+		 setTimeout(function(){		    	
+			 WAL_SetTabIndex('rightTabs', 1); 			 
+		 			}, 
+		 	500);		
+		break; 
+	case 'NEW_FILE_CREATED':
+		var JQSel = '.TOOLBAR'; 
+		$(JQSel).removeClass('disabledState');
+		WAL_ShowPopover('shapes_popup', true); 
+		setTimeout(function(){		    	
+			WAL_ShowNotification('messageNotification','info', "Your New Project has been created Successfully</br>You can now Add Shapes/Images/Text to your project",5000,
+					0, -550, 'bottom-left', false);			 
+		 			}, 
+		 	500);
+		
+		break; 
+		
+	default:
+		break; 		
+	}		
 }
 
 function GX_EditBoxValueChange(value, widgetnode)
@@ -4172,6 +4344,10 @@ function GX_EditBoxValueChange(value, widgetnode)
 					GX_SetRectObjectDim(gCurrGrabber,DimValue);
 				}
 				break;
+			case 'radiusIP':
+				DimValue.radius = value; 
+				retVal = GX_SetObjectAttribute(currnodeSel, "DIMENSION", DimValue, true, false);
+				break; 
 			default:
 				break; 
 			}
@@ -4284,6 +4460,7 @@ function GX_ToolbarHandler(event)
 		 break; 	
 	 case 'close_icon':
 		 GX_CloseSVGFile(); 
+		 GX_ManageUIState('APP_LAUNCHED'); 
 		 break;	 
 	 case 'diminfo':		 
 		 var svgdatanode = document.getElementById('SVGOBJECTCONTAINER'); 
@@ -4379,6 +4556,7 @@ function GX_ToolbarHandler(event)
 		if(objectType == 'SVG_PATH_OBJECT'){
 			// $(gCurrGripperSel).css({visibility:"hidden"});
 			$(gCurrGripperSel).hide(); 
+			$('#DivPathMarker').show(); 
 			gPathDataArray = GX_ConvertPathDataToArray(gCurrentObjectSelected);
 			GX_AddPathMarker(gCurrentObjectSelected.id, gPathDataArray, true); 
 		}
@@ -4637,12 +4815,27 @@ function GX_ToolbarHandler(event)
 				gridNode.setAttribute('visibility', 'hidden'); 
 			}
 		 
-		 break; 		 
+		 break; 
+		
+	 case 'publish_icon':
+		 GX_PublishFile(); 
+		 
+		 var filename = 'MynewtryPAM.svg'; 
+		 //GXRDE_ImportPublishedContent(filename, 'fnImport'); 
+		 break; 
 	 default:
 		break; 		
 	}
 }
 
+function fnPublish(respStr){
+	//Debug_Message("URL: " +respStr ); 
+	 var myWindow = window.open(respStr, '', '');
+}
+
+function fnImport(respStr){
+	Debug_Message(respStr); 
+}
 function GX_showEditorInterface(Mode)
 {
 	$('.PROPERTY_INTERFACE').hide(); 
@@ -5294,6 +5487,10 @@ function GX_UpdatePropertyOnUI(AttrName, AttrVal)
 		break; 
 	case 'FONT_NAME':
 		WAL_SetItemByValueInList('fontNameDDL', AttrVal, true);
+		break; 
+	case 'RADIUS':
+		var radius = AttrVal+" "; 
+		WAL_setNumberInputValue("radiusIP", radius, false);
 		break; 
 	default: 
 		break; 
@@ -6714,6 +6911,7 @@ function OnFreeDrawMouseMove(event){
 		
 }
 
+var gOrigPoint = new sPoint(); 
 function OnFreeDrawDragStart(evt, ui){
 	if(!gCurrentObjectSelected){
 		Debug_Message('Object not selected');
@@ -6763,8 +6961,8 @@ function OnFreeDrawDragStart(evt, ui){
 				(objectType == 'CUBIC_BEZIER') || (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC') || (objectType == 'IMAGE') )
 		{
 			gCurrSelectedObjectDim = new sDimension(); 
-			gCurrSelectedObjectDim.x = X; 
-			gCurrSelectedObjectDim.y = Y; 
+			gOrigPoint.x = gCurrSelectedObjectDim.x = X; 
+			gOrigPoint.y = gCurrSelectedObjectDim.y = Y; 
 			gCurrSelectedObjectDim.width = 0; 
 			gCurrSelectedObjectDim.height = 0;
 			gsvgRootNode.setAttribute("cursor", "crosshair");		
@@ -6799,6 +6997,7 @@ function OnFreeDrawDragStart(evt, ui){
 function OnFreeDrawDragEnd(evt, ui){	
 	
 	var objectType = gCurrentObjectSelected.classList[1]; 
+	var shapeType = gCurrentObjectSelected.classList[0]; 
 	if(gEnableMultiSelection == true)
 		objectType = 'RECTANGLE'; 
 	gsvgRootNode.setAttribute("cursor", "auto");	
@@ -6813,7 +7012,10 @@ function OnFreeDrawDragEnd(evt, ui){
 			|| (objectType == 'QUADRATIC_BEZIER')|| (objectType == 'ELLIPTIC'))
 	{
 		gCurrSelectedObjectDim = GX_GetRectObjectDim(gCurrentObjectSelected); 
-		GX_SetObjectAttribute(gCurrentObjectSelected, 'DIMENSION', gCurrSelectedObjectDim, false, false);	
+		if((shapeType != 'SVG_PATH_OBJECT')){
+			GX_SetObjectAttribute(gCurrentObjectSelected, 'DIMENSION', gCurrSelectedObjectDim, false, false);
+		}
+			
 		GX_SetObjectAttribute(gCurrentObjectSelected, '', '', true, false);
     	GX_SaveObjectProperties(gCurrentObjectSelected, true);		
 	}		
@@ -6835,6 +7037,8 @@ function OnFreeDrawDragEnd(evt, ui){
 	 }	
 	 GX_SetSelection(gCurrentObjectSelected, true, true);
 	 GX_ShowTooltip(true); 
+	 GX_ManageUIState('NEW_OBJECT_ADDED'); 
+	 
 	// Debug_Message('Drag End'); 
 }
 
@@ -6844,6 +7048,7 @@ function OnFreeDrawDrag(evt, ui)
 	 if (bDraw != true)
          return; 
 	 var objType = gCurrentObjectSelected.classList[1];
+	 var shapeType = gCurrentObjectSelected.classList[0];
 	 if(gEnableMultiSelection == true)
 		 objType = 'RECTANGLE'; 
      var node = evt.target;
@@ -6896,8 +7101,25 @@ function OnFreeDrawDrag(evt, ui)
 		//gCurrSelectedObjectDim.height = Y - gCurrSelectedObjectDim.y;
 		gCurrSelectedObjectDim.width = newWidth; 
 		gCurrSelectedObjectDim.height = newHeight;
-		if((gCurrSelectedObjectDim.width > 0) && (gCurrSelectedObjectDim.height >0 ) )
+		
+		if(shapeType == 'SVG_PATH_OBJECT'){
 			GX_SetRectObjectDim(gCurrentObjectSelected, gCurrSelectedObjectDim); 
+		}
+		else {
+			if( newWidth < 0 ){
+				newWidth = Math.abs(newWidth); 
+				gCurrSelectedObjectDim.x = gOrigPoint.x - newWidth; 
+			}
+			if( newHeight < 0 ){
+				newHeight = Math.abs(newHeight); 
+				gCurrSelectedObjectDim.y = gOrigPoint.y - newHeight; 
+			}
+			gCurrSelectedObjectDim.width = newWidth; 
+			gCurrSelectedObjectDim.height = newHeight; 
+			//if((gCurrSelectedObjectDim.width > 0) && (gCurrSelectedObjectDim.height >0 ) )
+			GX_SetRectObjectDim(gCurrentObjectSelected, gCurrSelectedObjectDim); 
+		}
+			
 		return ;		
 	}
 	 
@@ -7350,6 +7572,7 @@ function GX_SetMarkerNodeSelection(markerNode, bFlag)
 		//make the divmarker node visible here 
 		//$(gCurrGripperSel).css({visibility: 'hidden'});
 		$(gCurrGripperSel).hide(); 
+		$(gDivPathMarkerSel).show(); 
 		var currDim = GX_GetRectObjectDim(markerNode); 
 		GX_SetRectObjectDim($(gDivPathMarkerSel)[0], currDim); 
 		markerNode.setAttribute('visibility', 'hidden'); 
@@ -7575,11 +7798,11 @@ function OnGradPointClick(evt) {
         else
         {
         	gLineNode = document.getElementById('LG_INDICATOR_LINE');                   
-            if (node.id == 'START_POINT') {
+            if (node.id == 'LG_START_POINT') {
                 gInitLinePoint.x = new Number(gLineNode.getAttribute('x1'));
                 gInitLinePoint.y = new Number(gLineNode.getAttribute('y1'));
             }
-            else if (node.id == 'END_POINT') {
+            else if (node.id == 'LG_END_POINT') {
                 gInitLinePoint.x = new Number(gLineNode.getAttribute('x2'));
                 gInitLinePoint.y = new Number(gLineNode.getAttribute('y2'));
             }
@@ -7638,11 +7861,11 @@ function OnGradDragStart(evt){
 	        else
 	        {
 	        	gLineNode = document.getElementById('LG_INDICATOR_LINE');                   
-	            if (node.id == 'START_POINT') {
+	            if (node.id == 'LG_START_POINT') {
 	                gInitLinePoint.x = new Number(gLineNode.getAttribute('x1'));
 	                gInitLinePoint.y = new Number(gLineNode.getAttribute('y1'));
 	            }
-	            else if (node.id == 'END_POINT') {
+	            else if (node.id == 'LG_END_POINT') {
 	                gInitLinePoint.x = new Number(gLineNode.getAttribute('x2'));
 	                gInitLinePoint.y = new Number(gLineNode.getAttribute('y2'));
 	            }
@@ -7690,7 +7913,7 @@ function OnGradMouseMove(evt) {
 
             newX = gInitLinePoint.x + relPosition.x;
             newY = gInitLinePoint.y + relPosition.y;
-            if (node.id == 'START_POINT') {
+            if (node.id == 'LG_START_POINT') {
                 
                 var gradX1 = Math.round((newX * 100) / gGradWidth);
                 if( (gradX1 < 0) || (gradX1 > 100) )
@@ -7703,7 +7926,7 @@ function OnGradMouseMove(evt) {
                 GX_SetObjectAttribute(gGradientObj.GradResourceNode, 'x1', gradX1 + '%', true, false);
                 GX_SetObjectAttribute(gGradientObj.GradResourceNode, 'y1', gradX1 + '%', true, false);
             }
-            else if(node.id == 'END_POINT') {              
+            else if(node.id == 'LG_END_POINT') {              
                 var gradX2 = Math.round((newX * 100) / gGradWidth);
                 if( (gradX2 < 0) || (gradX2 > 100) )
                 	return ; 
@@ -7788,16 +8011,20 @@ function GX_ShowGradWindow(gradID, gradType)
 {	    
      var JQSel = '#gradientDlg';  
      gCurrentGradientType = gradType; 
+     
      var rgnode = document.getElementById('RGSpecific'); 
  	 var lgnode = document.getElementById('LGSpecific');
  	 gGradientObj = new sGradientWidget('gradientWidget', gradID);
  	 if(gbNewGradObject == false){
  		var JQSel = "#" + 'gradTitleIP';        
         WAL_disableWidget('gradTitleIP', 'data-jqxInput', false, true);
+        $('#gradcontainer').removeClass('disabledState');  
+        
  	 }
  	 else{
  		var JQSel = "#" + 'gradTitleIP';        
         WAL_disableWidget('gradTitleIP', 'data-jqxInput', false, false);
+        $('#gradcontainer').addClass('disabledState');        
  	 }
      if(gradType == 'LINEAR_GRADIENT')
      {
@@ -7819,10 +8046,10 @@ function GX_ShowGradWindow(gradID, gradType)
      	 x2 = 150; 
      	 y2 = 150;     	 
      	 
-     	JQSel = '#START_POINT'; 
+     	JQSel = '#LG_START_POINT'; 
      	$(JQSel).show(); 
      	
-     	JQSel = '#END_POINT'; 
+     	JQSel = '#LG_END_POINT'; 
      	$(JQSel).show(); 
      	
      }
@@ -7844,9 +8071,11 @@ function GX_ShowGradWindow(gradID, gradType)
      //gGradientObj.UpdateUI(gGradientObj.GradParam);
      var pos = $('#rightpanel').position(); 
      var width = $('#rightpanel').width(); 
+     var childWidth = $('#gradientDlg').width();
      var fillpos = $('#fillcolorDDL').position(); 
  	 pos.top = pos.top + fillpos.top; 
- 	 pos.left = pos.left - 50 + Math.round(width/2); 
+ 	// pos.left = pos.left - 50 + Math.round(width/2); 
+ 	 pos.left = pos.left + Math.round(width) - childWidth; 
      WAL_setWindowAtPos('gradientDlg', pos.left, pos.top); 
      WAL_showModalWindow('gradientDlg', "GX_GradDlgOK", "");    
      gGradientObj.UpdateUI(gGradientObj.GradParam);
@@ -8797,8 +9026,7 @@ function GX_AddNewImageSVG(URL){
 	GX_AddNewSVGObject('image', URL,'newImageCallbackFn'); 
 	newImageCallbackFn = function(respStr){
 		//WAL_showModalWindow(gImageDlg,"GX_ImageLoadOK", "" );	
-		GX_ReloadSVG(gNewObjectID, true); 
-		
+		GX_ReloadSVG(gNewObjectID, true); 		
 	}
 	//BlockUIinAjax(true);	 
 }
@@ -9004,24 +9232,26 @@ function OnKeyDown(event){
 	var pos = $(gCurrGripperSel).position(); 
 	var left = new Number(pos.left); 
 	var top =  new Number(pos.top); 
-	var keyID = event.keyIdentifier.toUpperCase(); 
+	//var keyID = event.keyIdentifier.toUpperCase(); 
+	var keyID = event.key.toUpperCase(); 
+	
 	bMoveObject = false; 
 	var relX = new Number(0);
 	var relY = new Number(0);  
 	switch(keyID){
-	case 'LEFT':
+	case 'ARROWLEFT':
 		relX = -1; 
 		bMoveObject = true;  
 		break;
-	case 'RIGHT':
+	case 'ARROWRIGHT':
 		relX = 1; 
 		bMoveObject = true; 
 		break; 
-	case 'UP':
+	case 'ARROWUP':
 		relY = -1; 
 		bMoveObject = true; 
 		break; 
-	case 'DOWN':
+	case 'ARROWDOWN':
 		relY = 1; 
 		bMoveObject = true; 
 		break;
@@ -9062,6 +9292,7 @@ function GX_MoveSelectedObject(relX, relY){
         newObjDim.rotate = gCurrSelectedObjectDim.rotate;          
         newObjDim.rotCentreX = Math.round(newObjDim.x + newObjDim.width/2);
         newObjDim.rotCentreY = Math.round(newObjDim.y + newObjDim.height/2);
+        newObjDim.radius = gCurrSelectedObjectDim.radius;   
         if(gCurrentObjectSelected.classList[1]== 'ELLIPSE')
         {
         	//newObjDim.x = newObjDim.rotCentreX;
@@ -9500,10 +9731,11 @@ function GX_InitializePropertyTab(){
 	
 	 WAL_createNumberInput("lposIP", '80px', gDDLHeight,  "GX_EditBoxValueChange", true, 1280, 0,1);
 	 WAL_createNumberInput("tposIP", '80px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1);
+	 WAL_createNumberInput("radiusIP", '80px', gDDLHeight,  "GX_EditBoxValueChange", true, 50, 0,1);
 	 
 	 WAL_createNumberInput("widthIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 1280, 0,1);
-	 WAL_createNumberInput("heightIP", '80px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1); 
-	    
+	 WAL_createNumberInput("heightIP", '80px', gDDLHeight, "GX_EditBoxValueChange", true, 1000, 0,1); 	  
+	
 	 
 	 WAL_createNumberInput("rotateIP", '80px', gDDLHeight, "GX_EditBoxValueChange",true, 180, -180,1);	   
 	 var fillValue = ['None', 'Solid','Linear Gradient', 'Radial Gradient'];	 
@@ -9558,7 +9790,7 @@ function GX_InitializePropertyTab(){
 	    }	        
 	 WAL_createDropdownList('strokedashDDL', '80', gDDLHeight, false, listBoxSrc, "GX_DDLHandler", '100', '120');    
 	 WAL_createSlider('opacitySlider', '130px','12px', true, 0, 100, 1,25, true, false ,'GX_OpacitySliderHandler', false, '');
-	 
+	 WAL_setSliderValue('opacitySlider', '100'); 	
 	
 	 WAL_createCheckBox('pathclose', 'GX_CheckValueChange', '110', '20' , '13', false, false);
 	 WAL_createNumberInput("radiusXIP", '50px', gDDLHeight, "GX_EditBoxValueChange",true,300,0,1);
@@ -9667,6 +9899,7 @@ function GX_SetDefualtPropOnUI(){
 	WAL_setNumberInputValue("rotateIP", 0, false);
 	WAL_SetItemByValueInList('fillcolorDDL', 'None', 'true');	
 	WAL_setNumberInputValue('strokeWeightIP', 1, false);
+	WAL_setNumberInputValue("radiusIP", 0, false);
 	$('#fillopacityValue')[0].innerHTML = '100'; 
 	
 	WAL_setSliderValue('opacitySlider', 100); 	
@@ -9688,13 +9921,20 @@ function GX_SetPropertyonUI(objNode){
 	WAL_setNumberInputValue("tposIP", dim.y, false);
 	WAL_setNumberInputValue("widthIP", dim.width, false);
 	WAL_setNumberInputValue("heightIP", dim.height, false);
+	WAL_setNumberInputValue("radiusIP", dim.radius, false);
+	WAL_hideWidget('roundRadProp', true); 
 	if( (objectType == 'RECTANGLE')|| (objectType == 'ELLIPSE') || (objectType == 'IMAGE') ) {		
 		WAL_disableWidget('widthIP', 'data-jqxNumberInput', false, false); 
 		WAL_disableWidget('heightIP', 'data-jqxNumberInput', false, false); 
+		WAL_disableWidget('heightIP', 'data-jqxNumberInput', false, false); 
+		if(objectType == 'RECTANGLE')
+			WAL_hideWidget('roundRadProp', false); 
+		
 	}
 	else{
 		WAL_disableWidget('widthIP', 'data-jqxNumberInput', false, true); 
 		WAL_disableWidget('heightIP', 'data-jqxNumberInput', false, true); 
+		
 	}	
 	WAL_setNumberInputValue('rotateIP', dim.rotate, false); 
 	if( (objectType == 'VERT_LINE_PATH')|| (objectType == 'HOR_LINE_PATH') 
@@ -9783,11 +10023,26 @@ function GX_RightTabHandler(tabIndex){
 	if(tabIndex == 0){
 		bTreeWidgetDisplay = true;
 		setTimeout(function(){			
-			WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
+			//WAL_setTreeItemSelection(gTreeNodeID, 'TM_BASEGROUP');
 			}, 250); 		
 	}
-	else if(tabIndex == 1)
+	else if(tabIndex == 1){
 		bTreeWidgetDisplay = false; 
+		var objectType = 0;
+		var objectClass = 0; 
+		if(gCurrentObjectSelected){
+			objectType = gCurrentObjectSelected.classList[1]; 
+			objectClass = gCurrentObjectSelected.classList[0]; 
+		}		
+		 if(objectType == 'TEXT'){
+			 WAL_TriggerEvent('click', 'editTextBtn'); 		
+		 }
+		 if(objectClass = 'SVG_PATH_OBJECT'){
+			 WAL_TriggerEvent('click', 'patheditBtn'); 	
+		 }
+		 
+	}
+		
 	else if(tabIndex == 2){
 	//	if(gCurrentObjectSelected)
 		//	GX_SetSelection(gCurrentObjectSelected, false, false); 
@@ -10017,7 +10272,8 @@ function GX_OpenHelp(URL){
 
 function GX_ShowTooltip(bFlag){
 	if(bFlag == true){
-		$('[data-toggle="tooltip"]').tooltip({html:true, trigger:'hover'}); 
+		$('[data-toggle="tooltip"]').tooltip({html:true, trigger:'hover', delay: {show: 500, hide: 100}
+		}); 
 		  $("[data-toggle='tooltip']").on('shown.bs.tooltip', function(){
 			var mytext = $(".tooltip-inner").html(); 
 			if(mytext){
@@ -10048,3 +10304,60 @@ function GX_ReloadWorkspace(){
 	var urlStr = 'GX_Editor.html?'+ gSVGFilename; 
 	window.open(urlStr, '_self',''); 	
 }
+
+function OnEditBoxChange(event){
+	var nodeID = event.target.id; 
+	if(nodeID == 'gradTitleIP'){
+		var JQSel = '#gradTitleIP'; 
+		var value = $(JQSel).val(); 
+		if(value.length > 0 ){
+			//if(value[0] != ' ')
+				$('#gradcontainer').removeClass('disabledState'); 
+		}
+			
+		else		
+			$('#gradcontainer').addClass('disabledState'); 
+
+	}
+}
+
+function GX_PublishFile(){
+	//_rm for local testing purpose	
+	GXRDE_Publish('fnPublish'); 
+}
+
+function OnPubWindowShow(event){	
+	GXRDE_GetPublishedList('fnPublishedCallback');	 
+}
+
+
+function fnPublishedCallback(respstr){
+	if(!respstr){
+		 Debug_Message('No Data Available'); 
+		 return; 
+	}		
+	gSVGImportList = respstr; 	
+	var source =
+	    {
+	        datatype: "json",
+	        datafields: [
+	            { name: 'ID', type: 'string' },
+	            { name: 'pubdate', type: 'string'},
+	            { name: 'title', type: 'string' },           
+	            { name: 'publishedURL', type: 'string'}
+	        ],
+	        id: 'ID',
+	        localdata : gSVGImportList	         
+	    };		      
+	    WAL_setSourceColumn('publistgrid', source);
+	WAL_ClearGridSelection('publistgrid'); 
+	WAL_showModalWindow('publishedListDlg', "", "" );	
+	
+}
+
+function OnGridURLClick(event){
+	var aNode = event.target;
+	var URL = aNode.getAttribute('data-href'); 	
+	window.open(URL); 
+}
+	

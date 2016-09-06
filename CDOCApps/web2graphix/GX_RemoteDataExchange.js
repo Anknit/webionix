@@ -278,4 +278,27 @@ function GXRDE_GetSVGImportList()
  return respstr; 
 }
 
+function GXRDE_GetPublishedList(callbackFn){
+	var respstring = AJX_RequestWithReponseCallback("text", "WKSM", "110", '', callbackFn);
+    if (respstring == "FAIL") {
+        return null; 
+    }   
+    return respstring; 
+}
 
+function GXRDE_Publish(callbackFn)
+{
+	var respstring = AJX_RequestWithReponseCallback("text", "PUB", "801", '', callbackFn);
+    if (respstring == "FAIL") {
+        return null; 
+    }   
+    return respstring; 
+}
+function GXRDE_ImportPublishedContent(filename, callbackFn)
+{
+	var respstring = AJX_RequestWithReponseCallback("text", "PUB", "802", filename, callbackFn);
+    if (respstring == "FAIL") {
+        return null; 
+    }   
+    return respstring; 
+}

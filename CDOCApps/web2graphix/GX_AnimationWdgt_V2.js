@@ -211,8 +211,9 @@ gReverseOffsetList['Top'] = 0;
 gReverseOffsetList['Center'] = 1;
 gReverseOffsetList['Bottom'] = 2;
 
-var gRotAnimTransfValue = 0; 
+//var gRotAnimTransfValue = 0; 
 var gRotAnimObjectNode = 0; 
+var gRotInitTransProp =  0; 
 
 var gMaxKeytimesInterval = new Number(10); 
 var gKeytimesValues ='0;.1;.2;.3;.4;.5;.6;.7;.8;.9;1'; 
@@ -529,7 +530,7 @@ function GX_GetAnimParamsFromUI(inputParam)
 			 if(animParams.bPathVisible == false){			
 				 GX_SetObjectAttribute(pathNode, 'stroke-opacity', '0.5', true, true);
 				 GX_SetObjectAttribute(pathNode, 'visibility', 'hidden', true, true);
-				 var attrArray = [['visibility', 'hidden'],['stroke-opacity', '0.5']]; 
+				 var attrArray = [['visibility', 'visible'],['stroke-opacity', '0.5']]; 
 				var retval =  GXRDE_updateSVGObject(pathNode.id, attrArray); 
 			 }				
 			 else{	
@@ -1469,7 +1470,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		var newAnimID = motionAnimGroupID + '_V'; 
 		attrData = ['title','Invisible Animation'];  
 		visAnimAttr.push(attrData); 		 
-		attrData = ['dur','0.5s'];  
+		attrData = ['dur','0.2s'];  
 		visAnimAttr.push(attrData);		 
 		attrData = ['calcMode','linear'];  
 		visAnimAttr.push(attrData);		    
@@ -1487,7 +1488,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		visAnimAttr.push(attrData);
 		attrData = ['begin',beginval];  
 		visAnimAttr.push(attrData); 
-		attrData = ['from','hidden'];  
+		attrData = ['from','visible'];  
 		visAnimAttr.push(attrData); 
 		attrData = ['to','visible'];  
 		visAnimAttr.push(attrData); 
@@ -1495,7 +1496,7 @@ function GX_RemoveAnimInfoFromList(animID)
 		visAnimAttr.push(attrData); 		
 		attrData = ['attributeName',"visibility"]; 
 		visAnimAttr.push(attrData); 
-		attrData = ['from',"hidden"]; 
+		attrData = ['from',"visible"]; 
 		visAnimAttr.push(attrData); 
 		attrData = ['to',"visible"]; 
 		visAnimAttr.push(attrData); 		
@@ -2541,7 +2542,7 @@ function GX_RemoveAnimInfoFromList(animID)
 						 //get the object ID 
 						var objID = motionNode.targetElement.id; 
 						if(attrArray[i][1] == 'OnBeginAnimation(evt)')
-							var objattrArray = [['visibility', 'hidden']]; 
+							var objattrArray = [['visibility', 'visible']]; 
 						else
 							var objattrArray = [['visibility', 'visible']];						
 						var retval =  GXRDE_updateSVGObject(objID, objattrArray); 						 
@@ -2645,7 +2646,7 @@ function GX_RemoveAnimInfoFromList(animID)
 					 if(attrArray[i][0] == 'onbegin'){
 						var objID = animNode1.targetElement.id; 
 						if(attrArray[i][1] == 'OnBeginAnimation(evt)')
-							var objattrArray = [['visibility', 'hidden']]; 
+							var objattrArray = [['visibility', 'visible']]; 
 						else
 							var objattrArray = [['visibility', 'visible']]; 
 						var retval =  GXRDE_updateSVGObject(objID, objattrArray);
@@ -2721,7 +2722,7 @@ function GX_RemoveAnimInfoFromList(animID)
 					 if(attrArray[i][0] == 'onbegin'){
 						var objID = animNode1.targetElement.id; 
 						if(attrArray[i][1] == 'OnBeginAnimation(evt)')
-							var objattrArray = [['visibility', 'hidden']]; 
+							var objattrArray = [['visibility', 'visible']]; 
 						else
 							var objattrArray = [['visibility', 'visible']]; 
 						var retval =  GXRDE_updateSVGObject(objID, objattrArray);
@@ -2750,7 +2751,7 @@ function GX_RemoveAnimInfoFromList(animID)
 				 if(attrArray[i][0] == 'onbegin'){
 						var objID = animNode.targetElement.id; 
 						if(attrArray[i][1] == 'OnBeginAnimation(evt)')
-							var objattrArray = [['visibility', 'hidden']]; 
+							var objattrArray = [['visibility', 'visible']]; 
 						else
 							var objattrArray = [['visibility', 'visible']]; 
 						var retval =  GXRDE_updateSVGObject(objID, objattrArray);
@@ -2830,7 +2831,8 @@ function GX_RemoveAnimInfoFromList(animID)
   	//get the previous Sibling 
   	//set that into animation mode 
   	gRotAnimObjectNode = document.getElementById(objectID); 
-	gRotAnimTransfValue = gRotAnimObjectNode.getAttribute('transform');
+	//gRotAnimTransfValue = gRotAnimObjectNode.getAttribute('transform');
+	gRotInitTransProp = GX_GetTransformProperty(gRotAnimObjectNode, 'translate'); 
   	if(animnode.nodeName == 'g'){
   		var animType = animnode.classList[1]; 
   		if(animType == 'PATH_MOTION'){
@@ -2875,7 +2877,8 @@ function GX_RemoveAnimInfoFromList(animID)
   //	var animInfo = GX_GetAnimInfoByID(animID); 
   //	if(animType.toUpperCase()== 'ROTATE'){  		
   		gRotAnimObjectNode = document.getElementById(objectID); 
-  		gRotAnimTransfValue = gRotAnimObjectNode.getAttribute('transform'); 
+  		//gRotAnimTransfValue = gRotAnimObjectNode.getAttribute('transform'); 
+  		gRotInitTransProp = GX_GetTransformProperty(gRotAnimObjectNode, 'translate');
   //	}
   	var restartval =  animnode.getAttribute('restart');
   	animnode.setAttribute('restart', 'whenNotActive');
@@ -3948,9 +3951,10 @@ function GX_OnAnimationEndHandler(evt)
 		 gCurrAnimNode.setAttribute('fill', 'remove');
 		 GX_RestoreAnimationObject(gCurrAnimNode.id); 
 		 GX_RestoreMotionObject(gCurrAnimNode);
-		 if(gRotAnimTransfValue){
-			 gRotAnimObjectNode.setAttribute('transform', gRotAnimTransfValue); 
-			 gRotAnimTransfValue =0; 
+		 if(gRotInitTransProp){
+			 //gRotAnimObjectNode.setAttribute('transform', gRotAnimTransfValue);
+			 GX_SetTransformProperty(gRotAnimObjectNode, 'all', gRotInitTransProp); 
+			 gRotInitTransProp =0; 
 			 gRotAnimObjectNode = 0; 
 		 }
 		 gbAnimationEnd = true; 		

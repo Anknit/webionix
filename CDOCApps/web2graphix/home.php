@@ -41,7 +41,7 @@
             <div class="hero-container text-center container">
                 <h1>Build amazing animations, faster.</h1>
                 <h4 class="width-sm text-grey padding-md-all">
-                    <strong>Noxta</strong> is a web based application, to allow designers create graphics and animations assets for usage on Web.
+                    <strong>Webionix</strong> is a web based application, to allow designers create graphics and animations assets for usage on Web.
                 </h4>
                 <button class="btn btn-info btn-lg btn-flat" id='launchAppBtn' onclick='OnBtnclick(event)' >Start Building Now !</button>
             </div>
@@ -56,7 +56,7 @@
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner text-center" role="listbox">
                     <div class="item active text-center">
-                        <object type="image/svg+xml" data="../SharedDocs/DemoSVG/DemoAnim.svg" height="500px" width="auto"></object>
+                        <object type="image/svg+xml" data="../SharedDocs/DemoSVG/DemoAnim.svg" height="300px" width="auto"></object>
 <!--
                         <img src="../SharedDocs/DemoSVG/DemoAnim.svg" width="auto" height="auto">
 -->
@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="item text-center">
-                        <object type="image/svg+xml" data="../SharedDocs/DemoSVG/Demonanim2.svg" height="500px" width="auto"></object>
+                        <object type="image/svg+xml" data="../SharedDocs/DemoSVG/Demonanim2.svg" height="300px" width="auto"></object>
 <!--
                         <img src="../SharedDocs/DemoSVG/Demonanim2.svg" width="auto" height="auto">
 -->
@@ -76,7 +76,7 @@
                     </div>
 
                     <div class="item text-center">
-                        <object type="image/svg+xml" data="../SharedDocs/DemoSVG/Demonanim3.svg" height="500px" width="auto"></object>
+                        <object type="image/svg+xml" data="../SharedDocs/DemoSVG/Demonanim3.svg" height="300px" width="auto"></object>
 <!--
                         <img src="../SharedDocs/DemoSVG/Demonanim3.svg" width="auto" height="auto">
 -->

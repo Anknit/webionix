@@ -8,7 +8,8 @@ $USER_DATA_PATH="../USER_DATA";
 //$IMAGE_PATH="http://54.165.155.215/CDOC_APPS_AWS/CommonCSS";
 $DUMMY="."; 
 
-$urlOrig = $_SERVER['HTTP_ORIGIN'];
+//$urlOrig = $_SERVER['HTTP_ORIGIN'];
+$urlOrig = $_SERVER['HTTP_HOST']; 
 $retval = stristr($urlOrig, 'localhost'); 
 if($retval == true){	
 	$DBAUTHOR = 'rajarshi';
@@ -25,6 +26,9 @@ else{
 	$DBNAME = 'cdocapptestdb';
 	$DBHOSTADDR ='172.31.61.104';
 	$DBPORT = '3306';
+	$AWS_API_AK = 'AKIAJCQH36HXZACXCX7A';
+	$AWS_API_SK = 'dSHGRrejj8fJGiT5TA3VAZnAWXx+dUMnaPpOVYyi';
+	$AWS_BUCKET_NAME = 'gallery.webionix.com';  
 }
 	
 

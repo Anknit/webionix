@@ -15,6 +15,7 @@ include_once "GX_PageMgrModule.php";
 include_once "Debuglog.php"; 
 
 
+
 //include "dummy.php"; 
 
 	$retval = CDOC_Session_Validate();
@@ -59,9 +60,14 @@ include_once "Debuglog.php";
    		else if($reqid == '501')
    		{   			
    			$retval  = CDOC_Session_GetUsername($respdata);   			
-   		}
-
-   		
+   		}  		
+   	}
+   	else if($modid == 'PUB'){
+   		LogString("Request Arrived here at PUB");
+   		require "GX_S3ContentMgr.php";
+   		$str =  "reqID = " . $reqid . 'data= ' .  $respdata;
+   		LogString($str);
+   		$retval = GX_PUB_ProcessRequest($reqid, $respdata );   		
    	}
    
    //now send the status code

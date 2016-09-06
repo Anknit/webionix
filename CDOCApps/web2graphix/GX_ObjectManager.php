@@ -146,7 +146,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 	switch($objectTypeVal)
 	{
 		case 'RECTANGLE':
-			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT RECTANGLE ROTATE,0', 'x'=> '10','y'=>'10', 'width'=>'0', 'height'=>'0', 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0', 'visibility'=>'visible');
+			$attrdefinition = array("id"=>$objectIDVal, "class"=>'SVG_SHAPE_OBJECT RECTANGLE ROTATE,0', 'x'=> '10','y'=>'10', 'width'=>'0', 'height'=>'0', 'transform'=>'translate(0 0) scale(1 1) rotate(0 0 0)', 'fill'=>'none', 'stroke'=>'black', 'stroke-width'=>'3','stroke-dasharray'=>'none', 'stroke-linejoin'=>'miter','stroke-opacity'=>'1', 'opacity'=>'1.0', 'visibility'=>'visible', 'rx'=>'0', 'ry'=>'0');
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'rect',$objectIDVal,0, $parentIDVal, $attrdefinition,''); 
 			break; 
 		case 'IMAGE':
@@ -225,7 +225,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'path',$objectIDVal, 0, $parentIDVal, $attrdefinition,'');
 			break;
 		case 'LINEAR_GRADIENT':
-			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_GRAD_OBJECT LINEAR_GRADIENT Default:Linear', 'x1'=>'0%','y1'=>'0%', 'x2'=>'100%'
+			$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_GRAD_OBJECT LINEAR_GRADIENT ', 'x1'=>'0%','y1'=>'0%', 'x2'=>'100%'
 			, 'y2'=>'100%', 'spreadMethod'=>'pad');		
 			$tagval = " "; 
 			$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'linearGradient',$objectIDVal,0, $parentIDVal, $attrdefinition,$tagval);
@@ -269,7 +269,7 @@ function GX_OBJ_AddNewSVGObject(&$respData)
 			$respData = $SVGDom->saveXML($objNode);
 			break;			
 			case 'RADIAL_GRADIENT':
-				$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_GRAD_OBJECT RADIAL_GRADIENT Default:Radial', 'cx'=>'50%','cy'=>'50%', 'r'=>'100%'
+				$attrdefinition = array('id'=>$objectIDVal, 'class'=>'SVG_GRAD_OBJECT RADIAL_GRADIENT ', 'cx'=>'50%','cy'=>'50%', 'r'=>'100%'
 				, 'fx'=>'50%','fy'=>'50%', 'spreadMethod'=>'pad');				
 				$tagval = " ";
 				$respData = GX_COMMON_AddSVGElement($SVGDom, $SVGFileName, 'radialGradient',$objectIDVal,0, $parentIDVal, $attrdefinition,$tagval);

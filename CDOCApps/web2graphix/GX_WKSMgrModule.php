@@ -1,7 +1,7 @@
 <?php
 require_once "GX_CommonAPI.php"; 
 require_once __DIR__.'./../CommonPHP/fileexplorer.php';
-
+include_once "GX_ContentInfo.php";
 
 function GX_WKS_ProcessRequest($ReqID, &$responseData)
 {
@@ -63,6 +63,10 @@ function GX_WKS_ProcessRequest($ReqID, &$responseData)
 	{
 		//$retval = GX_WKS_DowloadCurrentFile($responseData);
 		//return $retval;
+	}
+	else if($ReqID == '110'){
+		$retval = GX_WKS_getListofPublishedContent($responseData); 
+		return $retval; 
 	}
 }
 
@@ -244,7 +248,9 @@ function GX_WKS_CreateSVGFile(&$respData)
 {
 	// check if the Project folder already exists
 	$svgFileName = $respData; 
-	$Projdir = $_SESSION['wksdir'].$_SESSION['pathSeparator'].'SVG';	
+	$Projdir = $_SESSION['wksdir'].$_SESSION['pathSeparator'].'SVG';
+	$title = 'Default Title';
+	$descr = "Default Desciption";	
 	//if yes then just return
 	$retval = is_dir($Projdir);
 	if($retval == false)
@@ -354,6 +360,15 @@ function GX_WKS_CreateSVGFile(&$respData)
 	$respData = "";		
 	$respData = $_SESSION['svg_xml_dom']->save($_SESSION['svg_xml_FileName']);
 	$respData = $_SESSION['svg_xml_dom']->saveXML($svgNode);	
+	
+	//update the contentinfo database here 
+
+	$infoArr = array('userID'=> $_SESSION['userid'],
+			'name'=>$svgFileName,
+			'title'=>$title,
+			'descr'=>$descr			
+			); 
+	$retval = GX_AddContentInfo($infoArr); 
 	return true;
 }
 
@@ -361,8 +376,27 @@ function GX_WKS_CreateSVGFile(&$respData)
 function GX_WKS_getListofSVGFile(&$responseData)
 {
 	$dirpath = $_SESSION['projDataPath'];
-	$assettype = $responseData;
+	$assettype = $responseData;	
 	$responseData = getassetfilelist($dirpath, $assettype);
+	//rm right now go with old implementation so that files could be easily imported
+	/*
+	if(isset($_SESSION['userid'])){
+		$responseData = ''; 
+		$d_data = GX_ListofContent($_SESSION['userid']);
+		if($d_data){
+			$arrlen = sizeof($d_data); 
+			for($i=0;  $i < $arrlen; $i++){
+				$fname = $d_data[$i]['filename'];
+				if($i < $arrlen-1)
+					$responseData = $responseData . $fname . '#'; 
+				else
+					$responseData = $responseData . $fname ;
+			}//for	
+			return true	; 	
+		}//ifd_data
+	}
+	$responseData = 0;*/
+	 
 	return true;
 }
 
@@ -433,14 +467,51 @@ function GX_WKS_OpenSVGFile(&$respData)
 	$respData = $_SESSION['svg_xml_dom']->saveXML($svgNode);
 	//$_SESSION['pathHTMLFile'] = $_SESSION['baseWKSURI'] . 'USER_DATA/' . 'SVG' . '/' . $svgFileName;
 	$_SESSION['pathHTMLFile'] = $_SESSION['userProjectDataPath'] . $svgFileName; 
+	
+	$cinfo = GX_GetContentInfo($svgFileName, $_SESSION['userid']); 
+
+	//now update the modification time right away
+	//just for testing remove it later on 
+	if($cinfo){		
+		$_SESSION['contentID'] = $cinfo['ID'];
+		$contentID = $_SESSION['contentID'];
+		/*$infoArr = array(
+				'title'=>"New Title",
+				'descr'=>"Heavy acid rain will cause it to defer",
+				); 
+		GX_UpdateMetadata($contentID, $infoArr);*/
+		/*$url = 'http://gallery.webionix.com/published/roger' . $svgFileName; 
+		$infoArr = array('publishedURL'=>$url);
+		GX_UpdatePublicationInfo($contentID, $infoArr);*/
+			
+
+		
+		GX_UpdateModficationTime($contentID);		
+	} 
+	else{
+		$infoArr = array('userID'=> $_SESSION['userid'],
+				'name'=>$svgFileName,
+				'title'=>"Default Title",
+				'descr'=>"Defualt Description"
+		);
+		$retval = GX_AddContentInfo($infoArr);
+		//tap the new value of contentID here 
+		$cinfo = GX_GetContentInfo($svgFileName, $_SESSION['userid']);
+		$_SESSION['contentID'] = $cinfo['ID'];
+		
+	}
+	
+	
+	//GX_UpdateContentInfo($cinfo['ID'], $cinfo);
+	//_rm only for testing purpose remove it surely 
+	$retval = GX_ListofPublishedURL($_SESSION['userid']); 
 	return true;
 }
 
 
 function GX_WKS_deleteSVGFile(&$respdata)
 {
-	$fname = $respdata;
-	
+	$fname = $respdata;		
 	$fpath = $_SESSION['projDataPath'] . $_SESSION['pathSeparator'].$fname;	
 	deleteassetfile($fpath);
 	
@@ -448,6 +519,12 @@ function GX_WKS_deleteSVGFile(&$respdata)
 	$xmlfname = $xmlfname . 'xml';
 	$fpath = $_SESSION['projDataPath'] . $_SESSION['pathSeparator'].$xmlfname;
 	deleteassetfile($fpath);
+	//now dleete from the DB 
+	$info = GX_GetContentInfo($fname, $_SESSION['userid']);
+	if($info){
+		$contentID = $info['ID']; 
+		GX_DeleteContentInfo($contentID);
+	}		
 	$respdata = 'OK';
 	return true;
 }
@@ -635,4 +712,15 @@ function GX_WKS_DowloadCurrentFile($responseData){
 		readfile($filename);
 		exit;
 	}
+}
+function GX_WKS_getListofPublishedContent(&$responseData){
+	$responseData = 0; 
+	if(isset($_SESSION['userid'])){
+		$responseData = GX_ListofPublishedURL($_SESSION['userid']);
+		if($responseData)
+			return true; 
+		else
+			return false; 
+	}	
+	return false; 
 }
