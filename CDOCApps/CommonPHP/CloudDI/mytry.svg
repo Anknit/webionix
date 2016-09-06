@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg SYSTEM "svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="SVGOBJECTCONTAINER" x="0px" y="0px" width="600px" height="400px" viewBox="0 0 600 400" version="1.1">
+		      <title>New SVG File</title><defs id="SVGDEFINITION"> </defs>
+		       <script type="application/ecmascript">
+			          <![CDATA[
+			                   
+			                   function GX_ChangeAnimateMotionSettings(node)
+			                   {    	
+				               	    var motionanimNode = node.nextElementSibling;       
+				               	    var fromval = motionanimNode.getAttribute("from");
+				               	    fromval = fromval.split(",");    
+				               	    var objRef =  node.getAttribute("xlink:href"); 
+				               	    objRef = objRef.substring(1,objRef.length); 				               	       
+				               	    var objNode = document.getElementById(objRef); 
+				               	    var objType = objNode.classList[1]; 
+				               	    if( (objType == "ELLIPSE") || (objType == "CIRCLE") )
+				               	    {
+				               	  	  objNode.setAttribute("cx", fromval[0]); 
+				               	      objNode.setAttribute("cy", fromval[1]);   	  
+				               	    }
+				               	    else if(objType == "RECTANGLE")
+				               	    {
+				               	  	  objNode.setAttribute("x", fromval[0]); 
+				               	      objNode.setAttribute("y", fromval[1]);   	  
+				               	    }
+				               	    else if(objType == "TEXT")
+				               	    {
+				               	  	  objNode.setAttribute("x", fromval[0]); 
+				               	      objNode.setAttribute("y", fromval[1]);   	  
+				               	    }
+				               	    
+				               	    			
+			                   }                 
+							
+					  ]]>
+	          </script>
+	    <defs id="MARKER_GROUP"/> 
+	    <g id="ANIMATION_GROUP" class="ANIMATION_LIST_GROUP"><animate xmlns:xlink="http://www.w3.org/1999/xlink" id="ANIM_123" dur="3s" calcMode="linear" restart="never" repeatCount="0" xlink:href="#SVG_452" fill="freeze" begin="0s" attributeType="XML" attributeName="opacity" from="0.3" to="1"><desc id="DESC_ANIM_123" class="0s">fhdhd</desc></animate></g>
+		<g id="BASEGROUP" class="GROUP BaseGroup" transform="translate(0 0) scale(1 1) rotate(0 0 0)"><ellipse id="SVG_452" class="SVG_SHAPE_OBJECT ELLIPSE ROTATE,0" cx="370" cy="152" rx="47" ry="50" transform="translate(0 0) scale(1 1) rotate(0 0 0)" fill="#9DCE23" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="0.66"/><rect id="SVG_1284" class="SVG_SHAPE_OBJECT RECTANGLE ROTATE,0" x="307" y="78" width="121" height="21" transform="translate(0 0) scale(1 1) rotate(0 0 0)" fill="none" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="1.0"/><path id="SVG_1628" class="SVG_PATH_OBJECT VERT_LINE_PATH ROTATE,0" transform="translate(0 0) scale(1 1) rotate(0 0 0)" d="M184,41 V270" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" opacity="1" fill="none" visibility="visible" marker-start="" marker-mid="" marker-end="" pointer-events="visible"/></g></svg>

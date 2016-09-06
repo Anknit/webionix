@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg SYSTEM "svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="SVGOBJECTCONTAINER" x="0px" y="0px" width="600px" height="400px" viewBox="0 0 600 400" version="1.1">
+		      <title>New SVG File</title><defs id="SVGDEFINITION"> <linearGradient id="SVG_1786" class="SVG_GRAD_OBJECT LINEAR_GRADIENT mygrad1" x1="0%" y1="0%" x2="100%" y2="100%" spreadMethod="pad"> <stop id="SVG_1786_STOP0" class="SVG_STOP_OBJECT" offset="0%" stop-color="#C600D8"/><stop id="SVG_1786_STOP1" class="SVG_STOP_OBJECT" offset="100%" stop-color="#C7CE00"/><stop id="SVG_1786_STOP2" class="SVG_STOP_OBJECT" offset="100%" stop-color="none"/><stop id="SVG_1786_STOP3" class="SVG_STOP_OBJECT" offset="100%" stop-color="none"/></linearGradient><radialGradient id="SVG_616" class="SVG_GRAD_OBJECT RADIAL_GRADIENT grad2" cx="50%" cy="50%" r="100%" fx="50%" fy="50%" spreadMethod="pad"> <stop id="SVG_616_STOP0" class="SVG_STOP_OBJECT" offset="0%" stop-color="#1300E5"/><stop id="SVG_616_STOP1" class="SVG_STOP_OBJECT" offset="100%" stop-color="#D7E200"/><stop id="SVG_616_STOP2" class="SVG_STOP_OBJECT" offset="100%" stop-color="none"/><stop id="SVG_616_STOP3" class="SVG_STOP_OBJECT" offset="100%" stop-color="none"/></radialGradient></defs>
+		       <script type="application/ecmascript">
+			          <![CDATA[
+			                   
+			                   function GX_ChangeAnimateMotionSettings(node)
+			                   {    	
+				               	    var motionanimNode = node.nextElementSibling;       
+				               	    var fromval = motionanimNode.getAttribute("from");
+				               	    fromval = fromval.split(",");    
+				               	    var objRef =  node.getAttribute("xlink:href"); 
+				               	    objRef = objRef.substring(1,objRef.length); 				               	       
+				               	    var objNode = document.getElementById(objRef); 
+				               	    var objType = objNode.classList[1]; 
+				               	    if( (objType == "ELLIPSE") || (objType == "CIRCLE") )
+				               	    {
+				               	  	  objNode.setAttribute("cx", fromval[0]); 
+				               	      objNode.setAttribute("cy", fromval[1]);   	  
+				               	    }
+				               	    else if(objType == "RECTANGLE")
+				               	    {
+				               	  	  objNode.setAttribute("x", fromval[0]); 
+				               	      objNode.setAttribute("y", fromval[1]);   	  
+				               	    }
+				               	    else if(objType == "TEXT")
+				               	    {
+				               	  	  objNode.setAttribute("x", fromval[0]); 
+				               	      objNode.setAttribute("y", fromval[1]);   	  
+				               	    }
+				               	    
+				               	    			
+			                   }                 
+							
+					  ]]>
+	          </script>
+	    <defs id="MARKER_GROUP"/> 
+	    <g id="ANIMATION_GROUP" class="ANIMATION_LIST_GROUP"><animateTransform xmlns:xlink="http://www.w3.org/1999/xlink" id="ANIM_1271" dur="2s" calcMode="linear" restart="never" repeatCount="0" xlink:href="#SVG_678" fill="freeze" begin="0s" attributeType="XML" attributeName="transform" type="translate" values="0 0;195 196" keyTimes="0;1" to="195 196"><desc id="DESC_ANIM_1271" class="0s">sghsgs</desc></animateTransform><animateTransform xmlns:xlink="http://www.w3.org/1999/xlink" id="ANIM_81" dur="2s" calcMode="linear" restart="never" repeatCount="0" xlink:href="#SVG_678" fill="freeze" begin="0s" attributeType="XML" attributeName="transform" type="translate" values="0 0;200 200" keyTimes="0;1"><desc id="DESC_ANIM_81" class="0s">afafa</desc></animateTransform></g>
+		<g id="BASEGROUP" class="GROUP BaseGroup" transform="translate(0 0) scale(1 1) rotate(0 0 0)" opacity="1"><rect id="SVG_678" class="SVG_SHAPE_OBJECT RECTANGLE ROTATE,0" x="392" y="203" width="126" height="67" transform="translate(0 0) scale(1 1) rotate(0 0 0)" fill="url(#SVG_1786)" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="1.0"/><ellipse id="SVG_340" class="SVG_SHAPE_OBJECT ELLIPSE ROTATE,0" cx="203" cy="217.5" rx="60" ry="35.5" transform="translate(0 0) scale(1 1) rotate(0 0 0)" fill="#277CB5" stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" stroke-opacity="1" opacity="1.0"/></g><g id="SVG_530" class="GROUP mynewgroup" transform="translate(0 0) scale(1 1) rotate(0 0 0)" opacity="1"><path id="SVG_681" class="SVG_PATH_OBJECT QUADRATIC_BEZIER ROTATE,0" transform="translate(0 0) scale(1 1) rotate(0 0 0)" d="M135,116 Q197,241 258,116 " stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" opacity="1" fill="url(#SVG_616)" visibility="visible" marker-start="" marker-mid="" marker-end="" pointer-events="visible"/><path id="SVG_338" class="SVG_PATH_OBJECT ELLIPTIC ROTATE,0" transform="translate(0 0) scale(1 1) rotate(0 0 0)" d="M403,121 A100,120 0 0 1 482,164 " stroke="black" stroke-width="3" stroke-dasharray="none" stroke-linejoin="miter" opacity="1" fill="none" visibility="visible" marker-start="" marker-mid="" marker-end="" pointer-events="visible"/></g></svg>
