@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'./../CommonPHP/SSO/php/verify-sign-up.php';
-require_once __DIR__.'./../securimage/securimage.php'; 
+require_once __DIR__.'./../secureimage/securimage.php'; 
 require_once 'GX_SessionMgr.php';
 require_once 'GX_WKSMgrModule.php';
 
