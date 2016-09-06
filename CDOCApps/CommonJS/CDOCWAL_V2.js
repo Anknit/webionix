@@ -1089,6 +1089,20 @@ added . God knows why .
 	 return item; 
  }
  
+ function WAL_getTreeParentItem(treeID, itemID){
+	 var JQSel = "#"+treeID;
+	 var item = WAL_getTreeItem(treeID, itemID); 
+	 var parentItem = $(JQSel).jqxTree('getItem', item.parentElement);
+	 return parentItem; 
+ }
+ 
+ function WAL_getTreeItemType(treeID, itemID){
+	 var JQSel = "#"+treeID;
+	 var item = WAL_getTreeItem(treeID, itemID); 
+	 var type = item.getAttribute('type');
+	 return type;	
+ }
+ 
  function WAL_setTreeItemText(treeID, ItemID, string)
  {
 	 if(bTreeWidgetDisplay != true)
@@ -3399,7 +3413,7 @@ function WAL_createGrid(ID, Width, Height, handlerFnName, rowHeight, bPageable, 
 	$(JQSel).jqxGrid(
 			{
 				width: Width, height: Height, theme: gTheme, columnsresize: true, enabletooltips:true, pageable: bPageable, pagesize: pageSize, rowsheight: rowHeight, groupable: bGroupable, groups: groupname,
-				columnsmenu: true, columns: colArray
+				columnsmenu: true, columns: colArray, enabletooltips: true, showgroupsheader: false
 			}); 
 		
 	$(JQSel).on('rowselect', function (event) 
@@ -3506,16 +3520,39 @@ function WAL_CreateNotification(ID, timeOut, Width){
 /*
  * type == 'info' , 'warning', 'success' , 'error', 'mail', 'time'
  */
-function WAL_ShowNotification(ID,type, msgString, timeout){
+/*
+ * 'top-left' 'top-right', 'bottom-left' , 'bottom-right'
+ */
+function WAL_ShowNotification(ID,type, msgString, timeout, refID, offset, Position, bBlink){
 	var JQSel = '#' + ID; 	
 	$(JQSel).jqxNotification('closeAll');
 	var id = $(JQSel).attr('data-msgnodeid');
 	var msgNode = document.getElementById(id); 
 	msgNode.innerHTML = msgString; 
-	if(type)
-		$(JQSel).jqxNotification({template: type}); 
+	var appendContanerID = ''; 
+	var displayTime = 3000; 
+	if(refID)
+		appendContanerID = '#'+refID; 
+	if(timeout)
+		displayTime = timeout; 
+	var dispOffset = 0; 
+	if(offset)
+		dispOffset = offset; 	
+	var dispPos = 'top-left'; 
+	if(Position)
+		dispPos = Position; 
+	
+	var bBlinkVal = true; 
+	if(bBlink)
+		bBlinkVal = bBlink;
+	$(JQSel).jqxNotification({template: type, autoCloseDelay: timeout, appendContainer: appendContanerID,
+		position: dispPos, notificationOffset: dispOffset, blink: bBlinkVal, animationOpenDelay:500, animationCloseDelay: 1000}); 
+	
+	/*if(type)
+		$(JQSel).jqxNotification({template: type, }); 
 	if(timeout)
 		$(JQSel).jqxNotification({autoCloseDelay: timeout});
+		*/
 	
 	$(JQSel).jqxNotification('refresh');
 	$(JQSel).jqxNotification('open'); 
@@ -3525,3 +3562,30 @@ function WAL_HideNotification(ID){
 	$(JQSel).jqxNotification('closeAll'); 
 }
 
+
+function WAL_ShowPopover(ID, bFlag){
+	
+	var JQSel = '#' + ID;
+	if(bFlag == true)
+		$(JQSel).jqxPopover('open'); 
+	else
+		$(JQSel).jqxPopover('close'); 
+}
+
+var gClickEvent = 0; 
+function WAL_TriggerEvent(eventType, ID){
+	var currentEventToTrigger = 0; 
+	if(eventType == 'click'){
+		if(!gClickEvent){
+			gClickEvent = new MouseEvent(eventType, {
+			    'view': window,
+			    'bubbles': true,
+			    'cancelable': true
+			  });
+		}
+		currentEventToTrigger = gClickEvent; 
+	}
+	
+	$('#' + ID)[0].dispatchEvent(currentEventToTrigger); 
+	
+}
