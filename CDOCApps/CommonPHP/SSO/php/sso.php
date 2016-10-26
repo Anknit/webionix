@@ -42,7 +42,7 @@ if(isset($_POST['type'])	&&	$_POST['type']	==	'signin_verify'	)
 {
 	$securimage = new Securimage();
     if ($securimage->check($_POST['captcha_code']) == false) {
-		echo json_encode(array("success"=>"false","reason"=>"captcha mismatch"));
+		echo json_encode(array("success"=>"false","reason"=>"Captcha mismatch: Please enter the correct text"));
         exit();
     }
 	$retval = sso_signin_verify($_POST['email'],$_POST['password']);	

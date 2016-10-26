@@ -20,41 +20,216 @@ $(document).ready(function(){
 		a={"age":"23"};
 		sso.u="../../../web2graphix/GX_sso.php";		
 		sso.signup_verify(	$("#firstName").val(),	$("#lastName").val(),	a,	$("#password").val(), 'MySSOCallback');
-		
+		BlockUIinAjax(true);
 	});
 });
 
 function MySSOCallback(optype, status){
+			BlockUIinAjax(false);
 			var obj = JSON.parse(status);
 			var URLstr = '../../../web2graphix/WNX_Home.php';
 			if(!URLstr)
 					return;	
+			$('.alert').hide(); 
 			$('#signupSuccessMessage').show(); 		
+				    //open a new window with page title
+			/*var myWindow = window.open(URLstr, '_self', '');			
+			myWindow.focus();
+			*/ 
 }
 </script>
+
+<style>
+  /* latin */
+@font-face {
+		  font-family: 'Montserrat';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Montserrat-Regular'), url(http://fonts.gstatic.com/s/montserrat/v6/zhcz-_WihjSQC0oHJ9TCYPk_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(http://fonts.gstatic.com/s/lato/v11/UyBMtLsHKBKXelqf4x7VRQ.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(http://fonts.gstatic.com/s/lato/v11/1YwB1sO8YE1Lyjf12WNiUA.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+  body {
+      font: 400 15px Lato, sans-serif;
+      line-height: 1.8;
+      color: #818181;
+      text-align: justify;
+      text-justify: inter-word;
+  }
+  h2 {
+      font-size: 24px;
+      text-transform: uppercase;
+      color: #303030;
+      font-weight: 600;
+      margin-bottom: 30px;
+  }
+  h4 {
+      font-size: 19px;
+      line-height: 1.375em;
+      color: #303030;
+      font-weight: 400;
+      margin-bottom: 30px;
+  }  
+  .container-fluid {
+      padding: 60px 50px;
+  }
+	.jumbotron { 
+	    background-color: #BFD1F1 ;/*#000;*/ 
+	    color: #000;
+	    padding: 100px 5px;
+	    font-family: Montserrat, sans-serif;
+	    height:350px; 
+	    
+	}
+   .bg-grey {
+      background-color: #f6f6f6;
+  }
+	.nav{
+		background-color:ddd;
+		color: #fff;
+	}.navbar {
+    margin-bottom: 0;
+    background-color: #f4511e;
+    z-index: 9999;
+    border: 0;
+    font-size: 12px !important;
+    line-height: 1.42857143 !important;
+    letter-spacing: 4px;
+    border-radius: 0;
+}
+/*SSO Widget related */
+.modal-header{background-color:#555}
+
+.sso_widget{
+	/*position:relative;
+	top:0px; */
+	padding-top:45px; 
+}
+.navbar li a, .navbar {
+    color: #fff !important;    
+}
+.navbar li a{
+	font-variant:small-caps; 
+	font-size: 14px;
+}
+.logotext{
+	color:green; 
+	margin-top:0px; 
+	font-weight:bold;
+	font-size: 30px;
+	font-family:'Impact,sans-serif';
+	/*text-shadow: 0 0 1px #0000ff;*/
+}
+.navbar-brand{	
+	
+}
+.navbar-nav li a:hover, .navbar-nav li.active a {
+    color: #f4511e !important;
+   /* background-color: #fff !important;*/
+    text-decoration:underline; 
+}
+
+
+.navbar-default .navbar-toggle {
+    border-color: transparent;
+    color: #fff !important;
+}
+.navbar-text{
+	color:#98AAE0 !important; 
+}
+
+
+.dropdown-menu {
+	color:#ff0000; 
+	background-color:#555
+}
+.carousel-control.right, .carousel-control.left {
+      background-image: none;
+      color: #f4511e;
+  }
+  .carousel-indicators li {
+      border-color: #f4511e;
+      bottom:2px; 
+      position:relative;
+      top:60px;
+  }
+  .carousel-indicators li.active {
+      background-color: #f4511e;
+  }
+   .carousel-inner > .item > img,
+  .carousel-inner > .item > a > img {
+     /* width: 30%;*/
+      margin: auto;
+  }
+  
+  .carousel-caption {
+  	padding-right: 0px; 
+  	position:relative;
+  	top:10px;
+  	left:30px; 
+  	color:#565052; 
+  }
+</style>
+
 </head>
 <body>
-        <nav class="navbar navbar-theme">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>                        
-                    </button>
-                    <a class="pull-left brand-logo" href="./../../../../">
-                        <img src="../../../CommonCSS/icons/Version1/SiteIcons/wnxnotextlogo.png" width='50px' height='50px' style="float:left;margin-right:5px">
-                        <p class="navbar-brand logotext">Noxta</p>
-                    </a>
-                </div>
-                <div class="collapse navbar-collapse" id="myNavbar">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a class="btn-link" href="#" id='signinBtn' onclick='OnBtnclick(event)' data-toggle="modal" data-target="#signupModal">Login</a></li>
-                        <li><a class="btn-link" href="#" id='signupBtn' onclick='OnBtnclick(event)' data-toggle="modal" data-target="#signupModal">Signup</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+<nav class="navbar navbar-default navbar-fixed-top" style='background-color:black'>
+  <div class="container" style='margin-top:5px'>
+    <div class="navbar-header" style='margin-left:-60px'>
+      <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>-->
+      <a class="navbar-brand" href="#myPage" style='margin-top:-15px'><img class="img-responsive" src="../CommonCSS/icons/Version1/SiteIcons/wnxnotextlogo.png" width='50px' height='50px'></a>
+      <p class="navbar-brand logotext" style='color:#f4511e;'>Webionix</p>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-left" style='padding-left:45px'>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#application">Application</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li class='dropdown'><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">Help<span class="caret"></span></a>
+          <ul id='helpmenu' class="dropdown-menu dropdown-menu-center" >
+    		<li><a href="#">FAQs</a></li>
+    		<li><a href="#">Tutorials</a></li>    			
+  		  </ul>
+        </li>
+        
+        <li><a href="#forums">Forums</a></li>
+      </ul>
+      <ul class='nav navbar-nav navbar-right'>        	    	
+      	<p  id="dropdownMenu1" class="navbar-text dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      	Hi Guest kumar 
+    	<span class="caret"></span>
+    	</p>
+    	<ul id='accountinfomenu' class="dropdown-menu dropdown-menu-center" aria-labelledby="dropdownMenu1" >
+    		<li><a href="#">My Account</a></li>
+    		<li><a href="#">My Workspace</a></li>
+    		<li><a href="#">Log-Out</a></li>    		
+  		</ul>
+      </ul>
+      <ul class='nav navbar-nav navbar-right' style='padding-left:50px'>
+      	<button type="button" class="btn btn-default navbar-btn btn-info" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in" aria-hidden="true" style='padding-right:5px'></span>Sign in</button>
+      </ul> 
+    </div>
+  </div>
+</nav>
 
 <!-- Home section -->
 <div id='home' class='container'>
@@ -85,12 +260,12 @@ function MySSOCallback(optype, status){
 				   <div class="form-group text-center">
 				  		<button type="submit" class="btn btn-default btn-success">Submit</button>
 				  </div>
-				  <div id='signupSuccessMessage' class="alert alert-success sso_message text-center" style='display:none'>
+				  <div id='signupSuccessMessage' class="alert alert-success sso_message text-center" style='display:none;top-margin:10px'>
     					<strong>Congratulations! </strong><span>You have been successfully Registered.</span> 
     					<a href="../../../web2graphix/WNX_Home.php" class="btn btn-info btn-success" role="button">Click Here</a>
     					<!-- <button id='linkBtn' class='btn btn-default btn-link' onclick='' >Take me to Main site</button>-->
   				  </div>
-  				  <div id='signupErrorMessage' class="alert alert-danger sso_message text-center" style='display:none'>
+  				  <div id='signupErrorMessage' class="alert alert-danger sso_message text-center" style='display:none;top-margin:10px'>
     					<strong>Sorry ! </strong><span>Some Error Occurred while submitting. Try again</span> 
     					
   				  </div>
@@ -100,137 +275,6 @@ function MySSOCallback(optype, status){
 		</div>
 	</div> 
 </div>
-        <div id="loginModal" class="modal fade sso_widget" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header text-center">
-                        <button type="button" class="close" data-dismiss='modal'>&times;</button>
-                        <h4 class="modal-title">Log-In</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class='form-group'>
-                            <div class='contaner'>
-                                <div class='row'>
-                                    <div class='col-sm-4'></div>
-                                    <div class='col-sm-4'>
-                                        <div id='googleBtn' class="g-signin2" data-onsuccess="onSignIn"></div>
-                                    </div>
-                                    <div class='col-sm-4'></div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class='form-group'>
-                            <div class='text-center' style=' border-top:2px dash grey'>
-                                <span class='help-block'>OR</span>
-                            </div>
-                            <div class='contaner'>
-                                <div class='row'>
-                                    <div class='col-sm-2'></div>
-                                    <div class='col-sm-8'>
-                                        <input id="sign-in-email" class="form-control" type="email" name="email" placeholder="Use your registered EMail ID to Sign-In" required="">
-                                    </div>
-                                    <div class='col-sm-2'></div>
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <div class='form-group'>
-                            <div class='contaner'>
-                                <div class='row'>
-                                    <div class='col-sm-2'></div>
-                                    <div class='col-sm-8'>
-                                        <input id="sign-in-password" class="form-control" type="password" name="" placeholder="Type in password" required="">
-                                    </div>
-                                    <div class='col-sm-2'></div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-                            <div class="row text-center">
-                                <div class="col-xs-12">
-                                    <img id="captcha" src="./../securimage/securimage_show.php" alt="CAPTCHA Image" />
-                                </div>
-                                <div class="col-xs-12">
-                                    <input type="text" name="captcha_code" size="10" maxlength="6" id="captcha_code" />
-                                    <a href="#" onclick="document.getElementById('captcha').src = './../securimage/securimage_show.php?' + Math.random(); return false">
-                                        <span class="glyphicon glyphicon-refresh"></span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class='text-center'>
-                            <div>
-                                <button id='signinBtn' type="button" class="btn btn-success" onclick='OnClickSSOButtons(event)'>Sign-In</button>
-                            </div>
-                            <div>
-                                <button id='resetBtn' type="button" class="btn btn-link" onclick='OnClickSSOButtons(event)'>Forgot Password</button>
-                            </div>
-
-                            <div id='signinErrorMessage' class="alert alert-danger sso_message" style='display:none'>
-                                <strong>Sign-In Error!</strong>Problem with the EMail Id or the password you entered! Try again.
-                            </div>
-                            <div id='reset_success_message' class="alert alert-success sso_message" style='display:none'>
-                                <strong>Reset Password!</strong>An EMail has been sent to your Email Id for verification.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <div class='text-center'>
-                            <label class='control-label'>Don't Have a Registered Account</label>
-                            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#signupModal" data-dismiss="modal">Sign-Up</button>
-                            <p id="login-message" class="text-danger"></p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div id="signupModal" class="modal fade sso_widget" role="dialog">
-            <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header text-center">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Sign-Up</h4>
-                    </div>
-                    <div class="modal-body">
-
-                        <div class='form-group'>
-                            <div class='text-center' style='position:relative:50px'>
-                                <span class='help-block'>OR</span>
-                            </div>
-                            <input id="sign-up-email" class="form-control" type="email" name="email" placeholder="Enter a Valid EMail ID to Register" required="">
-
-                        </div>
-
-                        <div class='text-center'>
-                            <button id='signupBtn' type="button" class="btn btn-success" onclick='OnClickSSOButtons(event)'>Sign-Up</button>
-                            <div id='result_error' class="alert alert-danger sso_message" style='display:none'>
-                                <strong>Sign-Up Error!</strong><span id='SU_Err_Msg'>Problem with the EMail Id you entered! Try again.</span>
-                            </div>
-                            <div id='result_success' class="alert alert-success sso_message" style='display:none'>
-                                <strong>Sign-Up Success!</strong>An EMail has been sent to your Email Id for verification.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <div class='text-center'>
-                            <span class='help-block' style='display:inline-block'>Already Registered ?</span>
-                            <!-- <button type="button" class="btn btn-link" data-toggle="modal" data-target="#loginModal">Sign-In</button>-->
-                            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#loginModal" data-dismiss="modal">Sign-In</button>
-                            <p id="signup-message" class="text-danger"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 </body>
 </html>

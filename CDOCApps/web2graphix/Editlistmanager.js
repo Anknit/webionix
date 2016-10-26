@@ -122,10 +122,7 @@ function EL_SaveEditList(finalEditList, bAsyncMode) {
             	}       
             	len++; 
         	}  	
-        	/*else if(finalEditList[n].type == 'NODEMOVE')
-        	{
-        		GXRDE_MoveZIndex(finalEditList[n].ID, finalEditList[n].currValue);
-        	}*/        	
+        	      	
             
           //the entry is marked as saved , will be changed to applied only when 
            

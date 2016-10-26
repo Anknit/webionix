@@ -62,11 +62,3 @@ CDOCAPP-Wed, 05 Mar 14 06:59:13 +0000 : Calling Appl.htm
 --------------------
 CDOCAPP-Tue, 01 Apr 14 16:30:42 +0000 : Calling Appl.htm
 --------------------
-
---------------------
--Tue, 24 May 16 07:53:12 +0000 : Error in User Authentication Query
---------------------
-
---------------------
--Tue, 24 May 16 07:53:23 +0000 : Error in User Authentication Query
---------------------

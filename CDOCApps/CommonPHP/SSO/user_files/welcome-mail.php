@@ -15,7 +15,7 @@ $mailString = '<html lang="en">
                     </a>
                 </div>
             </div>
-            <div style="padding:15px 0px">
+            <div style="padding:15px 0px">   
                 <div>
                     <div>
                         Hi, there

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="22" version="2.0">
+<workbench progressCount="37" version="2.0">
 <workbenchAdvisor/>
-<window height="574" width="1183" x="53" y="111">
+<window height="574" maximized="true" width="1183" x="53" y="111">
 <fastViewData fastViewLocation="1024">
 <orientation position="512" view="org.eclipse.ui.console.ConsoleView"/>
 <orientation position="512" view="org.eclipse.search.ui.views.SearchView"/>
@@ -15,7 +15,7 @@
 <coolItem id="additions" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="129" y="22"/>
 <coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="76" y="22"/>
-<coolItem id="org.eclipse.ui.edit.text.actionSet.presentation" itemType="typeToolBarContribution" x="61" y="22"/>
+<coolItem id="org.eclipse.ui.edit.text.actionSet.presentation" itemType="typeToolBarContribution" x="38" y="22"/>
 <coolItem id="org.eclipse.wst.jsdt.ui.JavaElementCreationActionSet" itemType="typeToolBarContribution" x="61" y="22"/>
 <coolItem id="org.eclipse.wst.xml.ui.perspective.NewFileToolBar" itemType="typeToolBarContribution" x="-1" y="-1"/>
 <coolItem id="org.eclipse.wst.xml.ui.design.DesignToolBar" itemType="typeToolBarContribution" x="-1" y="-1"/>
@@ -27,7 +27,7 @@
 <coolItem id="org.eclipse.ui.DefaultTextEditor" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="org.eclipse.php.editor" itemType="typeToolBarContribution" x="-1" y="-1"/>
 <coolItem id="org.eclipse.wst.html.core.htmlsource.source" itemType="typeToolBarContribution" x="-1" y="-1"/>
-<coolItem id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" itemType="typePlaceholder" x="-1" y="-1"/>
+<coolItem id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" itemType="typeToolBarContribution" x="-1" y="-1"/>
 <coolItem id="group.help" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
 </coolbarLayout>
@@ -88,21 +88,16 @@
 <part id="48"/>
 <part id="49"/>
 <part id="50"/>
+<part id="51"/>
+<part id="52"/>
+<part id="53"/>
+<part id="54"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" name="GX_RemoteDataExchange.js" partName="GX_RemoteDataExchange.js" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOCApps/web2graphix/GX_RemoteDataExchange.js" title="GX_RemoteDataExchange.js" tooltip="web2graphix/GX_RemoteDataExchange.js" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/GX_RemoteDataExchange.js"/>
-<editorState selectionHorizontalPixel="0" selectionLength="16" selectionOffset="6244" selectionTopPixel="2975"/>
-</editor>
-<editor id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" name="Utilities.js" partName="Utilities.js" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOCApps/CommonJS/Utilities.js" title="Utilities.js" tooltip="CommonJS/Utilities.js" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CommonJS/Utilities.js"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="7609" selectionTopPixel="3933"/>
-</editor>
-<editor id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" name="Editlistmanager.js" partName="Editlistmanager.js" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOCApps/web2graphix/Editlistmanager.js" title="Editlistmanager.js" tooltip="web2graphix/Editlistmanager.js" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" name="Editlistmanager.js" partName="Editlistmanager.js" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/web2graphix/Editlistmanager.js" title="Editlistmanager.js" tooltip="web2graphix/Editlistmanager.js" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/Editlistmanager.js"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="4684" selectionTopPixel="2175"/>
 </editor>
 <editor id="org.eclipse.wst.css.core.csssource.source" name="CDOCStyle.css" partName="CDOCStyle.css" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOCApps/CommonCSS/CDOCStyle.css" title="CDOCStyle.css" tooltip="CommonCSS/CDOCStyle.css" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CommonCSS/CDOCStyle.css"/>
@@ -180,9 +175,9 @@
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/GX_PageMgrModule.php"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
 </editor>
-<editor id="org.eclipse.php.editor" name="GX_SessionMgr.php" partName="GX_SessionMgr.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOCApps/web2graphix/GX_SessionMgr.php" title="GX_SessionMgr.php" tooltip="web2graphix/GX_SessionMgr.php" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.php.editor" name="GX_SessionMgr.php" partName="GX_SessionMgr.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/web2graphix/GX_SessionMgr.php" title="GX_SessionMgr.php" tooltip="web2graphix/GX_SessionMgr.php" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/GX_SessionMgr.php"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="4552" selectionTopPixel="2420"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3576" selectionTopPixel="1649"/>
 </editor>
 <editor id="org.eclipse.php.editor" name="GX_sso.php" partName="GX_sso.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOCApps/web2graphix/GX_sso.php" title="GX_sso.php" tooltip="web2graphix/GX_sso.php" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/GX_sso.php"/>
@@ -240,9 +235,9 @@
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/Download.php"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="41" selectionTopPixel="0"/>
 </editor>
-<editor id="org.eclipse.php.editor" name="GX_Config.php" partName="GX_Config.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOCApps/web2graphix/GX_Config.php" title="GX_Config.php" tooltip="web2graphix/GX_Config.php" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.php.editor" name="GX_Config.php" partName="GX_Config.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/web2graphix/GX_Config.php" title="GX_Config.php" tooltip="web2graphix/GX_Config.php" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/GX_Config.php"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="13" selectionOffset="7" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.php.editor" name="GX_CommonAPI.php" partName="GX_CommonAPI.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOCApps/web2graphix/GX_CommonAPI.php" title="GX_CommonAPI.php" tooltip="web2graphix/GX_CommonAPI.php" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/GX_CommonAPI.php"/>
@@ -272,14 +267,6 @@
 <input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Program%20Files/MYPROGRAMS/wamp/www/CDOCApps/USER_DATA/rajaryahoo_201620124915/SVG/NewTestFile%20-%20Copy.html"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="21" selectionTopPixel="0"/>
 </editor>
-<editor id="org.eclipse.wst.html.core.htmlsource.source" name="GX_Editor.html" partName="GX_Editor.html" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOCApps/web2graphix/GX_Editor.html" title="GX_Editor.html" tooltip="web2graphix/GX_Editor.html" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/GX_Editor.html"/>
-<editorState selectionHorizontalPixel="0" selectionLength="17" selectionOffset="46853" selectionTopPixel="9826"/>
-</editor>
-<editor id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" name="GX_AnimationWdgt_V2.js" partName="GX_AnimationWdgt_V2.js" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOCApps/web2graphix/GX_AnimationWdgt_V2.js" title="GX_AnimationWdgt_V2.js" tooltip="web2graphix/GX_AnimationWdgt_V2.js" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/GX_AnimationWdgt_V2.js"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="122481" selectionTopPixel="58439"/>
-</editor>
 <editor id="org.eclipse.php.editor" name="GX_ObjectManager.php" partName="GX_ObjectManager.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOCApps/web2graphix/GX_ObjectManager.php" title="GX_ObjectManager.php" tooltip="web2graphix/GX_ObjectManager.php" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/GX_ObjectManager.php"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="35866" selectionTopPixel="16167"/>
@@ -291,6 +278,42 @@
 <editor id="org.eclipse.php.editor" name="WNX_Home.php" partName="WNX_Home.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOCApps/web2graphix/WNX_Home.php" title="WNX_Home.php" tooltip="web2graphix/WNX_Home.php" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/WNX_Home.php"/>
 <editorState selectionHorizontalPixel="0" selectionLength="29" selectionOffset="787" selectionTopPixel="240"/>
+</editor>
+<editor id="org.eclipse.php.editor" name="home.php" partName="home.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/web2graphix/home.php" title="home.php" tooltip="web2graphix/home.php" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/home.php"/>
+<editorState selectionHorizontalPixel="119" selectionLength="0" selectionOffset="4245" selectionTopPixel="1050"/>
+</editor>
+<editor id="org.eclipse.php.editor" name="securimage.php" partName="securimage.php" title="securimage.php" tooltip="C:\Program Files\MYPROGRAMS\wamp\www\CDOC_RemoteSVN\CDOCApps\securimage\securimage.php" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Program%20Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/securimage/securimage.php"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="32318" selectionTopPixel="18058"/>
+</editor>
+<editor id="org.eclipse.wst.html.core.htmlsource.source" name="GX_Editor.html" partName="GX_Editor.html" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/web2graphix/GX_Editor.html" title="GX_Editor.html" tooltip="web2graphix/GX_Editor.html" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/GX_Editor.html"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="110367" selectionTopPixel="23169"/>
+</editor>
+<editor id="org.eclipse.php.editor" name="feedback.php" partName="feedback.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/CommonPHP/feedback/feedback.php" title="feedback.php" tooltip="CommonPHP/feedback/feedback.php" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CommonPHP/feedback/feedback.php"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="258" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.php.editor" name="feedbackrequest.php" partName="feedbackrequest.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/CommonPHP/feedback/feedbackrequest.php" title="feedbackrequest.php" tooltip="CommonPHP/feedback/feedbackrequest.php" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CommonPHP/feedback/feedbackrequest.php"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="699" selectionTopPixel="240"/>
+</editor>
+<editor id="org.eclipse.php.editor" name="feedbackConfig.php" partName="feedbackConfig.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/CommonPHP/feedback/feedbackConfig.php" title="feedbackConfig.php" tooltip="CommonPHP/feedback/feedbackConfig.php" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CommonPHP/feedback/feedbackConfig.php"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="388" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" name="GX_UIHandlerV5.js" partName="GX_UIHandlerV5.js" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/web2graphix/GX_UIHandlerV5.js" title="GX_UIHandlerV5.js" tooltip="web2graphix/GX_UIHandlerV5.js" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/web2graphix/GX_UIHandlerV5.js"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="343675" selectionTopPixel="170482"/>
+</editor>
+<editor activePart="true" focus="true" id="org.eclipse.php.editor" name="welcome-mail.php" partName="welcome-mail.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/CommonPHP/SSO/user_files/welcome-mail.php" title="welcome-mail.php" tooltip="CommonPHP/SSO/user_files/welcome-mail.php" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CommonPHP/SSO/user_files/welcome-mail.php"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="842" selectionTopPixel="60"/>
+</editor>
+<editor id="org.eclipse.php.editor" name="sign-up-mail.php" partName="sign-up-mail.php" path="C:/Program Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/CommonPHP/SSO/user_files/sign-up-mail.php" title="sign-up-mail.php" tooltip="CommonPHP/SSO/user_files/sign-up-mail.php" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CommonPHP/SSO/user_files/sign-up-mail.php"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2851" selectionTopPixel="0"/>
 </editor>
 </editors>
 <views>
@@ -320,6 +343,9 @@
 </view>
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
+<expanded>
+<category IMemento.internal.id="Warnings (100 of 319 items)"/>
+</expanded>
 <columnWidths org.eclipse.ui.ide.locationField="90" org.eclipse.ui.ide.markerType="90" org.eclipse.ui.ide.pathField="120" org.eclipse.ui.ide.resourceField="90" org.eclipse.ui.ide.severityAndDescriptionField="300"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
@@ -395,7 +421,7 @@
 <viewState/>
 </view>
 </views>
-<perspectives activePart="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" activePerspective="org.eclipse.php.perspective">
+<perspectives activePart="org.eclipse.php.editor" activePerspective="org.eclipse.php.perspective">
 <perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
 <descriptor class="org.eclipse.wst.jsdt.internal.ui.JavaPerspectiveFactory" id="org.eclipse.wst.jsdt.ui.JavaPerspective" label="JavaScript"/>
 <alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
@@ -709,7 +735,7 @@
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
-<info part="org.eclipse.ui.editorss" ratio="0.14907749" ratioLeft="202" ratioRight="1153" relationship="2" relative="topLeft"/>
+<info part="org.eclipse.ui.editorss" ratio="0.16309963" ratioLeft="221" ratioRight="1134" relationship="2" relative="topLeft"/>
 <info folder="true" part="bottom" ratio="0.6688207" ratioLeft="414" ratioRight="205" relationship="4" relative="org.eclipse.ui.editorss">
 <folder activePageID="org.eclipse.search.ui.views.SearchView" appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
@@ -732,7 +758,7 @@
 </presentation>
 </folder>
 </info>
-<info folder="true" part="right" ratio="0.82869565" ratioLeft="953" ratioRight="197" relationship="2" relative="org.eclipse.ui.editorss">
+<info folder="true" part="right" ratio="0.80861247" ratioLeft="845" ratioRight="200" relationship="2" relative="org.eclipse.ui.editorss">
 <folder activePageID="org.eclipse.ui.views.ContentOutline" appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
 <page content="org.eclipse.php.ui.projectOutline" label="LabelNotFound"/>
@@ -751,117 +777,35 @@
 <editors>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" path="/web2graphix/GX_UIHandlerV5.js"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.html.core.htmlsource.source" path="/web2graphix/GX_Editor.html"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.css.core.csssource.source" path="/CommonCSS/CDOCStyle.css"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" path="/web2graphix/WNX_Home.php"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" path="/web2graphix/GX_AppModule.php"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" path="/CommonJS/Utilities.js"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.html.core.htmlsource.source" path="/web2graphix/WNX_Home.html"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" path="/web2graphix/GX_RemoteDataExchange.js"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" path="/web2graphix/GX_WKSMgrModule.php"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" path="/web2graphix/GX_RemoteDataExchange.js"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" path="/CommonJS/Utilities.js"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" path="/web2graphix/Editlistmanager.js"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" path="/web2graphix/GX_AnimationWdgt_V2.js"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" path="/web2graphix/home.php"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" path="/web2graphix/GX_Config.php"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" path="/web2graphix/GX_SessionMgr.php"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.php.editor" uri="file:/C:/Program%20Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/securimage/securimage.php"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.html.core.htmlsource.source" path="/web2graphix/GX_Editor.html"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" path="/CommonPHP/feedback/feedback.php"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" path="/CommonPHP/feedback/feedbackrequest.php"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" path="/CommonPHP/feedback/feedbackConfig.php"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" path="/web2graphix/GX_SessionMgr.php"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" path="/secureimage/securimage.js"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" path="/web2graphix/GX_UIHandlerV5.js"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" path="/CommonPHP/SSO/user_files/welcome-mail.php"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" path="/CommonPHP/SSO/user_files/sign-up-mail.php"/>
 </editors>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="42966" y="39"/>
-</item>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="42963" y="0"/>
-</item>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="282627" y="20"/>
-</item>
-<item historyLabel="GX_Editor.html" index="1">
-<position info="not_deleted" x="11548" y="6"/>
-</item>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="282627" y="21"/>
-</item>
-<item historyLabel="GX_Editor.html" index="1">
-<position info="not_deleted" x="11249" y="0"/>
-</item>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="282882" y="0"/>
-</item>
-<item historyLabel="Utilities.js" index="5">
-<position info="not_deleted" x="7434" y="0"/>
-</item>
-<item historyLabel="GX_AppModule.php" index="4">
-<position info="not_deleted" x="3171" y="0"/>
-</item>
-<item historyLabel="Utilities.js" index="5">
-<position info="not_deleted" x="7434" y="0"/>
-</item>
-<item historyLabel="WNX_Home.html" index="6">
-<position info="not_deleted" x="8330" y="0"/>
-</item>
-<item historyLabel="WNX_Home.html" index="6">
-<position info="not_deleted" x="2114" y="14"/>
-</item>
-<item historyLabel="WNX_Home.php" index="3">
-<position info="not_deleted" x="787" y="29"/>
-</item>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="282882" y="0"/>
-</item>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="282752" y="0"/>
-</item>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="282814" y="0"/>
-</item>
-<item historyLabel="WNX_Home.html" index="6">
-<position info="not_deleted" x="2114" y="14"/>
-</item>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="282805" y="0"/>
-</item>
-<item historyLabel="WNX_Home.php" index="3">
-<position info="not_deleted" x="787" y="29"/>
-</item>
-<item historyLabel="WNX_Home.html" index="6">
-<position info="not_deleted" x="2114" y="14"/>
-</item>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="282805" y="0"/>
-</item>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="282817" y="0"/>
-</item>
-<item historyLabel="GX_Editor.html" index="1">
-<position info="not_deleted" x="11407" y="13"/>
-</item>
-<item historyLabel="CDOCStyle.css" index="2">
-<position info="not_deleted" x="5491" y="0"/>
-</item>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="282817" y="0"/>
-</item>
-<item historyLabel="GX_UIHandlerV5.js" index="0">
-<position info="not_deleted" x="160134" y="22"/>
-</item>
-<item historyLabel="GX_RemoteDataExchange.js" index="7">
-<position info="not_deleted" x="221" y="0"/>
-</item>
-<item historyLabel="GX_WKSMgrModule.php" index="8">
-<position info="not_deleted" x="467" y="0"/>
-</item>
-<item historyLabel="GX_WKSMgrModule.php" index="8">
-<position info="not_deleted" x="19401" y="18"/>
-</item>
-<item historyLabel="GX_WKSMgrModule.php" index="8">
-<position info="not_deleted" x="19460" y="12"/>
-</item>
-<item historyLabel="GX_WKSMgrModule.php" index="8">
-<position info="not_deleted" x="13925" y="12"/>
-</item>
-<item historyLabel="GX_WKSMgrModule.php" index="8">
+<item historyLabel="GX_WKSMgrModule.php" index="2">
 <position info="not_deleted" x="14020" y="0"/>
 </item>
-<item historyLabel="GX_WKSMgrModule.php" index="8">
+<item historyLabel="GX_WKSMgrModule.php" index="2">
 <position info="not_deleted" x="11681" y="18"/>
 </item>
-<item historyLabel="GX_WKSMgrModule.php" index="8">
+<item historyLabel="GX_WKSMgrModule.php" index="2">
 <position info="not_deleted" x="11743" y="0"/>
 </item>
-<item historyLabel="GX_WKSMgrModule.php" index="8">
+<item historyLabel="GX_WKSMgrModule.php" index="2">
 <position info="not_deleted" x="11446" y="0"/>
 </item>
 <item historyLabel="GX_UIHandlerV5.js" index="0">
@@ -906,8 +850,91 @@
 <item historyLabel="GX_UIHandlerV5.js" index="0">
 <position info="not_deleted" x="1643" y="17"/>
 </item>
-<item active="true" historyLabel="GX_UIHandlerV5.js" index="0">
+<item historyLabel="GX_UIHandlerV5.js" index="0">
 <position info="not_deleted" x="53415" y="19"/>
+</item>
+<item historyLabel="GX_RemoteDataExchange.js" index="3"/>
+<item historyLabel="Utilities.js" index="4"/>
+<item historyLabel="Editlistmanager.js" index="5"/>
+<item historyLabel="GX_AnimationWdgt_V2.js" index="6"/>
+<item historyLabel="Editlistmanager.js" index="5"/>
+<item historyLabel="home.php" index="7">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="home.php" index="7">
+<position info="not_deleted" x="4603" y="0"/>
+</item>
+<item historyLabel="GX_Config.php" index="8">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="GX_Config.php" index="8">
+<position info="not_deleted" x="23" y="5"/>
+</item>
+<item historyLabel="GX_SessionMgr.php" index="9">
+<position info="not_deleted" x="4552" y="0"/>
+</item>
+<item historyLabel="GX_SessionMgr.php" index="9">
+<position info="not_deleted" x="3445" y="5"/>
+</item>
+<item historyLabel="GX_SessionMgr.php" index="9">
+<position info="not_deleted" x="4184" y="5"/>
+</item>
+<item historyLabel="GX_SessionMgr.php" index="9">
+<position info="not_deleted" x="4170" y="12"/>
+</item>
+<item historyLabel="GX_SessionMgr.php" index="9">
+<position info="not_deleted" x="3548" y="28"/>
+</item>
+<item historyLabel="home.php" index="7">
+<position info="not_deleted" x="4245" y="0"/>
+</item>
+<item historyLabel="securimage.php" index="10">
+<position info="not_deleted" x="123394" y="0"/>
+</item>
+<item historyLabel="securimage.php" index="10">
+<position info="not_deleted" x="33428" y="0"/>
+</item>
+<item historyLabel="GX_Editor.html" index="11">
+<position info="not_deleted" x="110367" y="0"/>
+</item>
+<item historyLabel="feedback.php" index="12">
+<position info="not_deleted" x="258" y="0"/>
+</item>
+<item historyLabel="feedbackrequest.php" index="13">
+<position info="not_deleted" x="316" y="0"/>
+</item>
+<item historyLabel="feedbackConfig.php" index="14">
+<position info="not_deleted" x="279" y="0"/>
+</item>
+<item historyLabel="feedbackrequest.php" index="13">
+<position info="not_deleted" x="699" y="0"/>
+</item>
+<item historyLabel="feedbackConfig.php" index="14">
+<position info="not_deleted" x="279" y="0"/>
+</item>
+<item historyLabel="GX_SessionMgr.php" index="15">
+<position info="not_deleted" x="3548" y="12"/>
+</item>
+<item historyLabel="securimage.js" index="16">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="GX_SessionMgr.php" index="15">
+<position info="not_deleted" x="3576" y="0"/>
+</item>
+<item historyLabel="securimage.php" index="10">
+<position info="not_deleted" x="32342" y="0"/>
+</item>
+<item historyLabel="GX_UIHandlerV5.js" index="17">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="welcome-mail.php" index="18">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="sign-up-mail.php" index="19">
+<position info="not_deleted" x="2851" y="0"/>
+</item>
+<item active="true" historyLabel="welcome-mail.php" index="18">
+<position info="not_deleted" x="0" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -926,50 +953,50 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="sign-up-mail.php" tooltip="CommonPHP/SSO/user_files/sign-up-mail.php">
+<persistable path="/CommonPHP/SSO/user_files/sign-up-mail.php"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="welcome-mail.php" tooltip="CommonPHP/SSO/user_files/welcome-mail.php">
+<persistable path="/CommonPHP/SSO/user_files/welcome-mail.php"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" name="GX_UIHandlerV5.js" tooltip="web2graphix/GX_UIHandlerV5.js">
+<persistable path="/web2graphix/GX_UIHandlerV5.js"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="securimage_play.php" tooltip="secureimage/securimage_play.php">
+<persistable path="/secureimage/securimage_play.php"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" name="securimage.js" tooltip="secureimage/securimage.js">
+<persistable path="/secureimage/securimage.js"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="feedbackConfig.php" tooltip="CommonPHP/feedback/feedbackConfig.php">
+<persistable path="/CommonPHP/feedback/feedbackConfig.php"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="feedbackrequest.php" tooltip="CommonPHP/feedback/feedbackrequest.php">
+<persistable path="/CommonPHP/feedback/feedbackrequest.php"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="feedback.php" tooltip="CommonPHP/feedback/feedback.php">
+<persistable path="/CommonPHP/feedback/feedback.php"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.html.core.htmlsource.source" name="GX_Editor.html" tooltip="web2graphix/GX_Editor.html">
+<persistable path="/web2graphix/GX_Editor.html"/>
+</file>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.php.editor" name="securimage.php" tooltip="C:\Program Files\MYPROGRAMS\wamp\www\CDOC_RemoteSVN\CDOCApps\securimage\securimage.php">
+<persistable uri="file:/C:/Program%20Files/MYPROGRAMS/wamp/www/CDOC_RemoteSVN/CDOCApps/securimage/securimage.php"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="securimage_show.php" tooltip="secureimage/securimage_show.php">
+<persistable path="/secureimage/securimage_show.php"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="securimage.php" tooltip="secureimage/securimage.php">
+<persistable path="/secureimage/securimage.php"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="home.php" tooltip="web2graphix/home.php">
+<persistable path="/web2graphix/home.php"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="WNX_Home.php" tooltip="web2graphix/WNX_Home.php">
 <persistable path="/web2graphix/WNX_Home.php"/>
 </file>
 <file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart" name="Category.xml" tooltip="C:\RAJARSHI\VENERA\Corona\CURATION\Category.xml">
 <persistable uri="file:/C:/RAJARSHI/VENERA/Corona/CURATION/Category.xml"/>
-</file>
-<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" name="GX_AnimationWdgt_V2_5May_2016.js" tooltip="C:\Program Files\MYPROGRAMS\wamp\www\CDOCApps\web2graphix\GX_AnimationWdgt_V2_5May_2016.js">
-<persistable uri="file:/C:/Program%20Files/MYPROGRAMS/wamp/www/CDOCApps/web2graphix/GX_AnimationWdgt_V2_5May_2016.js"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.browser.editorSupport" name="Category.xml" tooltip="web2graphix/Category.xml">
-<persistable path="/web2graphix/Category.xml"/>
-</file>
-<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart" name="wksdata.xml" tooltip="C:\Program Files\MYPROGRAMS\wamp\www\CDOCApps\USER_DATA\wksdata.xml">
-<persistable uri="file:/C:/Program%20Files/MYPROGRAMS/wamp/www/CDOCApps/USER_DATA/wksdata.xml"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" name="GX_AnimationWdgt_V2.js" tooltip="web2graphix/GX_AnimationWdgt_V2.js">
-<persistable path="/web2graphix/GX_AnimationWdgt_V2.js"/>
-</file>
-<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" name="GX_AnimationWdgt_V2_Latest.js" tooltip="C:\Program Files\MYPROGRAMS\wamp\www\CDOCApps\web2graphix\GX_AnimationWdgt_V2_Latest.js">
-<persistable uri="file:/C:/Program%20Files/MYPROGRAMS/wamp/www/CDOCApps/web2graphix/GX_AnimationWdgt_V2_Latest.js"/>
-</file>
-<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart" name="wksdata.xml" tooltip="C:\Program Files\MYPROGRAMS\wamp\www\CDOCApps\USER_DATA\rajaryahoo_201620124915\wksdata.xml">
-<persistable uri="file:/C:/Program%20Files/MYPROGRAMS/wamp/www/CDOCApps/USER_DATA/rajaryahoo_201620124915/wksdata.xml"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.html.core.htmlsource.source" name="GX_Editor.html" tooltip="web2graphix/GX_Editor.html">
-<persistable path="/web2graphix/GX_Editor.html"/>
-</file>
-<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.wst.html.core.htmlsource.source" name="NewTestFile - Copy.html" tooltip="C:\Program Files\MYPROGRAMS\wamp\www\CDOCApps\USER_DATA\rajaryahoo_201620124915\SVG\NewTestFile - Copy.html">
-<persistable uri="file:/C:/Program%20Files/MYPROGRAMS/wamp/www/CDOCApps/USER_DATA/rajaryahoo_201620124915/SVG/NewTestFile%20-%20Copy.html"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" name="GX_UIHandlerV2.js" tooltip="web2graphix/GX_UIHandlerV2.js">
-<persistable path="/web2graphix/GX_UIHandlerV2.js"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.html.core.htmlsource.source" name="WNX_Home.html" tooltip="web2graphix/WNX_Home.html">
-<persistable path="/web2graphix/WNX_Home.html"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="GX_WKSMgrModule.php" tooltip="web2graphix/GX_WKSMgrModule.php">
-<persistable path="/web2graphix/GX_WKSMgrModule.php"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="GX_sso_V1.php" tooltip="web2graphix/GX_sso_V1.php">
-<persistable path="/web2graphix/GX_sso_V1.php"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.php.editor" name="GX_CommonAPI.php" tooltip="web2graphix/GX_CommonAPI.php">
-<persistable path="/web2graphix/GX_CommonAPI.php"/>
 </file>
 </mruList>
 </workbench>

@@ -244,7 +244,9 @@ function GX_SetAnimParamOnUI(animParam) {
 	$('.animpropertyRow').hide();
 	
 	//showin common property first
-	$('#commonAnim').show();// = 'table-row'; 
+	$('#commonAnim').show();// = 'table-row';	
+	$('#hideshowanim').show(); 
+	
 	WAL_hideWidget('hideafterCBContainer', false);
 	WAL_hideWidget('endValueIPDiv', true);
 	
@@ -1858,25 +1860,21 @@ function GX_RemoveAnimInfoFromList(animID)
 	GX_AddNewAnimElementInDOM(animParams.animID, containerGroupID,animParams.animType, commonAttrArray, bUpdateUI); 
  }
  
- 
- 
- function GX_CalculateMotionAnimPathOffset(objectID, pathID)
- {	 
-	var objNode =  document.getElementById(objectID); 
-	var pathNode  = document.getElementById(pathID);
-		//get the path dim . 
+ function GX_GetAnimMotionOriginalPos(objectID){
+	var objNode =  document.getElementById(objectID);  
+	var objType = objNode.classList[1]; 
 	var objDim =  GX_GetRectObjectDim(objNode); 
 	var origPos =  new sPoint();	
-	var objType = objNode.classList[1]; 
+	
 	if( (objType == "ELLIPSE") || (objType == "CIRCLE") )
 	{
-		origPos.x = objDim.centerX;
-		origPos.y = objDim.centerY;
+			origPos.x = objDim.centerX;
+			origPos.y = objDim.centerY;
 	}
 	else if(objType == "RECTANGLE")
 	{
-		////origPos.x = objDim.centerX;
-		////origPos.y = objDim.centerY;
+			////origPos.x = objDim.centerX;
+			////origPos.y = objDim.centerY;
 		origPos.x = objDim.x;
 		origPos.y = objDim.y;
 	} 
@@ -1884,7 +1882,19 @@ function GX_RemoveAnimInfoFromList(animID)
 	{
 		origPos.x = objDim.centerX;
 		origPos.y = objDim.centerY;
-	} 	
+	} 
+	var pos = origPos.x + ',' + origPos.y; 
+	return pos; 
+ }
+ 
+ function GX_CalculateMotionAnimPathOffset(objectID, pathID)
+ {	 
+	var objNode =  document.getElementById(objectID);  
+	var objType = objNode.classList[1];	
+	var objDim =  GX_GetRectObjectDim(objNode); 
+	var pathNode  = document.getElementById(pathID);
+		//get the path dim . 	
+	var origPos =  GX_GetAnimMotionOriginalPos(objectID);		
 	//temporary taken to be 0 offset but later on offset input will be takne in new GUI
 	var X = 0;//WAL_getMaskedInputValue('offsetFromPathX'); 
 	var Y = 0;//WAL_getMaskedInputValue('offsetFromPathY'); 
@@ -1896,8 +1906,8 @@ function GX_RemoveAnimInfoFromList(animID)
 		normalizedVal -= 2;
 	var Y = (objDim.height * normalizedVal)/2;	
 	var offset = X + ',' + Y;
-	var origPosString = origPos.x + ',' + origPos.y; 
-	offset = offset + ';' + origPosString; 
+	//var origPosString = origPos.x + ',' + origPos.y; 
+	offset = offset + ';' + origPos; 
 	return offset; 
  }
  
@@ -2104,6 +2114,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			//get the pathoffset here
 			var mystr = animNode.getAttribute('from'); 
 			animParam.PathObjectOffset = mystr; 
+			animParam.originalPosition = GX_GetAnimMotionOriginalPos(animParam.objectID); 
 			var pathNode = document.getElementById(animParam.refPathID); 
 			animParam.refPathType = pathNode.classList[1]; 
 			animParam.PathStartPoint = GX_GetPathStartPoint(pathNode); 
@@ -2337,10 +2348,14 @@ function GX_RemoveAnimInfoFromList(animID)
 		 if(AnimParam2.bHideBeforeAnim == true){
 			 attrData = ['onbegin','OnBeginAnimation(evt)'];  
 			 attrArray.push(attrData); 
+			// var objNode =  document.getElementById(AnimParam2.objectID); 
+			// objNode.setAttribute('visibility', 'hidden'); 
 		 }
 		 else{
 			 attrData = ['onbegin',''];  
 			 attrArray.push(attrData); 
+			// var objNode =  document.getElementById(AnimParam2.objectID); 
+			// objNode.setAttribute('visibility', 'visible'); 
 		 }		 
 	 }
 	 if(AnimParam1.bHideAfterAnim != AnimParam2.bHideAfterAnim)
@@ -2542,7 +2557,7 @@ function GX_RemoveAnimInfoFromList(animID)
 						 //get the object ID 
 						var objID = motionNode.targetElement.id; 
 						if(attrArray[i][1] == 'OnBeginAnimation(evt)')
-							var objattrArray = [['visibility', 'visible']]; 
+							var objattrArray = [['visibility', 'hidden']]; 
 						else
 							var objattrArray = [['visibility', 'visible']];						
 						var retval =  GXRDE_updateSVGObject(objID, objattrArray); 						 
@@ -2646,7 +2661,7 @@ function GX_RemoveAnimInfoFromList(animID)
 					 if(attrArray[i][0] == 'onbegin'){
 						var objID = animNode1.targetElement.id; 
 						if(attrArray[i][1] == 'OnBeginAnimation(evt)')
-							var objattrArray = [['visibility', 'visible']]; 
+							var objattrArray = [['visibility', 'hidden']]; 
 						else
 							var objattrArray = [['visibility', 'visible']]; 
 						var retval =  GXRDE_updateSVGObject(objID, objattrArray);
@@ -2722,7 +2737,7 @@ function GX_RemoveAnimInfoFromList(animID)
 					 if(attrArray[i][0] == 'onbegin'){
 						var objID = animNode1.targetElement.id; 
 						if(attrArray[i][1] == 'OnBeginAnimation(evt)')
-							var objattrArray = [['visibility', 'visible']]; 
+							var objattrArray = [['visibility', 'hidden']]; 
 						else
 							var objattrArray = [['visibility', 'visible']]; 
 						var retval =  GXRDE_updateSVGObject(objID, objattrArray);
@@ -2751,7 +2766,7 @@ function GX_RemoveAnimInfoFromList(animID)
 				 if(attrArray[i][0] == 'onbegin'){
 						var objID = animNode.targetElement.id; 
 						if(attrArray[i][1] == 'OnBeginAnimation(evt)')
-							var objattrArray = [['visibility', 'visible']]; 
+							var objattrArray = [['visibility', 'hidden']]; 
 						else
 							var objattrArray = [['visibility', 'visible']]; 
 						var retval =  GXRDE_updateSVGObject(objID, objattrArray);
@@ -3232,7 +3247,7 @@ function GX_RemoveAnimInfoFromList(animID)
 			var rectdim = GX_GetRectObjectDim(gCurrentObjectSelected);
 			var startX = 0;//new Number(rectdim.x + rectdim.width/2); 
 			var startY = 0;//new Number(rectdim.y + rectdim.height/2);
-			var endX = startX +  200; 
+			var endX = startX ;//+  200; 
 			var endY = startY +  200; 
 			//gInitAnimParam.center = centreX + ' ' + centreY;	
 		    gInitAnimParam.startValue = startX + ' ' + startY ;
@@ -3314,7 +3329,7 @@ function GX_RemoveAnimInfoFromList(animID)
 				startPoint.y = new Number(gCurrentObjectSelected.getAttribute('y')); 				
 			}
 			gInitAnimParam.startPos = startPoint.x + ',' + startPoint.y; 
-			endPoint.x = startPoint.x + 200; 
+			endPoint.x = startPoint.x ; 
 			endPoint.y = startPoint.y + 200; 
 			gInitAnimParam.endPos = endPoint.x + ',' + endPoint.y;
 			//animtype is move 
@@ -3378,9 +3393,21 @@ function GX_RemoveAnimInfoFromList(animID)
 	 var nodeid =  event.target.id; 
 	// Debug_Message('BtnID = ' + nodeid); 	
 	 switch(nodeid){	 
-	 case 'play_anim_btn':
-		 if(gCurrentAnimInfo)
-			 GX_PreviewAnimation(gCurrentAnimInfo[0], gCurrentAnimInfo[1], gCurrentAnimInfo[2]); 		
+	 case 'play_anim_btn':		 
+		 if(gCurrentAnimInfo){
+			 var tempAnimParam = GX_GetAnimParamsFromUI(gCurrAnimParam); 
+			 var attrArray = GX_CompareAndGetAnimParamArray(gCurrAnimParam, tempAnimParam); 
+			 if( (attrArray) && (attrArray.length >0) ){
+				var respStr = GX_UpdateAnimObjectAttribute(gCurrAnimParam.animID, attrArray);
+				if(gCurrAnimParam.animType == 'ANIM_MOTION'){
+					var id =  gCurrAnimParam.animID; 
+					GX_ReloadNode(id); 
+			 }				 
+		 }
+		 gAnimList = GX_SortAnimListInDisplayOrder(gAnimList);
+		 GX_PreviewAnimation(gCurrentAnimInfo[0], gCurrentAnimInfo[1], gCurrentAnimInfo[2]); 
+		 }
+			 		
 		 break; 
 	 case 'delete_anim_btn':		
 		 if(gCurrentAnimInfo){		 

@@ -1,9 +1,10 @@
 gAppURI = "GX_AppModule.php";
 
-function GXRDE_addNewSVGFile(svgFname, callbackFn)
-{	
-	AJX_RequestWithReponseCallback("text", "WKSM", "102", svgFname, callbackFn);    
+function GXRDE_addNewSVGFile(svgFname, svgTitle, callbackFn){	
+	var reqbody = "&SVGFNAME=" + svgFname + "&SVGTITLE=" + svgTitle;	
+	AJX_RequestWithReponseCallback("text", "WKSM", "102", reqbody, callbackFn);    
 }
+
 function GXRDE_openSVGFile(svgFname, callback)
 {	
 	var respstring = AJX_RequestWithReponseCallback("text", "WKSM", "103", svgFname,callback);
@@ -73,13 +74,13 @@ function GXRDE_addNewImageObject(objectID, parentID, objectType, URL, callbackFn
 }
 
 
-function GXRDE_MoveZIndex(currobjID, beforeID,befParentID)
-{
+function GXRDE_MoveZIndex(currobjID, beforeID,befParentID, callbackFn){
 	var reqbody = "&CURROBJECTID=" + currobjID + "&BEFOREID=" + beforeID + '&BEFOREPARENTID='+ befParentID;
-	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "306", reqbody);	
+	//var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "306", reqbody);	
+	AJX_RequestWithReponseCallback("text", "OBJM", "306", reqbody, callbackFn); 
 }
 
-function GXRDE_MoveObjectToGroup(groupID,objectIDArray ){
+function GXRDE_MoveObjectToGroup(groupID,objectIDArray, callbackFn ){
 	
 	var arrLen = objectIDArray.length; 
 	var reqbody = "&GROUPID=" + groupID + '&ARRAY_LENGTH='+ arrLen;
@@ -88,7 +89,7 @@ function GXRDE_MoveObjectToGroup(groupID,objectIDArray ){
 		var attrstr = "&OBJECTID[]=" +  objectIDArray[j]; 
 		reqbody += attrstr; 			
 	}
-	var respstring = AJX_RequestWithNoReponseData("text", "OBJM", "312", reqbody);	
+	var respstring = AJX_RequestWithReponseCallback("text", "OBJM", "312", reqbody, callbackFn);	
 }
 
 function GXRDE_GetSVGMetaXML(svgFname, callback){	    

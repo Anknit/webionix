@@ -1069,6 +1069,7 @@ class Securimage
                 }
                 session_name('GXAPP'); 
                 session_start();
+                
             }
         }
     }

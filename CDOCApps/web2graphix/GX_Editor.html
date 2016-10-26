@@ -23,37 +23,11 @@
  <style>
 /* Bootstrap based styles */ 
   /* latin */
-  
-@font-face {
-		  font-family: 'Montserrat';
-		  font-style: normal;
-		  font-weight: 400;
-		  src: local('Montserrat-Regular'), url(http://fonts.gstatic.com/s/montserrat/v6/zhcz-_WihjSQC0oHJ9TCYPk_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
-		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-		}
-		 
-		/* latin-ext */
-		
-@font-face {
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Lato Regular'), local('Lato-Regular'), url(http://fonts.gstatic.com/s/lato/v11/UyBMtLsHKBKXelqf4x7VRQ.woff2) format('woff2');
-  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
-}
-
-/* latin */
-
-@font-face {
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Lato Regular'), local('Lato-Regular'), url(http://fonts.gstatic.com/s/lato/v11/1YwB1sO8YE1Lyjf12WNiUA.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
+ 
  
   body {
-      font: 400 15px Lato, sans-serif;
+      font-family: "Verdana"; 
+      font-size: 13px; 
       line-height: 1.8;
       color: #818181;
       text-align: justify;
@@ -115,8 +89,8 @@
     color: #fff !important;    
 }
 .navbar li a{
-	font-variant:small-caps; 
-	font-size: 14px;
+	
+	font-size: 12px;
 }
 
 .navbar-brand{	
@@ -238,7 +212,7 @@ display:none;
     	  <div  style="display:inline-block;">
     	  		<div id='file_icon_div' class='BTN_CONTAINER TOOLBAR'  data-toggle="tooltip" data-placement="bottom" data-html='true' data-original-title="<p>Manage Workspace<span data-href=Help/NewHelp.htm#manageproject ><br><i>Press <b>H</b> key for Help</span></p>" disabled=''>		
     				<input class='IMAGE_BUTTON '  type = "image" id='file_icon' value=''  src='../CommonCSS/icons/Version1/svgfile.svg'  />    				
-    				<span class='TB_TEXT'>Project</span>
+    				<span class='TB_TEXT'>File</span>
     			</div>
     			
     			<div class="BTN_CONTAINER  TOOLBAR"  style='display:inline-block' data-toggle="tooltip" data-placement="bottom" data-html='true' data-original-title="<p>Add a Group<span data-href=Help/NewHelp.htm#addgroup><br><i>Press <b>H</b> key for Help</span></p>" disabled=''>
@@ -247,7 +221,7 @@ display:none;
 	    		</div>
      			<div id='object_icon_div' class='BTN_CONTAINER TOOLBAR' data-toggle="tooltip" data-placement="bottom" data-html='true' title="<p>Add New Objects<span data-href=Help/NewHelp.htm#addobject><br><i>Press <b>H</b> key for Help</span></p>">		
     				<input class='IMAGE_BUTTON'  type = "image" id='object_icon' value=''  src='../CommonCSS/icons/Version1/shapes.svg'  />    				
-    				<span class='TB_TEXT'>Shapes</span>
+    				<span class='TB_TEXT'>Draw</span>
     			</div>
     			
     			<div class="BTN_CONTAINER TOOLBAR"  style='display:inline-block' data-toggle="tooltip" data-placement="bottom" data-html='true' title="<p>Add Text<span data-href=Help/NewHelp.htm#addtext><br><i>Press <b>H</b> key for Help</span></p>"> 
@@ -319,11 +293,11 @@ display:none;
   	<div class='row' style='margin-top:35px'>
   		<div id='leftpanel' class="panel panel-default col-sm-8" style='position:relative;top:0px; border:none;' onscroll="OnWindowScroll(event)">    	
     	<div class="panel-body" style='padding:0px' >
-    	<div id='statusinfo' style='font-weight:bold; font-size:12px'><span style='margin-left:15px'>Project Name:</span><span id='fname' style='margin-left:5px; font-weight:bold; font-style:italic; color:#E62A15' ></span>
-    		<span style='margin-left:15px'>Dimension:</span><a id='diminfo' onclick='GX_ToolbarHandler(event)' href='' class='custom_anchor' style='margin-left:5px; font-weight:bold' data-toggle="tooltip" data-placement="bottom" data-html='true' title="<p>Change Dimension of SVG Image<span data-href=Help/NewHelp.htm#addimage><br><i>Press <b>H</b> key for Help</span></p>" ></a>
-    		<div id='zoomp' style= 'display:inline-block; margin-left:15px; margin-right:3px'>Zoom<div id='zoomDDL' class='EDIT_BOX' type='Zoom' style='position:relative; top:6px' data-toggle="tooltip" data-placement="bottom" data-html='true' title="<p>Zoom-In<span data-href=Help/NewHelp.htm#addimage><br><i>Press <b>H</b> key for Help</span></p>"></div></div>
-    		<div id='snaptogrid' style="display:inline-block; margin-left:1px; margin-top:1px; font-size:11px;" data-tooltiptext='Snap to Grid' data-helptext='Snaps to the Grid when Object is moved or resized'>Snap To Grid</div>    		
-    		<div id='tooltipBtn' style="display:inline-block; margin-left:10px; margin-top:1px; font-size:11px;" title='Show/Hide the Tooltip'>Tooltip</div>
+    	<div id='statusinfo' style='font-weight:bold;'><span style='margin-left:15px' class='STATUS_FIELD'>File:</span><span id='fname' style='margin-left:5px; font-weight:bold; font-style:italic; color:#E62A15' ></span>
+    		<span style='margin-left:15px' class='STATUS_FIELD'>Dimension:</span><a id='diminfo' onclick='GX_ToolbarHandler(event)'  class='custom_anchor' style='margin-left:5px; font-weight:bold' data-toggle="tooltip" data-placement="bottom" data-html='true' title="<p>Change Dimension of SVG Image<span data-href=Help/NewHelp.htm#addimage><br><i>Press <b>H</b> key for Help</span></p>" ></a>
+    		<div id='zoomp' style= 'display:inline-block; margin-left:15px; margin-right:3px' class='STATUS_FIELD'>Zoom<div id='zoomDDL' class='EDIT_BOX' type='Zoom' style='position:relative; top:6px' data-toggle="tooltip" data-placement="bottom" data-html='true' title="<p>Zoom-In<span data-href=Help/NewHelp.htm#addimage><br><i>Press <b>H</b> key for Help</span></p>"></div></div>
+    		<div id='snaptogrid' class='STATUS_FIELD' style="display:inline-block; margin-left:20px; margin-top:1px;" data-tooltiptext='Snap to Grid' data-helptext='Snaps to the Grid when Object is moved or resized'>Snap To Grid</div>    		
+    		<div id='tooltipBtn' class='STATUS_FIELD' style="display:inline-block; margin-left:20px; margin-top:1px;" title='Show/Hide the Tooltip'>Tooltip</div>
     		<div style='display:inline-block; margin-left:1px; margin-top:1px; position:relative; top:-3px'><button id='reloadBtn' type="button" class="btn btn-sm btn-primary" onclick='GX_ToolbarHandler(event)'>Reload</button> </div>
     	</div>
     	  <div id='editorTabs' onscroll="OnWindowScroll(event)">
@@ -363,17 +337,17 @@ display:none;
 			        	<path id="erasepath_orig" visibility="hidden" class='ERASE_PATH' stroke="white" stroke-width="4" fill="none" d="" />
 			        	<rect id='eraser1_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
 			        	<rect id='eraser2_orig' visibility='hidden' x='10' y='10' width='10' height='10' stroke-width='1' stroke='red' fill='none'/>
-						<rect id="gripper_orig" x="10" y="10" width="50" height="50" stroke="indigo" stroke-width="1" fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible"  onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)"></rect>				      
+						<rect id="gripper_orig" x="10" y="10" width="50" height="50" stroke="indigo" stroke-width="2" fill="none" stroke-dasharray="" visibility="hidden" pointer-events="visible"  onmousedown="OnObjectMouseDown(evt)" onmouseout="OnObjectMouseOut(evt)"></rect>				      
 				        <rect id="freedraw_orig" x="10" y="10" width="250" height="123" stroke="" stroke-width="0" stroke-opacity='0.2' fill="none" stroke-dasharray="6 4" visibility="hidden" pointer-events="visible" onmousedown="OnFreeDrawClick(evt)" onmousemove='OnFreeDrawMouseMove(evt)' ></rect>
 			       </svg>
 		        
 	</svg> <!-- SVGContainer -->
 	
 	  
-	<div id="sel_gripper" class="ui-widget-content GRIPPER" style='position:absolute' data-toggle="tooltip" data-placement="right"></div>
+	<div id="sel_gripper" class="ui-widget-content GRIPPER" style='position:absolute' onclick='OnSelGripperClick(event)' ></div>
 	<div id='DivPathMarker' class="ui-widget-content" style='border:2px solid black; position:absolute; width:10px; height:10px; border-radius:5px' onmousemove='OnDivPathMarkerMouseMove(event)' onmouseout='OnDivPathMarkerMouseOut(event)'
      onmousedown='OnDivPathMarkerMouseDown(event)'></div>  
-     <div id='MarkerHighlighter' class='PATH_MARKER' style='border:2px solid red; position:absolute; width:20px; height:20px; border-radius:10px; display:none'></div>
+     <div id='MarkerHighlighter' class='PATH_MARKER' style='border:2px solid black; position:absolute; width:20px; height:20px; border-radius:10px; display:none; opacity:0.6'></div>
      <div id='markerPoint'  class='CUSTOM_MARKER' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1;display:none'></div>          		
      </div> <!-- Canvas -->       	
                 
@@ -396,55 +370,70 @@ display:none;
 		                <li class='tabTitle'>Animation</li>                
 		            </ul>		            
 		            <div id='groupTab' style='background-color:#e8e8e8'>
-		                <div id="node_panel" >Node Panel</div>
+		                <div id="node_panel" ></div>
 		            </div>
 		            <div id='propertyTab' style='background-color:#e8e8e8' >
 		              <div  style="width:100%; margin-top:15px">
 		              	<div id='positionProp' class='propertyRow' >
 		              		<div class='propertyName'>Position:</div>
-		              		<div class='propertyValues' style='display:inline-block; margin-left:27px'> 
-		              			<div id='LPosEdit' style='display:inline-block; margin-left:5px;' data-toggle="tooltip" data-placement="top" title="<p>X-Coordinate of Top-Left Corner of the Object<a href=Help/NewHelp.htm#position></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>X</span><div id='lposIP' class='EDIT_BOX group7' type='DIMENSION' style='font-size:10px'></div></div>		              					              		
-		              		</div>
-		              		<div class='propertyValues' style='display:inline-block; margin-left:32px'>
-		              			<div id='TPosEdit' style='display:inline-block; margin-left:10px;' data-toggle="tooltip" data-placement="top" title="<p>Y-Coordinate of Top-Left Corner of the Object<a href=Help/NewHelp.htm#position></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Y</span><div id='tposIP' class='EDIT_BOX group7' type='DIMENSION'></div></div>
+		              		<div class='PROPVALUE_CONTAINER' style='position:relative; top:2px;'>		              		
+			              		<div class='propertyValues firstVal'> 
+			              			<div id='LPosEdit' style='margin-left:5px;' data-toggle="tooltip" data-placement="bottom" title="<p>X-Coordinate of Top-Left Corner of the Object<a href=Help/NewHelp.htm#position></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>X</span><div id='lposIP' class='EDIT_BOX group7' type='DIMENSION' style=''></div></div>		              					              		
+			              		</div>
+			              		<div class='propertyValues lastVal'>
+			              			<div id='TPosEdit' style='margin-left:10px;' data-toggle="tooltip" data-placement="bottom" title="<p>Y-Coordinate of Top-Left Corner of the Object<a href=Help/NewHelp.htm#position></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Y</span><div id='tposIP' class='EDIT_BOX group7' type='DIMENSION'></div></div>
+			              		</div>
 		              		</div>
 		              	</div >
 		              	<div id='dimProp' class='propertyRow'>
-		              		<div class='propertyName'>Dimension:</div>
-		              		<div class='propertyValues' style='display:inline-block; margin-left:5px;'><div id='WidthEdit' style='display:inline-block; margin-left:5px;' data-toggle="tooltip" data-placement="top" title="<p>Width of the Bounding Rectangle<a href=Help/NewHelp.htm#dimension></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Width</span><div id='widthIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div></div>
-		              		<div class='propertyValues' style='display:inline-block; margin-left:10px;'><div  id='HeightEdit' style='display:inline-block; margin-left:5px;' data-toggle="tooltip" data-placement="top" title="<p>Height of the Bounding Rectangle<a href=Help/NewHelp.htm#dimension></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Height</span><div id='heightIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div></div>
+		              		<div class='propertyName'>Size:</div>
+		              		<div class='PROPVALUE_CONTAINER' style='position:relative; top:2px;'>		   
+		              			<div class='propertyValues firstVal' style='display:inline-block; margin-left:-22px;'><div id='WidthEdit' style='display:inline-block; margin-left:5px;' data-toggle="tooltip" data-placement="top" title="<p>Width of the Bounding Rectangle<a href=Help/NewHelp.htm#dimension></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Width</span><div id='widthIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div></div>
+		              			<div class='propertyValues lastVal' style='display:inline-block; margin-left:10px;'><div  id='HeightEdit' style='display:inline-block; margin-left:5px;' data-toggle="tooltip" data-placement="top" title="<p>Height of the Bounding Rectangle<a href=Help/NewHelp.htm#dimension></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Height</span><div id='heightIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div></div>
+		              		</div>		   
 		              	</div>
-		              	<div id='rotateProp' class='propertyRow'>
-		              		<div class='propertyName'>Rotate(<sup>o</sup>):</div>
-		              		<div class='propertyValues' style='display:inline-block; margin-left:5px;'><div id='rotateEdit' style='display:inline-block; margin-left:1px;' data-toggle="tooltip" data-placement="top" title="<p>Angle of Rotation<a href=Help/NewHelp.htm#rotation></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Rotate</span><div id='rotateIP' class='EDIT_BOX group6' type='ROTATION'></div></div></div>
-		              		<div class='propertyValues' style='display:inline-block; margin-left:10px;'><!-- <div id='rotateSlider' style='display:inline-block;margin-left:3px;'></div>--></div>
+		              	<div id='rotateProp' class='propertyRow' >
+		              		<div class='propertyName'>Rotation(<sup>o</sup>):</div>
+		              		<div class='PROPVALUE_CONTAINER' style='position:relative; top:2px;'>
+		              			<div class='propertyValues' style='display:inline-block; margin-left:15px;'><div id='rotateEdit' style='display:inline-block; margin-left:1px;' data-toggle="tooltip" data-placement="top" title="<p>Angle of Rotation<a href=Help/NewHelp.htm#rotation></a></br>Press 'H' Key for Help</p>"><div id='rotateIP' class='EDIT_BOX group6' type='ROTATION'></div></div></div>
+		              		</div>
 		              	</div>		              	
 		              	<div id='fillProp' class='propertyRow' >
-		              		<div class='propertyName'>Fill:</div>
-		              		<div class='propertyValues' style='display:inline-block; margin-left:-32px;' ><div id='filldiv' style= 'display:inline-block; margin-left:29px; margin-right:3px' data-toggle="tooltip" data-placement="top" title="<p>Select Type of Background Fill<a href=Help/NewHelp.htm#fill></a></br>Press 'H' Key for Help</p>" ><span class='myLabel' style='text-align:right;'>Fill Type</span><div id='fillcolorDDL' class='EDIT_BOX'></div></div></div>
-		              		<div class='propertyValues' style='margin-left:52px;margin-top:5px;'>
-		              			<div id='gradlistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px' data-toggle="tooltip" data-placement="top" title="<p>Use Existing Gradient<a href=Help/NewHelp.htm#usegradient></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Use Gradient</span><div id='gradlistDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
-		              			<div style= 'display:inline-block;position:relative; top:-10px'>
-		    						<button id='edit_grad_btn' type="button" class="btn btn-xs propertyBtn" style='width:55px' onclick='GX_ToolbarHandler(event)' data-toggle="tooltip" data-placement="top" title="<p>Edit Gradient<a href=Help/NewHelp.htm#editgradient></a></br>Press 'H' Key for Help</p>" ><span class="glyphicon glyphicon-edit" style='margin-right:2px'></span>Edit</button> 
-		    						<button id='delete_grad_btn' type="button" class="btn btn-xs propertyBtn" style='width:55px; margin-left:5px;' onclick='GX_ToolbarHandler(event)' data-toggle="tooltip" data-placement="top" title="<p>Delete Gradient<a href=Help/NewHelp.htm#deletegradient></a></br>Press 'H' Key for Help</p>"><span class="glyphicon glyphicon-remove" style='margin-right:2px'></span>Delete</button>
-		    					</div> 		              		
-		              		</div>		              		
-		              	</div>		              	
-		              	<div id='strokeProp' class='propertyRow' style='margin-top:0px;'>
-		              		<div class='propertyName'>Outline:</div>
-		              		<div class='propertyValues' style='display:inline-block; margin-left:-15px;'>
-		              			<div class="BTN_CONTAINER_SMALL" style='display:inline-block; margin-left:0px;'><input class='small_icon' type = "image" id='stroke_color_icon' value=''  src='../CommonCSS/icons/Version1/bordercolor.png' style='width:22px; height:22px;margin-top:5px;' data-toggle="tooltip" data-placement="top" title="<p>Outline Color<a href=Help/NewHelp.htm#strokecolor></a></br>Press 'H' Key for Help</p>"/></div>
-		              			<div id='strokeweightEdit' style='display:inline-block; margin-left:5px; margin-right:5px;margin-top:6px' data-toggle="tooltip" data-placement="top" title="<p>Outline Thickness<a href=Help/NewHelp.htm#strokethickness></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Thickness</span><div id='strokeWeightIP' class='EDIT_BOX group6' type='STROKE_WEIGHT' ></div></div>
-		              			<div id='strokedashdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px' data-toggle="tooltip" data-placement="top" title="<p>Outline Pattern<a href=Help/NewHelp.htm#strokepattern></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;' >Pattern</span><div id='strokedashDDL' class='EDIT_BOX' type='STROKE_DASH'></div></div>
-		              		</div>		              		
+		              		<div class='propertyName'>Fill:</div>	
+		              		<div class='PROPVALUE_CONTAINER' style='position:relative; top:-1px;'>	              		
+			              		<div class='propertyValues' style='display:inline-block; margin-left:-25px;margin-top:5px;'>
+			              			<div id='gradlistdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px' data-toggle="tooltip" data-placement="top" title="<p>Use Existing Gradient<a href=Help/NewHelp.htm#usegradient></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Type</span><div id='gradlistDDL' class='EDIT_BOX' type='GRAD_LIST'></div></div>
+			              			<div style= 'display:inline-block;position:relative; top:-10px'>
+			    						<button id='edit_grad_btn' type="button" class="btn btn-xs propertyBtn" style='width:55px' onclick='GX_ToolbarHandler(event)' data-toggle="tooltip" data-placement="top" title="<p>Edit Gradient<a href=Help/NewHelp.htm#editgradient></a></br>Press 'H' Key for Help</p>" ><span class="glyphicon glyphicon-edit" style='margin-right:2px'></span>Edit</button> 
+			    						<button id='delete_grad_btn' type="button" class="btn btn-xs propertyBtn" style='width:55px; margin-left:5px;' onclick='GX_ToolbarHandler(event)' data-toggle="tooltip" data-placement="top" title="<p>Delete Gradient<a href=Help/NewHelp.htm#deletegradient></a></br>Press 'H' Key for Help</p>"><span class="glyphicon glyphicon-remove" style='margin-right:2px'></span>Delete</button>
+			    					</div> 		              		
+			              		</div>	
+			              	</div>	              		
 		              	</div>
+		              	
+		              	
+		              	
+		              	<div id='strokeProp' class='propertyRow' >
+		              		<div class='propertyName' style='top:-20px; margin-bottom:0px;'>Outline:</div>	
+		              		<div class='PROPVALUE_CONTAINER' style='position:relative; top:-3px;'>	              		
+			              		<div class='propertyValues firstVal' style=''>
+			              			<div class="BTN_CONTAINER_SMALL" style='display:inline-block; margin-left:0px;'><input class='small_icon' type = "image" id='stroke_color_icon' value=''  src='../CommonCSS/icons/Version1/bordercolor.png' style='width:22px; height:22px;margin-top:5px;' data-toggle="tooltip" data-placement="top" title="<p>Outline Color<a href=Help/NewHelp.htm#strokecolor></a></br>Press 'H' Key for Help</p>"/></div>
+			              			<div id='strokeweightEdit' style='display:inline-block; margin-left:5px; margin-right:5px;margin-top:6px' data-toggle="tooltip" data-placement="top" title="<p>Outline Thickness<a href=Help/NewHelp.htm#strokethickness></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Thickness</span><div id='strokeWeightIP' class='EDIT_BOX group6' type='STROKE_WEIGHT' ></div></div>
+			              			
+			              		</div>
+			              		<div class='propertyValues lastVal' style='position:relative; top:5px'>
+			              			<div id='strokedashdiv' style= 'display:inline-block; margin-left:2px; margin-right:3px' data-toggle="tooltip" data-placement="top" title="<p>Outline Pattern<a href=Help/NewHelp.htm#strokepattern></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;' >Pattern</span><div id='strokedashDDL' class='EDIT_BOX' type='STROKE_DASH'></div></div>
+			              		</div>
+			              	</div>	              		
+		              	</div>
+		              	
 		              	<div id='opacityProp' class='propertyRow' style='margin-top:10px;'>
-		              		<div class='propertyName'>Opacity:</div>
+		              		<div class='propertyName' style='margin-top:7px'>Opacity:</div>
 		              		<div class='propertyValues' style='display:inline-block;'>
 		              			<div id='opacitySlider' style='display:inline-block;margin-left:10px;' data-toggle="tooltip" data-placement="top" title="<p>Opacity<a href=Help/NewHelp.htm#opacity></a></br>Press 'H' Key for Help</p>" ></div>
-		              			<div class='EDIT_BOX' style='display:inline-block; margin-left:5px; font-weight:bold'><span id='fillopacityValue' ></span>%</div>
+		              			<div class='EDIT_BOX' style='display:inline-block; margin-left:5px; font-weight:bold; color:#777'><span id='fillopacityValue' ></span>%</div>
 		              		</div>
-		              		<div style='height:10px'></div>		              		
+		              		              		
 		              	</div>		
 		              	
 		              	<div id='roundRadProp' class='propertyRow'>
@@ -452,14 +441,31 @@ display:none;
 		              		<div class='propertyValues' style='display:inline-block; margin-left:5px;'><div id='rxEdit' style='display:inline-block; margin-left:5px;' data-toggle="tooltip" data-placement="top" title="<p>Radius of the Rounding Corner of Rectangle<a href=Help/NewHelp.htm#dimension></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Radius</span><div id='radiusIP' class='EDIT_BOX group6' type='DIMENSION' ></div></div></div>
 		              		
 		              	</div>
-		              	             
+		              	<div id='editbtnProp' class='propertyRow pathProperty'>
+		              		<div class='propertyName' style='display:inline-block'>Edit Path: </div>		
+		              		<div class='propertyValues' style='display:inline-block'>
+		              			<div style='margin-left:-10px; display:inline-block;' ><span class='myLabel' style='text-align:right;'>Close Path</span><div id='pathclose' style="display:inline-block; margin-left:-5px; margin-top: 2px;position:relative; top:3px" ></div></div>
+		              			<div style='margin-left:15px; display:inline-block; position:relative; top:-7px'><button id='patheditBtn' type="button" class="btn btn-xs btn-primary" onclick='GX_ToolbarHandler(event)' style='margin-top:1px;' data-toggle="tooltip" data-placement="top" title="<p>Edit Path<a href=Help/NewHelp.htm#editpathpoint></a></br>Press 'H' Key for Help</p>">Edit Points</button></div>
+		              		</div>              		
+		              		<div class='propertyValues polypointEditProperty' style='display:inline-block; margin-left:15px;position:relative; top:-8px'>		
+		              			<button id='addpointBtn' type="button" class="btn btn-xs propertyBtn" style='width:75px;' onclick='GX_ToolbarHandler(event)' data-toggle="tooltip" data-placement="top" title="<p>Adding a point<a href=Help/NewHelp.htm#addpolygonpoints></a></br>Press 'H' Key for Help</p>">Add Point</button>
+		              			<button id='deletepointBtn' type="button" class="btn btn-xs propertyBtn" style='margin-left:5px;width:75px;' onclick='GX_ToolbarHandler(event)' data-toggle="tooltip" data-placement="top" title="<p>Deleting a point<a href=Help/NewHelp.htm#deletepolygonpoints></a></br>Press 'H' Key for Help</p>">Delete Point</button>              			
+		              		</div>
+		              		<div class='propertyValues freedrawProp pathProperty' style='display:inline-block; margin-left:0px;position:relative; top:-6px'>
+		              			<button id='eraseBtn' type="button" class="btn  btn-xs propertyBtn freedrawBtn" style='width:60px' onclick='GX_ToolbarHandler(event)'  data-toggle="tooltip" data-placement="top" title="<p>Eraser<a href=Help/NewHelp.htm#erase></a></br>Press 'H' Key for Help</p>">Erase</button> 
+		              			<button id='redrawBtn' type="button" class="btn btn-xs propertyBtn freedrawBtn" style='width:60px' onclick='GX_ToolbarHandler(event)' data-toggle="tooltip" data-placement="top" title="<p>Redraw<a href=Help/NewHelp.htm#redraw></a></br>Press 'H' Key for Help</p>">Redraw</button>
+		              			<button id='smoothBtn' type="button" class="btn btn-xs propertyBtn freedrawBtn" style='width:60px' onclick='GX_ToolbarHandler(event)' data-toggle="tooltip" data-placement="top" title="<p>Smoothen<a href=Help/NewHelp.htm#smoothen></a></br>Press 'H' Key for Help</p>">Smoothen</button> 
+		              		</div>
+		              	</div>   
+		              	<!--  	              	             
 		              	<div id='pathcloseProp' class='propertyRow pathProperty'>
 		              		<div class='propertyName' style='width:120px;'>Closed Path:</div>
 		              		<div class='propertyValues' style='display:inline-block;margin-left:-25px;'>
-		              			<div id='pathclose' style="margin-left:-25px; margin-top: 2px;position:relative; top:5px;" data-toggle="tooltip" data-placement="top" title="<p>Closed Path<a href=Help/NewHelp.htm#closedpath></a></br>Press 'H' Key for Help</p>" ></div>
+		              			<div id='pathclose11' style="margin-left:-25px; margin-top: 2px;position:relative; top:5px;" data-toggle="tooltip" data-placement="top" title="<p>Closed Path<a href=Help/NewHelp.htm#closedpath></a></br>Press 'H' Key for Help</p>" ></div>
 		              		</div>
 		              		<div style='height:10px' ></div>
 		              	</div>		
+		              -->	
 		              	<div id='markerProp' class='propertyRow markerProperty'>
 		              		<div class='propertyName'>Markers:</div>
 		              		<div class='propertyValues' style='display:inline-block;margin-left:0px;'>
@@ -500,18 +506,7 @@ display:none;
 		              			--> 
 		              		</div>		              		
 		              	</div>
-		              	<div id='editbtnProp' class='propertyRow pathProperty'>
-		              		<div class='propertyName' style='display:inline-block'><button id='patheditBtn' type="button" class="btn btn-sm btn-primary" onclick='GX_ToolbarHandler(event)' style='margin-top:5px; height:24px' data-toggle="tooltip" data-placement="top" title="<p>Edit Path<a href=Help/NewHelp.htm#editpathpoint></a></br>Press 'H' Key for Help</p>">Edit Points</button></div>		              		
-		              		<div class='propertyValues polypointEditProperty' style='display:inline-block; margin-left:37px;position:relative; top:-3px'>		
-		              			<button id='addpointBtn' type="button" class="btn btn-xs propertyBtn" style='width:100px;' onclick='GX_ToolbarHandler(event)' data-toggle="tooltip" data-placement="top" title="<p>Adding a point<a href=Help/NewHelp.htm#addpolygonpoints></a></br>Press 'H' Key for Help</p>">Add Point</button>
-		              			<button id='deletepointBtn' type="button" class="btn btn-xs propertyBtn" style='margin-left:5px;width:100px;' onclick='GX_ToolbarHandler(event)' data-toggle="tooltip" data-placement="top" title="<p>Deleting a point<a href=Help/NewHelp.htm#deletepolygonpoints></a></br>Press 'H' Key for Help</p>">Delete Point</button>              			
-		              		</div>
-		              		<div class='propertyValues freedrawProp pathProperty' style='display:inline-block; margin-left:37px;position:relative; top:-3px'>
-		              			<button id='eraseBtn' type="button" class="btn  btn-xs propertyBtn" style='width:68px' onclick='GX_ToolbarHandler(event)'  data-toggle="tooltip" data-placement="top" title="<p>Eraser<a href=Help/NewHelp.htm#erase></a></br>Press 'H' Key for Help</p>">Erase</button> 
-		              			<button id='redrawBtn' type="button" class="btn btn-xs propertyBtn" style='width:68px' onclick='GX_ToolbarHandler(event)' data-toggle="tooltip" data-placement="top" title="<p>Redraw<a href=Help/NewHelp.htm#redraw></a></br>Press 'H' Key for Help</p>">Redraw</button>
-		              			<button id='smoothBtn' type="button" class="btn btn-xs propertyBtn" style='width:68px' onclick='GX_ToolbarHandler(event)' data-toggle="tooltip" data-placement="top" title="<p>Smoothen<a href=Help/NewHelp.htm#smoothen></a></br>Press 'H' Key for Help</p>">Smoothen</button> 
-		              		</div>
-		              	</div>    	
+		              	 	
 		              	
 		              	<div id='fontProp1' class='propertyRow fontProperty'>		              		 
 		              		<div class='propertyName' style='width:15%'>Font:</div>
@@ -545,71 +540,77 @@ display:none;
 		       			<div style='margin-left:5px; margin-top:10px'>
 		       				<button id='add_anim_btn' type="button" class="btn btn-xs propertyBtn" style='width:70px' onclick='GX_AnimListWidgetBtnHdlr(event)' data-toggle="tooltip" data-placement="top" title="<p>Add Animation<a href=Help/NewHelp.htm#addanim></a></br>Press 'H' Key for Help</p>"><span class="glyphicon glyphicon-plus" style='margin-right:5px'></span>Add</button>
 		       				<button id='delete_anim_btn' type="button" class="btn btn-xs propertyBtn animOpBtn" style='width:70px' onclick='GX_AnimListWidgetBtnHdlr(event)' data-toggle="tooltip" data-placement="top" title="<p>Delete Animation<a href=Help/NewHelp.htm#deleteanim></a></br>Press 'H' Key for Help</p>"><span class="glyphicon glyphicon-remove" style='margin-right:5px'></span>Delete</button>
-		       				<button id='apply_anim_btn' type="button" class="btn btn-xs propertyBtn animOpBtn" style='width:70px' onclick='GX_AnimListWidgetBtnHdlr(event)' data-toggle="tooltip" data-placement="top" title="<p>Apply<a href=Help/NewHelp.htm#applyanim></a></br>Press 'H' Key for Help</p>"><span class="glyphicon glyphicon-ok" style='margin-right:5px' ></span>Apply</button>
-		       				<button id='play_anim_btn' type="button" class="btn btn-xs propertyBtn animOpBtn" style='width:70px' onclick='GX_AnimListWidgetBtnHdlr(event)' data-toggle="tooltip" data-placement="top" title="<p>Play<a href=Help/NewHelp.htm#playanim></a></br>Press 'H' Key for Help</p>"><span class="glyphicon glyphicon-play" style='margin-right:5px' ></span>Play</button>
+		       				<button id='apply_anim_btn' type="button" class="btn btn-xs propertyBtn animOpBtn" style='width:70px;display:none' onclick='GX_AnimListWidgetBtnHdlr(event)' data-toggle="tooltip" data-placement="top" title="<p>Save<a href=Help/NewHelp.htm#applyanim></a></br>Press 'H' Key for Help</p>" ><span class="glyphicon glyphicon-ok" style='margin-right:5px' ></span>Save</button>
+		       				<button id='play_anim_btn' type="button" class="btn btn-xs propertyBtn animOpBtn" style='width:100px' onclick='GX_AnimListWidgetBtnHdlr(event)' data-toggle="tooltip" data-placement="top" title="<p>Saves Changes and Play<a href=Help/NewHelp.htm#playanim></a></br>Press 'H' Key for Help</p>"><span class="glyphicon glyphicon-play" style='margin-right:5px' ></span>Save & Play</button>
 		       			</div>
-		       			<div id='jqxAnimWidget' style="margin-top:10px; text-align:center" data-toggle="tooltip" data-placement="top" title="<p>Timing Control<a href=Help/NewHelp.htm#timinganim></a></br>Press 'H' Key for Help</p>">
+		       			<div id='jqxAnimWidget' style="margin-top:10px; text-align:center">
 					        <div id="jqxAnimgrid" style='font-size:12px'></div>  
  						</div>
  						<div id='animParamdiv' style="width:100%; margin-top:8px">
  							<div id='commonAnim' class='animpropertyRow'>
- 								<div class='propertyValues'>
- 								<div>
-			              			<div id="repeatcountEdit" style="display:inline-block; margin-left:1px; margin-top:2px" data-toggle="tooltip" data-placement="top" title="<p>Repeat Animation<a href=Help/NewHelp.htm#repeatanim></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;' >Repeat</span><div id="repeatcountIP" class="EDIT_BOX group6"></div></div>
-			              			<div id="endstatelist" style="display:inline-block; margin-left:40px;"><span class='myLabel' style='text-align:right;' >End State</span><div id="endstatelistDDL" class="EDIT_BOX" style="margin-top:2px"></div></div>
+ 								<div class='animpropertyValues'> 								
+			              			<div id="repeatcountEdit" class='firstAnimVal' style="margin-left:1px; margin-top:2px; margin-bottom:10px" data-toggle="tooltip" data-placement="top" title="<p>Repeat Animation<a href=Help/NewHelp.htm#repeatanim></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;' >Repeat</span><div id="repeatcountIP" class="EDIT_BOX group6"></div></div>
+			              			<div id="endstatelist"    class='lastAnimVal' style="float:right;"><span class='myLabel' style='text-align:right;' >End State</span><div id="endstatelistDDL" class="EDIT_BOX" style="margin-top:2px"></div></div>
 			              		</div>
-			              			<div class="ANIMATTR" style="display:inline-block; margin-left:2px;"><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Hidden Before Animation<a href=Help/NewHelp.htm#rolingeffectanim></a></br>Press 'H' Key for Help</p>" >Hide Before Animation</span><div id="hidebeforeCB" style="display:inline-block;margin-left:5px; margin-top:2px; position:relative; top:5px"></div></div>
-			              			<div id='hideafterCBContainer' class="ANIMATTR" style="display:inline-block; margin-left:2px;"><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Hidden After Animation<a href=Help/NewHelp.htm#rolingeffectanim></a></br>Press 'H' Key for Help</p>" >Hide After Animation</span><div id="hideafterCB" style="display:inline-block;margin-left:5px; margin-top:2px; position:relative; top:5px"></div></div>
-			              					              					              		
-			              		</div>			              		
+			              				              		
  							</div>	
+ 							<div id='hideshowanim' class='animpropertyRow'>
+ 								<div class='animpropertyValues'>
+			              			<div class='firstAnimVal' style=""><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Hidden Before Animation<a href=Help/NewHelp.htm#rolingeffectanim></a></br>Press 'H' Key for Help</p>" >Hide Before Animation</span><div id="hidebeforeCB" style="display:inline-block;margin-left:5px; margin-top:2px; position:relative; top:5px"></div></div>
+			              			<div id='hideafterCBContainer' class="lastAnimVal" style="float:right;"><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Hidden After Animation<a href=Help/NewHelp.htm#rolingeffectanim></a></br>Press 'H' Key for Help</p>" >Hide After Animation</span><div id="hideafterCB" style="display:inline-block;margin-left:5px; margin-top:2px; position:relative; top:5px"></div></div>			              			              					              		
+			              		</div>	
+ 							</div>
 			              	<div id='sasd' class='animpropertyRow MotionPathProperty'>			              		
-			              		<div class='propertyValues'>
-				              		<div style="display:inline-block;"><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Path Visibility<a href=Help/NewHelp.htm#pamanim></a></br>Press 'H' Key for Help</p>">Path Visible</span><div id="pathvisibilityCB" style="display:inline-block;margin-left:1px; margin-top:2px;position:relative; top:5px"></div></div>
-				              			<div style="display:inline-block; margin-left:20px">
-				              				<div  class="ANIMATTR" style="display:inline-block; margin-left:2px;"><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Change Path type<a href=Help/NewHelp.htm#changepathanim></a></br>Press 'H' Key for Help</p>">Change Path</span><div id="pathModifyDDL" class="EDIT_BOX"  style="margin-top:2px" ></div></div>	              			
+			              		<div class='animpropertyValues'>
+				              		<div class='firstAnimVal' style=""><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Path Visibility<a href=Help/NewHelp.htm#pamanim></a></br>Press 'H' Key for Help</p>">Path Visible</span><div id="pathvisibilityCB" style="display:inline-block;margin-left:1px; margin-top:2px;position:relative; top:5px"></div></div>
+				              			<div class='lastAnimVal' style="">
+				              				<div  class="ANIMATTR" style="display:inline-block; margin-left:2px;"><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Change Path type<a href=Help/NewHelp.htm#changepathanim></a></br>Press 'H' Key for Help</p>">Change Path To</span><div id="pathModifyDDL" class="EDIT_BOX"  style="margin-top:2px" ></div></div>	              			
 				              				<div style='display:inline-block; margin-left:2px; position:relative;top:-9px' data-toggle="tooltip" data-placement="bottom" title="<p>Edit Motion Path<a href=Help/NewHelp.htm#editpathanim></a></br>Press 'H' Key for Help</p>"><button id='edit_animpath_btn' type="button" class="btn btn-xs propertyBtn" style='width:90px' onclick='GX_ToolbarHandler(event)'><span class="glyphicon glyphicon-edit" style='margin-right:5px' ></span>Edit Path</button></div>
 				              			</div>	
-				              		</div>	
-				              	<div class='propertyValues'>
+				              		</div>					 	              			            					              		
+				             </div>	
+				             
+				            <div  class='animpropertyRow MotionPathProperty'>
+				              <div class='animpropertyValues'>
 				              	<div class="ANIMATTR" style="display:inline-block; margin-left:2px;"><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Rolling Effect<a href=Help/NewHelp.htm#rolingeffectanim></a></br>Press 'H' Key for Help</p>" >Rolling</span><div id="rollingmotionCB" style="display:inline-block;margin-left:5px; margin-top:2px; position:relative; top:5px"></div></div>
 			              			<div  class="ANIMATTR" style="display:inline-block; margin-left:20px;"><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Touch Point<a href=Help/NewHelp.htm#touchingPAMctanim></a></br>Press 'H' Key for Help</p>">Touching</span><div id="offsetParamDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:2px"></div></div>			              				              					              		
-			              		</div>		              			            					              		
-				             </div>	
-				              				              		
+			                  </div>	
+				            </div> 				              		
 			              		              	
 			              	<div id='dfretr' class='animpropertyRow MoveProperty'>			              		
-			              		<div class='propertyValues'>
-			              			<div style='display:inline-block;'><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Auto Reverse<a href=Help/NewHelp.htm#linmotanim></a></br>Press 'H' Key for Help</p>">Auto Reverse</span><div id="autoReverseCB" style="display:inline-block;margin-left:5px; margin-top:2px; position:relative; top:5px"></div></div>
-			              			<div  class="ANIMATTR" style="display:inline-block; margin-left:10px;" data-toggle="tooltip" data-placement="bottom" title="<p>Pace<a href=Help/NewHelp.htm#lmanimpace></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Pace</span><div id="paceValueDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:2px"></div></div>		              					              		
+			              		<div class='animpropertyValues'>
+			              			<div class='firstAnimVal'><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Auto Reverse<a href=Help/NewHelp.htm#linmotanim></a></br>Press 'H' Key for Help</p>">Auto Reverse</span><div id="autoReverseCB" style="display:inline-block;margin-left:5px; margin-top:2px; position:relative; top:5px"></div></div>
+			              			<div  class='lastAnimVal' style="display:inline-block; margin-left:10px;" data-toggle="tooltip" data-placement="bottom" title="<p>Pace<a href=Help/NewHelp.htm#lmanimpace></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Pace</span><div id="paceValueDDL" class="EDIT_BOX" type="ANIMATTR" style="margin-top:2px"></div></div>		              					              		
 			              		</div>			              		
 			              	</div >
 			              	<div  class='animpropertyRow RotateProperty'>			              		
-			              		<div class='propertyValues'>
-			              			<div style='display:inline-block;'><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Auto-Reverse<a href=Help/NewHelp.htm#autoreverseanim></a></br>Press 'H' Key for Help</p>" >Auto Reverse</span><div id="autoRotateReverseCB" style="display:inline-block;margin-left:5px; margin-top:2px;position:relative; top:5px" ></div></div>
-			              					 
+			              		<div class='animpropertyValues' style='position:relative; top:3px'>
+			              		<div class='firstAnimVal'>
+			              			<div style='display:inline-block;'><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Auto-Reverse<a href=Help/NewHelp.htm#autoreverseanim></a></br>Press 'H' Key for Help</p>" >Auto Reverse</span><div id="autoRotateReverseCB" style="display:inline-block;margin-left:5px; margin-top:2px;position:relative; top:5px" ></div></div>			              					 
 			              			<div style="margin-left:2px; display:inline-block;" data-toggle="tooltip" data-placement="bottom" title="<p>Starting Angle<a href=Help/NewHelp.htm#rotationanim></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;'>Start Angle(<sup>o</sup>)</span><div id="initRotationValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:2px;"></div></div>
-			              			<div style="margin-left:10px; display:inline-block;"><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Ending Angle<a href=Help/NewHelp.htm#endrotanim></a></br>Press 'H' Key for Help</p>">End Angle(<sup>o</sup>)</span><div id="endRotationValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:2px;"></div></div>             					              		
+			              		</div>
+			              		<div class='lastAnimVal'>			              		
+			              			<div style="margin-left:5px; display:inline-block;"><span class='myLabel' style='text-align:right;' data-toggle="tooltip" data-placement="bottom" title="<p>Ending Angle<a href=Help/NewHelp.htm#endrotanim></a></br>Press 'H' Key for Help</p>">End Angle(<sup>o</sup>)</span><div id="endRotationValueIP" class="EDIT_BOX group6" type="DIMENSION" style="margin-left:2px;"></div></div>
+			              		</div>             					              		
 			              		</div>
 			              	</div >	          
 			              	
 			              	<div class='animpropertyRow OpacityAnimProperty'>			              		
-			              		<div class='propertyValues'>
-			              			<div id="startfracEdit" style="margin-left:2px;display:inline-block"><span class='myLabel' style='text-align:right;'>Initial Opacity</span><div id="startOpacityValueIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>	
-			              			<div id="endfracEdit" style="margin-left:25px; display:inline-block"><span class='myLabel' style='text-align:right;'>Final Opacity</span><div id="endOpacityValueIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>	              					              		
+			              		<div class='animpropertyValues'> 
+			              			<div id="startfracEdit" class='firstAnimVal' style="margin-left:2px;"><span class='myLabel' style='text-align:right;'>Initial Opacity</span><div id="startOpacityValueIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>	
+			              			<div id="endfracEdit" class='lastAnimVal' style="margin-left:25px;"><span class='myLabel' style='text-align:right;'>Final Opacity</span><div id="endOpacityValueIP" class="EDIT_BOX group6" type="DIMENSION"></div></div>	              					              		
 			              		</div>
-			              		<div class='propertyValues'>			              			
-			              		</div>
+			              		
 			              	</div >
 			              	<div class='animpropertyRow SkewAnimProperty'>			              		
-			              		<div class='propertyValues'>
+			              		<div class='animpropertyValues'>
 			              			<div style="margin-left:2px; display:inline-block;"><span class='myLabel' style='text-align:right;'>Skew Angle(<sup>0</sup>)</span><div id="endAngleValueIP" class="EDIT_BOX group6"  style="margin-left:11px;"></div></div>		              					              		
 			              		</div>
 			              	</div >
-			              	<div class='animpropertyRow ValueProperty'>			              		
-			              		<div class='propertyValues'>
-			              			<div style="margin-left:2px; display:inline-block;" data-toggle="tooltip" data-placement="bottom" title="<p>Start Value<a href=Help/NewHelp.htm#lmanimotheranim></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;' >Start Value(%)</span><div id="startValueIP" class="EDIT_BOX group6"  style="margin-left:2px;"></div></div>
-			              			<div id='endValueIPDiv' style="margin-left:20px; display:inline-block;"><span class='myLabel' style='text-align:right;'>End Value(%)</span><div id="endValueIP" class="EDIT_BOX group6"  style="margin-left:2px;"></div></div>		              					              		
+			              	<div class='animpropertyRow ValueProperty' >			              		
+			              		<div class='animpropertyValues' style='position:relative; top:5px'>
+			              			<div class='firstAnimVal' style="margin-left:2px;" data-toggle="tooltip" data-placement="bottom" title="<p>Start Value<a href=Help/NewHelp.htm#lmanimotheranim></a></br>Press 'H' Key for Help</p>"><span class='myLabel' style='text-align:right;' >Start Value(%)</span><div id="startValueIP" class="EDIT_BOX group6"  style="margin-left:2px;"></div></div>
+			              			<div id='endValueIPDiv'  class='lastAnimVal' style="margin-left:5px;"><span class='myLabel' style='text-align:right;'>End Value(%)</span><div id="endValueIP" class="EDIT_BOX group6"  style="margin-left:2px;"></div></div>		              					              		
 			              		</div>			              		
 			              	</div >			              	
 		              	</div> 
@@ -642,11 +643,14 @@ display:none;
  
  <div id="project_popup" style='margin-top:20px; display:none'>
     <div style="display:inline-block">
-         	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;' data-toggle="tooltip" data-placement="bottom"  title="<p>Create New SVG file<span data-href=Help/NewHelp.htm#newproject><br><i>Press <b>H</b> key for Help<i></span></p>"><input class='small_icon'  type = "image" id='new_icon' value=''  src='../CommonCSS/icons/Version1/projectnew.svg'  /><span class='SMALL_TB_TEXT'>New</span></div>
+         	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;' data-toggle="tooltip" data-placement="bottom"  title="<p>Create a SVG file<span data-href=Help/NewHelp.htm#newproject><br><i>Press <b>H</b> key for Help<i></span></p>"><input class='small_icon'  type = "image" id='new_icon' value=''  src='../CommonCSS/icons/Version1/projectnew.svg'  /><span class='SMALL_TB_TEXT'>New</span></div>
          	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;' data-toggle="tooltip" data-placement="bottom"  title="<p>Open a SVG file<span data-href=Help/NewHelp.htm#openproject><br><i>Press <b>H</b> key for Help<i></span></p>" ><input class='small_icon'  type = "image" id='open_icon' value=''  src='../CommonCSS/icons/Version1/projectopen.svg'  /><span class='SMALL_TB_TEXT'>Open</span></div>
          	<div class="BTN_CONTAINER_SMALL" style='margin-right:5px;' data-toggle="tooltip" data-placement="bottom"  title="<p>Close a SVG file<span data-href=Help/NewHelp.htm#closeproject><br><i>Press <b>H</b> key for Help<i></span></p>"><input class='small_icon'  type = "image" id='close_icon' value=''  src='../CommonCSS/icons/Version1/projectclose.svg'  /><span class='SMALL_TB_TEXT'>Close</span></div>
 	    	
     </div>	  
+ </div>
+ <div id="sel_popup" style='margin-top:20px; display:none'>
+    <p id='objectTips'>Click on Edit point Button to edit path</p>  
  </div>
  
 <div id="svgfileopendlg" style='display:none;z-index:18000'><div id="svglisttitle">My Workspace</div>
@@ -658,32 +662,47 @@ display:none;
 		</div>
 </div>
   
-  <div id="newSVGFileNameDlg" style="display:none"><div id="Div2">Enter File Name</div>
+  <div id="newSVGFileNameDlg" style="display:none"><div id="Div2">Enter File Info</div>
         <div id='Div3' style="overflow: hidden"> 
-            <input  id='pageNameIP' type=text value="" />
-            <div style='margin-top:10px'> 
+            <label class='CUSTOM_LABEL'>Filename<input  id='pageNameIP' type=text value="" placeholder='Enter File name' class='CUSTOM_TEXT_INPUT' style='width:140px'/></label>
+            <div style='margin-top:5px'><label class='CUSTOM_LABEL'>Title<input  id='titleIP' type=text value="" placeholder='Enter a Title' class='CUSTOM_TEXT_INPUT' style='width:140px; margin-left:30px'/></label></div>
+            <div style='margin-top:5px; text-align:center'> 
                 <input type="button" id ='pageOK'     value="OK" />
                 <input type="button" id ='pageCancel' value="Cancel"  />
             </div>
        </div>          
   </div>
   
-  
+  <!-- 
   <div id="svgdimensiondlg" style='display:none'><div id="svgdimtitle">Dimension of SVG Image</div>
-    <div id="svgfiledeletedlgcontent" style="overflow:hidden">
-		 <div id='svgWidthEdit' style='display:inline-block; margin-left:5px;'>Width<div id='svgwidthIP' class='EDIT_BOX' type='DIMENSION' ></div></div>
-		 <div id='svgHeightEdit' style='display:inline-block; margin-left:5px;'>Height<div id='svgheightIP' class='EDIT_BOX' type='DIMENSION' ></div></div>		
-            <div> 
+    <div id="svgdimensiondlgcontent" style="overflow:hidden">	 	
+		 	<div id='svgWidthEdit' style='margin-left:5px;display:inline-block;'>Width<div id='svgwidthIP' class='SVG_DIM_BOX' type='DIMENSION' ></div></div>
+		 	<div id='svgHeightEdit' style='margin-left:15px;display:inline-block;'>Height<div id='svgheightIP' class='SVG_DIM_BOX' type='DIMENSION' ></div></div>
+			
+            <div style='margin-top:40px; text-align:center'> 
                 <input type="button" id ='svgDimOK'     value="OK" />
                 <input type="button" id ='svgDimCancel' value="Cancel"  />
            </div>
      </div>
   </div>
+  
+   -->
+  <div id="svgdimensiondlg" style='display:none'><div id="svgdimtitle">SVG Dimensions</div>
+    <div id="svgdimensiondlgcontent" style="overflow:hidden">
+		 <div id='svgWidthEdit' style='display:inline-block; margin-left:5px;'>Width<div id='svgwidthIP' class='EDIT_BOX'  style='position:relative; top:4px; margin-left:5px'></div></div>
+		 <div id='svgHeightEdit' style='display:inline-block; margin-left:15px;'>Height<div id='svgheightIP' class='EDIT_BOX' style='position:relative; top:4px; margin-left:5px' ></div></div>		
+            <div style='margin-top:15px; text-align:center'> 
+                <input type="button" id ='svgDimOK'     value="OK" />
+                <input type="button" id ='svgDimCancel' value="Cancel" />
+           </div>
+     </div>
+  </div>
+  
   <div id="polygonipdlg" style='display:none'><div id="svgdimtitle">Inputs for Polygon</div>
     <div id="svgfiledeletedlgcontent" style="overflow:hidden">
-		 <div id='polynSidesedit' style='display:inline-block; margin-left:5px;'>Number of Sides<div id='polynSidesIP' class='EDIT_BOX' type='POLY_DIMENSION' ></div></div>
-		 <div id='polyLengthEdit' style='display:inline-block; margin-left:5px;'>Length<div id='polyLengthIP' class='EDIT_BOX' type='POLY_DIMENSION' ></div></div>		
-            <div> 
+		 <div id='polynSidesedit' style='display:inline-block; margin-left:5px;'>Sides<div id='polynSidesIP' class='EDIT_BOX' type='POLY_DIMENSION' style='position:relative; top:4px; margin-left:5px'></div></div>
+		 <div id='polyLengthEdit' style='display:inline-block; margin-left:5px; margin-top:10px'>Length<div id='polyLengthIP' class='EDIT_BOX' type='POLY_DIMENSION' style='position:relative; top:4px; margin-left:5px' ></div></div>		
+            <div style='margin-top:10px; text-align:center'> 
                 <input type="button" id ='polynSidesOK'     value="OK" />
                 <input type="button" id ='polyLengthCancel' value="Cancel" />
            </div>
@@ -694,8 +713,10 @@ display:none;
             <div id='colorhdr'>Choose Color</div>
             <div id='colorcontent' style="overflow: hidden">
                 <div id="colorpicker"></div> 
-                	<input type="button" id='okbtn' value="Ok" onclick="GX_ColorWidgetOK(event)"/>  
-                	<input type="button" id='cancelbtn'  value="Cancel" onclick="GX_ColorWidgetCANCEL(event)"/>                	
+                   <div style='margin-top:5px'>
+                		<input type="button" id='okbtn' value="Ok" onclick="GX_ColorWidgetOK(event)"/>  
+                		<input type="button" id='cancelbtn'  value="Cancel" onclick="GX_ColorWidgetCANCEL(event)"/> 
+                   </div>               	
             </div>        
   </div>  
   
@@ -713,36 +734,34 @@ display:none;
  	     
        <div id="linearcontent" style="overflow:hidden;">
         
-              	<div style= 'margin-left:2px; margin-top:10px;'>Gradient Title<input  id='gradTitleIP' style= 'margin-left:10px; font-weight:200; font-size:10px' placeholder="Enter Gradient Title" type=text value="" onblur='OnEditBoxFocusOut(event)' oninput='OnEditBoxChange(event)'/></div>
+              	<div style= 'margin-left:2px; margin-top:10px;'>Gradient Title<input  id='gradTitleIP' style= 'margin-left:10px; font-weight:200; font-size:10px' placeholder="Enter Gradient Title" type=text value="" onblur='OnEditBoxFocusOut(event)'  /></div>
                 
        <div id='gradcontainer'>   
        	  <div id='linSpreaddiv' style= 'display:inline-block; margin-left:2px; margin-right:3px; margin-bottom:5px'>Spread-Method<div id='gradSpreadDDL' class='EDIT_BOX' type='Spread Method to Apply' style='margin-top:8px' ></div></div>      
-         <div id='LGSpecific' style='display:block;margin-left:55px;''>
-         		<div id='LG_END_POINT'  class='LG_MARKER_POINTS' style='position:absolute; z-index:1000'></div>
-         		<div id='LG_START_POINT'  class='LG_MARKER_POINTS' style='position:absolute; z-index:1000'></div>       
-                <div id='LinearGradpreview' style='position:relative; left:0px; '>
+         <div id='LGSpecific' style='display:block;margin-left:55px;' class='GRAD_DLG_ELEM'>
+         		<!-- <div id='LG_END_POINT'  class='LG_MARKER_POINTS' style='position:absolute; z-index:1000; opacity:0.6'></div>
+         			<div id='LG_START_POINT'  class='LG_MARKER_POINTS' style='position:absolute; z-index:1000; opacity:0.6'></div>
+         			-->            		
+         		<div id='LinearGradpreviewContainer' style='position:relative; left:0px; top:0px; width:170px; height:170px; padding:0px'>
+         		   <div id='LG_END_POINT'  class='LG_MARKER_POINTS' style='position:absolute; z-index:1000; opacity:0.6'></div>
+         		   <div id='LG_START_POINT'  class='LG_MARKER_POINTS' style='position:absolute; z-index:1000; opacity:0.6'></div> 
+                <div id='LinearGradpreview' style='position:relative; left:5px; top:5px; width:150px; height:150px; padding:0px'>
                     <?xml version="1.0"?><!DOCTYPE svg SYSTEM "svg11.dtd">
                     <svg xmlns="http://www.w3.org/2000/svg" id="GRAD_PREVIEW_SVG" x="0px" y="0px" width="150px" height="150px" viewBox="0 0 150 150" version="1.1">
 			            <title>New SVG File</title>
 	                    <defs>    
 	                    </defs>
 	                    <rect id="LINEAR_GRAD_PREVIEW_RECTANGLE" x="0" y="0" width="150" height="150" fill="green" stroke="black" stroke-width="0" opacity="1.0"/>
-	                    <line id="LG_INDICATOR_LINE" class="LG_MARKERS" x1='1' y1='1' x2='149' y='149' stroke="black" stroke-width="1" stroke-dasharray="4,2" stroke-linejoin="miter" stroke-opacity="1" fill="none"/>
-	                   <!-- 
-	                    <circle id='START_POINT' class="LG_MARKERS" cx='7' cy='7' r='14' stroke='black'  stroke-width='2' fill='none' fill-opacity='0.5' pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
-	                    <circle id='END_POINT' class="LG_MARKERS" cx='122' cy='122' r='14' stroke='black' stroke-width='2' fill='none' fill-opacity='0.5'pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>
-	                    -->
+	                    <line id="LG_INDICATOR_LINE" class="LG_MARKERS" x1='1' y1='1' x2='149' y2='149' stroke="black" stroke-width="1" stroke-dasharray="4,2" stroke-linejoin="miter" stroke-opacity="1" fill="none"/>       
                  
-                    </svg>
-                   <!-- <div id='END_POINT'  class='LG_MARKER_POINTS' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1; display:none'></div>
-         		    <div id='START_POINT'  class='LG_MARKER_POINTS' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1; display:none'></div>-->
+                    </svg>                   
                   </div> 
-                 
-        </div>
-        
-        <div id='RGSpecific' style='display:block;margin-left:65px;'> 
-         <div id='RG_FOCUS_POINT'  class='RG_MARKER_POINTS' style='position:absolute;  z-index:1000; display:none'>F</div>
-         <div id='RadialGradPreview' style='position:relative; left:5px;'>
+                </div>                 
+        </div>        
+        <div id='RGSpecific' style='display:block;margin-left:65px;' class='GRAD_DLG_ELEM'> 
+        <div id='RadialGradPreviewContainer' style='position:relative; left:0px; top:0px; width:170px; height:170px; padding:0px; border-radius:85px;'>
+         <div id='RG_FOCUS_POINT'  class='RG_MARKER_POINTS' style='position:absolute;  z-index:1000; display:none; text-align:center'><span style='position:relative; top:2px; font-weight:bold'>F</span></div>
+         <div id='RadialGradPreview' style='position:relative; left:7px; top:7px; width:150px; height:150px; border-radius:75px;'>
           <?xml version="1.0"?><!DOCTYPE svg SYSTEM "svg11.dtd">
           <svg xmlns="http://www.w3.org/2000/svg" id="GRAD_PREVIEW_SVG" x="0px" y="0px" width="150px" height="150px" viewBox="0 0 150 150" version="1.1">
          	<circle id='RG_CIRCLE' class= 'RG_MARKERS' cx='75' cy='75' r='75' fill='none' stroke="black" stroke-width="0" stroke-dasharray="4,2"  pointer-events='visible'/>
@@ -750,29 +769,21 @@ display:none;
            <!-- <circle id='RG_FOCUS_POINT' class="RG_MARKERS" cx='38' cy='38' r='10' stroke='black' stroke-width='2' fill='black' fill-opacity='0.5' pointer-events='visible' onclick="OnGradPointClick(evt)" onmousemove="OnGradMouseMove(evt)" onmouseout="OnGradMouseOut(evt)"/>-->
            </svg>
          </div>
+        </div>
         	       		
        </div>    
-      	<div style='margin-left:65px;'>  
-	        <div id='color1offset' style='margin-left:-10px;'>
+      	<div style='margin-left:65px;' class='GRAD_DLG_ELEM'>  
+	        <div id='color1offset' style='margin-left:-10px;' >
 				<div style='display:inline-block; vertical-align:middle;'><button id='stop0_color' onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div> 
 				<div id='stop0_offset_slider' style='display:inline-block;margin-left:3px;vertical-align:middle;'></div>
 			</div>  
-			<div id='color2offset' style='margin-left:-10px;'>
+			<div id='color2offset' style='margin-left:-10px; margin-top:10px'>
 				<div style='display:inline-block; vertical-align:middle;'><button id='stop1_color' onclick="GX_GradColorButtonHandler(event)" style='display:inline-block;background-color:grey; width:32px; height:32px;margin-top:0px'></button></div>
 				<div id='stop1_offset_slider' style='display:inline-block;margin-left:3px;vertical-align:middle;'></div>
 			</div>	  
 		</div>   
-		<!--        
-                 <div style='border:ridge 2px #f0f0f0;border-radius: 4px 4px 4px 4px; position:relative; margin-left:5px; margin-top:10px;  margin-right:5px; width: auto; '>   
-                   <div id='animateStop_col' style="position:relative; top:-13px; margin-left:10px; margin-top: 5px;margin-right:10px;z-index:1;background-color:white;">Animate</div>
-                    <div style='display:inline-block; position:relative; top:-10px;'>	                    	
-                      	<div class='GRAD_PROP_ANIMATION' style='display:inline-block; margin-left:5px;margin-top:0px;'>Duration(s)<div id='durStopColIP' class='EDIT_BOX group6' type='DIMENSION' style='margin-top:2px' ></div></div>	               
-	                	<input type="button" id ='apply_Stop_Col' style='display:inline-block; margin-left:12px; position:relative; top:-10px' value="Apply" onclick='GX_GradAnimApplyBtnHdlr(event)' />
-	                	<input type="button" id ='animPreviewStop' style='display:inline-block; margin-left:1px; position:relative; top:-10px;'; value="Preview" onclick='GX_GradAnimPreviewBtnHdlr(event)' />
-	                </div> 
-                  </div>
-               -->  
-                    <div style='margin-top:8px; text-align:center'> 
+		 
+                    <div id='gradokdiv' style='margin-top:15px; text-align:center' class='GRAD_DLG_ELEM'> 
                         <input type="button" id ='myOK'     value="OK"  onclick='GX_GradDlgOK()'/>
                         <input type="button" id ='myCancel' value="Cancel" onclick='GX_GradDlgCancel()' />
                     </div>
@@ -786,9 +797,11 @@ display:none;
     <div id='gradcolorpickwidget' style='display:none'>
                 <div id='gradcolorhdr'>Choose Color</div>
                 <div id='gradcolorcontent' style="overflow: hidden">
-                    <div id="gradcolorpicker"></div> 
+                    <div id="gradcolorpicker" ></div> 
+                     <div style='margin-top:5px; text-align:center'>
                 	    <input type="button" id='gradokbtn' value="Ok" onclick="GX_GradColorWidgetOK(event)"/>  
-                	    <input type="button" id='gradcancelbtn'  value="Cancel" onclick="GX_GradColorWidgetCANCEL(event)"/>                	
+                	    <input type="button" id='gradcancelbtn'  value="Cancel" onclick="GX_GradColorWidgetCANCEL(event)"/>
+                	 </div>                	
                 </div>        
      </div> 
      
@@ -867,8 +880,8 @@ display:none;
  
   <div id="newGroupNameDlg" style="display:none"><div id="Div2">Enter Name of Group</div>
         <div id='div1123' style="overflow: hidden"> 
-            <input  id='groupNameIP' type=text value="" />
-            <div> 
+            <label class='CUSTOM_LABEL'>Group<input  id='groupNameIP' type=text value="" placeholder='Enter Name' class='CUSTOM_TEXT_INPUT' style='width:115px;' /></label>
+            <div style='text-align:center; margin-top:5px'> 
                 <input type="button" id ='groupOK'     value="OK" />
                 <input type="button" id ='groupCancel' value="Cancel"  />
             </div>
@@ -895,7 +908,7 @@ display:none;
 	     		</ul>
               </div>
      </div>
-      <div id="movetoGroupDlg" style="display:none; font-size:12px"><div id="Div2">Add To</div>
+      <div id="movetoGroupDlg" style="display:none; font-size:12px"><div id="Div2">Move To</div>
         <div id='hfad' style="overflow: hidden; font-size:12px"> 
         <!-- 	<div><span style='margin-right:4px'>New Group</span><input  id='newgroupNameIP' type=text value="" placeholder='New Group Name' style='width:140px;'/></div>
         	<div style='margin-top:10px; border-bottom:1px solid #e5e5e5; text-align:center'><span>OR</span></div>
@@ -984,20 +997,15 @@ display:none;
        <div id='mycontent'style="overflow: hidden">                     
        </div>        
     </div>
-    <div id="drawingpen" class="ui-widget-content" style='border:3px solid black; position:absolute; width:8px;height:8px;left:50px; top:50px; visibility:hidden' data-toggle="tooltip" data-placement="right"></div>
+    <div id="drawingpen" class="ui-widget-content" style='position:absolute; left:50px; top:50px; visibility:hidden' data-toggle="tooltip" data-placement="right"></div>
     <div id="eraserpen"  style='border:2px solid red; position:absolute; width:10px;height:10px;left:50px; top:50px; visibility:hidden' onclick='OnEraserPenClick(event)'></div>
     <!-- <div id="sel_gripper" class="ui-widget-content GRIPPER" style='border:3px dashed blue; position:absolute'></div>-->
     
-   <!-- <div id='DivPathMarker' class="ui-widget-content" style='border:2px solid black; position:absolute; width:10px; height:10px; border-radius:5px' onmousemove='OnDivPathMarkerMouseMove(event)' onmouseout='OnDivPathMarkerMouseOut(event)'
-     onmousedown='OnDivPathMarkerMouseDown(event)'></div> -->
-    
-    <!-- <div id='markerPoint'  class='CUSTOM_MARKER' style='position:absolute; border-radius: 10px; background-color:grey; border:solid blue 1px; padding: 1px; width:10px; height:10px; z-index:1;'></div>-->
-    
     <div id="deleteConfirmDlg" style="display:none"><div ">Confirm</div>
         <div  style="overflow: hidden"> 
-        	<div  style= 'display:inline-block; margin-left:2px; margin-top:14px;'>Are You Sure You Want to Delete the Object ?</div>         	           
-            <div> 
-                <input type="button" id ='deleteOK'     value="Yes" onclick='GX_DeleteConfirmDlgOK()'/>
+        	<div  style= 'display:inline-block; margin-left:2px; margin-top:14px; text-align:center'><span style='margin-left:30px'>Want to Delete this Object ?</span></div>         	           
+            <div style='text-align:center; margin-top:10px'> 
+                <input type="button" id ='deleteOK'   value="Yes" onclick='GX_DeleteConfirmDlgOK()'/>
                 <input type="button" id ='deleteCancel' value="No"  />
             </div>
        </div>          
@@ -1040,8 +1048,8 @@ display:none;
  
  <div id="newImageDlg" style="display:none"><div id="Div2">Enter URL of the Image</div>
         <div id='Div3' style="overflow: hidden"> 
-            <label>URL<input  id='imageURLIP' type='url' value="" placeholder="Type in OR Copy paste the URL" style="width:300px"/></label>
-            <div> 
+            <label class='CUSTOM_LABEL'>URL<input  id='imageURLIP' type='url' value="" placeholder="Type in OR Copy paste the URL" style="width:310px" class='CUSTOM_TEXT_INPUT' /></label>
+            <div style='margin-top:5px; text-align:center'> 
                 <input type="button" id ='imageOK'     value="OK"  />
                 <input type="button" id ='imageCancel' value="Cancel"  />
             </div>

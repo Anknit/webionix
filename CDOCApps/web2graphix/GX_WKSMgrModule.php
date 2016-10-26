@@ -247,9 +247,10 @@ function CDOC_WKS_DeleteProject($ProjID)
 function GX_WKS_CreateSVGFile(&$respData)
 {
 	// check if the Project folder already exists
-	$svgFileName = $respData; 
+	parse_str($respData);	
+	$svgFileName = $SVGFNAME ;//$respData; 
 	$Projdir = $_SESSION['wksdir'].$_SESSION['pathSeparator'].'SVG';
-	$title = 'Default Title';
+	$title = $SVGTITLE ; //'Default Title';
 	$descr = "Default Desciption";	
 	//if yes then just return
 	$retval = is_dir($Projdir);
