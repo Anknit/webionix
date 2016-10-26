@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2016 at 04:20 PM
+-- Generation Time: Oct 26, 2016 at 10:40 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -49,6 +49,54 @@ INSERT INTO `audiometainfo` (`ID`, `URL`, `title`, `summary`, `chapter`, `bookma
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `contentinfo`
+--
+
+CREATE TABLE IF NOT EXISTS `contentinfo` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'content ID',
+  `userID` int(11) NOT NULL COMMENT 'User ID owning',
+  `filename` varchar(30) NOT NULL COMMENT 'SVg file name',
+  `title` text NOT NULL COMMENT 'title of content',
+  `descr` text NOT NULL COMMENT 'description',
+  `modifydate` datetime NOT NULL COMMENT 'last modify date',
+  `publishedURL` text COMMENT 'published URL',
+  `pubdate` timestamp NULL DEFAULT NULL COMMENT 'last Pub date',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=94 ;
+
+--
+-- Dumping data for table `contentinfo`
+--
+
+INSERT INTO `contentinfo` (`ID`, `userID`, `filename`, `title`, `descr`, `modifydate`, `publishedURL`, `pubdate`) VALUES
+(6, 218, 'Anuradhafile.svg', 'New Title', 'Heavy acid rain will cause it to defer', '2016-08-28 11:28:59', 'http//gallery.webionix.com/published/RajarVenera_2016200171529/MynewtryPAM.svg', '2016-08-28 05:58:59'),
+(18, 218, 'Demonanim2.svg', 'Default Title', 'Defualt Description', '2016-10-22 10:59:31', 'http://gallery.webionix.com/published/rogerDemonanim2.svg', '2016-09-01 10:08:06'),
+(20, 218, 'Demonanim3.svg', 'Default Title', 'Defualt Description', '2016-10-21 23:22:52', 'http://gallery.webionix.com/published/rogerDemonanim3.svg', '2016-09-01 10:12:11'),
+(25, 218, 'SVGLogo.svg', 'Default Title', 'Defualt Description', '2016-10-21 23:22:23', NULL, NULL),
+(26, 218, 'VisibleAnim.svg', 'Default Title', 'Defualt Description', '2016-10-15 23:21:11', NULL, NULL),
+(27, 218, 'DemoAnim.svg', 'Default Title', 'Defualt Description', '2016-10-22 11:01:44', 'http://gallery.webionix.com/published/rogerDemoAnim.svg', '2016-09-02 05:22:54'),
+(29, 218, 'hflkahf.svg', 'Default Title', 'Defualt Description', '2016-09-24 11:55:29', NULL, NULL),
+(45, 228, 'OPWZ.svg', 'PRITHISH THE GREAT', 'Default Desciption', '2016-09-24 15:19:48', NULL, NULL),
+(46, 218, 'anim.svg', 'myanim1', 'Default Desciption', '2016-09-24 12:04:10', NULL, NULL),
+(47, 228, 'file1.svg', 'myfile', 'Default Desciption', '2016-09-24 12:36:26', NULL, NULL),
+(48, 228, 'animation.svg', 'car', 'Default Desciption', '2016-09-24 16:47:46', NULL, NULL),
+(49, 229, 'myfile.svg', 'svg', 'Default Desciption', '2016-09-24 15:30:08', NULL, NULL),
+(82, 218, 'TextPath.svg', '', 'Default Desciption', '2016-10-23 10:27:05', NULL, NULL),
+(83, 218, 'TextPath - Copy.svg', 'Default Title', 'Defualt Description', '2016-10-14 21:16:36', NULL, NULL),
+(84, 218, 'AlignCheck1.svg', '', 'Default Desciption', '2016-10-21 22:52:57', NULL, NULL),
+(85, 218, 'trialfile.svg', '', 'Default Desciption', '2016-10-18 08:45:07', NULL, NULL),
+(86, 218, 'Animtryfile.svg', '', 'Default Desciption', '2016-10-26 10:36:35', NULL, NULL),
+(87, 218, 'Myfilters.svg', '', 'Default Desciption', '2016-10-22 11:00:54', NULL, NULL),
+(88, 218, 'asffafa.svg', 'ff ', 'Default Desciption', '2016-10-21 22:43:13', NULL, NULL),
+(89, 218, 'merabeta.svg', '', 'Default Desciption', '2016-10-21 22:49:16', NULL, NULL),
+(90, 218, 'rogerfile.svg', '', 'Default Desciption', '2016-10-22 16:35:20', NULL, NULL),
+(91, 218, 'TryFreedraw.svg', '', 'Default Desciption', '2016-10-23 16:23:28', NULL, NULL),
+(92, 218, 'mydemo.svg', 'zffasf ', 'Default Desciption', '2016-10-25 11:38:14', NULL, NULL),
+(93, 218, 'kjgkjg.svg', 'kjj', 'Default Desciption', '2016-10-25 11:59:57', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `exportedassetinfo`
 --
 
@@ -77,6 +125,30 @@ INSERT INTO `exportedassetinfo` (`id`, `filename`, `title`, `category`) VALUES
 (29, 'mydesign.svg', 'Testing new entry', 'Science'),
 (30, 'mydesign.svg', 'Testing new entry', 'Science'),
 (31, 'surety.svg', 'Another Entry into DB', 'NewDBCategory');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedbackinfo`
+--
+
+CREATE TABLE IF NOT EXISTS `feedbackinfo` (
+  `feedbackId` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  PRIMARY KEY (`feedbackId`),
+  UNIQUE KEY `feedbackId_UNIQUE` (`feedbackId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `feedbackinfo`
+--
+
+INSERT INTO `feedbackinfo` (`feedbackId`, `userId`, `title`, `description`, `status`) VALUES
+(3, 12, 'The UI should be better', 'You should be designing it better than what it is now', 1),
+(4, 12, 'Try this feedback', 'Try out feebdack now', 1);
 
 -- --------------------------------------------------------
 
@@ -117,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `userinfo` (
   `regAuthorityId` int(11) DEFAULT NULL,
   `sso_ott` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`userid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=217 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=230 ;
 
 --
 -- Dumping data for table `userinfo`
@@ -126,11 +198,13 @@ CREATE TABLE IF NOT EXISTS `userinfo` (
 INSERT INTO `userinfo` (`userid`, `username`, `firstname`, `lastname`, `password`, `workspacename`, `status`, `emailid`, `reset_key`, `sessionid`, `verification_key`, `age`, `location`, `phone`, `user_image`, `usertype`, `regAuthorityId`, `sso_ott`) VALUES
 (102, 'vaibhav', '', '', NULL, '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'bf0512593e1cffba50d0920ac9e5beeff11d83ff'),
 (120, 'ccccc ccccc', '', '', '310a87565a48526e9d096f917007dbfe', '', 'verified', 'vaibhav.singhal@veneratech.com', NULL, NULL, NULL, 23, NULL, NULL, NULL, 'normal', 0, '63dc533eae934feee0a76a57ba551123275b9d2a'),
-(184, 'rajaryahoo mukhejee', 'rajaryahoo', 'mukhejee', 'bbf6dd883bfa9eaddb0ad6aba2d17aa5', 'rajaryahoo_201620124915', 'verified', 'rajarshi_m@yahoo.com', NULL, NULL, NULL, 23, NULL, NULL, NULL, 'normal', 0, '434211600fc6c352f67943b9dbdb61d77ae30a0e'),
 (185, 'Ranjan Shrivastava', 'Ranjan', 'Shrivastava', NULL, '_2016183204456', 'verified', 'ranjanhyd@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'normal', 0, '705e7ee2fce7a4c6eefc2454dc10d3496b210ff2'),
-(208, 'Rajarshi Mukhopadhyay', 'Rajarshi', 'Mukhopadhyay', NULL, 'Rajarshi_201620011017', 'verified', 'rajarshi.m2010@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'normal', 0, '9764d03907bb7dcf43c3ac9cfab1dd3a1ee44b9e'),
 (209, 'Mala Mukhopadhyay', 'Mala', 'Mukhopadhyay', NULL, 'Mala_201620011339', 'verified', 'mala.mukhopadhyay@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'normal', 0, 'c94da7bf8cb81b892a9af838fef00902c93c9fc9'),
-(216, NULL, '', '', NULL, '', 'unverified', 'rajarshi@veneratech.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'normal', NULL, NULL);
+(218, 'Roger Venera', 'Roger', 'Venera', 'bbf6dd883bfa9eaddb0ad6aba2d17aa5', 'Roger_201620313321', 'verified', 'rajarshi@veneratech.com', NULL, NULL, NULL, 23, NULL, NULL, NULL, 'normal', 0, '442a63b4d75e04558c3dd089fbcfcd73168b0aa3'),
+(219, 'Rajarshi Mukhopadhyay', 'Rajarshi', 'Mukhopadhyay', NULL, 'Rajarshi_2016203133554', 'verified', 'rajarshi.m2010@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'normal', 0, '57a3218a349d86008aeb4161cc847e19d64812c7'),
+(227, 'rajayahoo kumar', 'rajayahoo', 'kumar', 'bbf6dd883bfa9eaddb0ad6aba2d17aa5', 'rajayahoo_201624811353', 'verified', 'rajarshi_m@yahoo.com', NULL, NULL, NULL, 23, NULL, NULL, NULL, 'normal', 0, 'ddc11ca54919ac4237aa92bbec9a386e7a096f72'),
+(228, 'Prithish Kumar Yadav', 'Prithish', 'Kumar Yadav', '3a0b11647a44f1ab46ab481c3a718255', 'Prithish_2016267111321', 'verified', 'prithish4@yahoo.com', NULL, NULL, NULL, 23, NULL, NULL, NULL, 'normal', 0, 'c30a7cc434d403592bcc99645e495de824e24635'),
+(229, 'Ritwik mukhopadhyay', 'Ritwik', 'mukhopadhyay', '368ceb195cce94745f4080fdba98257e', 'Ritwik_2016267152156', 'verified', 'ritwik1998@yahoo.com', NULL, NULL, NULL, 23, NULL, NULL, NULL, 'normal', 0, '929c0dccc1f6ed03860fbffcd7fec80a0be9ed72');
 
 -- --------------------------------------------------------
 
@@ -144,17 +218,15 @@ CREATE TABLE IF NOT EXISTS `verify_link` (
   `verify_key` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `verify_link`
 --
 
 INSERT INTO `verify_link` (`id`, `emailid`, `verify_key`) VALUES
-(20, 'rajarshi@veneratech.com', 'c6be243d5b5e6429663ef1b7d3ceaa845a1ca6d028a9892d556bc2a77b326332'),
-(21, 'rajarshi@veneratech.com', 'a990bdca91353768f2df872f2a3a7576aecfa28301cd68a7f674689454d1b89c'),
-(22, 'rajarshi@veneratech.com', 'cb8bc2d470d1af7c70cb0a51d594fb360e176acdd27b7203250173b572268eab'),
-(23, 'rajarshi@veneratech.com', '45e7ffddf43f1c5c266d06e484d0f7237544a30782e45e4b08cd5237a5f7fc1e');
+(1, 'prithish4@yahoo.com', 'ce3f5a61fc071f9daeea76013da1e4f10adb89ab319b6e8633df751252085f5c'),
+(2, 'ritwik1998@yahoo.com', '05f1e783750a2c1d71894becb32ccf46aa978c2934d0b93482b900d4c08a73c6');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
