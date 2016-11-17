@@ -149,7 +149,7 @@ function GetUserInfo(ott){
 	      		<div class='row'>
 	      			<div class='col-sm-4'></div>
 	      			<div class='col-sm-4'>
-	      				<div id='googleBtn' class="g-signin2" data-onsuccess="onSignIn" '></div>     
+	      				<div id='googleBtn' class="g-signin2" data-onsuccess="onSignIn"></div>     
 	      			</div>
 	      			<div class='col-sm-4'></div>
 	      		</div>	      		
@@ -223,7 +223,7 @@ function GetUserInfo(ott){
       </div>
       <div class="modal-body">
       	<div class='form-group'>	     		
-	       	    <div id='googleBtn1' class="g-signin2" data-onsuccess="onSignIn" '></div>         		
+	       	    <div id='googleBtn1' class="g-signin2" data-onsuccess="onSignIn"></div>         		
       	</div> 	 
       	 
       	<div class='form-group'>
