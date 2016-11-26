@@ -45,10 +45,26 @@ function returnUsersData($clause, $orderClause) {
 	$data	=	$DbObj->Query($queryStr);
 	return $data;
 }
+function returnFeedbacksData($clause, $orderClause) {
+	$queryStr = "Select feedbackinfo.*, userinfo.emailid from feedbackinfo left join userinfo on feedbackinfo.userId = userinfo.userid";
+	if($clause != ''){
+		$queryStr .=	" where ".$clause;
+	}
+	
+	if($orderClause != ''){
+		$queryStr .=	" order by ".$orderClause;
+	}
+    
+    $DbObj = GX_InitializeContentInfoDB();
+	$data	=	$DbObj->Query($queryStr);
+	return $data;
+}
 
 function returnTableData($datatable) {
     if($datatable == 'user') {
         $tableName = 'userinfo';
+    } elseif($datatable == 'feedback') {
+        $tableName = 'feedbackinfo';
     }
 	$limit	=	$_GET['rows'];
     $clause =   '';
@@ -67,6 +83,8 @@ function returnTableData($datatable) {
 	}
 	if($datatable == 'user') {
         $data	=	returnUsersData($clause, $orderClause);
+    } elseif($datatable == 'feedback') {
+        $data	=	returnFeedbacksData($clause, $orderClause);
     }
 	$jTableResult = array();
 	$jTableResult['total'] 		= $total_pages;
