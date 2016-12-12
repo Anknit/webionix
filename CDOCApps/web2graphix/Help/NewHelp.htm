@@ -1,1053 +1,1192 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="ISO-8859-1">
-<title>My New Hep V1.0</title>
-<link href="../../CommonJS/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<style>
-
-.instruct {
-      font: 400 15px Lato, sans-serif;
-      line-height: 1.5;
-      color: #666;
-      text-align: justify;
-     /* text-justify: inter-word;*/
-  }
-
-h1{
-	color: #EF4D02;
-	font-weight:bold;
-	font-size:1.8rem;
-}
-
-h2{
-	color: #222;
-	font-weight:bold;
-	font-size:1.5rem;
-}
-
-h3{
-	color: #222;
-	font-weight:bold;
-	font-size:1.2rem;
-	font-style:italic; 
-}
-.icon{
-width: 32px; 
-height:auto; 
-}
-
-.note{
-	font-weight:bold;
-	font-size:1.2rem; 
-}
-
-.maintopic{
-	border-top:1px solid #888; 
-}
-</style>
-<script  type="text/javascript" src="../../CommonJS/jqwidget_3.9.1/scripts/jquery-1.11.1.min.js"></script>
-<script  type="text/javascript" src="../../CommonJS/Bootstrap/js/bootstrap.min.js"></script>
+    <meta charset="ISO-8859-1">
+    <title>My New Hep V1.0</title>
+    <link href="../../CommonJS/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .instruct {
+            font: 400 15px Lato, sans-serif;
+            line-height: 1.5;
+            color: #666;
+            text-align: justify;
+            /* text-justify: inter-word;*/
+        }
+        
+        h1 {
+            color: #EF4D02;
+            font-weight: bold;
+            font-size: 1.8rem;
+        }
+        
+        h2 {
+            color: #222;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            color: #222;
+            font-weight: bold;
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+        
+        .icon {
+            width: 32px;
+            height: auto;
+        }
+        
+        .note {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .maintopic {
+            border-top: 1px solid #888;
+        }
+        #videoplayerModal .modal-body iframe {
+            margin:auto;
+        }
+    </style>
+    <script type="text/javascript" src="../../CommonJS/jqwidget_3.9.1/scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../CommonJS/Bootstrap/js/bootstrap.min.js"></script>
 </head>
+
 <body>
-<!-- <nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="10">-->
-  <div data-spy="affix" data-offset-top="2" style='background:red; display:none'>
-  	<a href='/'>Go To ToC</a>
-  </div>
-<!-- </nav>-->
-<div class="container-fluid">
-<div class='maintopic' ><img src="Project.png" style='display:inline-block' class='icon'/><div style='display:inline-block'><h1 id='manageproject'  >Managing Workspace</h1></div></div>
-<p class='instruct'>
-Workspace is the place where all SVG files and other data are stored. 
-The workspace is created on the Webionix cloud server and is available anytime. Any changes in the SVG data is always stored in workspace. 
-Hence, it is necessary that application is always connected to the cloud.   
-</p>
-
-
-<div>
-	<div><img src="NewProject.png" style='display:inline-block' class='icon'/><h2 id='newproject' style='display:inline-block'>Create New SVG File</h2></div>
-	<ul class='instruct'>
-		<li>Enter an unique filename to create a SVG file.</li>	
-	</ul>
-	 <p class='note'>NOTE:<i><u>Avoid any blank space in the name</u></i> </p>
-</div>
-
-<div>
-<div><img src="OpenProject.png" style='display:inline-block' class='icon'/><h2 id='openproject' style='display:inline-block'>Open a SVG File</h2></div>
-	<ul class='instruct'>
-		<li>Select a file from the list in the MyWorkspace dialog. </li>
-		<li>Click <b>Open</b> to open the file </li>		
-	</ul>
-	<p class='note'>NOTE:<i><u>MyWorkspace dialog shows blank if no file exist in the workspace</u></i></p>	
-</div>
-
-<div>
-	<div><img src="CloseProject.png" style='display:inline-block' class='icon'/><h2 id='closeproject' style='display:inline-block'>Close a SVG File</h2></div>
-	<ul class='instruct'>
-			<li>Click on the button to close the existing SVG file opened in the editor </li>			
-	</ul>	
-</div>
-<!-- Group Documentation -->
-<div class='maintopic'>
-	<div><img src="Group.png" style='display:inline-block' class='icon'/><h1 id='addgroup' style='display:inline-block'>Group</h1></div>
-	<p class='instruct'>One or more objects can be put into an user defined group. One can position a group of objects at a desired location by dragging the selected group</p>
-	<ul class='instruct'>
-		<li>Enter an unique group name to create a new group.</li>	
-	</ul>	
-</div>
-<div>
-	<div><h2 id='selectgroup' style='display:inline-block'>Selecting a Group</h2></div>
-	<div style='display:inline-block'><img src="GroupSelect.png" width='120px' height='auto' style='display:inline-block'/></div>
-	<div style='display:inline-block;position:relative; left:15px'><img src="GroupSelected.png" width='120px' height='auto' style='display:inline-block'/></div>
-	<ul class='instruct'>
-			<li>Click on the Group item on the tree node under the <b>Groups</b> tab </li>	
-			<li>All objects within the group are selected within a bounding rectangle </li>			
-	</ul>	
-</div>
-<!-- Deleting a Group -->
-<div>
-	<div><h2 id='deletegroup' style='display:inline-block'>Deleting a Group</h2></div>	
-	<ul class='instruct'>
-			<li>Select the Group. 	
-			<li>Use the <b>Delete</b> <img  src="Delete.png" width='20px' height='auto' /> button in the toolbar to delete the group</li>			
-	</ul>	
-</div>
-
-<!-- Moving Object to Group  -->
-<div>
-	<div><h2 id='movegroup' style='display:inline-block'>Adding Object to a Group</h2></div>
-	<div style='display:inline-block'><img src="SelectedObject.png" width='auto' height='120px' style='display:inline-block' /></div>
-	<div style='display:inline-block;position:relative; left:15px'><img src="moveGroup.png" width='120px' height='auto' style='display:inline-block'/></div>
-	<ul class='instruct'>
-			<li>Select an <b>Object</b> in the Editor</li>	
-			<li>Right Click on the mouse to invoke the context menu </li>	
-			<li>Select the desired <b>Group</b> where you want to add the Object to </li>		
-	</ul>	
-</div>
-
-<!-- Adding Objects -->
-<div class='maintopic'>
-	<div><img src="Shapes.png" style='display:inline-block' class='icon'/><h1 id='addobject' style='display:inline-block'>Adding Objects</h1></div>
-	<p class='instruct'><b>Objects</b> are nothing but various types of SVG objects. In Webionix we mainly deal with 4 different classes of objects 
-	<ul class='instruct'>
-		<li><b>Shapes:</b>Circle,Ellipses,Rectangles are examples of Shape type objects.</li>
-		<li><b>Path:</b>Lines,Curves,Polygons, Freehand are examples of Path type objects.</li>
-		<li><b>Text:</b>Text Objects are those which contain only textual matter.</li>
-		<li><b>Image:</b>Image Objects are the Image objects containing URL to an Image</li>
-	</ul>	
-	 </p>	
-</div>
-<!-- Adding Objects  -->
-<div>
-	<div><h2 id='addshapepathobject' style='display:inline-block'>Adding Shape or Path Objects</h2></div>	
-	<div style='display:inline-block'>
-		<ul class='instruct'>
-			<li>Select the <b>Group</b> in which the Object is to be added.(By default an object is always added to <b>BASEGROUP</b> )</li>	
-			<li>Select an Object from the list of Objects(except the Polygon)<br>
-			
-			</li>	
-			<li>A rectangular dot is visible which is a drawing pointer, which moves with the mouse cursor <br><img src="drawingcursor.png" width='100px' height='auto' style='display:inline-block'/></li>			
-			<li>Click at the point from where you want to start drawing</li>
-			<li>Drag the cursor downwards and towards right</li>
-			<li>Release the mouse button to mark the end of drawing</li>			
-		</ul>	
-	</div>	
-</div>
-
-<!-- Adding a Polygon object -->
-<div>
-	<div><h2 id='addpolygon' style='display:inline-block'>Adding Polygon Objects</h2></div>	
-	<div style='display:inline-block'><img src="SelectPolygon.png" width='300px' height='auto' style='display:inline-block'/>
-		<ul class='instruct'>
-			<li>Select the <b>Group</b> in which the Object is to be added.(By default an object is always added to <b>BASEGROUP</b> )</li>	
-			<li>Select a Polygon Object from the list shown below <br>
-			<img src="objectlist.png" width='300px' height='auto' style='display:inline-block'/>
-			</li>			
-			<li>Enter the inputs in the pop-up as given in the figure below <br>
-			<img src="PolygonInputs.png" width='200px' height='auto' style='display:inline-block'/>
-			</li>
-			<li>Upon pressing OK a regular polygon is added in the editor window</li>				
-		</ul>	
-	</div>	
-</div>
-<!-- Adding a text -->
-<div>
-	<div><img src="Text.png" style='display:inline-block' class='icon'/><h2 id='addtext' style='display:inline-block'>Adding Text Objects</h2></div>	
-	<div style='display:inline-block'>
-		<ul class='instruct'>
-			<li>On clicking the icon above, a default text box is added in the editor as shown below<br>
-			<img src="AddText.png" width='130px' height='auto' style='display:inline-block'/></li>	
-			<li>To modify the default text, just drag the text box, a small text editor opens up below it as shown below <br>
-			<img src="TextModify.png" width='150px' height='auto' style='display:inline-block'/></li>				
-		</ul>	
-	</div>	
-</div>
-
-<!-- Adding a Image -->
-<div>
-	<div><img src="Image.png" style='display:inline-block' class='icon'/><h2 id='addimage' style='display:inline-block'>Adding Image Objects</h2></div>	
-	<div style='display:inline-block'>
-		<ul class='instruct'>
-			<li>On clicking the icon above, an input-box is displayed as shown below<br>
-			<img src="ImageURL.png" width='auto' height='auto' style='display:inline-block'/></li>	
-			<li>Enter the web URL of the Image file to be added<br>
-						
-			</li>						
-		</ul>	
-		
-		<p class='note'>NOTE:<i><u>Webionix application does not store image files on its server, hence the web URL of the image file should be well qualified name</u></i> </p>
-	</div>	
-</div>
-
-
-
-<!-- deleting objects -->
-<div>
-	<div><img src="Delete.png" style='display:inline-block' class='icon'/><h2 id='deleteobject' style='display:inline-block'>Deleting Objects</h2></div>	
-	<div style='display:inline-block'>
-		<ul class='instruct'>
-			<li>Select an Object</li>	
-			<li>Use the icon above to delete the object</li>						
-		</ul>		
-	</div>	
-</div>
-
-<!-- Modifying Objects -->
-<div class='maintopic'>
-	<div><h1 id='modifyobject' style='display:inline-block'>Modifying Objects</h1></div>
-	<p class='instruct'><b>Objects</b> can be modified in various ways using the editor. In case of shape type objects only the dimension can be changed whereas in case of path objects the points can be modified. </p>	
-</div>
-
-<div>
-	<div><h2 id='modifyshapes' style='display:inline-block'>Modifying Shape Type Objects</h2></div>	
-		<ul class='instruct'>
-			<li>Select a Shape type object (e.g. Rectangle,Circle, Ellipse).</li>
-			<li>Drag the outline of the object to change the dimensions of the object.</li>				 									
-		</ul>	
-</div>
-
-<div>
-	<div><h2 id='modifycurves' style='display:inline-block'>Modifying Path Type Object</h2></div>	
-		<ul class='instruct'>
-			<li>Select a Path type object <br> (e.g. Lines,Cubic Bezier, Quadatric Bezier, Elliptic, Polygons etc)</li>
-			<li>Go to <b>Properties</b> tab and click on <img src='PolyEditPoints.png' width='75px' height='auto' />. One could see the points of the path marked with circles.<br>The Green circle indicates Start point and the Red circle indicates End point of the path <br><img src='ModifyCurvePath.png' width='100px' height='auto' /></li>	
-			<li>Select the point you want to move and drag it to the desired location to modify the path <br><img src='ModifiedPathPoint.png' width='75px' height='auto' /></li>			 									
-		</ul>	
-</div>
-
-<div>
-	<div><h2 id='modifyimage' style='display:inline-block'>Modifying Image Object</h2></div>	
-		<ul class='instruct'>
-			<li>Select the Image object</li>
-			<li>Drag the outline of the object to change the dimensions of the object.</li>		 									
-		</ul>	
-</div>
-<!-- Modifying a Polygon object -->
-
-
-
-
-<div class='maintopic'>
-	<div><h1 id='selectobject' style='display:inline-block'>Selecting Objects</h1></div>
-	<p class='instruct'>To modify any property of an object, one needs to select an object. The editor allows one to select object in two modes </p>
-	<br>
-	<ul class='instruct'>
-		<li><h3 id='singleselect'>Single Selection:</h3>In this mode, just click on the target object and an Orange outline should appear 
-		<br>                                                OR
-		<br> One can also select an object from the <b>Groups</b> tab by selecting the appropriate tree item.
-		<br><img src='SingleSelection.png' width='auto' height='auto' />
-		</li>
-		
-		<li><h3 id='multiselect'>Multiple Selection:</h3> In this mode two or more objects can be selected at a time. There are two methods to achieve this.
-			<ul><br><b>Method-1</b>
-				<li>Press <b>"Ctrl"</b> key and then select objects one by one. The first object selected will be marked in Red and the remaining ones will be in Green 
-				<br><img src='SelectmultipleCtrlKey.png' width='250px' height='auto' /></li>				
-			</ul>
-			<ul><b>Method-2</b>
-				<li>On clicking the <img src='Multiselect.png' class='icon'> button in the toolbar, one can see rectanglar dot appearing on the editor</li>
-				<li>Start from some point in the editor and drag it downwards in such a way that all desired objects are covered within the dragged path and then release the mouse button <br>
-				
-				All the selected objects are bounded by a dotted outline as shown below<br>
-				<img src='SelectionMultipleDrag.png' width='200px' height='auto'/>
-				</li>
-			</ul>
-		
-		</li>
-	</ul>
-	
-</div>
-
-
-<div class='maintopic' >
-	<div><h1 id='alignobject' style='display:inline-block'>Aligning Objects</h1></div>
-	<p class='instruct'>Two or more Objects can be aligned with respect to each other in terms of position or dimensions. One need to select two or more objects using <b>Ctrl Key</b> as mentioned in <a href='#multiselect'>Multiple Object Selection section</a>. 
-	The first object outlined in Red is the reference object which means other objects will align with respect to the reference object. 
-	</p>
-</div>
-<div class='instruct'>
-	<div><h2 id='alignwidth' style='display:inline-block'>Align Width</h2></div>
-		<ul>
-			<li>Select two or more objects using Ctrl key</li>
-			<li>On Clicking <img src = 'AlignWidth.png' class='icon' /> button, the objects align their width with respect to the reference object. </li>
-		</ul>
-</div>
-
-<div class='instruct'>
-	<div><h2 id='alignheight' style='display:inline-block'>Align Height</h2></div>
-		<ul>
-			<li>Select two or more objects using Ctrl key</li>
-			<li>On Clicking <img src = 'AlignHeight.png' class='icon' /> button, the objects align their height with respect to the reference object. </li>
-		</ul>
-</div>
-
-<div class='instruct'>
-	<div><h2 id='alignleft' style='display:inline-block'>Align Left Edge</h2></div>
-		<ul>
-			<li>Select two or more objects using Ctrl key</li>
-			<li>On Clicking <img src = 'AlignLeft.png' class='icon' /> button, the objects align their left edge with respect to the reference object. </li>
-		</ul>
-</div>
-
-<div class='instruct'>
-	<div><h2 id='aligntop' style='display:inline-block'>Align Top Edge</h2></div>
-		<ul>
-			<li>Select two or more objects using Ctrl key</li>
-			<li>On Clicking <img src = 'AlignTop.png' class='icon' /> button, the objects align their top edge with respect to the reference object. </li>
-		</ul>
-</div>
-
-<div class='instruct'>
-	<div><h2 id='alignright' style='display:inline-block'>Align Right Edge</h2></div>
-		<ul>
-			<li>Select two or more objects using Ctrl key</li>
-			<li>On Clicking <img src = 'AlignRight.png' class='icon' /> button, the objects align their right edge with respect to the reference object. </li>
-		</ul>
-</div>
-
-<div class='instruct'>
-	<div><h2 id='alignbottom' style='display:inline-block'>Align Bottom Edge</h2></div>
-		<ul>
-			<li>Select two or more objects using Ctrl key</li>
-			<li>On Clicking <img src = 'AlignBottom.png' class='icon' /> button, the objects align their bottom edge with respect to the reference object. </li>
-		</ul>
-</div>
-
-<div class='instruct'>
-	<div><h2 id='alignhorcenter' style='display:inline-block'>Align Center Horizontally</h2></div>
-		<ul>
-			<li>Select two or more objects using Ctrl key</li>
-			<li>On Clicking <img src = 'AlignHorCenter.png' class='icon' /> button, the objects align their center horizontally with respect to the reference object. </li>
-		</ul>
-</div>
-
-<div class='instruct'>
-	<div><h2 id='alignvertcenter' style='display:inline-block'>Align Center Vertically</h2></div>
-		<ul>
-			<li>Select two or more objects using Ctrl key</li>
-			<li>On Clicking <img src = 'AlignVertCenter.png' class='icon' /> button, the objects align their center vertically with respect to the reference object. </li>
-		</ul>
-</div>
-
-<div class='maintopic' >
-	<div><h1 id='download' style='display:inline-block'>Download SVG</h1></div>
-	<ul class='instruct'>
-		<li>Click on the <img src='Download.png' class='icon' /> button to download the current SVG file onto your local storage </li>
-	</ul>
-</div>
-
-<div class='maintopic' >
-	<div><h1 id='properties' style='display:inline-block'>Modifying Object Properties</h1></div>
-	<p class='instruct'>Properties of all the objects can be modified through the editor. The basic steps are:</p>
-		<ul class='instruct'>
-			<li>Select the object </li>
-			<li>Modify the properties </li>
-			<li>Save the value by deselecting the object </li>
-		</ul>
-</div>
- <!-- Position -->
- <div class='instruct'>
-	<div><h2 id='position' style='display:inline-block'>Positions</h2></div>
-	<p>The position of any object is the top-left corner of the bounding rectangle of the object as depicted below:
-	<br><img src='PositionObject.png' width='auto' height='auto'/>
-	<br>The position of any object can be modified in two ways:
-	</p>
-		<ul>
-			<li>Drag-Drop:
-				<ul>
-					<li>Select the object. </li>
-					<li>Drag and Drop it at desired position.</li>
-				</ul> 
- 			</li>	
- 			
- 			<li>Modify X,Y co-ordinates in the Properties window:(refer to Figure below)
-				<ul>
-					<li>Modify the X and Y value in the input box. </li>
-					<li>Click on the area outside the input boxes to apply the values. You should see the new position.</li>
-				</ul> 
-				<br><img src=' PositionInput.png' width='auto' height='auto'/>
- 			</li>
-		</ul>
-</div>
- 
- <!-- Dimension -->
- <div class='instruct'>
-	<div><h2 id='dimension' style='display:inline-block'>Dimensions</h2></div>
-	<p>The dimension of an object is the Width and Height of the bounding rectangle of an object as depicted in the figure below: 
-	 Only the dimensions of Shape objects and Image objects can be modified. :
-	<br><img src='DimensionObject.png' width='auto' height='auto'/>
-	<br>The position of any object can be modified in two ways:
-	</p>
-		<ul>
-			<li>Drag one of the sides:
-				<ul>
-					<li>Select the object(shape types or Image).</li>
-					<li>Drag one of the sides of the bounding rectangle to a desired length and then release the mouse button.</li> 
-				</ul> 
- 			</li>	
- 			
- 			<li>Modify Width/Height in the Properties window:(refer to Figure below)
-				<ul>
-					<li>Modify the values of Width/Height in the input box.</li>
-					<li>Click on the area outside the input boxes to apply the values. You should see the new dimension.</li> 
-				</ul> 
-				<br><img src='DimensionInput.png' width='auto' height='auto'/>
- 			</li>
-		</ul>
-</div>
- 
- <!-- Rotate -->
- <div class='instruct'>
-	<div><h2 id='rotation' style='display:inline-block'>Rotation</h2></div>
-	<p>One can rotate an object by an angle using the <b>Rotate</b> input box in the properties window.  
-	Positive value rotates the object in clockwise direction and negative values rotates in anti-clockwise direction.
-	<br><img src='RotateObject.png' width='auto' height='auto'/>	
-	</p>		
-</div>
- 
- <!-- Fill -->
- <div class='instruct'>
-	<div><h2 id='fill' style='display:inline-block'>Fill</h2></div>
-	<p>Fill properties allows one to add colors to the background of an object. By default, the background color is transparent.
-	 <br>There are 3 types of background fill one  can add.</p>	
-		<ul>
-			<li><h3>Solid</h3>
-				<ul>
-					<li>Select an object.</li>
-					<li>Choose fill type as solid from the Combo box as shown below:
-					 <br><img src= 'FillSolid.png' /> </li>
-					<li>Select the color from the color palette window as shown in the figure below:
-					<br><img src='Color.png' width='250px' height='auto' /> </li>
-				</ul>
-			</li>		 
-			<li><h3>Linear Gradient</h3>
-				<ul>
-					<li>Select an object.</li>
-					<li>Choose fill type as Linear Gradient from the Fill Type combo box as depicted below:
-					<br><img src='FillTypeLinGrad.png' width='auto' height='auto' /> </li>
-					<li>Enter a title to the gradient. 
-					This is important as the same gradient could be used for other objects as well.</li>
-					<li>Choose the spread-method from the list. </li>
-					<li>Select the start-offset and end offset colors. </li>
-					<li>One can set the start offset of the first color and start offset of the second color.
-					<br><img src= 'FillLinearGradientWindow.png' width='250px' height='auto' /></li>			
-				</ul>
-			</li> 
-			<li><h3>Radial Gradient</h3></li>	
-				<ul>
-					<li>Select an object. </li>
-					<li>Choose fill type as Radial Gradient from the Fill Type combo box as depicted below:
-						<br><img src='FillTypeRadialGrad.png' width='auto' height='auto' /> </li>
-					<li>Enter a title to the gradient.
-					 This is important as the same gradient could be used for other objects as well. </li>
-					 <li> Choose the spread-method from the list. </li>
-					 <li>Change the Center of radial gradient if required. </li>
-					 <li>Select the start-offset and end offset colors. </li>
-					 <li>One can set the start offset of the first color and start offset of the second color. 
-						<br> <img src='FillRadialGradientWindow.png' width='250px' height='auto' />
-					</li>
-				</ul>		
-		</ul>		
-</div>
- <!-- Using Gradient -->
- <div class='instruct'>
-	<div><h2 id='usegradient' style='display:inline-block'>Using Gradient</h2></div>
-	<p>One can also use an existing gradient for an object. </p>	
-	<ul>
-		<li>Select an object. </li> 
-		<li>Select one of the Gradients already defined, from the list box as depicted below. 
-			<br><img src ='fillApplyGradient.png' width='auto' height='auto' />
-`		</li>
-	</ul>	
-</div>
- 
- <!-- Editing Gradient -->
- <div class='instruct'>
-	<div><h2 id='editgradient' style='display:inline-block'>Edit Gradient</h2></div>
-	<p>One can edit an existing gradient. 
-	On editing, the same will be reflected in all the objects wherever the gradient is referenced. </p>	
-	<ul>
-		<li>Select a Gradient as shown below
-		<br><img src='FillApplyGradient.png' width='auto' height='auto' /></li>
-		 
-		<li>On clicking the <img src='FillGradEditBtn.png'  style='display:inline-block' width='auto' height='auto' /> button the gradient window opens up,
-		 where one can edit the parameters of the chosen gradient. 
-`		</li>
-	</ul>	
-</div>
-
-<!-- Deleting Gradient -->
- <div class='instruct'>
-	<div><h2 id='deletegradient' style='display:inline-block'>Delete Gradient</h2></div>
-	<p>One can delete an existing gradient. 
-	On deleting, the same will be reflected in all the objects wherever the gradient is referenced. </p>	
-	<ul>
-		<li>Select a Gradient as shown below
-		<br><img src='FillApplyGradient.png' width='auto' height='auto' /></li>
-		 
-		<li>Click on the <img src='FillGradDeleteBtn.png'  style='display:inline-block' width='auto' height='auto' /> button to delete the gradient
-`		</li>
-	</ul>	
-</div>
-
-<!-- Stroke -->
- <div class='instruct'>
-	<div><h2 id='stroke' style='display:inline-block'>Stroke</h2></div>
-	<p>Stroke is the outline or border of an object.
-	 One can modify the various properties of the stroke like thickness, colors or patterns.  </p>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='strokecolor' style='display:inline-block'>Stroke Color</h3></div>		
-	<ul>
-		<li>Select an object. </li> 
-		<li>On clicking on the <img src='StrokeColor.png' class='icon' />button, a color palette window opens up.</li> 
-		<li>Select any color to apply.</li> 
-	</ul>	
-</div>
-
-<div class='instruct'>
-	<div><h3 id='strokethickness' style='display:inline-block'>Stroke Thickness</h3></div>		
-	<ul>
-		<li>Select an object. </li> 
-		<li>Select the value of the thickness from the input box. A value of 0 means no outline.
-		<br><img src='StrokeThickness.png' width='auto' height='auto' />
-		</li> 
-	</ul>	
-</div>
-
-<div class='instruct'>
-	<div><h3 id='strokepattern' style='display:inline-block'>Stroke Pattern</h3></div>		
-	<ul>
-		<li>Select an object. </li> 
-		<li>Select one of the items from the list box as shown below.
-		<br><img src='StrokePattern.png' width='auto' height='auto' />
-		</li> 
-	</ul>	
-</div>
-
-<div class='instruct'>
-	<div><h2 id='opacity' style='display:inline-block'>Opacity</h2></div>
-	<p>Opacity of any object can be set using the slider control as depicted below:
-	<br><img src='opacity.png' width='auto' height='auto' />
-	</p>	
-</div>
-
-<div class='instruct'>
-	<div><h2 id='closedpath' style='display:inline-block'>Closed Path</h2></div>
-	<p>For any path objects one can set or unset a closed path.
-	 On setting the closed path, the start point and end points are joined.
-	<br><img src='ClosedPath.png' width='auto' height='auto' />
-	</p>	
-</div>
-
-<div class='instruct'>
-	<div><h2 id='markers' style='display:inline-block'>Markers</h2></div>
-	<p>For any path objects one can set markers for the start, intermediate and end points.
-	<br>There are three types of markers.	
-	</p>	
-	<ul>
-		<li>Start Marker - Marker for Start point. </li>
-		<li>Middle Marker - Marker for intermediate points.</li> 
-		<li>End Marker - Marker for end points.</li>
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='addmarker' style='display:inline-block'>Add Marker</h3></div>
-	<ul>
-		<li>Choose type of marker from the list box as shown below:
-			<br><img src='MarkerTypes.png' width='auto' height='auto' /> 
-		</li>
-		<li>Corresponding point will be highlighted as shown below:
-			<br><img src='MarkerSelected.png' width='auto' height='auto' /> 
-		</li>
-		<li>Select the Shape of the marker from the list as shown below:
-			<br><img src='MarkerShapes.png' width='auto' height='auto' /> 
-		</li>
-		<li>Click on the <img src='MarkerAdd.png'  />button, the marker will be added to the selected point.
-		</li>
-
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='deletemarker' style='display:inline-block'>Delete Marker</h3></div>
-	<ul>
-		<li>Choose type of marker from the list box as shown below:
-			<br><img src='MarkerTypes.png' width='auto' height='auto' /> 
-		</li>		
-		<li>Click on the <img src='MarkerDelete.png'  />button, to delete the marker.
-		</li>
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='outlinemarker' style='display:inline-block'>Border Color of Marker</h3></div>
-	<p>One can set the color of the border of the marker</p>
-	<ul>
-		<li>Select the Marker type from List. </li> 
-		<li>On clicking the <img src='MarkerOutline.png' /> button, the color palette window is displayed. </li>
-		<li>Choose the color you want to apply to the border. </li> 
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='fillmarker' style='display:inline-block'>Background Color of Marker</h3></div>
-	<p>One can set the background color of the marker</p>
-	<ul>
-		<li>Select the Marker type from List. </li> 
-		<li>On clicking the <img src='MarkerBackground.png' /> button, the color palette window is displayed. </li>
-		<li>Choose the color you want to apply to the background. </li> 
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h2 id='editpathpoint' style='display:inline-block'>Editing Path Points</h2></div>
-	<p>One can edit the points of the path objects by moving a point</p>
-	<ul>
-		<li>Select a path type object.</li> 
-		<li>On clicking the Edit Point <img src='PolyEditPoints.png'  /> button, the path points are highlighted as shown below.
-		 The Green ones show Start point, Red one is the End point and the Grey ones are intermediate points.
-		 <br> <img src='PolygonPointSelection.png' />
-		  </li>
-		<li>On bringing the mouse on a point, the point gets highlighted, 
-		 click on the point and drag the point to the desired location and release the mouse button.  </li> 
-	</ul>
-</div>
-
-<div>
-	<div><h2 id='modifypolygon' style='display:inline-block'>Modifying Polygon Objects</h2></div>	
-	<div style='display:inline-block'><img src="PolygonEditPoints.png" width='300px' height='auto' style='display:inline-block' />
-		<ul class='instruct'>
-			<li>Select the <b>Polygon</b> object</li>	
-			<li>Click on the <img src="PolyEditPoints.png" width='75px' height='auto' style='display:inline-block'/> button,the editor shows all the points of the polygon.</li>							
-		</ul>	
-	</div>	
-</div>
-
-<div>
-	<div><h3 id='addpolygonpoints' style='display:inline-block'>Add Points</h3></div>	
-		<ul class='instruct'>
-			<li>Select a Point in the polygon, the point will be highlighted with larger circle as shown in the figure below<br>
-			 <img src="polygonSelected.png" width='100px' height='auto' style='display:inline-block' /> </li>	
-			<li>Click on <img src="PolyAddPoint.png" width='90px' height='auto' style='display:inline-block'/> button , a point is added after the currently selected point as shown in the figure below<br>
-			 <img src="PolygonModified.png" width='100px' height='auto' style='display:inline-block'/> </li>		 									
-		</ul>	
-</div>	
-
-
-<div>
-	<div><h3 id='deletepolygonpoints' style='display:inline-block'>Delete Points</h3></div>	
-		<ul class='instruct'>
-			<li>Select a Point in the polygon, the point will be highlighted with larger circle as shown in the figure below<br>
-			 <img src="PolygonDeleteModify.png" width='100px' height='auto' style='display:inline-block'/> </li>	
-			<li>Click on <img src="PolyDeletePoint.png" width='90px' height='auto' style='display:inline-block'/> button , a point is added after the currently selected point as shown in the figure below<br>
-			 <img src="PolygonDeleted.png" width='100px' height='auto' style='display:inline-block'/> </li>		 									
-		</ul>	
-</div>
-
-<div>
-	<div><h3 id='polygonlength' style='display:inline-block'>Length of Sides</h3></div>	
-	<p>One can change the length of the sides of a regular polygon. If the polygon is non-regular then 
-	on changing the length, the polygon is modified to a regular polygon with new values of the length	
-	</p>
-		<ul class='instruct'>
-			<li>Select a <b>Polygon</b> object<br></li>
-			<li>Change the value of the input box to a desired length as given below
-			<br> <img src='polygonLength.png' />
-			 </li>		 									
-		</ul>	
-</div>
-
-
-<div class='instruct'>
-	<div><h2 id='ellipticcurve' style='display:inline-block'>Modifying Elliptic Curve Objects</h2></div>
-	<p>There are some specific parameters for Elliptic curve that can be modified in the Properties window.
-	 examples Large Arc, Sweep Flag etc. These are depicted in the figure given below <br> 
-	 <img  src ='EllipticParamter.png' width='auto', height='auto' /> </p>
-</div>
-
-<div class='instruct'>
-	<div><h2 id='freehandobject' style='display:inline-block'>Modifying Freehand Drawing Objects</h2></div>
-	<p>One can modify a Freehand drawing object using tools like Smoothening, Erasing or Redrawing.  </p>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='smoothen' style='display:inline-block'>Smoothen</h3></div>
-	<ul>
-		<li> Select the Freehand object. </li>
-		<li>Clicking on the <img src='FreehandSmoothenBtn.png' />will result into smoothening of the object as shown below:
-		<br><img src='FreeSmoothingDemo.png' width='auto' height='auto' />
-		 </li>
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='redraw' style='display:inline-block'>Redraw</h3></div>
-	<ul>
-		<li>Select the Freehand object. </li>
-		<li>On clicking the <img src='FreehandRedrawBtn.png' />,one can see the rectangular dot as shown below.
-		<br><img src = 'FreehandRedraw.png' /></li>
-		<li>Now move the dot as desired to modify the object </li> 
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='erase' style='display:inline-block'>Erase</h3></div>
-	<ul>
-		<li>Select the Freehand Object.</li>
-		<li>On clicking the <img src='FreeEraseBtn.png' /> button, a red rectangular dot appears as shown below. 
-		<br> <img src ='FreehandErase.png' width='auto' height='auto' /> </li>
-		<li> Now take this red dot on the part which you want to erase and click. </li>
-		<li>Once done, just click on the green dotted border to save the changes. </li> 
-	</ul>
-</div>
-
-
-<div class='instruct'>
-	<div><h2 id='modtextobject' style='display:inline-block'>Modifying Text Object</h2></div>
-	<p>One can edit and modify the text object through the properties window</p>
-	<div><h3 id='textedit' style='display:inline-block'>Edit</h3></div>	
-	<ul>
-		<li>Select the Text Object. </li>
-		<li>On clicking the <img src='TextEditBtn.png' /> button, you will see a text editor opening right below the text object as shown below
-		<br> <img src='TextEditor.png' /> </li>
-		<li>Edit the text and then click outside the text object to save the text.</li> 
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='textbold' style='display:inline-block'>Bold</h3></div>	
-	<ul>
-		<li>Select the Text Object.</li>
-		<li>Click on the <img  src='TextBoldBtn.png' /> button to toggle between applying Bold style or removing it. <li>
-	</ul>
-</div>
-
-
-<div class='instruct'>
-	<div><h3 id='textitalic' style='display:inline-block'>Italic</h3></div>	
-	<ul>
-		<li>Select the Text Object.</li>
-		<li>Click on the <img src='TextItalicBtn.png'/> button to toggle between applying Italic style  or removing it. </li>
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='textunderline' style='display:inline-block'>Underline</h3></div>	
-	<ul>
-		<li>Select the Text Object. </li>
-		<li>Click on the <img src='TextUnderlineBtn.png' /> button to toggle between applying Underline style  or removing it. </li> 
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='textstrikeout' style='display:inline-block'>Strike-Out</h3></div>	
-	<ul>
-		<li>Select the Text Object.</li>
-		<li>Click on the <img src='TextStrikeoutBtn.png' /> button to toggle between applying Strike-out style  or removing it. </li> 
-	</ul>
-</div>
-
-
-<div class='instruct'>
-	<div><h3 id='textsmallcaps' style='display:inline-block'>Small-caps</h3></div>	
-	<ul>
-		<li>Select the Text Object.</li>
-		<li>Click on the <img src='TextSmallcapsBtn.png' /> button to toggle between applying Small-caps style  or removing it.</li>  
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h2 id='modimageobject' style='display:inline-block'>Modifying Image URL</h2></div>	
-	<ul>
-		<li>Select the Image object</li>
-		<li>Enter the new URL as shown below and then click on the <b>Apply</b> button.
-			<br><img src='ImageURLProperty.png' width='auto'  height='auto' />
-		</li>
- 
-	</ul>
-</div>
-
-<div class='maintopic' ><h1 id='animation'>Animation </h1></div>
-<div class='instruct'>
-<p class='instruct'>
-The application supports SVG animations as per the SVG specification. 
-One can animate objects created in the editor. 
-You can also have multiple animations defined for a single object. 
-The animation of any object is controlled by 3 basic parameters: </p>
-<ul>
-	<li><b>Animation Type:</b> There are different types of animation supported which can be viewed in the list while adding any new animation.</li> 
-	<li><b>Start Time of the animation:</b> By default all animations are executed when SVG is loaded. Hence, animations by default starts at 0th second after loading. However, one may also synchronize the start time with the end or beginning of animation of some other object.</li>
-	<li><b>Duration:</b>Duration defines the duration for which the animation will be executed. By modifying this parameter one can make an animation slow or fast. </li>
-</ul>
-<p class='note'>NOTE:<i>Any change in animation parameters or position of an object should be followed by click on the 
+    <!-- <nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="10">-->
+    <div data-spy="affix" data-offset-top="2" style='background:red; display:none'>
+        <a href='/'>Go To ToC</a>
+    </div>
+    <!-- </nav>-->
+    <div class="container-fluid">
+        <div class='maintopic'><img src="Project.png" style='display:inline-block' class='icon' />
+            <div style='display:inline-block'>
+                <h1 id='manageproject'>Managing Workspace</h1></div>
+        </div>
+        <p class='instruct'>
+            Workspace is the place where all SVG files and other data are stored. The workspace is created on the Webionix cloud server and is available anytime. Any changes in the SVG data is always stored in workspace. Hence, it is necessary that application is always connected to the cloud.
+        </p>
+
+
+        <div>
+            <div><img src="NewProject.png" style='display:inline-block' class='icon' />
+                <h2 id='newproject' style='display:inline-block'>Create New SVG File</h2></div>
+            <ul class='instruct'>
+                <li>Enter an unique filename to create a SVG file.</li>
+            </ul>
+            <p class='note'>NOTE:<i><u>Avoid any blank space in the name</u></i> </p>
+        </div>
+
+        <div>
+            <div><img src="OpenProject.png" style='display:inline-block' class='icon' />
+                <h2 id='openproject' style='display:inline-block'>Open a SVG File</h2></div>
+            <ul class='instruct'>
+                <li>Select a file from the list in the MyWorkspace dialog. </li>
+                <li>Click <b>Open</b> to open the file </li>
+            </ul>
+            <p class='note'>NOTE:<i><u>MyWorkspace dialog shows blank if no file exist in the workspace</u></i></p>
+        </div>
+
+        <div>
+            <div><img src="CloseProject.png" style='display:inline-block' class='icon' />
+                <h2 id='closeproject' style='display:inline-block'>Close a SVG File</h2></div>
+            <ul class='instruct'>
+                <li>Click on the button to close the existing SVG file opened in the editor </li>
+            </ul>
+        </div>
+        <!-- Group Documentation -->
+        <div class='maintopic'>
+            <div><img src="Group.png" style='display:inline-block' class='icon' />
+                <h1 id='addgroup' style='display:inline-block'>Group</h1></div>
+            <button class="video-play-button hide btn btn-sm btn-primary" onclick="playHelpVideo(3 ,10);">Watch Video</button>
+            <p class='instruct'>One or more objects can be put into an user defined group. One can position a group of objects at a desired location by dragging the selected group</p>
+            <ul class='instruct'>
+                <li>Enter an unique group name to create a new group.</li>
+            </ul>
+        </div>
+        <div>
+            <div>
+                <h2 id='selectgroup' style='display:inline-block'>Selecting a Group</h2></div>
+            <div style='display:inline-block'><img src="GroupSelect.png" width='120px' height='auto' style='display:inline-block' /></div>
+            <div style='display:inline-block;position:relative; left:15px'><img src="GroupSelected.png" width='120px' height='auto' style='display:inline-block' /></div>
+            <ul class='instruct'>
+                <li>Click on the Group item on the tree node under the <b>Groups</b> tab </li>
+                <li>All objects within the group are selected within a bounding rectangle </li>
+            </ul>
+        </div>
+        <!-- Deleting a Group -->
+        <div>
+            <div>
+                <h2 id='deletegroup' style='display:inline-block'>Deleting a Group</h2></div>
+            <ul class='instruct'>
+                <li>Select the Group.
+                    <li>Use the <b>Delete</b> <img src="Delete.png" width='20px' height='auto' /> button in the toolbar to delete the group</li>
+            </ul>
+        </div>
+
+        <!-- Moving Object to Group  -->
+        <div>
+            <div>
+                <h2 id='movegroup' style='display:inline-block'>Adding Object to a Group</h2></div>
+            <div style='display:inline-block'><img src="SelectedObject.png" width='auto' height='120px' style='display:inline-block' /></div>
+            <div style='display:inline-block;position:relative; left:15px'><img src="moveGroup.png" width='120px' height='auto' style='display:inline-block' /></div>
+            <ul class='instruct'>
+                <li>Select an <b>Object</b> in the Editor</li>
+                <li>Right Click on the mouse to invoke the context menu </li>
+                <li>Select the desired <b>Group</b> where you want to add the Object to </li>
+            </ul>
+        </div>
+
+        <!-- Adding Objects -->
+        <div class='maintopic'>
+            <div><img src="Shapes.png" style='display:inline-block' class='icon' />
+                <h1 id='addobject' style='display:inline-block'>Adding Objects</h1></div>
+            <p class='instruct'><b>Objects</b> are nothing but various types of SVG objects. In Webionix we mainly deal with 4 different classes of objects
+                <ul class='instruct'>
+                    <li><b>Shapes:</b>Circle,Ellipses,Rectangles are examples of Shape type objects.</li>
+                    <li><b>Path:</b>Lines,Curves,Polygons, Freehand are examples of Path type objects.</li>
+                    <li><b>Text:</b>Text Objects are those which contain only textual matter.</li>
+                    <li><b>Image:</b>Image Objects are the Image objects containing URL to an Image</li>
+                </ul>
+            </p>
+        </div>
+        <!-- Adding Objects  -->
+        <div>
+            <div>
+                <h2 id='addshapepathobject' style='display:inline-block'>Adding Shape or Path Objects</h2></div>
+            <div style='display:inline-block'>
+                <ul class='instruct'>
+                    <li>Select the <b>Group</b> in which the Object is to be added.(By default an object is always added to <b>BASEGROUP</b> )</li>
+                    <li>Select an Object from the list of Objects(except the Polygon)
+                        <br>
+
+                    </li>
+                    <li>A rectangular dot is visible which is a drawing pointer, which moves with the mouse cursor
+                        <br><img src="drawingcursor.png" width='100px' height='auto' style='display:inline-block' /></li>
+                    <li>Click at the point from where you want to start drawing</li>
+                    <li>Drag the cursor downwards and towards right</li>
+                    <li>Release the mouse button to mark the end of drawing</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Adding a Polygon object -->
+        <div>
+            <div>
+                <h2 id='addpolygon' style='display:inline-block'>Adding Polygon Objects</h2></div>
+            <div style='display:inline-block'><img src="SelectPolygon.png" width='300px' height='auto' style='display:inline-block' />
+                <ul class='instruct'>
+                    <li>Select the <b>Group</b> in which the Object is to be added.(By default an object is always added to <b>BASEGROUP</b> )</li>
+                    <li>Select a Polygon Object from the list shown below
+                        <br>
+                        <img src="objectlist.png" width='300px' height='auto' style='display:inline-block' />
+                    </li>
+                    <li>Enter the inputs in the pop-up as given in the figure below
+                        <br>
+                        <img src="PolygonInputs.png" width='200px' height='auto' style='display:inline-block' />
+                    </li>
+                    <li>Upon pressing OK a regular polygon is added in the editor window</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Adding a text -->
+        <div>
+            <div><img src="Text.png" style='display:inline-block' class='icon' />
+                <h2 id='addtext' style='display:inline-block'>Adding Text Objects</h2></div>
+            <div style='display:inline-block'>
+                <ul class='instruct'>
+                    <li>On clicking the icon above, a default text box is added in the editor as shown below
+                        <br>
+                        <img src="AddText.png" width='130px' height='auto' style='display:inline-block' /></li>
+                    <li>To modify the default text, just drag the text box, a small text editor opens up below it as shown below
+                        <br>
+                        <img src="TextModify.png" width='150px' height='auto' style='display:inline-block' /></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Adding a Image -->
+        <div>
+            <div><img src="Image.png" style='display:inline-block' class='icon' />
+                <h2 id='addimage' style='display:inline-block'>Adding Image Objects</h2></div>
+            <div style='display:inline-block'>
+                <ul class='instruct'>
+                    <li>On clicking the icon above, an input-box is displayed as shown below
+                        <br>
+                        <img src="ImageURL.png" width='auto' height='auto' style='display:inline-block' /></li>
+                    <li>Enter the web URL of the Image file to be added
+                        <br>
+
+                    </li>
+                </ul>
+
+                <p class='note'>NOTE:<i><u>Webionix application does not store image files on its server, hence the web URL of the image file should be well qualified name</u></i> </p>
+            </div>
+        </div>
+
+
+
+        <!-- deleting objects -->
+        <div>
+            <div><img src="Delete.png" style='display:inline-block' class='icon' />
+                <h2 id='deleteobject' style='display:inline-block'>Deleting Objects</h2></div>
+            <div style='display:inline-block'>
+                <ul class='instruct'>
+                    <li>Select an Object</li>
+                    <li>Use the icon above to delete the object</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Modifying Objects -->
+        <div class='maintopic'>
+            <div>
+                <h1 id='modifyobject' style='display:inline-block'>Modifying Objects</h1></div>
+            <p class='instruct'><b>Objects</b> can be modified in various ways using the editor. In case of shape type objects only the dimension can be changed whereas in case of path objects the points can be modified. </p>
+        </div>
+
+        <div>
+            <div>
+                <h2 id='modifyshapes' style='display:inline-block'>Modifying Shape Type Objects</h2></div>
+            <ul class='instruct'>
+                <li>Select a Shape type object (e.g. Rectangle,Circle, Ellipse).</li>
+                <li>Drag the outline of the object to change the dimensions of the object.</li>
+            </ul>
+        </div>
+
+        <div>
+            <div>
+                <h2 id='modifycurves' style='display:inline-block'>Modifying Path Type Object</h2></div>
+            <ul class='instruct'>
+                <li>Select a Path type object
+                    <br> (e.g. Lines,Cubic Bezier, Quadatric Bezier, Elliptic, Polygons etc)</li>
+                <li>Go to <b>Properties</b> tab and click on <img src='PolyEditPoints.png' width='75px' height='auto' />. One could see the points of the path marked with circles.
+                    <br>The Green circle indicates Start point and the Red circle indicates End point of the path
+                    <br><img src='ModifyCurvePath.png' width='100px' height='auto' /></li>
+                <li>Select the point you want to move and drag it to the desired location to modify the path
+                    <br><img src='ModifiedPathPoint.png' width='75px' height='auto' /></li>
+            </ul>
+        </div>
+
+        <div>
+            <div>
+                <h2 id='modifyimage' style='display:inline-block'>Modifying Image Object</h2></div>
+            <ul class='instruct'>
+                <li>Select the Image object</li>
+                <li>Drag the outline of the object to change the dimensions of the object.</li>
+            </ul>
+        </div>
+        <!-- Modifying a Polygon object -->
+
+
+
+
+        <div class='maintopic'>
+            <div>
+                <h1 id='selectobject' style='display:inline-block'>Selecting Objects</h1></div>
+            <p class='instruct'>To modify any property of an object, one needs to select an object. The editor allows one to select object in two modes </p>
+            <br>
+            <ul class='instruct'>
+                <li>
+                    <h3 id='singleselect'>Single Selection:</h3>In this mode, just click on the target object and an Orange outline should appear
+                    <br> OR
+                    <br> One can also select an object from the <b>Groups</b> tab by selecting the appropriate tree item.
+                    <br><img src='SingleSelection.png' width='auto' height='auto' />
+                </li>
+
+                <li>
+                    <h3 id='multiselect'>Multiple Selection:</h3> In this mode two or more objects can be selected at a time. There are two methods to achieve this.
+                    <ul>
+                        <br><b>Method-1</b>
+                        <li>Press <b>"Ctrl"</b> key and then select objects one by one. The first object selected will be marked in Red and the remaining ones will be in Green
+                            <br><img src='SelectmultipleCtrlKey.png' width='250px' height='auto' /></li>
+                    </ul>
+                    <ul><b>Method-2</b>
+                        <li>On clicking the <img src='Multiselect.png' class='icon'> button in the toolbar, one can see rectanglar dot appearing on the editor</li>
+                        <li>Start from some point in the editor and drag it downwards in such a way that all desired objects are covered within the dragged path and then release the mouse button
+                            <br> All the selected objects are bounded by a dotted outline as shown below
+                            <br>
+                            <img src='SelectionMultipleDrag.png' width='200px' height='auto' />
+                        </li>
+                    </ul>
+
+                </li>
+            </ul>
+
+        </div>
+
+
+        <div class='maintopic'>
+            <div>
+                <h1 id='alignobject' style='display:inline-block'>Aligning Objects</h1></div>
+            <p class='instruct'>Two or more Objects can be aligned with respect to each other in terms of position or dimensions. One need to select two or more objects using <b>Ctrl Key</b> as mentioned in <a href='#multiselect'>Multiple Object Selection section</a>. The first object outlined in Red is the reference object which means other objects will align with respect to the reference object.
+            </p>
+        </div>
+        <div class='instruct'>
+            <div>
+                <h2 id='alignwidth' style='display:inline-block'>Align Width</h2></div>
+            <ul>
+                <li>Select two or more objects using Ctrl key</li>
+                <li>On Clicking <img src='AlignWidth.png' class='icon' /> button, the objects align their width with respect to the reference object. </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='alignheight' style='display:inline-block'>Align Height</h2></div>
+            <ul>
+                <li>Select two or more objects using Ctrl key</li>
+                <li>On Clicking <img src='AlignHeight.png' class='icon' /> button, the objects align their height with respect to the reference object. </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='alignleft' style='display:inline-block'>Align Left Edge</h2></div>
+            <ul>
+                <li>Select two or more objects using Ctrl key</li>
+                <li>On Clicking <img src='AlignLeft.png' class='icon' /> button, the objects align their left edge with respect to the reference object. </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='aligntop' style='display:inline-block'>Align Top Edge</h2></div>
+            <ul>
+                <li>Select two or more objects using Ctrl key</li>
+                <li>On Clicking <img src='AlignTop.png' class='icon' /> button, the objects align their top edge with respect to the reference object. </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='alignright' style='display:inline-block'>Align Right Edge</h2></div>
+            <ul>
+                <li>Select two or more objects using Ctrl key</li>
+                <li>On Clicking <img src='AlignRight.png' class='icon' /> button, the objects align their right edge with respect to the reference object. </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='alignbottom' style='display:inline-block'>Align Bottom Edge</h2></div>
+            <ul>
+                <li>Select two or more objects using Ctrl key</li>
+                <li>On Clicking <img src='AlignBottom.png' class='icon' /> button, the objects align their bottom edge with respect to the reference object. </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='alignhorcenter' style='display:inline-block'>Align Center Horizontally</h2></div>
+            <ul>
+                <li>Select two or more objects using Ctrl key</li>
+                <li>On Clicking <img src='AlignHorCenter.png' class='icon' /> button, the objects align their center horizontally with respect to the reference object. </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='alignvertcenter' style='display:inline-block'>Align Center Vertically</h2></div>
+            <ul>
+                <li>Select two or more objects using Ctrl key</li>
+                <li>On Clicking <img src='AlignVertCenter.png' class='icon' /> button, the objects align their center vertically with respect to the reference object. </li>
+            </ul>
+        </div>
+
+        <div class='maintopic'>
+            <div>
+                <h1 id='download' style='display:inline-block'>Download SVG</h1></div>
+            <ul class='instruct'>
+                <li>Click on the <img src='Download.png' class='icon' /> button to download the current SVG file onto your local storage </li>
+            </ul>
+        </div>
+
+        <div class='maintopic'>
+            <div>
+                <h1 id='properties' style='display:inline-block'>Modifying Object Properties</h1></div>
+            <p class='instruct'>Properties of all the objects can be modified through the editor. The basic steps are:</p>
+            <ul class='instruct'>
+                <li>Select the object </li>
+                <li>Modify the properties </li>
+                <li>Save the value by deselecting the object </li>
+            </ul>
+        </div>
+        <!-- Position -->
+        <div class='instruct'>
+            <div>
+                <h2 id='position' style='display:inline-block'>Positions</h2></div>
+            <p>The position of any object is the top-left corner of the bounding rectangle of the object as depicted below:
+                <br><img src='PositionObject.png' width='auto' height='auto' />
+                <br>The position of any object can be modified in two ways:
+            </p>
+            <ul>
+                <li>Drag-Drop:
+                    <ul>
+                        <li>Select the object. </li>
+                        <li>Drag and Drop it at desired position.</li>
+                    </ul>
+                </li>
+
+                <li>Modify X,Y co-ordinates in the Properties window:(refer to Figure below)
+                    <ul>
+                        <li>Modify the X and Y value in the input box. </li>
+                        <li>Click on the area outside the input boxes to apply the values. You should see the new position.</li>
+                    </ul>
+                    <br><img src=' PositionInput.png' width='auto' height='auto' />
+                </li>
+            </ul>
+        </div>
+
+        <!-- Dimension -->
+        <div class='instruct'>
+            <div>
+                <h2 id='dimension' style='display:inline-block'>Dimensions</h2></div>
+            <p>The dimension of an object is the Width and Height of the bounding rectangle of an object as depicted in the figure below: Only the dimensions of Shape objects and Image objects can be modified. :
+                <br><img src='DimensionObject.png' width='auto' height='auto' />
+                <br>The position of any object can be modified in two ways:
+            </p>
+            <ul>
+                <li>Drag one of the sides:
+                    <ul>
+                        <li>Select the object(shape types or Image).</li>
+                        <li>Drag one of the sides of the bounding rectangle to a desired length and then release the mouse button.</li>
+                    </ul>
+                </li>
+
+                <li>Modify Width/Height in the Properties window:(refer to Figure below)
+                    <ul>
+                        <li>Modify the values of Width/Height in the input box.</li>
+                        <li>Click on the area outside the input boxes to apply the values. You should see the new dimension.</li>
+                    </ul>
+                    <br><img src='DimensionInput.png' width='auto' height='auto' />
+                </li>
+            </ul>
+        </div>
+
+        <!-- Rotate -->
+        <div class='instruct'>
+            <div>
+                <h2 id='rotation' style='display:inline-block'>Rotation</h2></div>
+            <p>One can rotate an object by an angle using the <b>Rotate</b> input box in the properties window. Positive value rotates the object in clockwise direction and negative values rotates in anti-clockwise direction.
+                <br><img src='RotateObject.png' width='auto' height='auto' />
+            </p>
+        </div>
+
+        <!-- Fill -->
+        <div class='instruct'>
+            <div>
+                <h2 id='fill' style='display:inline-block'>Fill</h2></div>
+            <p>Fill properties allows one to add colors to the background of an object. By default, the background color is transparent.
+                <br>There are 3 types of background fill one can add.</p>
+            <ul>
+                <li>
+                    <h3>Solid</h3>
+                    <ul>
+                        <li>Select an object.</li>
+                        <li>Choose fill type as solid from the Combo box as shown below:
+                            <br><img src='FillSolid.png' /> </li>
+                        <li>Select the color from the color palette window as shown in the figure below:
+                            <br><img src='Color.png' width='250px' height='auto' /> </li>
+                    </ul>
+                </li>
+                <li>
+                    <h3>Linear Gradient</h3>
+                    <ul>
+                        <li>Select an object.</li>
+                        <li>Choose fill type as Linear Gradient from the Fill Type combo box as depicted below:
+                            <br><img src='FillTypeLinGrad.png' width='auto' height='auto' /> </li>
+                        <li>Enter a title to the gradient. This is important as the same gradient could be used for other objects as well.</li>
+                        <li>Choose the spread-method from the list. </li>
+                        <li>Select the start-offset and end offset colors. </li>
+                        <li>One can set the start offset of the first color and start offset of the second color.
+                            <br><img src='FillLinearGradientWindow.png' width='250px' height='auto' /></li>
+                    </ul>
+                </li>
+                <li>
+                    <h3>Radial Gradient</h3></li>
+                <ul>
+                    <li>Select an object. </li>
+                    <li>Choose fill type as Radial Gradient from the Fill Type combo box as depicted below:
+                        <br><img src='FillTypeRadialGrad.png' width='auto' height='auto' /> </li>
+                    <li>Enter a title to the gradient. This is important as the same gradient could be used for other objects as well. </li>
+                    <li> Choose the spread-method from the list. </li>
+                    <li>Change the Center of radial gradient if required. </li>
+                    <li>Select the start-offset and end offset colors. </li>
+                    <li>One can set the start offset of the first color and start offset of the second color.
+                        <br> <img src='FillRadialGradientWindow.png' width='250px' height='auto' />
+                    </li>
+                </ul>
+            </ul>
+        </div>
+        <!-- Using Gradient -->
+        <div class='instruct'>
+            <div>
+                <h2 id='usegradient' style='display:inline-block'>Using Gradient</h2></div>
+            <p>One can also use an existing gradient for an object. </p>
+            <ul>
+                <li>Select an object. </li>
+                <li>Select one of the Gradients already defined, from the list box as depicted below.
+                    <br><img src='fillApplyGradient.png' width='auto' height='auto' /> ` </li>
+            </ul>
+        </div>
+
+        <!-- Editing Gradient -->
+        <div class='instruct'>
+            <div>
+                <h2 id='editgradient' style='display:inline-block'>Edit Gradient</h2></div>
+            <p>One can edit an existing gradient. On editing, the same will be reflected in all the objects wherever the gradient is referenced. </p>
+            <ul>
+                <li>Select a Gradient as shown below
+                    <br><img src='FillApplyGradient.png' width='auto' height='auto' /></li>
+
+                <li>On clicking the <img src='FillGradEditBtn.png' style='display:inline-block' width='auto' height='auto' /> button the gradient window opens up, where one can edit the parameters of the chosen gradient. ` </li>
+            </ul>
+        </div>
+
+        <!-- Deleting Gradient -->
+        <div class='instruct'>
+            <div>
+                <h2 id='deletegradient' style='display:inline-block'>Delete Gradient</h2></div>
+            <p>One can delete an existing gradient. On deleting, the same will be reflected in all the objects wherever the gradient is referenced. </p>
+            <ul>
+                <li>Select a Gradient as shown below
+                    <br><img src='FillApplyGradient.png' width='auto' height='auto' /></li>
+
+                <li>Click on the <img src='FillGradDeleteBtn.png' style='display:inline-block' width='auto' height='auto' /> button to delete the gradient ` </li>
+            </ul>
+        </div>
+
+        <!-- Stroke -->
+        <div class='instruct'>
+            <div>
+                <h2 id='stroke' style='display:inline-block'>Stroke</h2></div>
+            <p>Stroke is the outline or border of an object. One can modify the various properties of the stroke like thickness, colors or patterns. </p>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='strokecolor' style='display:inline-block'>Stroke Color</h3></div>
+            <ul>
+                <li>Select an object. </li>
+                <li>On clicking on the <img src='StrokeColor.png' class='icon' />button, a color palette window opens up.</li>
+                <li>Select any color to apply.</li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='strokethickness' style='display:inline-block'>Stroke Thickness</h3></div>
+            <ul>
+                <li>Select an object. </li>
+                <li>Select the value of the thickness from the input box. A value of 0 means no outline.
+                    <br><img src='StrokeThickness.png' width='auto' height='auto' />
+                </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='strokepattern' style='display:inline-block'>Stroke Pattern</h3></div>
+            <ul>
+                <li>Select an object. </li>
+                <li>Select one of the items from the list box as shown below.
+                    <br><img src='StrokePattern.png' width='auto' height='auto' />
+                </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='opacity' style='display:inline-block'>Opacity</h2></div>
+            <p>Opacity of any object can be set using the slider control as depicted below:
+                <br><img src='opacity.png' width='auto' height='auto' />
+            </p>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='closedpath' style='display:inline-block'>Closed Path</h2></div>
+            <p>For any path objects one can set or unset a closed path. On setting the closed path, the start point and end points are joined.
+                <br><img src='ClosedPath.png' width='auto' height='auto' />
+            </p>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='markers' style='display:inline-block'>Markers</h2></div>
+            <p>For any path objects one can set markers for the start, intermediate and end points.
+                <br>There are three types of markers.
+            </p>
+            <ul>
+                <li>Start Marker - Marker for Start point. </li>
+                <li>Middle Marker - Marker for intermediate points.</li>
+                <li>End Marker - Marker for end points.</li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='addmarker' style='display:inline-block'>Add Marker</h3></div>
+            <ul>
+                <li>Choose type of marker from the list box as shown below:
+                    <br><img src='MarkerTypes.png' width='auto' height='auto' />
+                </li>
+                <li>Corresponding point will be highlighted as shown below:
+                    <br><img src='MarkerSelected.png' width='auto' height='auto' />
+                </li>
+                <li>Select the Shape of the marker from the list as shown below:
+                    <br><img src='MarkerShapes.png' width='auto' height='auto' />
+                </li>
+                <li>Click on the <img src='MarkerAdd.png' />button, the marker will be added to the selected point.
+                </li>
+
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='deletemarker' style='display:inline-block'>Delete Marker</h3></div>
+            <ul>
+                <li>Choose type of marker from the list box as shown below:
+                    <br><img src='MarkerTypes.png' width='auto' height='auto' />
+                </li>
+                <li>Click on the <img src='MarkerDelete.png' />button, to delete the marker.
+                </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='outlinemarker' style='display:inline-block'>Border Color of Marker</h3></div>
+            <p>One can set the color of the border of the marker</p>
+            <ul>
+                <li>Select the Marker type from List. </li>
+                <li>On clicking the <img src='MarkerOutline.png' /> button, the color palette window is displayed. </li>
+                <li>Choose the color you want to apply to the border. </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='fillmarker' style='display:inline-block'>Background Color of Marker</h3></div>
+            <p>One can set the background color of the marker</p>
+            <ul>
+                <li>Select the Marker type from List. </li>
+                <li>On clicking the <img src='MarkerBackground.png' /> button, the color palette window is displayed. </li>
+                <li>Choose the color you want to apply to the background. </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='editpathpoint' style='display:inline-block'>Editing Path Points</h2></div>
+            <p>One can edit the points of the path objects by moving a point</p>
+            <ul>
+                <li>Select a path type object.</li>
+                <li>On clicking the Edit Point <img src='PolyEditPoints.png' /> button, the path points are highlighted as shown below. The Green ones show Start point, Red one is the End point and the Grey ones are intermediate points.
+                    <br> <img src='PolygonPointSelection.png' />
+                </li>
+                <li>On bringing the mouse on a point, the point gets highlighted, click on the point and drag the point to the desired location and release the mouse button. </li>
+            </ul>
+        </div>
+
+        <div>
+            <div>
+                <h2 id='modifypolygon' style='display:inline-block'>Modifying Polygon Objects</h2></div>
+            <div style='display:inline-block'><img src="PolygonEditPoints.png" width='300px' height='auto' style='display:inline-block' />
+                <ul class='instruct'>
+                    <li>Select the <b>Polygon</b> object</li>
+                    <li>Click on the <img src="PolyEditPoints.png" width='75px' height='auto' style='display:inline-block' /> button,the editor shows all the points of the polygon.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div>
+            <div>
+                <h3 id='addpolygonpoints' style='display:inline-block'>Add Points</h3></div>
+            <ul class='instruct'>
+                <li>Select a Point in the polygon, the point will be highlighted with larger circle as shown in the figure below
+                    <br>
+                    <img src="polygonSelected.png" width='100px' height='auto' style='display:inline-block' /> </li>
+                <li>Click on <img src="PolyAddPoint.png" width='90px' height='auto' style='display:inline-block' /> button , a point is added after the currently selected point as shown in the figure below
+                    <br>
+                    <img src="PolygonModified.png" width='100px' height='auto' style='display:inline-block' /> </li>
+            </ul>
+        </div>
+
+
+        <div>
+            <div>
+                <h3 id='deletepolygonpoints' style='display:inline-block'>Delete Points</h3></div>
+            <ul class='instruct'>
+                <li>Select a Point in the polygon, the point will be highlighted with larger circle as shown in the figure below
+                    <br>
+                    <img src="PolygonDeleteModify.png" width='100px' height='auto' style='display:inline-block' /> </li>
+                <li>Click on <img src="PolyDeletePoint.png" width='90px' height='auto' style='display:inline-block' /> button , a point is added after the currently selected point as shown in the figure below
+                    <br>
+                    <img src="PolygonDeleted.png" width='100px' height='auto' style='display:inline-block' /> </li>
+            </ul>
+        </div>
+
+        <div>
+            <div>
+                <h3 id='polygonlength' style='display:inline-block'>Length of Sides</h3></div>
+            <p>One can change the length of the sides of a regular polygon. If the polygon is non-regular then on changing the length, the polygon is modified to a regular polygon with new values of the length
+            </p>
+            <ul class='instruct'>
+                <li>Select a <b>Polygon</b> object
+                    <br>
+                </li>
+                <li>Change the value of the input box to a desired length as given below
+                    <br> <img src='polygonLength.png' />
+                </li>
+            </ul>
+        </div>
+
+
+        <div class='instruct'>
+            <div>
+                <h2 id='ellipticcurve' style='display:inline-block'>Modifying Elliptic Curve Objects</h2></div>
+            <p>There are some specific parameters for Elliptic curve that can be modified in the Properties window. examples Large Arc, Sweep Flag etc. These are depicted in the figure given below
+                <br>
+                <img src='EllipticParamter.png' width='auto' , height='auto' /> </p>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='freehandobject' style='display:inline-block'>Modifying Freehand Drawing Objects</h2></div>
+            <p>One can modify a Freehand drawing object using tools like Smoothening, Erasing or Redrawing. </p>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='smoothen' style='display:inline-block'>Smoothen</h3></div>
+            <ul>
+                <li> Select the Freehand object. </li>
+                <li>Clicking on the <img src='FreehandSmoothenBtn.png' />will result into smoothening of the object as shown below:
+                    <br><img src='FreeSmoothingDemo.png' width='auto' height='auto' />
+                </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='redraw' style='display:inline-block'>Redraw</h3></div>
+            <ul>
+                <li>Select the Freehand object. </li>
+                <li>On clicking the <img src='FreehandRedrawBtn.png' />,one can see the rectangular dot as shown below.
+                    <br><img src='FreehandRedraw.png' /></li>
+                <li>Now move the dot as desired to modify the object </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='erase' style='display:inline-block'>Erase</h3></div>
+            <ul>
+                <li>Select the Freehand Object.</li>
+                <li>On clicking the <img src='FreeEraseBtn.png' /> button, a red rectangular dot appears as shown below.
+                    <br> <img src='FreehandErase.png' width='auto' height='auto' /> </li>
+                <li> Now take this red dot on the part which you want to erase and click. </li>
+                <li>Once done, just click on the green dotted border to save the changes. </li>
+            </ul>
+        </div>
+
+
+        <div class='instruct'>
+            <div>
+                <h2 id='modtextobject' style='display:inline-block'>Modifying Text Object</h2></div>
+            <p>One can edit and modify the text object through the properties window</p>
+            <div>
+                <h3 id='textedit' style='display:inline-block'>Edit</h3></div>
+            <ul>
+                <li>Select the Text Object. </li>
+                <li>On clicking the <img src='TextEditBtn.png' /> button, you will see a text editor opening right below the text object as shown below
+                    <br> <img src='TextEditor.png' /> </li>
+                <li>Edit the text and then click outside the text object to save the text.</li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='textbold' style='display:inline-block'>Bold</h3></div>
+            <ul>
+                <li>Select the Text Object.</li>
+                <li>Click on the <img src='TextBoldBtn.png' /> button to toggle between applying Bold style or removing it.
+                    <li>
+            </ul>
+        </div>
+
+
+        <div class='instruct'>
+            <div>
+                <h3 id='textitalic' style='display:inline-block'>Italic</h3></div>
+            <ul>
+                <li>Select the Text Object.</li>
+                <li>Click on the <img src='TextItalicBtn.png' /> button to toggle between applying Italic style or removing it. </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='textunderline' style='display:inline-block'>Underline</h3></div>
+            <ul>
+                <li>Select the Text Object. </li>
+                <li>Click on the <img src='TextUnderlineBtn.png' /> button to toggle between applying Underline style or removing it. </li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='textstrikeout' style='display:inline-block'>Strike-Out</h3></div>
+            <ul>
+                <li>Select the Text Object.</li>
+                <li>Click on the <img src='TextStrikeoutBtn.png' /> button to toggle between applying Strike-out style or removing it. </li>
+            </ul>
+        </div>
+
+
+        <div class='instruct'>
+            <div>
+                <h3 id='textsmallcaps' style='display:inline-block'>Small-caps</h3></div>
+            <ul>
+                <li>Select the Text Object.</li>
+                <li>Click on the <img src='TextSmallcapsBtn.png' /> button to toggle between applying Small-caps style or removing it.</li>
+            </ul>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h2 id='modimageobject' style='display:inline-block'>Modifying Image URL</h2></div>
+            <ul>
+                <li>Select the Image object</li>
+                <li>Enter the new URL as shown below and then click on the <b>Apply</b> button.
+                    <br><img src='ImageURLProperty.png' width='auto' height='auto' />
+                </li>
+
+            </ul>
+        </div>
+
+        <div class='maintopic'>
+            <h1 id='animation'>Animation </h1></div>
+        <div class='instruct'>
+            <p class='instruct'>
+                The application supports SVG animations as per the SVG specification. One can animate objects created in the editor. You can also have multiple animations defined for a single object. The animation of any object is controlled by 3 basic parameters: </p>
+            <ul>
+                <li><b>Animation Type:</b> There are different types of animation supported which can be viewed in the list while adding any new animation.</li>
+                <li><b>Start Time of the animation:</b> By default all animations are executed when SVG is loaded. Hence, animations by default starts at 0th second after loading. However, one may also synchronize the start time with the end or beginning of animation of some other object.</li>
+                <li><b>Duration:</b>Duration defines the duration for which the animation will be executed. By modifying this parameter one can make an animation slow or fast. </li>
+            </ul>
+            <p class='note'>NOTE:<i>Any change in animation parameters or position of an object should be followed by click on the 
 	<img src='AnimApplyBtn.png' /> button to make the changes effective. </i> </p>
-</div>
+        </div>
 
-<div class='instruct'>
-	<div><h2 id='addanim' style='display:inline-block'>Adding Animation</h2></div>	
-	<ul>
-		<li>Select an object which you to animate.</li>
-		<li>On Clicking the<img src= 'AnimAddBtn.png' /> button, a Pop-up dialog appears as shown below
-		<br><img src= 'Anim_NewanimateDlg.png' width='auto' height='200px' />
-		</li>
-		<li>Enter an unique title for the animation.</li>
-		<li>Select an Animation type from the list.</li>
-		<li>Click on the <b>Preview</b> button to preview the animation.</li> 
-		<li>On clicking <b>OK</b>  button the Animation is added in the Animation list in the Animation tab.</li>		 
-	</ul>
-</div>
+        <div class='instruct'>
+            <div>
+                <h2 id='addanim' style='display:inline-block'>Adding Animation</h2></div>
+            <ul>
+                <li>Select an object which you to animate.</li>
+                <li>On Clicking the<img src='AnimAddBtn.png' /> button, a Pop-up dialog appears as shown below
+                    <br><img src='Anim_NewanimateDlg.png' width='auto' height='200px' />
+                </li>
+                <li>Enter an unique title for the animation.</li>
+                <li>Select an Animation type from the list.</li>
+                <li>Click on the <b>Preview</b> button to preview the animation.</li>
+                <li>On clicking <b>OK</b> button the Animation is added in the Animation list in the Animation tab.</li>
+            </ul>
+        </div>
 
-<div class='instruct'>
-	<div><h2 id='deleteanim' style='display:inline-block'>Deleting Animation</h2></div>	
-	<ul>
-		<li>Select the animation from the  animation list.</li>
-		<li>On clicking <img src='AnimDeletBtn.png' /> button the animation is removed from the list. 	 
-	</ul>
-	
-</div>
+        <div class='instruct'>
+            <div>
+                <h2 id='deleteanim' style='display:inline-block'>Deleting Animation</h2></div>
+            <ul>
+                <li>Select the animation from the animation list.</li>
+                <li>On clicking <img src='AnimDeletBtn.png' /> button the animation is removed from the list.
+            </ul>
 
-<div class='instruct'>
-	<div><h2 id='applyanim' style='display:inline-block'>Applying Changes</h2></div>	
-	<p>Whenever an animation property or position of an object is modified then 
-		 click on <img src='AnimApplyBtn.png'/> button to apply the new values. 		
-	 </p>
-</div>
+        </div>
 
-<div class='instruct'>
-	<div><h2 id='playanim' style='display:inline-block'>Playing Animation</h2></div>	
-	<p>To play an animation select an animation title and click on the
-	 <img src='AnimPlayBtn.png' /> button to preview the animation 		
-	 </p>
-</div>
+        <div class='instruct'>
+            <div>
+                <h2 id='applyanim' style='display:inline-block'>Applying Changes</h2></div>
+            <p>Whenever an animation property or position of an object is modified then click on <img src='AnimApplyBtn.png' /> button to apply the new values.
+            </p>
+        </div>
 
-<div class='instruct'>
-	<div><h2 id='timinganim' style='display:inline-block'>Timing Controls of the Animation</h2></div>	
-	<p>The animations can be controlled from the Animation list and changing the 
-	Start parameters and Duration. By default all animation starts at 0th second.
-	<br><img src='AnimListControl.png' width='auto' height='auto'/>	
-	 </p>	 
-	 <p class='note'>NOTE:<i>In case of multiple animations there should be at least one animation which starts at 0th second.</i> 		
-	</p>
-</div>
+        <div class='instruct'>
+            <div>
+                <h2 id='playanim' style='display:inline-block'>Playing Animation</h2></div>
+            <p>To play an animation select an animation title and click on the
+                <img src='AnimPlayBtn.png' /> button to preview the animation
+            </p>
+        </div>
 
-<div class='instruct'>
-	<div><h3 id='startanim' style='display:inline-block'>Start of Animation </h3></div>	
-	<ul>
-	<li>Select an animation item from the animation from the list.</li> 
-	<li>Click on the cell corresponding to “Start” column as shown below:
-		<br> <img src='AnimStartUI.png' width='auto' height='auto'/>
-		<br>    .
-	</li>
-	<li>Select one of the options below: 
-		<br><b>At 0th second:</b> In this case the animation will start as soon as the SVG is loaded. 
-		<br><b>After:</b>When this is is chosen,the animation starts right after the reference animation finishes. 
-		<br>To choose a reference animation click on the cell corresponding to <b>Reference</b> column and select one of the animations as reference. 
-		<br><b>With:</b>In this case, the animation starts in sync with begining of the reference animation. 
-			<br>To choose a reference animation click on the cell corresponding to <b>Reference</b> column and select one of the animations as reference. 
-	</li>
-	</ul>
-</div>
+        <div class='instruct'>
+            <div>
+                <h2 id='timinganim' style='display:inline-block'>Timing Controls of the Animation</h2></div>
+            <p>The animations can be controlled from the Animation list and changing the Start parameters and Duration. By default all animation starts at 0th second.
+                <br><img src='AnimListControl.png' width='auto' height='auto' />
+            </p>
+            <p class='note'>NOTE:<i>In case of multiple animations there should be at least one animation which starts at 0th second.</i>
+            </p>
+        </div>
 
-<div class='instruct'>
-	<div><h3 id='duranim' style='display:inline-block'>Duration of Animation </h3></div>	
-	<p>Duration of an animation defines the time for which the object will be animating. Shorter duration will give an effect of fast animation 
-	and longer duration will give an effect of slow animation.</p> 
-	<ul>
-		<li>To modify duration just click on the cell corresponding to the <b>Duration</b> column in Animation List.</li> 
-		<li>Enter the time (in seconds) and press the <b>Apply</b> button</li> 
-	</ul>
-</div>
+        <div class='instruct'>
+            <div>
+                <h3 id='startanim' style='display:inline-block'>Start of Animation </h3></div>
+            <ul>
+                <li>Select an animation item from the animation from the list.</li>
+                <li>Click on the cell corresponding to “Start” column as shown below:
+                    <br> <img src='AnimStartUI.png' width='auto' height='auto' />
+                    <br> .
+                </li>
+                <li>Select one of the options below:
+                    <br><b>At 0th second:</b> In this case the animation will start as soon as the SVG is loaded.
+                    <br><b>After:</b>When this is is chosen,the animation starts right after the reference animation finishes.
+                    <br>To choose a reference animation click on the cell corresponding to <b>Reference</b> column and select one of the animations as reference.
+                    <br><b>With:</b>In this case, the animation starts in sync with begining of the reference animation.
+                    <br>To choose a reference animation click on the cell corresponding to <b>Reference</b> column and select one of the animations as reference.
+                </li>
+            </ul>
+        </div>
 
-<div class='instruct'>
-	<div><h3 id='repeatanim' style='display:inline-block'>Repeatition of Animation </h3></div>	
-	<p>One can make an animation repeat mutliple times by simply modifying the value in the input-box
-	<br><img src='AnimRepeatCount.png' />
-	</p> 	
-</div>
+        <div class='instruct'>
+            <div>
+                <h3 id='duranim' style='display:inline-block'>Duration of Animation </h3></div>
+            <p>Duration of an animation defines the time for which the object will be animating. Shorter duration will give an effect of fast animation and longer duration will give an effect of slow animation.</p>
+            <ul>
+                <li>To modify duration just click on the cell corresponding to the <b>Duration</b> column in Animation List.</li>
+                <li>Enter the time (in seconds) and press the <b>Apply</b> button</li>
+            </ul>
+        </div>
 
-
-<div class='instruct'>
-	<div><h2 id='specificanimtype' style='display:inline-block; text-decoration:underline'>Paramters Specific to Animation Types </h2></div>	
-	<p>There are parameters which are specific to certain types of animation.</p> 	
-</div>
-
-<div class='instruct'>
-	<div><h2 id='rotationanim' style='display:inline-block'>Rotation</h2></div>	
-	<p>In the Rotation type animation, an object is Rotated from an 
-	<b>Initial</b> angle to a given <b>Final</b> angle around a given <b>Center of rotation</b>. </p> 	
-</div>
-
-<div class='instruct'>
-	<div><h3 id='startrotanim' style='display:inline-block'>Start Angle</h3></div>	
-	<p>Gives the initial angle from where the object should start rotating</p> 	
-	<ul>
-		<li>Enter the value in <img src='AnimRotStartAngle.png'  width='130px' height='auto'/> to define the Start angle.		 
-		</li>
-		<li> Click on the <b>Apply</b> button </li>
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='endrotanim' style='display:inline-block'>End Angle</h3></div>	
-	<p>Gives the final angle to which the object will rotate to.</p> 	
-	<ul>
-		<li>Enter the value in <img src='AnimRotEndAngle.png'  width='130px' height='auto'/> to define the Start angle.		 
-		</li>
-		<li> Click on the <b>Apply</b> button </li>
-	</ul>
-</div>
-
-<div class='instruct'>
-	<div><h3 id='autoreverseanim' style='display:inline-block'>Auto Reverse</h3></div>	
-	<p> Switching On this flag, will allow the rotation to swing back to initial position</p>	
-</div>
-
-<div class='instruct'>
-	<div><h3 id='coranim' style='display:inline-block'>Center of Rotation</h3></div>	
-	<p>The center of rotation is point around which the rotation takes place. 
-	One can move the center of rotation. 
-	<br> <img src='AnimRotCenterRotation.png' /></p> 	
-	<ul>
-		<li>Take the mouse on the grey dot which is the center of rotation.</li> 
-		<li>Drag the dot to a desired location.</li> 
-		<li>Click on the <b>Apply</b> button to apply the new position of the Center of Rotation.</li>
-	</ul>
-</div>
+        <div class='instruct'>
+            <div>
+                <h3 id='repeatanim' style='display:inline-block'>Repeatition of Animation </h3></div>
+            <p>One can make an animation repeat mutliple times by simply modifying the value in the input-box
+                <br><img src='AnimRepeatCount.png' />
+            </p>
+        </div>
 
 
-<div class='instruct'>
-	<div><h2 id='pamanim' style='display:inline-block'>Path Aligned Motion</h2></div>	
-	<p>In the path aligned motion an object is moved along a given path. 
-	The Start point of the path is the Starting point and end point of the path being the end of animation. 
-	By default the initial path is a straight line which can be later modified into any other path of choice. 
-	<br>The following parameters are specific to <b>Path Aligned Motion</b>.  
-	</p> 	
-</div>
+        <div class='instruct'>
+            <div>
+                <h2 id='specificanimtype' style='display:inline-block; text-decoration:underline'>Paramters Specific to Animation Types </h2></div>
+            <p>There are parameters which are specific to certain types of animation.</p>
+        </div>
 
-<div class='instruct'>
-	<div><h3 id='pathvisibleanim' style='display:inline-block'>Path Visible</h3></div>	
-	<p> Select or Unselect the checkbox to make the path visible or invisible while animating
-	<br><img src='AnimPAMPathVisible.png' />
-	</p>	
-</div>
+        <div class='instruct'>
+            <div>
+                <h2 id='rotationanim' style='display:inline-block'>Rotation</h2></div>
+            <p>In the Rotation type animation, an object is Rotated from an
+                <b>Initial</b> angle to a given <b>Final</b> angle around a given <b>Center of rotation</b>. </p>
+        </div>
 
-<div class='instruct'>
-	<div><h3 id='changepathanim' style='display:inline-block'>Change Path</h3></div>	
-	<ul>
-		<li>Select the Type of path one would like to change to
-		<br><img src='AnimPAMPathChange.png' />
-		</li> 
-		<li>Click on <b>Apply</b> to make the new path effective.</li>
-	</ul>	
-</div>
+        <div class='instruct'>
+            <div>
+                <h3 id='startrotanim' style='display:inline-block'>Start Angle</h3></div>
+            <p>Gives the initial angle from where the object should start rotating</p>
+            <ul>
+                <li>Enter the value in <img src='AnimRotStartAngle.png' width='130px' height='auto' /> to define the Start angle.
+                </li>
+                <li> Click on the <b>Apply</b> button </li>
+            </ul>
+        </div>
 
-<div class='instruct'>
-	<div><h3 id='editpathanim' style='display:inline-block'>Edit Path</h3></div>	
-	<ul>
-		<li>On clicking the <img src='AnimPAMPathEdit.png' /> button the reference path for animation becomes editable
-		 and takes you to the <b>Properties</b> tab. 
-		 <li>Click on the <img src='PathEditPointBtn.png' /> to edit the path. </li>
-		 <li>Click on the <b>Apply</b> button to make the modified path effective. </li> 
-	</ul>	
-</div>
+        <div class='instruct'>
+            <div>
+                <h3 id='endrotanim' style='display:inline-block'>End Angle</h3></div>
+            <p>Gives the final angle to which the object will rotate to.</p>
+            <ul>
+                <li>Enter the value in <img src='AnimRotEndAngle.png' width='130px' height='auto' /> to define the Start angle.
+                </li>
+                <li> Click on the <b>Apply</b> button </li>
+            </ul>
+        </div>
 
-<div class='instruct'>
-	<div><h3 id='rolingeffectanim' style='display:inline-block'>Rolling Effect</h3></div>	
-	<p>
-		One can add rolling effect to the motion, especially this is useful for circular 
-		or elliptical objects with gradient fill-in. 
-		<br><img src='AnimPAMRollingEffect.png' />
-	 </p>
-	<ul>
-		<li>Check or Uncheck to add or remove rolling effect.<img src='AnimPAMRolling.png' /> </li>
-		<li>Click on <b>Apply</b> to make the changes effective. </li> 
-	</ul>	
-</div>
+        <div class='instruct'>
+            <div>
+                <h3 id='autoreverseanim' style='display:inline-block'>Auto Reverse</h3></div>
+            <p> Switching On this flag, will allow the rotation to swing back to initial position</p>
+        </div>
 
-
-<div class='instruct'>
-	<div><h3 id='touchingPAMctanim' style='display:inline-block'>Touching</h3></div>	
-	<p>
-		The object can move either touching the Top surface or Bottom surface or through the middle of the path.
-		One can select these touch points from the list		  
-		<br><img src='AnimPAMTouch.png' width='auto' height='100px'/>
-	 </p>
-	<ul>
-		<li><b>Top:</b>On selecting this option the object will moves along the top part of the path as shown below: 
-			<br><img src='AnimPAMTouchTop.png' />
-		</li>
-		<li><b>Center:</b>On selecting this option the object will moves through the middle of the path as shown below: 
-			<br><img src='AnimPAMTouchCenter.png' />
-		</li>
-		<li><b>Bottom:</b>On selecting this option the object will moves along the bottom part of the path as shown below: 
-			<br><img src='AnimPAMTouchBottom.png' />
-		</li>
-	</ul>	
-</div>
+        <div class='instruct'>
+            <div>
+                <h3 id='coranim' style='display:inline-block'>Center of Rotation</h3></div>
+            <p>The center of rotation is point around which the rotation takes place. One can move the center of rotation.
+                <br> <img src='AnimRotCenterRotation.png' /></p>
+            <ul>
+                <li>Take the mouse on the grey dot which is the center of rotation.</li>
+                <li>Drag the dot to a desired location.</li>
+                <li>Click on the <b>Apply</b> button to apply the new position of the Center of Rotation.</li>
+            </ul>
+        </div>
 
 
-<div class='instruct'>
-	<div><h2 id='linmotanim' style='display:inline-block'>Linear Motion</h2></div>	
-	<p>In this type of animation, the motion is linear i.e. along a straight line. 
-	<br>Following are the specific parameters   
-	</p> 	
-</div>
+        <div class='instruct'>
+            <div>
+                <h2 id='pamanim' style='display:inline-block'>Path Aligned Motion</h2></div>
+            <p>In the path aligned motion an object is moved along a given path. The Start point of the path is the Starting point and end point of the path being the end of animation. By default the initial path is a straight line which can be later modified into any other path of choice.
+                <br>The following parameters are specific to <b>Path Aligned Motion</b>.
+            </p>
+        </div>
 
-<div class='instruct'>
-	<div><h3 id='lmanimautoreverse' style='display:inline-block'>Auto Reverse</h3></div>	
-	<p>
-		When you check the Auto-Reverse checkbox as shown below, 
-		the object retraces the same path to come back to its original position. 
-		<br><img src='animLMautoreverse.png' />
-	 </p>		
-</div>
+        <div class='instruct'>
+            <div>
+                <h3 id='pathvisibleanim' style='display:inline-block'>Path Visible</h3></div>
+            <p> Select or Unselect the checkbox to make the path visible or invisible while animating
+                <br><img src='AnimPAMPathVisible.png' />
+            </p>
+        </div>
 
-<div class='instruct'>
-	<div><h3 id='lmanimpace' style='display:inline-block'>Pace</h3></div>	
-	<p>
-		One can choose to have a uniform motion or accelerated motion from the option shown below:  
-		<br><img src='animLMPace.png' />
-	 </p>		
-</div>
+        <div class='instruct'>
+            <div>
+                <h3 id='changepathanim' style='display:inline-block'>Change Path</h3></div>
+            <ul>
+                <li>Select the Type of path one would like to change to
+                    <br><img src='AnimPAMPathChange.png' />
+                </li>
+                <li>Click on <b>Apply</b> to make the new path effective.</li>
+            </ul>
+        </div>
 
-<div class='instruct'>
-	<div><h3 id='lmanimchangepath' style='display:inline-block'>Changing Linear Path</h3></div>	
-	<p>One can change the linear path by moving the grey dot as depcited in the figure below: 
-		<br><img src='AnimLMSelection.png' />
-	 </p>		
-</div>
+        <div class='instruct'>
+            <div>
+                <h3 id='editpathanim' style='display:inline-block'>Edit Path</h3></div>
+            <ul>
+                <li>On clicking the <img src='AnimPAMPathEdit.png' /> button the reference path for animation becomes editable and takes you to the <b>Properties</b> tab.
+                    <li>Click on the <img src='PathEditPointBtn.png' /> to edit the path. </li>
+                    <li>Click on the <b>Apply</b> button to make the modified path effective. </li>
+            </ul>
+        </div>
 
-<div class='instruct'>
-	<div><h3 id='lmanimotheranim' style='display:inline-block'>Start Value</h3></div>	
-	<p>There are other types of animations like <b>Fly-In, Zoom, Horizontal skew, Vertical Skew </b>
-	where only Start Value in % needs to be defined. See figure below:
-	<br> <img src='animLMStartValue.png' /> 
+        <div class='instruct'>
+            <div>
+                <h3 id='rolingeffectanim' style='display:inline-block'>Rolling Effect</h3></div>
+            <p>
+                One can add rolling effect to the motion, especially this is useful for circular or elliptical objects with gradient fill-in.
+                <br><img src='AnimPAMRollingEffect.png' />
+            </p>
+            <ul>
+                <li>Check or Uncheck to add or remove rolling effect.<img src='AnimPAMRolling.png' /> </li>
+                <li>Click on <b>Apply</b> to make the changes effective. </li>
+            </ul>
+        </div>
 
-	 </p>		
-</div>
 
-</div> <!-- container fluid  -->
+        <div class='instruct'>
+            <div>
+                <h3 id='touchingPAMctanim' style='display:inline-block'>Touching</h3></div>
+            <p>
+                The object can move either touching the Top surface or Bottom surface or through the middle of the path. One can select these touch points from the list
+                <br><img src='AnimPAMTouch.png' width='auto' height='100px' />
+            </p>
+            <ul>
+                <li><b>Top:</b>On selecting this option the object will moves along the top part of the path as shown below:
+                    <br><img src='AnimPAMTouchTop.png' />
+                </li>
+                <li><b>Center:</b>On selecting this option the object will moves through the middle of the path as shown below:
+                    <br><img src='AnimPAMTouchCenter.png' />
+                </li>
+                <li><b>Bottom:</b>On selecting this option the object will moves along the bottom part of the path as shown below:
+                    <br><img src='AnimPAMTouchBottom.png' />
+                </li>
+            </ul>
+        </div>
+
+
+        <div class='instruct'>
+            <div>
+                <h2 id='linmotanim' style='display:inline-block'>Linear Motion</h2></div>
+            <p>In this type of animation, the motion is linear i.e. along a straight line.
+                <br>Following are the specific parameters
+            </p>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='lmanimautoreverse' style='display:inline-block'>Auto Reverse</h3></div>
+            <p>
+                When you check the Auto-Reverse checkbox as shown below, the object retraces the same path to come back to its original position.
+                <br><img src='animLMautoreverse.png' />
+            </p>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='lmanimpace' style='display:inline-block'>Pace</h3></div>
+            <p>
+                One can choose to have a uniform motion or accelerated motion from the option shown below:
+                <br><img src='animLMPace.png' />
+            </p>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='lmanimchangepath' style='display:inline-block'>Changing Linear Path</h3></div>
+            <p>One can change the linear path by moving the grey dot as depcited in the figure below:
+                <br><img src='AnimLMSelection.png' />
+            </p>
+        </div>
+
+        <div class='instruct'>
+            <div>
+                <h3 id='lmanimotheranim' style='display:inline-block'>Start Value</h3></div>
+            <p>There are other types of animations like <b>Fly-In, Zoom, Horizontal skew, Vertical Skew </b> where only Start Value in % needs to be defined. See figure below:
+                <br> <img src='animLMStartValue.png' />
+
+            </p>
+        </div>
+    <div class="modal fade" id="videoplayerModal" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background:transparent; border:none; box-shadow: none;">
+                <div class="modal-body text-center">
+                    <div id="player"></div>
+                    <div>
+                        <button class="btn btn-link" data-dismiss="modal" style="color:#fff">Close</button>
+                        <button class="btn btn-link" onclick="replayHelpSegment()" style="color:#fff">Replay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="application/javascript" src="VideoPlayerClass.js"></script>
+    <script type="application/javascript">
+        var helpVideoId = 'b59MvaRm1xA'
+        function OnYTPlayerReady () {
+            var playButtons = document.getElementsByClassName('video-play-button');
+            for(var i=0; i < playButtons.length; i++) {
+                playButtons[i].classList.remove('hide');
+            }
+            console.log('player ready');
+        }
+        function segmentEndFunction (segmentIndex) {
+            if(segmentIndex >= 1 && !vidPlayerObject.bLoop) {
+                $('#videoplayerModal').modal('hide');
+            }
+        }
+        function replayHelpSegment () {
+            vidPlayerObject.Pause();
+            vidPlayerObject.PlaySegmentIndex(0);
+        }
+        $('#videoplayerModal').on('hide.bs.modal', function () {
+            vidPlayerObject.Pause();
+        })
+        function playHelpVideo(start, end) {
+            $('#videoplayerModal').modal('show');
+            vidPlayerObject.LoadVideoWithSegmentList(helpVideoId, [{startTime: start, endTime: end}], 'segmentEndFunction')
+        }
+        var vidPlayerObject =  new CreatePlayerWidget('YT', 'player', '320', '180', true, true);
+    </script>
+
+
+<!--
+    </div>
+-->
+    <!-- container fluid  -->
 </body>
+
 </html>
